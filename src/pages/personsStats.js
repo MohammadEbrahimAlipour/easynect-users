@@ -7,11 +7,16 @@ import StatsCard from "@/components/StatsCard";
 import StatsHorz from "@/components/StatsHorz";
 import StatsListItems from "@/components/StatsListItems";
 import { StatsVert } from "@/components/StatsVert";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { generateApiUrl } from "@/components/ApiUr";
+import { useAccessToken } from "../../context/AccessTokenContext";
+import axios from "axios";
 
 const PersonsStats = () => {
   const [cardSelected, setCardSelected] = useState(true);
   const [isSelected, setIsSelected] = useState(true);
+  const accessToken = useAccessToken();
+  const [statsData, setStatsData] = useState([]); // State to store data from the API
 
   // Function to handle vert button click
   const handleVertClick = () => {
@@ -22,6 +27,31 @@ const PersonsStats = () => {
   const handleHorzClick = () => {
     setIsSelected(false);
   };
+
+  // get data for top cards
+  useEffect(() => {
+    // Fetch data from the API
+    const apiUrl = generateApiUrl("/api/v1/analytics/pages/");
+
+    axios
+      .get(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${accessToken.accessToken}`, // Pass the access token in the headers
+          "accept-language": "fa"
+        }
+      })
+      .then((response) => {
+        // Handle the API response here
+        const data = response.data;
+        console.log(data); // Log the data to see what you've received
+        setStatsData(data); // Update the state with the fetched data
+      })
+      .catch((error) => {
+        // Handle any errors here
+        console.error("Error fetching data:", error);
+      });
+  }, [accessToken.accessToken]);
+
   return (
     <>
       <Header />
@@ -46,12 +76,9 @@ const PersonsStats = () => {
           overflow-x-auto hide-scrollbar
           snap-x"
           >
-            <StatsCard title="محمدامین " />
-            <StatsCard title="محمدامین خاکشوری" />
-            <StatsCard title="محمدامین خاکشوری" />
-            <StatsCard title="محمدامین " />
-            <StatsCard title="محمدامین خاکشوری" />
-            <StatsCard title="محمدامین خاکشوری" />
+            {statsData.map((item) => (
+              <StatsCard key={item.id} item={item} />
+            ))}
           </div>
         </div>
 
