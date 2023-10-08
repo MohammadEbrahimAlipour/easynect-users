@@ -11,6 +11,9 @@ module.exports = {
   // to support dark mode
   darkMode: "class",
 
+  // to support is selected mode
+  selected: "class",
+
   theme: {
     container: {
       padding: {

@@ -16,17 +16,13 @@ const PersonsStats = () => {
   const [cardSelected, setCardSelected] = useState(true);
   const [isSelected, setIsSelected] = useState(true);
   const accessToken = useAccessToken();
-  const [statsData, setStatsData] = useState([]); // State to store data from the API
+  const [statsData, setStatsData] = useState([]); // State to store data from api for top card section
+  const [pageData, setPageData] = useState([]);
+  const [selectedCardId, setSelectedCardId] = useState(); // State to store the selected card's id
 
-  // Function to handle vert button click
-  const handleVertClick = () => {
-    setIsSelected(true);
-  };
+  const [selectedButton, setSelectedButton] = useState("content");
 
-  // Function to handle horz button click
-  const handleHorzClick = () => {
-    setIsSelected(false);
-  };
+  const [chartView, setChartView] = useState();
 
   // get data for top cards
   useEffect(() => {
@@ -52,10 +48,83 @@ const PersonsStats = () => {
       });
   }, [accessToken.accessToken]);
 
+  // fetch bottom data
+  const fetchDataFromSecondApi = () => {
+    if (selectedCardId) {
+      const apiUrl = generateApiUrl(
+        `/api/v1/analytics/get_list_contents_taps_based_on_date_range/${selectedCardId}`
+      );
+      // Set the params object with the appropriate type
+      const params = {
+        type_: selectedButton
+        // Add other params if needed
+      };
+      axios
+        .get(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${accessToken.accessToken}`,
+            "accept-language": "fa"
+          },
+          params: params // Pass the params in the request
+        })
+        .then((response) => {
+          const data = response.data;
+          console.log(data); // Log the data to see what you've received
+          setPageData(data); // Update the state with the fetched data
+        })
+        .catch((error) => {
+          console.error("Error fetching page data:", error);
+        });
+    }
+  };
+
+  const fetchChartDataView = () => {
+    if (selectedCardId) {
+      const apiUrl = generateApiUrl(
+        `/api/v1/analytics/get_page_view_based_on_date_range/${selectedCardId}`
+      );
+      const params = {
+        from_date: "",
+        to_date: ""
+      };
+      axios
+        .get(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${accessToken.accessToken}`,
+            "accept-language": "fa"
+          },
+          params: params
+        })
+        .then((response) => {
+          const data = response.data;
+          console.log("statsData", data);
+          setChartView(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching chart view data:", error);
+        });
+    }
+  };
+  console.log("ChartView", chartView);
+
+  // Button click handlers
+  const handleButtonClick = (value) => {
+    setSelectedButton(value); // Set the selectedButton state to the value of the button clicked
+
+    // Call the function to fetch data from the second API
+    fetchDataFromSecondApi();
+  };
+
+  // Function to handle card selection
+  const handleCardSelect = (cardId) => {
+    setSelectedCardId(cardId);
+    console.log("cardId", cardId); // Set the selected card's id when a card is clicked
+  };
+
   return (
     <>
       <Header />
-      <Layout className="!pt-1 !h-fit min-h-screen ">
+      <Layout className="!pt-1 !h-fit min-h-screen !px-5">
         {cardSelected ? (
           <>
             <p className="text-xl font-medium text-right mb-4">
@@ -77,7 +146,12 @@ const PersonsStats = () => {
           snap-x"
           >
             {statsData.map((item) => (
-              <StatsCard key={item.id} item={item} />
+              <StatsCard
+                key={item.id}
+                item={item}
+                selectedCardId={selectedCardId}
+                onClick={() => handleCardSelect(item.id)} // Call handleCardSelect when a card is clicked
+              />
             ))}
           </div>
         </div>
@@ -92,31 +166,56 @@ const PersonsStats = () => {
         {/* list */}
         <div>
           <div className="flex justify-between items-center mt-9 mb-6">
-            <p className="text-lg font-medium ">ترکیب ورودی‌ها</p>
+            <p className="text-lg font-medium ">
+              {selectedButton === "content" &&
+                // Render content for the "content" button
+
+                "content"}
+
+              {selectedButton === "hm_item" && "hm_item"}
+            </p>
 
             {/* left side btns */}
             <div className="text-sm">
               <button
                 id="horz"
+                value="content"
                 className={`me-3 border-[1px] border-black px-4 py-1 rounded-lg ${
                   !isSelected ? "bg-dark text-white" : ""
                 }`}
-                onClick={handleHorzClick}
+                onClick={() => handleButtonClick("content")}
               >
                 افقی
               </button>
               <button
                 id="vert"
+                value="hm_item"
                 className={`${
                   isSelected ? "bg-dark text-white" : ""
                 } px-4 py-1 rounded-lg border-[1px] border-black`}
-                onClick={handleVertClick}
+                onClick={() => handleButtonClick("hm_item")}
               >
                 عمودی
               </button>
             </div>
           </div>
-          {isSelected ? <StatsVert /> : <StatsHorz />}
+          <div>
+            {/* Conditionally render content based on selectedButton */}
+            {selectedButton === "content" &&
+              // Render content for the "content" button
+
+              pageData.map((item) => (
+                <StatsHorz
+                  key={item.id}
+                  item={item}
+                  s3_icon_url={item.s3_icon_url}
+                />
+              ))}
+
+            {selectedButton === "hm_item" &&
+              // Render content for the "hm_item" button
+              pageData.map((item) => <StatsVert key={item.id} item={item} />)}
+          </div>
         </div>
       </Layout>
       <Footer />
