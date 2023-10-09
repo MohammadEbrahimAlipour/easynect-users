@@ -11,6 +11,8 @@ import React, { useEffect, useState } from "react";
 import { generateApiUrl } from "@/components/ApiUr";
 import { useAccessToken } from "../../context/AccessTokenContext";
 import axios from "axios";
+import BottomSheet from "@/components/BottomSheet";
+import BottomSheetStatsDate from "@/components/BottomSheetStatsDate";
 
 const PersonsStats = () => {
   const [cardSelected, setCardSelected] = useState(true);
@@ -24,6 +26,44 @@ const PersonsStats = () => {
 
   const [chartView, setChartView] = useState();
   const today = new Date(); // todays date
+
+  // handle date values for custom date
+  const [fromDate, setFromDate] = useState("2023-10-01");
+  const [toDate, setToDate] = useState("2023-10-08");
+
+  // below code handles two buttons above chart
+  const [showSubMenu, setShowSubMenu] = useState(false);
+
+  const [selectedOption, setSelectedOption] = useState("view"); //value to pass to chart
+
+  // options
+  const handleOptionChange = (event) => {
+    const newOption = event.target.value;
+    setSelectedOption(newOption);
+
+    // Save the selectedOption in localStorage (only on the client-side)
+    if (typeof window !== "undefined") {
+      localStorage.setItem("selectedOption", newOption);
+    }
+  };
+  useEffect(() => {
+    // Check if localStorage is available (only on the client-side)
+    if (typeof window !== "undefined") {
+      const storedOption = localStorage.getItem("selectedOption");
+      if (storedOption) {
+        setSelectedOption(storedOption);
+      }
+    }
+  }, []);
+  useEffect(() => {
+    // Check if localStorage is available (only on the client-side)
+    if (typeof window !== "undefined") {
+      const storedOption = localStorage.getItem("selectedOption");
+      if (storedOption) {
+        setSelectedOption(storedOption);
+      }
+    }
+  }, []);
 
   // get data for top cards
   useEffect(() => {
@@ -84,9 +124,10 @@ const PersonsStats = () => {
       const apiUrl = generateApiUrl(
         `/api/v1/analytics/get_page_view_based_on_date_range/${selectedCardId}`
       );
+
       const params = {
-        from_date: "2023-10-01",
-        to_date: "2023-10-08"
+        from_date: fromDate, // Use fromDate state variable
+        to_date: toDate // Use toDate state variable
       };
       axios
         .get(apiUrl, {
@@ -105,7 +146,7 @@ const PersonsStats = () => {
           console.error("Error fetching chart view data:", error);
         });
     }
-  }, [accessToken.accessToken, selectedCardId]);
+  }, [accessToken.accessToken, selectedCardId, fromDate, toDate]);
 
   // Button click handlers
   const handleButtonClick = (value) => {
@@ -158,8 +199,35 @@ const PersonsStats = () => {
 
         {/* stats */}
         <div className="my-5 w-full">
+          <div className="flex justify-between items-center mb-5">
+            <button
+              onClick={() => setShowSubMenu(!showSubMenu)}
+              className="bg-dark text-white rounded-2xl px-3 py-[6px] focus:outline-none
+         text-sm flex justify-center items-center"
+              // onClick={toggleDateMenu}
+            >
+              <span className="me-[0.5]">۷ روز گذشته</span>
+              <ArrowDownIcon />
+            </button>
+            <div className="flex flex-wrap">
+              {/* <label htmlFor="options">Choose a car:</label> */}
+              <select
+                id="options"
+                value={selectedOption}
+                onChange={handleOptionChange}
+                className="bg-dark text-white text-sm  py-1 px-3 rounded-2xl"
+              >
+                <option value="view" selected>
+                  بازدید‌ها
+                </option>
+                <option value="contacts">Option 1</option>
+                <option value="convertRate">Option 2</option>
+                <option value="shares">Option 3</option>
+              </select>
+            </div>
+          </div>
           {/* chart */}
-          <Chart chartView={chartView} />
+          <Chart chartView={chartView} selectedOption={selectedOption} />
           {/* text */}
         </div>
 
@@ -219,6 +287,18 @@ const PersonsStats = () => {
         </div>
       </Layout>
       <Footer />
+      <BottomSheet
+        showSubMenu={showSubMenu}
+        handleSubMenuClose={() => setShowSubMenu(false)}
+        childeren={
+          <BottomSheetStatsDate
+            fromDate={fromDate}
+            toDate={toDate}
+            setFromDate={setFromDate}
+            setToDate={setToDate}
+          />
+        }
+      />
     </>
   );
 };

@@ -29,6 +29,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-loader-spinner": "^5.4.5",
+    "react-modern-calendar-datepicker": "^3.1.6",
     "react-qr-code": "^2.0.12",
     "react-qrcode-logo": "^2.9.0",
     "react-responsive-carousel": "^3.2.23",
