@@ -23,6 +23,7 @@ const PersonsStats = () => {
   const [selectedButton, setSelectedButton] = useState("content");
 
   const [chartView, setChartView] = useState();
+  const today = new Date(); // todays date
 
   // get data for top cards
   useEffect(() => {
@@ -77,15 +78,15 @@ const PersonsStats = () => {
         });
     }
   };
-
-  const fetchChartDataView = () => {
+  //  fetch data for chart View
+  useEffect(() => {
     if (selectedCardId) {
       const apiUrl = generateApiUrl(
         `/api/v1/analytics/get_page_view_based_on_date_range/${selectedCardId}`
       );
       const params = {
-        from_date: "",
-        to_date: ""
+        from_date: "2023-10-01",
+        to_date: "2023-10-08"
       };
       axios
         .get(apiUrl, {
@@ -104,8 +105,7 @@ const PersonsStats = () => {
           console.error("Error fetching chart view data:", error);
         });
     }
-  };
-  console.log("ChartView", chartView);
+  }, [accessToken.accessToken, selectedCardId]);
 
   // Button click handlers
   const handleButtonClick = (value) => {
@@ -159,7 +159,7 @@ const PersonsStats = () => {
         {/* stats */}
         <div className="my-5 w-full">
           {/* chart */}
-          <Chart />
+          <Chart chartView={chartView} />
           {/* text */}
         </div>
 

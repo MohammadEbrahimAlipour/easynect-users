@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import axios from "axios"; // Import Axios for HTTP requests
 
 const AccessTokenContext = createContext();
 
@@ -29,23 +30,26 @@ export const AccessTokenProvider = ({ children }) => {
         localStorage.setItem("accessToken", accessToken);
       }
 
-      // added code for clearimg accessToken after 6 hours
-      // Set a timeout to clear the access token after 6 hours
-      const timeoutId = setTimeout(() => {
-        setAccessToken(null); // Clear the access token
-        if (typeof window !== "undefined") {
-          localStorage.removeItem("accessToken"); // Remove from local storage
+      // Set up an Axios interceptor to handle 401 errors and redirect to login
+      const interceptor = axios.interceptors.response.use(
+        (response) => {
+          return response;
+        },
+        (error) => {
+          if (error.response && error.response.status === 401) {
+            // Redirect to "/loginUser"
+            if (typeof window !== "undefined") {
+              window.location.href = "/loginUser";
+            }
+          }
+          return Promise.reject(error);
         }
-      }, 6 * 60 * 60 * 1000); // 6 hours in milliseconds
+      );
 
-      // Cleanup the timeout when component unmounts or when access token changes
-      return () => clearTimeout(timeoutId);
-      // end of added code
-    } else {
-      // Check if the code is running in a browser environment before using localStorage
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("accessToken");
-      }
+      // Cleanup the interceptor when component unmounts
+      return () => {
+        axios.interceptors.response.eject(interceptor);
+      };
     }
   }, [accessToken]);
 

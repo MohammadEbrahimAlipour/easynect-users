@@ -5,7 +5,7 @@ import Link from "next/link";
 const StatsListItems = ({ title, href, className = "" }) => {
   return (
     <>
-      <li className={`${className} bg-white rounded-lg py-3 mb-3`}>
+      <div className={`${className} bg-white rounded-lg py-3 mb-3`}>
         <Link href="/" className="flex justify-between px-4 items-center">
           <span className="flex justify-start items-center font-medium">
             <span className="me-2">
@@ -15,7 +15,7 @@ const StatsListItems = ({ title, href, className = "" }) => {
           </span>
           <span className="font-semibold text-lg">۲۱</span>
         </Link>
-      </li>
+      </div>
     </>
   );
 };

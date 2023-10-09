@@ -49,9 +49,11 @@ const CustomLink = ({ href, title, iconName, className = "" }) => {
   );
 };
 
-const Footer = () => {
+const Footer = ({ className = "" }) => {
   return (
-    <div className="text-center my-5 container sticky bottom-0 bg-white pt-2">
+    <div
+      className={`text-center my-5 container sticky bottom-0 bg-white pt-2 ${className}`}
+    >
       <div className="grid  3xl:grid-cols-12  2xl:grid-cols-12  md:grid-cols-12 gap-1">
         {/* right side */}
         <div className="3xl:col-span-4 2xl:col-span-4 md:col-span-4">

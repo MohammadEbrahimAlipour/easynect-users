@@ -3,8 +3,8 @@ import StatsListItems from "./StatsListItems";
 
 export const StatsVert = () => {
   return (
-    <ul className="bg-dark">
+    <div className="bg-dark">
       <StatsListItems href="/" title="اینستاگرام" />
-    </ul>
+    </div>
   );
 };
