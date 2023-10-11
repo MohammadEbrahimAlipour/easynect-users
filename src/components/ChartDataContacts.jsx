@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -26,7 +26,7 @@ const options = {
   plugins: {
     title: {
       display: true,
-      text: ""
+      text: "connection"
     }
   },
   scales: {
@@ -74,10 +74,57 @@ const data = {
   ]
 };
 
-const ChartDataContacts = () => {
+const ChartDataContacts = ({ chartConnection }) => {
+  const [chartLabels, setChartLabels] = useState([]);
+  const [chartDataValues, setChartDataValues] = useState([]);
+  useEffect(() => {
+    // Check if chartView is defined and has the expected structure
+    if (
+      chartConnection &&
+      chartConnection.views &&
+      Array.isArray(chartConnection.views)
+    ) {
+      // Extract data from chartView and transform it into the format Chart.js expects
+      const extractedLabels = chartConnection.views.map((view) => view.date);
+      const extractedDataValues = chartConnection.views.map(
+        (view) => view.views
+      );
+
+      // Update the state variables with the transformed data
+      setChartLabels(extractedLabels);
+      setChartDataValues(extractedDataValues);
+    }
+  }, [chartConnection]);
+  // conditionally Update the chart title to include the total_view value
+
+  if (
+    chartConnection &&
+    chartConnection.views &&
+    Array.isArray(chartConnection.views)
+  ) {
+    options.plugins.title.text = `Total Connection: ${chartConnection.total_view}`;
+  }
+
+  const data = {
+    labels: chartLabels,
+    datasets: [
+      {
+        label: "Dataset 1",
+        data: chartDataValues,
+        borderColor: "#CEA16A",
+        backgroundColor: "#ffff",
+        borderLeftColor: "#ffff"
+      }
+    ]
+  };
+
   return (
-    <div className="bg-white pb-4 rounded-lg ">
-      <Line options={options} data={data} />
+    <div className="bg-white pb-4 rounded-lg">
+      {chartConnection ? (
+        <Line options={options} data={data} />
+      ) : (
+        <p>Loading chart data...</p>
+      )}
     </div>
   );
 };

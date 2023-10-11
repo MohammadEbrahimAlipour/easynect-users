@@ -78,10 +78,14 @@ const data = {
   ]
 };
 
-const Chart = ({ chartView, selectedOption }) => {
+const Chart = ({
+  chartView,
+  selectedOption,
+  chartConnection,
+  chartShare,
+  chartConvert
+}) => {
   // Initialize selectedOption with the value from localStorage or "view" as a default
-
-  const submenuRef = useRef(null);
 
   // Use useEffect to trigger rendering of the selected component
   useEffect(() => {
@@ -96,13 +100,17 @@ const Chart = ({ chartView, selectedOption }) => {
       selectedComponent = <ChartDataView chartView={chartView} />;
       break;
     case "contacts":
-      selectedComponent = <ChartDataContacts />;
+      selectedComponent = (
+        <ChartDataContacts chartConnection={chartConnection} />
+      );
       break;
     case "convertRate":
-      selectedComponent = <ChartDataViewConvertRate />;
+      selectedComponent = (
+        <ChartDataViewConvertRate chartConvert={chartConvert} />
+      );
       break;
     case "shares":
-      selectedComponent = <ChartDataViewShares />;
+      selectedComponent = <ChartDataViewShares chartShare={chartShare} />;
       break;
     default:
       selectedComponent = null;

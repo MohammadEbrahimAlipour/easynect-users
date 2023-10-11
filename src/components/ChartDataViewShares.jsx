@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -26,7 +26,7 @@ const options = {
   plugins: {
     title: {
       display: true,
-      text: ""
+      text: "choose one"
     }
   },
   scales: {
@@ -59,22 +59,38 @@ const options = {
   }
 };
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
+const ChartDataViewShares = ({ chartShare }) => {
+  const [chartLabels, setChartLabels] = useState([]);
+  const [chartDataValues, setChartDataValues] = useState([]);
 
-const data = {
-  labels: labels,
-  datasets: [
-    {
-      label: "Dataset 1",
-      data: [30, 12, 13, 0, 89, 0, 12],
-      borderColor: "#CEA16A",
-      backgroundColor: "#ffff",
-      borderLeftColor: "#ffff"
+  useEffect(() => {
+    // Check if chartView is defined and has the expected structure
+    if (chartShare && chartShare.views && Array.isArray(chartShare.views)) {
+      // Extract data from chartView and transform it into the format Chart.js expects
+      const extractedLabels = chartShare.views.map((view) => view.date);
+      const extractedDataValues = chartShare.views.map((view) => view.views);
+
+      // Update the state variables with the transformed data
+      setChartLabels(extractedLabels);
+      setChartDataValues(extractedDataValues);
     }
-  ]
-};
-
-const ChartDataViewShares = () => {
+  }, [chartShare]);
+  // conditionally Update the chart title to include the total_view value
+  if (chartShare && chartShare.views && Array.isArray(chartShare.views)) {
+    options.plugins.title.text = `Total Shares: ${chartShare.total_view}`;
+  }
+  const data = {
+    labels: chartLabels,
+    datasets: [
+      {
+        label: "Dataset 1",
+        data: chartDataValues,
+        borderColor: "#CEA16A",
+        backgroundColor: "#ffff",
+        borderLeftColor: "#ffff"
+      }
+    ]
+  };
   return (
     <div className="bg-white pb-4 rounded-lg ">
       <Line options={options} data={data} />

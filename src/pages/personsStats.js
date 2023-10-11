@@ -24,7 +24,11 @@ const PersonsStats = () => {
 
   const [selectedButton, setSelectedButton] = useState("content");
 
-  const [chartView, setChartView] = useState();
+  const [chartView, setChartView] = useState(); // Chart data for view
+  const [chartConnection, setChartConnection] = useState(); // chart data for connection
+  const [chartShare, setChartShare] = useState(); // chart data for share
+  const [chartConvert, setChartConvert] = useState(); // chart data for conver
+
   const today = new Date(); // todays date
 
   // handle date values for custom date
@@ -35,6 +39,8 @@ const PersonsStats = () => {
   const [showSubMenu, setShowSubMenu] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState("view"); //value to pass to chart
+
+  //
 
   // options
   const handleOptionChange = (event) => {
@@ -118,7 +124,8 @@ const PersonsStats = () => {
         });
     }
   };
-  //  fetch data for chart View
+
+  // Fetch data for chart View
   useEffect(() => {
     if (selectedCardId) {
       const apiUrl = generateApiUrl(
@@ -126,8 +133,8 @@ const PersonsStats = () => {
       );
 
       const params = {
-        from_date: fromDate, // Use fromDate state variable
-        to_date: toDate // Use toDate state variable
+        from_date: fromDate, // Use fromDate prop from BottomSheetStatsDate
+        to_date: toDate // Use toDate prop from BottomSheetStatsDate
       };
       axios
         .get(apiUrl, {
@@ -146,7 +153,123 @@ const PersonsStats = () => {
           console.error("Error fetching chart view data:", error);
         });
     }
-  }, [accessToken.accessToken, selectedCardId, fromDate, toDate]);
+  }, [
+    accessToken.accessToken,
+    selectedCardId,
+    fromDate,
+    toDate,
+    selectedOption
+  ]);
+
+  // Fetch data for chart View
+  useEffect(() => {
+    if (selectedCardId) {
+      const apiUrl = generateApiUrl(
+        `/api/v1/analytics/get_page_connection_stats_based_on_date_range/${selectedCardId}`
+      );
+
+      const params = {
+        from_date: fromDate, // Use fromDate prop from BottomSheetStatsDate
+        to_date: toDate // Use toDate prop from BottomSheetStatsDate
+      };
+      axios
+        .get(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${accessToken.accessToken}`,
+            "accept-language": "fa"
+          },
+          params: params
+        })
+        .then((response) => {
+          const data = response.data;
+          console.log("statsData", data);
+          setChartConnection(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching chart view data:", error);
+        });
+    }
+  }, [
+    accessToken.accessToken,
+    selectedCardId,
+    fromDate,
+    toDate,
+    selectedOption
+  ]);
+
+  console.log("connectionStats", chartConnection);
+
+  // Fetch data for chart share
+  useEffect(() => {
+    if (selectedCardId) {
+      const apiUrl = generateApiUrl(
+        `/api/v1/analytics/get_page_view_based_on_date_range_by_share/${selectedCardId}`
+      );
+
+      const params = {
+        from_date: fromDate, // Use fromDate prop from BottomSheetStatsDate
+        to_date: toDate // Use toDate prop from BottomSheetStatsDate
+      };
+      axios
+        .get(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${accessToken.accessToken}`,
+            "accept-language": "fa"
+          },
+          params: params
+        })
+        .then((response) => {
+          const data = response.data;
+          console.log("statsData", data);
+          setChartShare(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching chart view data:", error);
+        });
+    }
+  }, [
+    accessToken.accessToken,
+    selectedCardId,
+    fromDate,
+    toDate,
+    selectedOption
+  ]);
+
+  // Fetch data for chart convert
+  useEffect(() => {
+    if (selectedCardId) {
+      const apiUrl = generateApiUrl(
+        `/api/v1/analytics/get_page_convert_rate_based_on_date_range/${selectedCardId}`
+      );
+
+      const params = {
+        from_date: fromDate, // Use fromDate prop from BottomSheetStatsDate
+        to_date: toDate // Use toDate prop from BottomSheetStatsDate
+      };
+      axios
+        .get(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${accessToken.accessToken}`,
+            "accept-language": "fa"
+          },
+          params: params
+        })
+        .then((response) => {
+          const data = response.data;
+          console.log("statsData", data);
+          setChartConvert(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching chart view data:", error);
+        });
+    }
+  }, [
+    accessToken.accessToken,
+    selectedCardId,
+    fromDate,
+    toDate,
+    selectedOption
+  ]);
 
   // Button click handlers
   const handleButtonClick = (value) => {
@@ -162,20 +285,21 @@ const PersonsStats = () => {
     console.log("cardId", cardId); // Set the selected card's id when a card is clicked
   };
 
+  console.log("pageData", pageData);
+
   return (
     <>
       <Header />
       <Layout className="!pt-1 !h-fit min-h-screen !px-5">
-        {cardSelected ? (
+        {selectedCardId ? (
           <>
             <p className="text-xl font-medium text-right mb-4">
-              آمار به تفکیک کارت‌ها
+              آمار به تفکیک کارت‌
             </p>
           </>
         ) : (
-          <p className="">
-            آمار کارت‌ها
-            <span className="font-semibold ms-2">محمدامین خاکشوری</span>
+          <p className="text-xl font-medium text-right mb-4">
+            کارت را انتخواب کنید
           </p>
         )}
 
@@ -220,14 +344,22 @@ const PersonsStats = () => {
                 <option value="view" selected>
                   بازدید‌ها
                 </option>
-                <option value="contacts">Option 1</option>
-                <option value="convertRate">Option 2</option>
-                <option value="shares">Option 3</option>
+                <option value="contacts">contacts</option>
+                <option value="convertRate">convert</option>
+                <option value="shares">Shares</option>
               </select>
             </div>
           </div>
           {/* chart */}
-          <Chart chartView={chartView} selectedOption={selectedOption} />
+
+          <Chart
+            chartView={chartView}
+            selectedOption={selectedOption}
+            chartConnection={chartConnection}
+            chartShare={chartShare}
+            chartConvert={chartConvert}
+          />
+
           {/* text */}
         </div>
 
@@ -269,6 +401,7 @@ const PersonsStats = () => {
           </div>
           <div>
             {/* Conditionally render content based on selectedButton */}
+
             {selectedButton === "content" &&
               // Render content for the "content" button
 
@@ -292,8 +425,6 @@ const PersonsStats = () => {
         handleSubMenuClose={() => setShowSubMenu(false)}
         childeren={
           <BottomSheetStatsDate
-            fromDate={fromDate}
-            toDate={toDate}
             setFromDate={setFromDate}
             setToDate={setToDate}
           />
