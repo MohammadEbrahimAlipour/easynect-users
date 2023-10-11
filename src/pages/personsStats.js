@@ -13,9 +13,9 @@ import { useAccessToken } from "../../context/AccessTokenContext";
 import axios from "axios";
 import BottomSheet from "@/components/BottomSheet";
 import BottomSheetStatsDate from "@/components/BottomSheetStatsDate";
+import BottomSheetStatsPresets from "@/components/BottomSheetStatsPresets";
 
 const PersonsStats = () => {
-  const [cardSelected, setCardSelected] = useState(true);
   const [isSelected, setIsSelected] = useState(true);
   const accessToken = useAccessToken();
   const [statsData, setStatsData] = useState([]); // State to store data from api for top card section
@@ -29,7 +29,7 @@ const PersonsStats = () => {
   const [chartShare, setChartShare] = useState(); // chart data for share
   const [chartConvert, setChartConvert] = useState(); // chart data for conver
 
-  const today = new Date(); // todays date
+  const [goToCal, setGoToCal] = useState(false); //to navigate inside bottom sheet setting
 
   // handle date values for custom date
   const [fromDate, setFromDate] = useState("2023-10-01");
@@ -285,7 +285,23 @@ const PersonsStats = () => {
     console.log("cardId", cardId); // Set the selected card's id when a card is clicked
   };
 
-  console.log("pageData", pageData);
+  // options
+  const [showOption, setShowOption] = useState(false);
+  const toggleShowOption = () => {
+    setShowOption(!showOption);
+  };
+  // Add a function to handle a click on a menu item and set the selected option
+  const handleMenuItemClick = (newOption) => {
+    setSelectedOption(newOption);
+    toggleShowOption(); // Close the menu
+  };
+
+  const optionTexts = {
+    view: "بازدید‌ها",
+    contacts: "مخاطبین",
+    convertRate: "نرخ تبدیل",
+    shares: "اشتراک‌ها"
+  };
 
   return (
     <>
@@ -306,7 +322,7 @@ const PersonsStats = () => {
         {/* card section */}
         <div className="">
           <div
-            className="grid grid-flow-col auto-cols-[34%] gap-2 overscroll-contain
+            className="grid grid-flow-col auto-cols-[36%] gap-2 overscroll-contain
           overflow-x-auto hide-scrollbar
           snap-x"
           >
@@ -330,26 +346,58 @@ const PersonsStats = () => {
          text-sm flex justify-center items-center"
               // onClick={toggleDateMenu}
             >
-              <span className="me-[0.5]">۷ روز گذشته</span>
+              <span className="me-1">انتخواب زمان</span>
               <ArrowDownIcon />
             </button>
             <div className="flex flex-wrap">
               {/* <label htmlFor="options">Choose a car:</label> */}
-              <select
-                id="options"
-                value={selectedOption}
-                onChange={handleOptionChange}
-                className="bg-dark text-white text-sm  py-1 px-3 rounded-2xl"
-              >
-                <option value="view" selected>
-                  بازدید‌ها
-                </option>
-                <option value="contacts">contacts</option>
-                <option value="convertRate">convert</option>
-                <option value="shares">Shares</option>
-              </select>
+
+              {/* drop down chart options */}
+              <div class="relative inline-block text-left">
+                <div>
+                  <button
+                    onClick={toggleShowOption}
+                    type="button"
+                    class="inline-flex w-full justify-center items-center gap-x-1 rounded-2xl bg-dark text-white px-3 py-[6px] text-sm font-medium shadow-sm  "
+                    id="menu-button"
+                    aria-expanded="true"
+                    aria-haspopup="true"
+                  >
+                    {optionTexts[selectedOption]}
+                    {/* Display the selected option text */}
+                    <ArrowDownIcon />
+                  </button>
+                </div>
+
+                {showOption ? (
+                  <div
+                    class="absolute left-0 z-10 mt-2 w-28 origin-top-right rounded-md bg-white shadow-lg "
+                    role="menu"
+                    aria-orientation="vertical"
+                    aria-labelledby="menu-button"
+                    tabindex="-1"
+                  >
+                    <div class="" role="none">
+                      {Object.keys(optionTexts).map((value) => (
+                        <button
+                          key={value}
+                          onClick={() => handleMenuItemClick(value)} // Handle click and set option
+                          value={value}
+                          class="text-gray-700 block px-4 py-2 text-xs w-full border-b-[1px]"
+                          role="menuitem"
+                          tabindex="-1"
+                          id={`menu-item-${value}`}
+                        >
+                          {optionTexts[value]} {/* Display the option text */}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+              </div>
             </div>
           </div>
+
           {/* chart */}
 
           <Chart
@@ -422,12 +470,26 @@ const PersonsStats = () => {
       <Footer />
       <BottomSheet
         showSubMenu={showSubMenu}
-        handleSubMenuClose={() => setShowSubMenu(false)}
+        handleSubMenuClose={() => {
+          setShowSubMenu(false);
+          setGoToCal(false);
+        }}
         childeren={
-          <BottomSheetStatsDate
-            setFromDate={setFromDate}
-            setToDate={setToDate}
-          />
+          goToCal ? (
+            <BottomSheetStatsDate
+              setFromDate={setFromDate}
+              setToDate={setToDate}
+            />
+          ) : (
+            <BottomSheetStatsPresets
+              goToCal={goToCal}
+              setGoToCal={setGoToCal}
+              fromDate={fromDate}
+              setFromDate={setFromDate}
+              setToDate={setToDate}
+              toDate={toDate}
+            />
+          )
         }
       />
     </>
