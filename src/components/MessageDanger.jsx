@@ -16,7 +16,7 @@ const MessageDanger = () => {
   };
   return (
     <button onClick={showToast} className="your-button-styles">
-      Show Success Toast
+      show danger message
     </button>
   );
 };

@@ -14,15 +14,16 @@ import axios from "axios";
 import BottomSheet from "@/components/BottomSheet";
 import BottomSheetStatsDate from "@/components/BottomSheetStatsDate";
 import BottomSheetStatsPresets from "@/components/BottomSheetStatsPresets";
+import LoadingState from "@/components/LoadingState";
 
 const PersonsStats = () => {
-  const [isSelected, setIsSelected] = useState(true);
+  const [isSelected, setIsSelected] = useState("content");
   const accessToken = useAccessToken();
   const [statsData, setStatsData] = useState([]); // State to store data from api for top card section
   const [pageData, setPageData] = useState([]);
   const [selectedCardId, setSelectedCardId] = useState(); // State to store the selected card's id
 
-  const [selectedButton, setSelectedButton] = useState("content");
+  const [selectedButton, setSelectedButton] = useState("");
 
   const [chartView, setChartView] = useState(); // Chart data for view
   const [chartConnection, setChartConnection] = useState(); // chart data for connection
@@ -39,8 +40,6 @@ const PersonsStats = () => {
   const [showSubMenu, setShowSubMenu] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState("view"); //value to pass to chart
-
-  //
 
   // options
   const handleOptionChange = (event) => {
@@ -320,22 +319,27 @@ const PersonsStats = () => {
         )}
 
         {/* card section */}
-        <div className="">
-          <div
-            className="grid grid-flow-col auto-cols-[36%] gap-2 overscroll-contain
+
+        {statsData ? (
+          <div className="">
+            <div
+              className="grid grid-flow-col auto-cols-[36%] gap-2 overscroll-contain
           overflow-x-auto hide-scrollbar
           snap-x"
-          >
-            {statsData.map((item) => (
-              <StatsCard
-                key={item.id}
-                item={item}
-                selectedCardId={selectedCardId}
-                onClick={() => handleCardSelect(item.id)} // Call handleCardSelect when a card is clicked
-              />
-            ))}
+            >
+              {statsData.map((item) => (
+                <StatsCard
+                  key={item.id}
+                  item={item}
+                  selectedCardId={selectedCardId}
+                  onClick={() => handleCardSelect(item.id)} // Call handleCardSelect when a card is clicked
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <LoadingState />
+        )}
 
         {/* stats */}
         <div className="my-5 w-full">
@@ -429,9 +433,12 @@ const PersonsStats = () => {
                 id="horz"
                 value="content"
                 className={`me-3 border-[1px] border-black px-4 py-1 rounded-lg ${
-                  !isSelected ? "bg-dark text-white" : ""
+                  isSelected === "content" ? "bg-dark text-white" : "bg-white"
                 }`}
-                onClick={() => handleButtonClick("content")}
+                onClick={() => {
+                  handleButtonClick("content");
+                  setIsSelected("content"); // Update isSelected state
+                }}
               >
                 افقی
               </button>
@@ -439,9 +446,12 @@ const PersonsStats = () => {
                 id="vert"
                 value="hm_item"
                 className={`${
-                  isSelected ? "bg-dark text-white" : ""
+                  isSelected === "hm_item" ? "bg-dark text-white" : "bg-white"
                 } px-4 py-1 rounded-lg border-[1px] border-black`}
-                onClick={() => handleButtonClick("hm_item")}
+                onClick={() => {
+                  handleButtonClick("hm_item");
+                  setIsSelected("hm_item"); // Update isSelected state
+                }}
               >
                 عمودی
               </button>
@@ -457,7 +467,7 @@ const PersonsStats = () => {
                 <StatsHorz
                   key={item.id}
                   item={item}
-                  s3_icon_url={item.s3_icon_url}
+                  // s3_icon_url={item.s3_icon_url}
                 />
               ))}
 

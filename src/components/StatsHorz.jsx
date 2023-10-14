@@ -19,7 +19,7 @@ const StatsHorz = ({ item, className }) => {
               />
               {item.title}
             </span>
-            <span className="font-semibold text-lg">۲۱</span>
+            <span className="font-semibold text-lg">{item.taps}</span>
           </Link>
         </div>
       ) : (
