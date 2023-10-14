@@ -14,6 +14,7 @@ import Header from "@/components/Header";
 import axios from "axios";
 import { useAccessToken } from "../../context/AccessTokenContext";
 import { useRouter } from "next/router";
+import { generateApiUrl } from "@/components/ApiUr";
 
 const CustomLinkProfile = ({ href, title, className = "" }) => {
   return (
@@ -27,25 +28,26 @@ const Profile = () => {
   const router = useRouter();
   // const { accessToken, setAccessToken } = useAccessToken();
   const accessToken = useAccessToken();
+  const { setAccessToken } = useAccessToken();
   console.log(accessToken);
 
   // logout
   const handleLogout = async () => {
-    console.log("Logout clicked"); // Add this line
-    console.log(accessToken.accessToken);
+    const apiUrl = generateApiUrl("/api/v1/logout/");
+
     try {
-      const response = await axios.get(
-        "http://188.121.115.0:8000/api/v1/logout/",
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken.accessToken}`,
-            "accept-language": "fa"
-          }
+      const response = await axios.get(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${accessToken.accessToken}`,
+          "accept-language": "fa"
         }
-      );
+      });
 
       if (response.status === 204) {
         // Logout was successful, you can redirect to a login page or perform any other actions
+        setAccessToken(null);
+        localStorage.removeItem("accessToken");
+
         router.push("/loginUser");
         console.log("Logout successful");
 
@@ -56,13 +58,22 @@ const Profile = () => {
         // router.push("/regiserUser");
       } else {
         // Handle logout error, e.g., display an error message
+        setAccessToken(null);
+        localStorage.removeItem("accessToken");
+
         console.error("Logout failed");
       }
     } catch (error) {
+      setAccessToken(null);
+      localStorage.removeItem("accessToken");
+
       // Handle network errors or other exceptions
       console.error("An error occurred during logout:", error);
     }
+    console.log("Logout clicked"); // Add this line
+    console.log(accessToken.accessToken);
   };
+  console.log("token", accessToken.accessToken);
   return (
     <>
       <Header />
@@ -109,7 +120,7 @@ const Profile = () => {
             </li>
 
             {/* logout */}
-            <li className="py-5 border-b-[1px] flex justify-start items-center">
+            <li className="py-5 border-b-[1px] flex justify-start items-center font-medium">
               <ProfileExitIcon />
               <button className="text-[#CB3434] ms-2" onClick={handleLogout}>
                 خروج از حساب کاربری

@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios"; // Import Axios for HTTP requests
+import { useRouter } from "next/router";
 
 const AccessTokenContext = createContext();
 
@@ -22,6 +23,16 @@ export const AccessTokenProvider = ({ children }) => {
     }
     return null; // Return null if not in a browser environment
   });
+
+  const router = useRouter();
+
+  // Check if the user has a valid access token
+  useEffect(() => {
+    if (!accessToken) {
+      // Redirect to the "/userLogin" page
+      router.push("/loginUser");
+    }
+  }, [accessToken, router]);
 
   useEffect(() => {
     if (accessToken) {
