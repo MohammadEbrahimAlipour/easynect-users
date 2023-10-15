@@ -4,6 +4,7 @@ import Link from "next/link";
 import { LinkedIn, PlusSign } from "@/components/Icons";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import HeaderTwo from "@/components/HeaderTwo";
 
 const MediaSelection = () => {
   const MediaOptions = ({ title, href, value = "", name = "" }) => {
@@ -55,7 +56,8 @@ const MediaSelection = () => {
 
   return (
     <>
-      <Header />
+      {/* add id to back route */}
+      <HeaderTwo href={"/editProfileInfo"} />
       <Layout>
         <div className="bg-white rounded-lg container py-10">
           <div className="flex justify-between items-center">
@@ -89,7 +91,7 @@ const MediaSelection = () => {
           {/* bottom side btns */}
           <div className="text-sm text-center w-full flex flex-col mt-5">
             <Link
-              href="/mediaSettings"
+              href="/contentStoreAddItem"
               className="border-[1px] border-black px-4 py-3 rounded-lg mb-2 flex justify-center
               items-center"
             >

@@ -8,7 +8,7 @@ import HeaderTwo from "@/components/HeaderTwo";
 const MediaSettings = () => {
   return (
     <>
-      <HeaderTwo />
+      <HeaderTwo href="/" />
       <Layout>
         <div className="bg-white rounded-lg container py-10">
           <div className="flex justify-between items-center">
