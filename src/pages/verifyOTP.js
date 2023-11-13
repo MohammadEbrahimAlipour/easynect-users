@@ -8,6 +8,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { generateApiUrl } from "@/components/ApiUr";
 import { useAccessToken } from "../../context/AccessTokenContext";
+import { toast } from "react-toastify";
 
 const VerifyOTP = () => {
   // Initialize state to store the user-entered code
@@ -81,6 +82,14 @@ const VerifyOTP = () => {
     } catch (error) {
       // Handle errors, e.g., display an error message
       console.error("Error:", error);
+      // Check if the error response contains a message
+      if (error.response && error.response.data && error.response.data.detail) {
+        const errorMessage = error.response.data.detail;
+        toast.error(errorMessage);
+      } else {
+        // If there is no specific error message, display a generic one
+        toast.error("ارور ناشناخته");
+      }
     }
   };
 

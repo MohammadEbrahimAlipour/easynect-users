@@ -95,7 +95,7 @@ const ProfileInfo = () => {
 
   return (
     <>
-      <HeaderTwo />
+      <HeaderTwo href="/profileInfo" />
       <Layout>
         <div>
           <p className="text-lg ps-3 font-semibold mb-3">اطلاعات کاربری</p>

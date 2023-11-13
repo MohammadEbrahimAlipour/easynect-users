@@ -3,10 +3,10 @@ import HeaderTwo from "@/components/HeaderTwo";
 import Layout from "@/components/Layout";
 import React from "react";
 
-const contentStoreAddItem = () => {
+const ContentStoreAddItem = () => {
   return (
     <>
-      <HeaderTwo href="/mediaSelection" />
+      <HeaderTwo href="/profileCard" />
       <Layout>
         {/* top filters */}
         <div
@@ -32,4 +32,4 @@ const contentStoreAddItem = () => {
   );
 };
 
-export default contentStoreAddItem;
+export default ContentStoreAddItem;

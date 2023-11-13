@@ -6,7 +6,7 @@ import raviFontLocal from "@next/font/local";
 import { AccessTokenProvider } from "../../context/AccessTokenContext";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const raviFont = raviFontLocal({
@@ -33,7 +33,7 @@ export default function App({ Component, pageProps }) {
       </main>
 
       <ToastContainer
-        position="bottom-center"
+        position="bottom-left"
         autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}
@@ -42,7 +42,7 @@ export default function App({ Component, pageProps }) {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="colored"
+        theme="dark"
       />
     </>
   );

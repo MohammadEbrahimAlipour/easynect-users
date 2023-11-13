@@ -12,7 +12,7 @@ const HorzCarousel = () => {
     infinite: true,
     centerPadding: "0",
     slidesToShow: 5,
-    arrows: false,
+    arrows: true,
     speed: 100,
     afterChange: (index) => {
       setCenteredItemIndex(index);

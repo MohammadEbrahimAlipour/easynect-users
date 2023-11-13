@@ -5,11 +5,11 @@ import { useRouter } from "next/router";
 import { useAccessToken } from "../../context/AccessTokenContext";
 import axios from "axios";
 import { generateApiUrl } from "@/components/ApiUr";
-import MessageDanger from "@/components/MessageDanger";
+import { toast } from "react-toastify";
 
 const LoginUser = () => {
   const router = useRouter();
-  const [serverErrorMessage, setServerErrorMessage] = useState("");
+  // const [serverErrorMessage, setServerErrorMessage] = useState("");
 
   // To fill access token
   const { setAccessToken } = useAccessToken();
@@ -63,19 +63,25 @@ const LoginUser = () => {
         // Handle login error, e.g., display an error message
         console.error("Login failed");
 
-        const errorMessage = response.data?.detail || "An error occurred";
-        setServerErrorMessage(errorMessage);
+        // const errorMessage = response.data?.detail || "An error occurred";
+        // setServerErrorMessage(errorMessage);
       }
     } catch (error) {
       // Handle network errors or other exceptions
       console.error("An error occurred:", error);
+      // Check if the error response contains a message
+      if (error.response && error.response.data && error.response.data.detail) {
+        const errorMessage = error.response.data.detail;
+        toast.error(errorMessage);
+      } else {
+        // If there is no specific error message, display a generic one
+        toast.error("ارور ناشناخته");
+      }
     }
   };
 
   return (
     <div className="container mb-10">
-      {/* Display the danger message using the MessageDanger component */}
-      {serverErrorMessage && <MessageDanger message={serverErrorMessage} />}
       <div>
         <div className="w-full h-[320px] rounded-[20px] mt-5 bg-gold">
           photo

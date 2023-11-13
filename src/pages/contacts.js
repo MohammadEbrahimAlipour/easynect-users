@@ -12,7 +12,7 @@ import ProfileImage from "@/components/ProfileImage";
 import Link from "next/link";
 import React from "react";
 
-const contacts = () => {
+const Contacts = () => {
   return (
     <>
       <Header />
@@ -67,4 +67,4 @@ const contacts = () => {
   );
 };
 
-export default contacts;
+export default Contacts;
