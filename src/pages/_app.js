@@ -33,7 +33,8 @@ const protectedRoutes = [
   "/personsStats",
   "/profile",
   "/profileCard",
-  "/profileInfo"
+  "/profileInfo",
+  "/infoPage"
 ];
 
 export default function App({ Component, pageProps }) {
