@@ -14,6 +14,28 @@ const raviFont = raviFontLocal({
   variable: "--font-rav"
 });
 
+const protectedRoutes = [
+  "/cards",
+  "/changeEmail",
+  "/changePassword",
+  "/confirmEmailCode",
+  "/contacts",
+  "/contentAddItem",
+  "/createCard",
+  "/editMedias",
+  "/editProfileInfo",
+  "/forgotPassword",
+  "/forgotPasswrodSuccessful",
+  "/mediaSelection",
+  "/mediaSettings",
+  "/newEmailOtp",
+  "/noticeSetting",
+  "/personsStats",
+  "/profile",
+  "/profileCard",
+  "/profileInfo"
+];
+
 export default function App({ Component, pageProps }) {
   return (
     <>
@@ -26,7 +48,7 @@ export default function App({ Component, pageProps }) {
         className={`${raviFont.variable} font-ravi w-full flex justify-center`}
       >
         <div className=" 3xl:w-[414px] 2xl:w-[414px] lg:w-[414px]">
-          <AccessTokenProvider>
+          <AccessTokenProvider protectedRoutes={protectedRoutes}>
             <Component {...pageProps} />
           </AccessTokenProvider>
         </div>

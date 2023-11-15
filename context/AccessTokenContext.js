@@ -14,7 +14,7 @@ export const useAccessToken = () => {
   return context;
 };
 
-export const AccessTokenProvider = ({ children }) => {
+export const AccessTokenProvider = ({ children, protectedRoutes }) => {
   const [accessToken, setAccessToken] = useState(() => {
     // Check if the code is running in a browser environment before using localStorage
     if (typeof window !== "undefined") {
@@ -28,11 +28,18 @@ export const AccessTokenProvider = ({ children }) => {
 
   // Check if the user has a valid access token
   useEffect(() => {
-    if (!accessToken) {
-      // Redirect to the "/userLogin" page
+    if (accessToken && !protectedRoutes.includes(router.pathname)) {
+      // If user is authenticated and the current route is not in protectedRoutes,
+      // allow access to the route.
+      return;
+    }
+
+    if (!accessToken && protectedRoutes.includes(router.pathname)) {
+      // If user is not authenticated and the current route is in protectedRoutes,
+      // redirect to the login page.
       router.push("/loginUser");
     }
-  }, [accessToken, router]);
+  }, [accessToken, router, protectedRoutes, router.pathname]);
 
   useEffect(() => {
     if (accessToken) {
