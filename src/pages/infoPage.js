@@ -40,6 +40,8 @@ URL:https://maps.app.goo.gl/mJSte6hmxcvH6ToJ7
 END:VCARD
     `;
 
+    // andnoiasidn aindians inains d adnaid
+
     // Download the vCard
     const blob = new Blob([vCardString], {
       type: "text/vcard"
