@@ -6,7 +6,11 @@ const InfoSocialMediaSquare = ({ icon, title, address, href = "" }) => {
   return (
     <>
       {/* square */}
-      <Link href={href} className="px-4 py-3 border-2 rounded-2xl">
+      <Link
+        href={href}
+        target="_blank"
+        className="px-4 py-3 border-2 rounded-2xl"
+      >
         <div
           className="bg-dark w-[45px] h-[45px] rounded-full mb-3
         flex justify-center items-center overflow-hidden"

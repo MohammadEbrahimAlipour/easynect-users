@@ -3,40 +3,39 @@ import InfoSocialMediaSquare from "@/components/InfoSocialMediaSquare";
 import PortfolioLink from "@/components/PortfolioLink";
 import ProfileImage from "@/components/ProfileImage";
 import ClientPageFooter from "@/components/ClientPageFooter";
-import HorzCarousel from "@/components/infoCarousel/HorzCarousel";
+import HorzCarouselPKP from "@/components/infoCarousel/HorzCarouselPKP";
 import Layout from "@/components/Layout";
-import sampleImage from "../../public/images/NIKBAKHT.png";
+import sampleImage from "../../public/images/PKP.jpeg";
 import { useAccessToken } from "../../context/AccessTokenContext";
 import Link from "next/link";
 
 import {
+  Email,
   Instagram,
   Maps,
   MapsSmall,
   Phone,
   PortfolioLinkIcon,
   Telegram,
-  WebsiteSmall
+  WebsiteSmall,
+  Whatsapp
 } from "@/components/Icons";
 
-const NikbakhtPrint = () => {
+const Pkp = () => {
   const handleSaveContact = () => {
     // create Vcard
 
     const vCardString = `
-BEGIN:VCARD
-VERSION:3.0
-N;CHARSET=utf-8:چاپ و تبلیغات نیکبخت
-TEL;TYPE=Number:05138842010
-TEL;TYPE=Number:09150032020
-TEL;TYPE=Number:09150042020
-EMAIL;INTERNET;TYPE=Email:nikbakhtprint@gmail.com
-URL;TYPE=WhatsApp:https://nikbakhtprint.com/
-URL;TYPE=Instagram:https://www.instagram.com/nikbakhtprint/
-URL;TYPE=Telegram:https://t.me/nikbakhtprint
-URL;TYPE=Website:https://maps.app.goo.gl/mJSte6hmxcvH6ToJ7
-END:VCARD
-`;
+    BEGIN:VCARD
+    VERSION:3.0
+    N;CHARSET=utf-8:چاپ و تبلیغات نیکبخت
+    TEL;TYPE=Number:05131532
+    EMAIL;INTERNET;TYPE=Email:info@pkp-paper.com
+    URL;TYPE=Website:https://pkp-paper.ir/
+    URL;TYPE=Whatsapp:https://api.whatsapp.com/send?phone=989155122158&text=
+    URL;TYPE=Maps:https://www.google.com/maps/place/35%C2%B057'15.6%22N+59%C2%B020'36.1%22E/@35.9543398,59.3407816,17z/data=!3m1!4b1!4m4!3m3!8m2!3d35.9543398!4d59.3433565?hl=en-IR&entry=ttu
+    END:VCARD
+    `;
 
     // andnoiasidn aindians inains d adnaid
 
@@ -60,19 +59,19 @@ END:VCARD
         <div
           id="photo_here"
           className=" box-contentw-[80px] h-[80px] rounded-full
-                      overflow-hidden flex items-center justify-center"
+                          overflow-hidden flex items-center justify-center"
         >
           <ProfileImage src={sampleImage} width={80} height={80} />
         </div>
-        <p className="mt-3 text-xl font-semibold"> چاپ و تبلیغات نیکبخت</p>
+        <p className="mt-3 text-xl font-semibold"> پردیس کاغذ پارسیان</p>
         <p className="text-muted mt-2 font-medium text-xs">
-          چاپ و تبلیغات نیکبخت
+          پردیس کاغذ پارسیان
         </p>
       </div>
       {/* horizontal scroll menu */}
       <div className="grid grid-flow-col justify-center items-center w-full">
         <div className="my-10 overflow-x-hidden overscroll-y-contain ">
-          <HorzCarousel />
+          <HorzCarouselPKP />
         </div>
       </div>
       <Layout className="!bg-white !py-0 !h-fit">
@@ -83,27 +82,25 @@ END:VCARD
         >
           ذخیره مخاطب
         </button>
-
         {/* square section */}
         <div className=" mt-5">
           <div className="grid grid-cols-2 gap-5">
             <InfoSocialMediaSquare
-              href="https://www.instagram.com/nikbakhtprint"
-              title="اینستاگرام"
-              address="@nikbakhtprint"
-              icon={<Instagram />}
+              href="https://api.whatsapp.com/send?phone=989155122158&text="
+              title="واتس اپ"
+              address="09155122158"
+              icon={<Whatsapp />}
             />
 
             <InfoSocialMediaSquare
-              href="https://t.me/nikbakhtprint"
-              title="تلگرام"
+              href="mailto:info@pkp-paper.com"
+              title="ایمیل"
               address="@nikbakhtprint"
-              icon={<Telegram />}
+              icon={<Email />}
             />
             {/* </Link> */}
           </div>
         </div>
-
         {/* portfolio section */}
         <div className="mt-5">
           <div>
@@ -112,14 +109,15 @@ END:VCARD
             <div>
               <Link
                 target="_blank"
-                href="https://maps.app.goo.gl/mJSte6hmxcvH6ToJ7"
+                href="https://www.google.com/maps/place/35%C2%B057'15.6%22N+59%C2%B020'36.1%22E/@35.9543398,59.3407816,17z/data=!3m1!4b1!4m4!3m3!8m2!3d35.9543398!4d59.3433565?hl=en-IR&entry=ttu"
                 className="flex items-center px-4 py-3 border-2 rounded-2xl "
               >
                 <div className="w-[32px] h-[32px] bg-dark rounded-md flex justify-center items-center">
                   <MapsSmall />
                 </div>
                 <p className="font-semibold text-xs ms-3">
-                  آدرس : هاشمیه 62 پلاک 62 چاپ نیک بخت
+                  آدرس: شهرک صنعتی بینالود انتهای جاده اوارشک رو به روی ایران
+                  خودرو
                 </p>
               </Link>
             </div>
@@ -130,38 +128,36 @@ END:VCARD
         <div className=" mt-5">
           <div className="grid grid-cols-2 gap-5">
             <InfoSocialMediaSquare
-              href="tel:09150032020"
+              href="tel:05131532"
               title="شماره تماس:"
               address="09150042020"
               icon={<Phone />}
             />
             <InfoSocialMediaSquare
-              href="tel:05138842010"
-              title="شماره تماس:"
-              address="05138842010"
+              href="tel:05131532"
+              title="فکس"
+              address="05138842010-6"
               icon={<Phone />}
             />
           </div>
         </div>
-
         {/* portfolio section */}
         <div className="mt-5">
           <div>
             <Link
               target="_blank"
-              href="https://nikbakhtprint.com/"
+              href="https://pkp-paper.ir/"
               className="flex items-center px-4 py-3 border-2 rounded-2xl "
             >
               <div className="w-[32px] h-[32px] bg-dark rounded-md flex justify-center items-center">
                 <WebsiteSmall />
               </div>
               <p className="font-semibold text-xs ms-3">
-                وبسایت تخصصی چاپ و تبلیغات نیکبخت
+                وبسایت تخصصی پردیس کاغذ پارسیان
               </p>
             </Link>
           </div>
         </div>
-
         {/* logo */}
         <div>
           <ClientPageFooter />
@@ -171,4 +167,4 @@ END:VCARD
   );
 };
 
-export default NikbakhtPrint;
+export default Pkp;
