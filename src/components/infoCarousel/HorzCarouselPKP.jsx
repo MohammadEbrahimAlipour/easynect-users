@@ -11,7 +11,9 @@ import {
   Email,
   EmailDark,
   Website,
-  WebsiteDark
+  WebsiteDark,
+  Instagram,
+  InstagramDark
 } from "../Icons"; // Import your icons
 import { Whatsapp, WhatsappDark } from "../Icons";
 
@@ -23,7 +25,7 @@ const HorzCarouselPKP = () => {
     centerMode: true,
     infinite: true,
     centerPadding: "0",
-    slidesToShow: 3,
+    slidesToShow: 5,
     arrows: false,
     speed: 100,
     afterChange: (index) => {
@@ -38,6 +40,12 @@ const HorzCarouselPKP = () => {
       icon: <Whatsapp />,
       iconDark: <WhatsappDark />,
       href: "https://api.whatsapp.com/send?phone=989155122158&text="
+    },
+    {
+      title: "اینستاگرام",
+      icon: <Instagram />,
+      iconDark: <InstagramDark />,
+      href: "https://www.instagram.com/pkp_paper"
     },
     {
       title: "ایمیل",

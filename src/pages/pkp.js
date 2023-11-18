@@ -11,6 +11,7 @@ import Link from "next/link";
 
 import {
   Email,
+  Fax,
   Instagram,
   Maps,
   MapsSmall,
@@ -32,6 +33,7 @@ N;CHARSET=utf-8:پردیس کاغذ پارسیان
 TEL;TYPE=Number:05131532
 EMAIL;INTERNET;TYPE=Email:info@pkp-paper.com
 URL;TYPE=Website:https://pkp-paper.ir/
+URL;TYPE=Instagram:https://www.instagram.com/pkp_paper
 URL;TYPE=Whatsapp:https://api.whatsapp.com/send?phone=989155122158&text=
 URL;TYPE=Maps:https://www.google.com/maps/place/35%C2%B057'15.6%22N+59%C2%B020'36.1%22E/@35.9543398,59.3407816,17z/data=!3m1!4b1!4m4!3m3!8m2!3d35.9543398!4d59.3433565?hl=en-IR&entry=ttu
 END:VCARD
@@ -93,10 +95,10 @@ END:VCARD
             />
 
             <InfoSocialMediaSquare
-              href="mailto:info@pkp-paper.com"
+              href="https://www.instagram.com/pkp_paper"
               title="ایمیل"
-              address="@nikbakhtprint"
-              icon={<Email />}
+              address="@pkp_paper"
+              icon={<Fax />}
             />
             {/* </Link> */}
           </div>
@@ -130,13 +132,13 @@ END:VCARD
             <InfoSocialMediaSquare
               href="tel:05131532"
               title="شماره تماس:"
-              address="09150042020"
+              address="05131532"
               icon={<Phone />}
             />
             <InfoSocialMediaSquare
-              href="tel:05131532"
+              href="tel:051315320006"
               title="فکس"
-              address="05138842010-6"
+              address="051315320006"
               icon={<Phone />}
             />
           </div>
