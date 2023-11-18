@@ -37,7 +37,7 @@ const HorzCarouselPKP = () => {
       title: "واتس اپ",
       icon: <Whatsapp />,
       iconDark: <WhatsappDark />,
-      href: "https://www.instagram.com/nikbakhtprint"
+      href: "https://api.whatsapp.com/send?phone=989155122158&text="
     },
     {
       title: "ایمیل",
