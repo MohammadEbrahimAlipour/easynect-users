@@ -95,10 +95,10 @@ END:VCARD
             />
 
             <InfoSocialMediaSquare
-              href="https://www.instagram.com/pkp_paper"
+              href="mailto:info@pkp-paper.com"
               title="ایمیل"
-              address="@pkp_paper"
-              icon={<Fax />}
+              address="info@pkp-paper.com"
+              icon={<Email />}
             />
             {/* </Link> */}
           </div>
@@ -138,8 +138,8 @@ END:VCARD
             <InfoSocialMediaSquare
               href="tel:051315320006"
               title="فکس"
-              address="051315320006"
-              icon={<Phone />}
+              address="05131532-6"
+              icon={<Fax />}
             />
           </div>
         </div>
