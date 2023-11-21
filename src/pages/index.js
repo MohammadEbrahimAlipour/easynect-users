@@ -53,20 +53,7 @@ const HomePage = () => {
         <title>Easynect</title>
         <meta name="description" content="Powered by Easynect" />
       </Head>
-
-      {isVisitorFirstTime ? (
-        <main className="flex flex-col items-center w-full my-20">
-          {isVisitorFirstTime ? (
-            // First-time visitor page
-            <Link href="/startHere/infoLanding">First Time Visitor Page</Link>
-          ) : (
-            // Rendering login page if user has visited the page before
-            <Link href="/loginUser">Login</Link>
-          )}
-        </main>
-      ) : (
-        <LoadingState />
-      )}
+       <LoadingState />
     </>
   );
 };
