@@ -56,6 +56,7 @@ const EditProfileInfo = () => {
             job_title: response.data.job_title || "",
             company: response.data.company || "",
             is_direct: response.data.is_direct || false,
+            is_direct: response.data.is_direct || false,
             bio: response.data.bio || "", // Set bio from the fetched data
             profile: response.data.profile_s3_url || ""
           });

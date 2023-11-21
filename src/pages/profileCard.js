@@ -50,7 +50,7 @@ const ProfileCard = () => {
   return (
     <>
       <Header />
-      <Layout className="">
+      <Layout>
         {isLoading ? (
           <LoadingState />
         ) : cardData.length ? (

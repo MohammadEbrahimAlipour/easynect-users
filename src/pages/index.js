@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useAccessToken } from "../../context/AccessTokenContext";
+import LoadingState from "@/components/LoadingState";
 
 const HomePage = () => {
   const router = useRouter();
@@ -53,15 +54,19 @@ const HomePage = () => {
         <meta name="description" content="Powered by Easynect" />
       </Head>
 
-      <main className="flex flex-col items-center w-full my-20">
-        {isVisitorFirstTime ? (
-          // First-time visitor page
-          <Link href="/startHere/infoLanding">First Time Visitor Page</Link>
-        ) : (
-          // Rendering login page if user has visited the page before
-          <Link href="/loginUser">Login</Link>
-        )}
-      </main>
+      {isVisitorFirstTime ? (
+        <main className="flex flex-col items-center w-full my-20">
+          {isVisitorFirstTime ? (
+            // First-time visitor page
+            <Link href="/startHere/infoLanding">First Time Visitor Page</Link>
+          ) : (
+            // Rendering login page if user has visited the page before
+            <Link href="/loginUser">Login</Link>
+          )}
+        </main>
+      ) : (
+        <LoadingState />
+      )}
     </>
   );
 };
