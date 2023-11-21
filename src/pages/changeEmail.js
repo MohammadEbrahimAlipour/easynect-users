@@ -72,7 +72,7 @@ const ChangeEmail = () => {
 
   return (
     <>
-      <HeaderTwo />
+      <HeaderTwo href="/profile" />
       <Layout>
         <p className="text-lg ps-3 font-semibold mb-3">تغییر ایمیل </p>
 

@@ -6,6 +6,8 @@ import Image from "next/image";
 import bgGradient from "../../public/images/backgrounds/bgGradient.jpg";
 import { useRouter } from "next/router";
 import { generateApiUrl } from "@/components/ApiUr";
+import IconReg from "@/components/icons/IconReg";
+import EasynecVertLogo from "@/components/icons/EasynecVertLogo";
 
 const RegisterUser = () => {
   const router = useRouter();
@@ -26,9 +28,7 @@ const RegisterUser = () => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-
     // Convert form data to a plain object
-
     const formObject = {};
 
     formData.forEach((value, key) => {
@@ -67,11 +67,22 @@ const RegisterUser = () => {
   return (
     <>
       <div className="container mb-10">
-        <div className="w-full h-[320px] rounded-[20px] mt-5 gradient relative">
+        <div className="w-full h-[320px] rounded-[20px] mt-5 gradient relative overflow-hidden">
+          <span className="absolute z-100 flex items-center justify-center w-full top-10">
+            <EasynecVertLogo />
+          </span>
           <Image className="rounded-[20px]" src={bgGradient} alt="img" />
-          <div className="bg-white absolute bottom-0">
+          <div className="absolute bottom-12 w-full flex flex-col justify-center items-center">
+            <div className="bg-white opacity-40  w-[54px] h-[15px] relative top-[620px] rounded-lg  "></div>
+            <div className="bg-white opacity-10  w-[80%] h-[230px] relative top-[590px] rounded-lg  "></div>
+
+            <div className="bg-white opacity-25 shadow-2xl w-[42%] h-[200px] relative top-[410px] rounded-lg  "></div>
+
+            <div className="bg-white opacity-40 shadow-2xl w-[52%] h-[200px] relative top-[230px] rounded-lg "></div>
             {/* middle of the photo icon */}
-            <span></span>
+            <div className="w-full relative bottom-[-55px]">
+              <IconReg />
+            </div>
             {/* end of icon */}
           </div>
         </div>
@@ -124,7 +135,7 @@ const RegisterUser = () => {
                 className="w-full mt-7 bg-dark text-white font-semibold
             text-lg py-3 rounded-lg"
               >
-                ثبت‌نام
+                ثبت‌ نام
               </button>
             </div>
           </div>

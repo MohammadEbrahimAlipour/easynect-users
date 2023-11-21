@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import Slider from "react-slick";
 import Item from "./Item";
 import {
-  Twitter,
-  Instagram,
-  LinkedIn,
   Telegram,
   TelegramDark,
   Maps,
@@ -13,26 +10,15 @@ import {
   Phone,
   Email,
   EmailDark,
-  InstagramDark,
   Website,
-  WebsiteDark
+  WebsiteDark,
+  Instagram,
+  InstagramDark
 } from "../Icons"; // Import your icons
+import { Whatsapp, WhatsappDark } from "../Icons";
 
-const HorzCarousel = () => {
+const HorzCarouselPKP = () => {
   const [centeredItemIndex, setCenteredItemIndex] = useState(0);
-
-  // const settings = {
-  //   className: "center",
-  //   centerMode: true,
-  //   infinite: true,
-  //   centerPadding: "0",
-  //   slidesToShow: 5,
-  //   arrows: false,
-  //   speed: 100,
-  //   afterChange: (index) => {
-  //     setCenteredItemIndex(index);
-  //   }
-  // };
 
   const settings = {
     className: "center",
@@ -42,12 +28,7 @@ const HorzCarousel = () => {
     slidesToShow: 5,
     arrows: false,
     speed: 100,
-    beforeChange: (oldIndex, newIndex) => {
-      // Before the slide changes, set the index to the new one
-      setCenteredItemIndex(newIndex);
-    },
     afterChange: (index) => {
-      // After the slide changes, update the index state
       setCenteredItemIndex(index);
     }
   };
@@ -55,43 +36,42 @@ const HorzCarousel = () => {
   // Define your items with associated titles and icons
   const items = [
     {
+      title: "واتس اپ",
+      icon: <Whatsapp />,
+      iconDark: <WhatsappDark />,
+      href: "https://api.whatsapp.com/send?phone=989155122158&text="
+    },
+    {
       title: "اینستاگرام",
       icon: <Instagram />,
       iconDark: <InstagramDark />,
-      href: "https://www.instagram.com/nikbakhtprint"
+      href: "https://www.instagram.com/pkp_paper"
     },
     {
       title: "ایمیل",
       icon: <Email />,
       iconDark: <EmailDark />,
-      href: "mailto:nikbakhtprint@gmail.com"
+      href: "mailto:info@pkp-paper.com"
     },
     {
       title: "لوکیشن",
       icon: <Maps />,
       iconDark: <MapsDark />,
-      href: "https://maps.app.goo.gl/mJSte6hmxcvH6ToJ7"
+      href: "https://www.google.com/maps/place/35%C2%B057'15.6%22N+59%C2%B020'36.1%22E/@35.9543398,59.3407816,17z/data=!3m1!4b1!4m4!3m3!8m2!3d35.9543398!4d59.3433565?hl=en-IR&entry=ttu"
     },
 
-    {
-      title: "تلگرام",
-      icon: <Telegram />,
-      iconDark: <TelegramDark />,
-      href: "https://t.me/nikbakhtprint"
-    },
     {
       title: "وبسایت",
       icon: <Website />,
       iconDark: <WebsiteDark />,
-      href: "https://nikbakhtprint.com/"
+      href: "https://pkp-paper.ir/"
     },
     {
       title: "شماره تماس",
       icon: <Phone />,
       iconDark: <PhoneDark />,
-      href: "tel:09150042020"
+      href: "tel:05131532"
     }
-    // { title: "Instagram", icon: <Instagram /> }
   ];
 
   return (
@@ -112,4 +92,4 @@ const HorzCarousel = () => {
   );
 };
 
-export default HorzCarousel;
+export default HorzCarouselPKP;

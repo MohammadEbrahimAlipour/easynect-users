@@ -7,7 +7,7 @@ import React from "react";
 const noticeSettings = () => {
   return (
     <>
-      <HeaderTwo />
+      <HeaderTwo href="/" />
       <Layout>
         <div>
           <p className="py-4 rounded-lg bg-[#EEEFEF]">پیامک</p>

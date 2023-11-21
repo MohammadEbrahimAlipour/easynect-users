@@ -1,0 +1,63 @@
+import { NextStartIcon } from "@/components/Icons";
+import EasynectSquareLogo from "@/components/icons/EasynectSquareLogo";
+import React from "react";
+import Link from "next/link";
+import Image from "next/image";
+import bgStartHere from "../../../public/images/startHere.jpg";
+import IconReg from "@/components/icons/IconReg";
+
+const StartHere = () => {
+  const progress = 100; // Set the progress percentage
+
+  return (
+    <div className="container mb-10">
+      <div>
+        <div className="w-full h-[70vh] rounded-[20px] mt-5 gradient relative overflow-hidden">
+          <span className="absolute z-100 flex items-center justify-center w-full top-[90px]">
+            <EasynectSquareLogo />
+          </span>
+          <Image className="rounded-[20px]" src={bgStartHere} alt="img" />
+          <div className="absolute bottom-12 w-full flex flex-col justify-center items-center">
+            <div className="bg-white opacity-40  w-[54px] h-[15px] relative top-[275px] rounded-lg  "></div>
+            <div className="bg-white opacity-10  w-[80%] h-[230px] relative top-[250px] rounded-lg  "></div>
+
+            {/* middle of the photo icon */}
+            <div className="w-full relative bottom-[-55px]">
+              <IconReg />
+            </div>
+            {/* end of icon */}
+          </div>
+        </div>
+
+        <h3 className="font-bold text-2xl mt-4 mb-3">آماده‌ای شروع کنیم؟</h3>
+
+        <div className="flex justify-between items-center mt-5">
+          {/* progress bar */}
+          <div className="relative w-[100px]">
+            <div className="flex items-center justify-between">
+              <div></div>
+            </div>
+            <div className="flex h-2  overflow-hidden text-xs bg-[#E3E3E3] rounded">
+              <div
+                style={{ width: `${progress}%` }}
+                className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-dark"
+              ></div>
+            </div>
+          </div>
+          {/* next btn */}
+          <Link
+            href="/registerUser"
+            className=" bg-dark text-white py-3 px-14 rounded-md"
+          >
+            {/* <div className="bg-dark w-[50px] h-[50px] flex justify-center items-center rounded-full">
+
+            </div> */}
+            شروع کنیم
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default StartHere;
