@@ -89,7 +89,7 @@ const HorzCarousel = () => {
       title: "شماره تماس",
       icon: <Phone />,
       iconDark: <PhoneDark />,
-      href: "tel:09150042020"
+      href: "tel:09150032020"
     }
     // { title: "Instagram", icon: <Instagram /> }
   ];

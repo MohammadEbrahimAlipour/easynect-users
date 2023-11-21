@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const ToggleSwitch = ({ id, isChecked, toggleSwitch }) => {
+const ToggleSwitch = ({ id, isChecked, toggleSwitch, name_ }) => {
   const handleToggle = () => {
     toggleSwitch();
   };
@@ -10,7 +10,7 @@ const ToggleSwitch = ({ id, isChecked, toggleSwitch }) => {
       <div className="inline-block w-[50px] mr-2 align-middle select-none transition-all duration-1000 ease-in">
         <input
           type="checkbox"
-          name="toggle"
+          name={name_}
           id={`toggle-${id}`}
           className="toggle-checkbox absolute appearance-none cursor-pointer"
           checked={isChecked}

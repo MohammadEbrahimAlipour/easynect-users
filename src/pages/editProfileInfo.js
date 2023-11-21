@@ -22,6 +22,7 @@ const EditProfileInfo = () => {
   const { id } = router.query;
   const apiUrl = generateApiUrl(`/api/v1/pages/${id}`);
   const [changedFormData, setChangedFormData] = useState({});
+
   const [formData, setFormData] = useState({
     username: "",
     owner_first_name: "",
@@ -30,9 +31,11 @@ const EditProfileInfo = () => {
     job_title: "",
     company: "",
     is_direct: false,
-    bio: "", // Add bio field
+    is_public: false,
+    bio: "",
     profile: ""
   });
+  const [isDirect, setIsDirect] = useState(formData.is_direct);
 
   // Fetch data from the server when the component mounts
   useEffect(() => {
@@ -48,6 +51,10 @@ const EditProfileInfo = () => {
         .then((response) => {
           setPageData(response.data);
           // Set the initial form data from the fetched data
+
+          // Set the initial value for isDirect here
+          setIsDirect(response.data.is_direct || false);
+          // Set the initial form data from the fetched data
           setFormData({
             username: response.data.username || "",
             owner_first_name: response.data.owner_first_name || "",
@@ -56,7 +63,7 @@ const EditProfileInfo = () => {
             job_title: response.data.job_title || "",
             company: response.data.company || "",
             is_direct: response.data.is_direct || false,
-            is_direct: response.data.is_direct || false,
+            is_public: response.data.is_public || false,
             bio: response.data.bio || "", // Set bio from the fetched data
             profile: response.data.profile_s3_url || ""
           });
@@ -66,9 +73,7 @@ const EditProfileInfo = () => {
         });
     }
   }, [accessToken.accessToken, apiUrl, id]);
-  // console.log("page Data", pageData);
-
-  // console.log("changed", changedFormData);
+  console.log("page Data", pageData);
 
   // Handle input changes
   const handleInputChange = (e) => {
@@ -93,6 +98,15 @@ const EditProfileInfo = () => {
         profile: selectedFile
       }));
     }
+  };
+  const handleToggleDirect = () => {
+    setIsDirect((prevIsDirect) => !prevIsDirect);
+
+    // Update formData.is_direct
+    setChangedFormData((prevFormData) => ({
+      ...prevFormData,
+      is_direct: !prevFormData.is_direct
+    }));
   };
 
   // Handle form submission
@@ -126,7 +140,7 @@ const EditProfileInfo = () => {
           console.log("Form submitted successfully");
           setChangedFormData({}); // Clear the changedFormData object
           // to reload the page
-          window.location.reload();
+          // window.location.reload();
         } else {
           // Handle other response status codes or errors
           console.error("Error: Unable to submit form");
@@ -138,6 +152,8 @@ const EditProfileInfo = () => {
       });
     console.log("forDatatosend", formDataToSend);
   };
+
+  console.log("edit", formData);
 
   return (
     <main>
@@ -252,12 +268,19 @@ const EditProfileInfo = () => {
                   />
 
                   {/* bottom side booleans */}
+
+                  {/* is_direct */}
                   <div
                     className="w-full bg-lightMenu border-2 py-3 flex justify-between
               items-center px-3 rounded-lg mb-3"
                   >
                     <p className="font-medium">لینک مستقیم</p>
-                    <ToggleSwitch />
+                    <ToggleSwitch
+                      name_="is_direct"
+                      id="isDirectToggle"
+                      isChecked={isDirect}
+                      toggleSwitch={handleToggleDirect}
+                    />
                   </div>
 
                   {/* bio */}
@@ -265,7 +288,7 @@ const EditProfileInfo = () => {
                   <textarea
                     placeholder="بیو"
                     maxLength={512}
-                    className="bg-lightMenu w-full border-2 rounded-lg p-3 font-semibold"
+                    className="bg-lightMenu w-full border-2 rounded-lg p-3 text-sm"
                     type="text"
                     name="bio"
                     defaultValue={formData.bio}

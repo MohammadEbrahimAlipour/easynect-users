@@ -130,7 +130,7 @@ END:VCARD
         <div className=" mt-5">
           <div className="grid grid-cols-2 gap-5">
             <InfoSocialMediaSquare
-              href="tel:09150032020"
+              href="tel:09150042020"
               title="شماره تماس:"
               address="09150042020"
               icon={<Phone />}
