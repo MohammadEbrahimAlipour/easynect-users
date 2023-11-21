@@ -21,6 +21,19 @@ import {
 const HorzCarousel = () => {
   const [centeredItemIndex, setCenteredItemIndex] = useState(0);
 
+  // const settings = {
+  //   className: "center",
+  //   centerMode: true,
+  //   infinite: true,
+  //   centerPadding: "0",
+  //   slidesToShow: 5,
+  //   arrows: false,
+  //   speed: 100,
+  //   afterChange: (index) => {
+  //     setCenteredItemIndex(index);
+  //   }
+  // };
+
   const settings = {
     className: "center",
     centerMode: true,
@@ -29,7 +42,12 @@ const HorzCarousel = () => {
     slidesToShow: 5,
     arrows: false,
     speed: 100,
+    beforeChange: (oldIndex, newIndex) => {
+      // Before the slide changes, set the index to the new one
+      setCenteredItemIndex(newIndex);
+    },
     afterChange: (index) => {
+      // After the slide changes, update the index state
       setCenteredItemIndex(index);
     }
   };

@@ -11,7 +11,7 @@ const ConfrimEmailCode = () => {
 
   return (
     <>
-      <HeaderTwo className="!pb-0" />
+      <HeaderTwo href="/changeEmail" className="!pb-0" />
       <Layout className="!mb-0 !pb-0">
         <div
           className="w-full h-[290px] rounded-[20px] bg-gold

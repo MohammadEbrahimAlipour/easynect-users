@@ -120,7 +120,7 @@ const Profile = () => {
             </li>
 
             {/* logout */}
-            <li className="py-5 border-b-[1px] flex justify-start items-center font-medium">
+            <li className="py-5 border-b-[1px] flex justify-start items-center font-semibold">
               <ProfileExitIcon />
               <button className="text-[#CB3434] ms-2" onClick={handleLogout}>
                 خروج از حساب کاربری

@@ -42,7 +42,7 @@ const HomePage = () => {
     // Check if isVisitorFirstTime changes and is true
     if (isVisitorFirstTime) {
       // Navigate to the "/registerUser" page
-      router.push("/registerUser");
+      router.push("/startHere/infoLanding");
     }
   }, [isVisitorFirstTime, router]);
 
@@ -56,7 +56,7 @@ const HomePage = () => {
       <main className="flex flex-col items-center w-full my-20">
         {isVisitorFirstTime ? (
           // First-time visitor page
-          <Link href="/registerUser">First Time Visitor Page</Link>
+          <Link href="/startHere/infoLanding">First Time Visitor Page</Link>
         ) : (
           // Rendering login page if user has visited the page before
           <Link href="/loginUser">Login</Link>

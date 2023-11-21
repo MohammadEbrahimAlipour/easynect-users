@@ -37,7 +37,7 @@ URL;TYPE=Instagram:https://www.instagram.com/pkp_paper
 URL;TYPE=Whatsapp:https://api.whatsapp.com/send?phone=989155122158&text=
 URL;TYPE=Maps:https://www.google.com/maps/place/35%C2%B057'15.6%22N+59%C2%B020'36.1%22E/@35.9543398,59.3407816,17z/data=!3m1!4b1!4m4!3m3!8m2!3d35.9543398!4d59.3433565?hl=en-IR&entry=ttu
 END:VCARD
-    `;
+`;
 
     // andnoiasidn aindians inains d adnaid
 
