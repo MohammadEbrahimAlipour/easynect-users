@@ -53,7 +53,8 @@ const HomePage = () => {
         <title>Easynect</title>
         <meta name="description" content="Powered by Easynect" />
       </Head>
-       <LoadingState />
+
+      <LoadingState />
     </>
   );
 };
