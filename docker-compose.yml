@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  nextjs-container:
+    image: ${DC_IMAGE_NAME}:${DC_IMAGE_TAG}
+    container_name: nextjs-container
+    networks:
+      - my-network
+    restart: always
+
+  nginx-container:
+    build:
+      context: ./
+      dockerfile: Dockerfile.nginx
+    networks:
+      - my-network
+    links:
+      - nextjs-container:nextjs
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+  
+networks:
+  my-network:
