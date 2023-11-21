@@ -12,7 +12,8 @@ const nextConfig = {
       "easynect-pages-contents.s3.ir-thr-at1.arvanstorage.ir",
       "easynect-static-contents.s3.ir-thr-at1.arvanstorage.ir"
     ]
-  }
+  }, 
+  output: 'standalone'
 };
 
 module.exports = nextConfig;
