@@ -15,20 +15,25 @@ module.exports = {
   selected: "class",
 
   theme: {
-    container: {
-      padding: {
-        DEFAULT: "1rem",
-        sm: "2rem",
-        lg: "4rem",
-        xl: "5rem",
-        "2xl": "6rem"
-      }
-    },
-
     extend: {
       fontFamily: {
         ravi: ["var(--font-rav)", ...fontFamily.sans]
       },
+
+      container: {
+        padding: {
+          DEFAULT: "1rem",
+          sm: "2rem",
+          lg: "4rem",
+          xl: "5rem",
+          "2xl": "6rem"
+        }
+      },
+
+      // extend: {
+      //   fontFamily: {
+      //     ravi: ["var(--font-rav)", ...fontFamily.sans]
+      //   },
       colors: {
         dark: "#141516",
         light: "#f5f5f5",

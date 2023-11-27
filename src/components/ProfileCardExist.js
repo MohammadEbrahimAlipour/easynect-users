@@ -154,7 +154,7 @@ const ProfileCardExist = ({
             {/* bottom section */}
             <div className="pb-5 border-t-[1px] w-full">
               <div className="grid grid-cols-12">
-                <div className="mt-5 mx-4 flex justify-center items-center lg:col-span-10 md:col-span-10">
+                <div className="mt-5 mx-4 flex justify-center items-center col-span-10">
                   {/* box right 1 */}
                   <Link
                     href={`/editProfileInfo?id=${cardData.id}`}
@@ -185,7 +185,7 @@ const ProfileCardExist = ({
                 {/* left side more icon */}
                 <button
                   href="/"
-                  className="border-2 w-[32px] h-[32px] rounded-md lg:col-span-2 md:col-span-2 mt-5
+                  className="border-2 w-[32px] h-[32px] rounded-md col-span-2 mt-5
             flex justify-center items-center"
                   onClick={toggleSubMenu}
                 >

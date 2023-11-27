@@ -18,7 +18,11 @@ const Item = ({ title, icon, iconDark, isCenter, href = "" }) => {
           {/* {icon} */}
           {isCenter ? icon : iconDark}
         </div>
-        {isCenter && <p className="text-xs mt-3">{title}</p>}
+        {isCenter && (
+          <p className="text-xs mt-3 whitespace-nowrap overflow-hidden">
+            {title}
+          </p>
+        )}
       </div>
     </Link>
   );

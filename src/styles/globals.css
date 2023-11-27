@@ -5,6 +5,7 @@
 body {
   direction: rtl;
 }
+
 /* Hide the scrollbar */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;

@@ -18,6 +18,7 @@ import {
   Telegram,
   WebsiteSmall
 } from "@/components/Icons";
+import SwiperCarousel from "@/components/SwiperCarousel";
 
 const NikbakhtPrint = () => {
   const handleSaveContact = () => {
@@ -72,7 +73,8 @@ END:VCARD
       {/* horizontal scroll menu */}
       <div className="grid grid-flow-col justify-center items-center w-full">
         <div className="my-10 overflow-x-hidden overscroll-y-contain ">
-          <HorzCarousel />
+          {/* <HorzCarousel /> */}
+          <SwiperCarousel />
         </div>
       </div>
       <Layout className="!bg-white !py-0 !h-fit">

@@ -100,6 +100,7 @@ const EditProfileInfo = () => {
     }
   };
   const handleToggleDirect = () => {
+    // Use a functional update to ensure the state is updated correctly
     setIsDirect((prevIsDirect) => !prevIsDirect);
 
     // Update formData.is_direct
@@ -275,12 +276,19 @@ const EditProfileInfo = () => {
               items-center px-3 rounded-lg mb-3"
                   >
                     <p className="font-medium">لینک مستقیم</p>
-                    <ToggleSwitch
-                      name_="is_direct"
-                      id="isDirectToggle"
-                      isChecked={isDirect}
-                      toggleSwitch={handleToggleDirect}
-                    />
+                    {/* toggle */}
+                    <div className="text-lg font-medium">
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          value=""
+                          className="sr-only peer"
+                          onChange={handleToggleDirect}
+                          checked={isDirect}
+                        />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-dark peer-checked:bg-dark"></div>
+                      </label>
+                    </div>
                   </div>
 
                   {/* bio */}
@@ -313,7 +321,7 @@ const EditProfileInfo = () => {
                   ویرایش آیتم ها
                 </Link>
                 <Link
-                  href="/mediaSelection"
+                  href={`/mediaSelection?id=${id}`}
                   className="border-[1px] border-black px-4 py-3 rounded-lg mb-2 flex justify-center
               items-center"
                 >

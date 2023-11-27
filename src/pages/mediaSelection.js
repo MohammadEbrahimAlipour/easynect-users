@@ -1,58 +1,59 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import Link from "next/link";
+import axios from "axios";
 import { LinkedIn, PlusSign } from "@/components/Icons";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import HeaderTwo from "@/components/HeaderTwo";
+import { useRouter } from "next/router";
+import { useAccessToken } from "../../context/AccessTokenContext";
+import { generateApiUrl } from "@/components/ApiUr";
+import { toast } from "react-toastify";
+import Image from "next/image";
+import MediaOptions from "@/components/MediaOptions";
 
 const MediaSelection = () => {
-  const MediaOptions = ({ title, href, value = "", name = "" }) => {
-    return (
-      <div className={`bg-lightMenu rounded-lg mb-3 border-2 box-border`}>
-        <div className="flex justify-start items-center py-3">
-          <label
-            className="font-semibold border-e-2 text-muted me-2 pe-2 ps-4"
-            for="data_inp"
-          >
-            {/* icon/text */}
-            <div className="w-[28px] h-[28px] bg-dark rounded-lg" />
-          </label>
-          <div className="flex flex-row w-full justify-between items-center pe-5">
-            <Link
-              href={href}
-              className="bg-lightMenu outline-0 font-semibold text-sm"
-            >
-              {title}
-            </Link>
-            {/* checkbox */}
+  const router = useRouter();
+  const { id } = router.query;
+  const accessToken = useAccessToken();
+  const [mediaData, setMediaData] = useState([]);
 
-            <form className="flex items-center justify-center">
-              {/* <input
-                    value={value}
-                    name={name}
-                    type="checkbox"
-                    className="bg-black border-white w-5 h-5 rounded focus:ring-0"
-                  /> */}
+  useEffect(() => {
+    const apiUrl = generateApiUrl(`/api/v1/contents/page/${id}`);
 
-              <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-                <input
-                  type="checkbox"
-                  name="toggle"
-                  id="toggle"
-                  class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
-                />
-                <label
-                  for="toggle"
-                  class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
-                ></label>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    );
-  };
+    if (id) {
+      // Make an Axios GET request to fetch user data
+      axios
+        .get(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${accessToken.accessToken}`, // Add your access token here
+            "Accept-Language": "fa" // Language header
+          }
+        })
+        .then((response) => {
+          // Handle the data once it's received
+          setMediaData(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          // Check if the error response contains a message
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.detail
+          ) {
+            const errorMessage = error.response.data.detail;
+            toast.error(errorMessage);
+          } else {
+            // If there is no specific error message, display a generic one
+            toast.error("Error: An error occurred.");
+          }
+        });
+    }
+  }, [accessToken.accessToken, id]);
+
+  console.log("mediaData", mediaData);
 
   return (
     <>
@@ -81,17 +82,15 @@ const MediaSelection = () => {
 
           {/* items */}
           <div className="mt-10">
-            <MediaOptions href="/" title=" لینکد این" />
-            <MediaOptions href="/" title=" لینکد این" />
-            <MediaOptions href="/" title=" لینکد این" />
-            <MediaOptions href="/" title=" لینکد این" />
-            <MediaOptions href="/" title=" لینکد این" />
+            {mediaData.map((item) => (
+              <MediaOptions key={item.id} item={item} />
+            ))}
           </div>
 
           {/* bottom side btns */}
           <div className="text-sm text-center w-full flex flex-col mt-5">
             <Link
-              href="/contentAddItem"
+              href={`/contentAddItem?id=${id}`}
               className="border-[1px] border-black px-4 py-3 rounded-lg mb-2 flex justify-center
               items-center"
             >

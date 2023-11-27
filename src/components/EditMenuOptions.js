@@ -11,7 +11,7 @@ const EditMenuOptions = ({
 }) => {
   return (
     <div
-      className={`bg-lightMenu rounded-lg ${className} mb-3 border-2 box-border`}
+      className={`bg-lightMenu rounded-lg ${className} mb-3 border-2 box-border overflow-hidden`}
     >
       <div className="flex justify-start items-center py-3">
         <label
@@ -26,7 +26,7 @@ const EditMenuOptions = ({
           value={value}
           defaultValue={defaultValue}
           placeholder={placeholder}
-          className="bg-lightMenu outline-0 font-medium "
+          className="bg-lightMenu outline-0 font-medium focus:outline-none"
           onChange={onChange}
         />
       </div>
