@@ -66,7 +66,7 @@ const AddHorzItem = () => {
           <HeaderTwo />
           <Layout>
             {/* top filters */}
-            <div
+            {/* <div
               className="grid grid-flow-col auto-cols-[36%] overscroll-contain overflow-x-auto
      hide-scrollbar gap-2 snap-x"
             >
@@ -78,7 +78,7 @@ const AddHorzItem = () => {
                   selectedCategory={selectedCategory}
                 />
               ))}
-            </div>
+            </div> */}
 
             {/* page data */}
 
