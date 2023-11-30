@@ -69,7 +69,7 @@ const ContentStoreAddItem = () => {
             >
               {contentData.map((cat) => (
                 <ContentHorizontalItems
-                  key={cat.title}
+                  key={`${cat.title}-${Math.random()}`}
                   cat={cat}
                   setSelectedCategory={setSelectedCategory}
                   selectedCategory={selectedCategory}
