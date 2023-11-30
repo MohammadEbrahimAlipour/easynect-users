@@ -8,9 +8,9 @@ import { toast } from "react-toastify";
 import { generateApiUrl } from "@/components/ApiUr";
 import Link from "next/link";
 import Image from "next/image";
-import ContentHorizontalItems from "@/components/contentHorizontalItems";
 import LoadingState from "@/components/LoadingState";
 import { useRouter } from "next/router";
+import Category from "@/components/contentStore/Category";
 
 const ContentStoreAddItem = () => {
   const accessToken = useAccessToken();
@@ -68,8 +68,8 @@ const ContentStoreAddItem = () => {
          hide-scrollbar gap-2 snap-x"
             >
               {contentData.map((cat) => (
-                <ContentHorizontalItems
-                  key={cat.title}
+                <Category
+                  key={cat.id}
                   cat={cat}
                   setSelectedCategory={setSelectedCategory}
                   selectedCategory={selectedCategory}

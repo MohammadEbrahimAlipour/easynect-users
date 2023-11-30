@@ -1,10 +1,11 @@
 import React from "react";
-import LoadingState from "./LoadingState";
+import LoadingState from "../LoadingState";
 
-const TestCat = ({ cat, selectedCategory, setSelectedCategory }) => {
+const Category = ({ cat, selectedCategory, setSelectedCategory }) => {
   const handleClick = () => {
     setSelectedCategory(cat.category);
   };
+
   return (
     <>
       {selectedCategory ? (
@@ -25,4 +26,4 @@ const TestCat = ({ cat, selectedCategory, setSelectedCategory }) => {
   );
 };
 
-export default TestCat;
+export default Category;

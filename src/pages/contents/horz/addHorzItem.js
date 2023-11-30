@@ -10,7 +10,7 @@ import Link from "next/link";
 import Image from "next/image";
 import LoadingState from "@/components/LoadingState";
 import { useRouter } from "next/router";
-import TestCat from "@/components/TestCat";
+import Category from "@/components/contentStore/Category";
 
 const AddHorzItem = () => {
   const accessToken = useAccessToken();
@@ -71,7 +71,7 @@ const AddHorzItem = () => {
       hide-scrollbar gap-2 snap-x"
             >
               {contentData.map((cat) => (
-                <TestCat
+                <Category
                   key={cat.id}
                   cat={cat}
                   setSelectedCategory={setSelectedCategory}
