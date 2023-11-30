@@ -82,7 +82,7 @@ const AddHorzItem = () => {
 
             {/* page data */}
 
-            {selectedCategory && (
+            {/* {selectedCategory && (
               <div>
                 <h3 className="my-8 font-semibold text-lg">
                   {selectedCategory}:
@@ -108,7 +108,7 @@ const AddHorzItem = () => {
                     ))}
                 </div>
               </div>
-            )}
+            )} */}
           </Layout>
           <Footer />
         </>
