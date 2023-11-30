@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { ChosenTik, InfoIcon, LinkedIn } from "@/components/Icons";
+import { InfoIcon } from "@/components/Icons";
 import Footer from "@/components/Footer";
 import HeaderTwo from "@/components/HeaderTwo";
 import { useRouter } from "next/router";
@@ -19,13 +19,11 @@ const CreateHorzItem = () => {
   const accessToken = useAccessToken();
   const [mediaData, setMediaData] = useState(null);
   const [placeholder, setPlaceholder] = useState("");
-  const [livePreviewDesc, setLivePreviewDesc] = useState("");
   const [livePreviewTitle, setLivePreviewTitle] = useState("");
-  const [is_square, setIsSquare] = useState(true);
   const [baseUrl, setBaseUrl] = useState("");
   const [showTooltip, setShowTooltip] = useState(false);
 
-  const [type, setType] = useState(""); // to save the type and use it in urls
+  // const [type, setType] = useState(""); // to save the type and use it in urls
 
   const [formData, setFormData] = useState({
     title: "",
@@ -44,7 +42,6 @@ const CreateHorzItem = () => {
       [name]: updatedValue
     });
   };
-  console.log("display", displayType); //clg here
 
   // to handle showing tips
   const handleTouchStart = () => {
@@ -54,14 +51,6 @@ const CreateHorzItem = () => {
   const handleTouchEnd = () => {
     setShowTooltip(false);
   };
-
-  // useEffect to update formData when displayType changes
-  useEffect(() => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      display_type: displayType
-    }));
-  }, [displayType]);
 
   useEffect(() => {
     const apiUrl = generateApiUrl(`/api/v1/contents_store/${id}`);
@@ -79,7 +68,7 @@ const CreateHorzItem = () => {
           // Handle the data once it's received
           setMediaData(response.data);
           setPlaceholder(response.data.placeholder);
-          setType(response.data.type);
+          // setType(response.data.type);
           setBaseUrl(response.data.base_url);
         })
         .catch((error) => {
@@ -111,8 +100,6 @@ const CreateHorzItem = () => {
         for (const key in formData) {
           formDataToSend.append(key, formData[key]);
         }
-
-        console.log("display sending", displayType); //clg here
 
         // Make a POST request to create a new user
         const apiUrl = generateApiUrl(
@@ -155,9 +142,6 @@ const CreateHorzItem = () => {
     }
   };
 
-  console.log("media", mediaData);
-  console.log("formData", formData);
-
   return (
     <>
       {mediaData && placeholder ? (
@@ -169,12 +153,12 @@ const CreateHorzItem = () => {
                 <div className="flex justify-end items-center">
                   {/* left side btns */}
                   <div className="text-sm flex">
-                    <Link
+                    {/* <Link
                       href="/contentAddItem"
                       className="me-3 border-[1px] border-black px-4 py-1 rounded-lg"
                     >
                       انصراف
-                    </Link>
+                    </Link> */}
                     <button
                       type="submit"
                       className="bg-dark text-white px-4 py-1 rounded-lg border-[1px] border-black font-ravi"

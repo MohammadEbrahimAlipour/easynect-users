@@ -1,8 +1,6 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useAccessToken } from "../../../../context/AccessTokenContext";
-import { generateApiUrl } from "@/components/ApiUr";
 
 const ContentHorzItems = ({ item }) => {
   return (
@@ -12,7 +10,7 @@ const ContentHorzItems = ({ item }) => {
           <div className="flex justify-start items-center py-3">
             <label
               className="font-semibold border-e-2 text-muted me-2 pe-2 ps-4"
-              for="data_inp"
+              htmlFor="data_inp"
             >
               {/* icon/text */}
               <div className="w-[28px] h-[28px] bg-dark rounded-lg">
@@ -38,7 +36,7 @@ const ContentHorzItems = ({ item }) => {
                     type="checkbox"
                     className="sr-only peer "
                     // onChange={toggleBan}
-                    checked={item.is_hide}
+                    defaultChecked={item.is_hide}
                   />
                   <div className="w-11 h-6  bg-gray-200 peer-focus:outline-none  rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-dark peer-checked:bg-dark"></div>
                 </label>

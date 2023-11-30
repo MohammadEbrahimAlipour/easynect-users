@@ -57,6 +57,7 @@ const AddHorzItem = () => {
         }
       });
   }, [accessToken.accessToken]);
+
   return (
     <>
       {contentData ? (
@@ -70,7 +71,7 @@ const AddHorzItem = () => {
             >
               {contentData.map((cat) => (
                 <ContentHorizontalItems
-                  key={cat.title}
+                  key={`${cat.title}-${Math.random()}`}
                   cat={cat}
                   setSelectedCategory={setSelectedCategory}
                   selectedCategory={selectedCategory}
@@ -90,8 +91,8 @@ const AddHorzItem = () => {
                     .find((cat) => cat.category === selectedCategory)
                     .contents_store.map((item) => (
                       <Link
-                        href={`/contents/horz/createHorzItem?id=${item.id}&pageId=${id}`}
                         key={item.id}
+                        href={`/contents/horz/createHorzItem?id=${item.id}&pageId=${id}`}
                         className="flex flex-col justify-center items-center me-3 mb-5"
                       >
                         <Image
