@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const ContentHorzItems = ({ item }) => {
+const HorzItems = ({ item }) => {
   return (
     <>
       <Link href={`/contents/horz/editHorzItems?id=${item.id}`}>
@@ -49,4 +49,4 @@ const ContentHorzItems = ({ item }) => {
   );
 };
 
-export default ContentHorzItems;
+export default HorzItems;

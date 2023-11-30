@@ -9,8 +9,7 @@ import { useRouter } from "next/router";
 import { useAccessToken } from "../../../../context/AccessTokenContext";
 import { generateApiUrl } from "@/components/ApiUr";
 import { toast } from "react-toastify";
-import MediaOptions from "@/components/MediaOptions";
-import ContentHorzItems from "@/components/contents/horz/contntentHorzItems";
+import HorzItems from "@/components/contents/horz/HorzItems";
 
 const ContentHorz = () => {
   const router = useRouter();
@@ -82,7 +81,7 @@ const ContentHorz = () => {
           {/* items */}
           <div className="mt-10">
             {mediaData.map((item) => (
-              <ContentHorzItems key={item.id} item={item} />
+              <HorzItems key={item.id} item={item} />
             ))}
           </div>
 
