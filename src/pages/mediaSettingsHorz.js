@@ -165,9 +165,6 @@ const MediaSettingsHorz = () => {
     }
   };
 
-  console.log("media", mediaData);
-  console.log("formData", formData);
-
   return (
     <>
       {mediaData && placeholder ? (
@@ -213,7 +210,7 @@ const MediaSettingsHorz = () => {
                         height={60}
                       />
                     </span>
-                    <p className="font-medium text-xs text-dark my-2 me-1 whitespace-nowrap">
+                    <p className="font-medium text-xs text-dark my-2 me-1 whitespace-nowrap truncate overflow-hidden">
                       {livePreviewTitle !== ""
                         ? livePreviewTitle
                         : mediaData.title}

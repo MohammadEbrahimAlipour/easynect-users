@@ -2,14 +2,11 @@ import ContactsCards from "@/components/contacts/ContactsCards";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import {
-  ArrowDownIcon,
   ContactsFilterIcon,
   ContactsImportIcon,
-  ContactsWifiIcon,
   SearchIcon
 } from "@/components/Icons";
 import Layout from "@/components/Layout";
-import ProfileImage from "@/components/ProfileImage";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -17,20 +14,38 @@ import { toast } from "react-toastify";
 import { useAccessToken } from "../../../context/AccessTokenContext";
 import { generateApiUrl } from "@/components/ApiUr";
 import LoadingState from "@/components/LoadingState";
+import InfiniteScroll from "react-infinite-scroll-component";
+import BottomSheet from "@/components/BottomSheet";
 
 const Contacts = () => {
   const accessToken = useAccessToken();
   const [pageData, setPageData] = useState([]);
-  const [showCards, setShowCards] = useState(false);
+  const [showSubMenu, setShowSubMenu] = useState(false);
   const [pageID, setPageId] = useState(null);
   const [contacts, setContacts] = useState([]);
-
   const [showOptions, setShowOptions] = useState(false);
   const [selectedOption, setSelectedOption] = useState("default");
-  const [selectedPage, setSelectedPage] = useState(null);
+  // const [selectedPage, setSelectedPage] = useState(null);
+  const [skip, setSkip] = useState(0);
+  const [limit, setLimit] = useState(3);
+  const [hasMore, setHasMore] = useState(true);
+
+  // Initialize selectedPage with the first page from pageData
+  const [selectedPage, setSelectedPage] = useState(pageData[0] || null);
+
+  const [showOption, setShowOption] = useState(false);
+  const toggleShowOption = () => {
+    setShowOption(!showOption);
+  };
+  // Add a function to handle a click on a menu item and set the selected option
+  const handleMenuItemClick = (newOption) => {
+    setSelectedOption(newOption);
+    toggleShowOption(); // Close the menu
+  };
 
   const handleToggleOptions = () => {
     setShowOptions(!showOptions);
+    console.log("Toggle options clicked");
   };
 
   const handleOptionClick = (value) => {
@@ -59,11 +74,20 @@ const Contacts = () => {
       .then((response) => {
         // Handle the data once it's received
         setPageData(response.data);
+
+        // Set selectedPage to the first page in pageData if it's not already set
+        if (!selectedPage && response.data.length > 0) {
+          setSelectedPage(response.data[0]);
+          setPageId(response.data[0].id);
+        }
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
-        // Check if the error response contains a message
-        if (
+        // Check if the error response is 404 (Not Found)
+        if (error.response && error.response.status === 404) {
+          // Handle the case where no cards are found
+          // setPageData([]); // Set an empty array to trigger the "no cards" message
+        } else if (
           error.response &&
           error.response.data &&
           error.response.data.detail
@@ -75,10 +99,12 @@ const Contacts = () => {
           toast.error("Error: An error occurred.");
         }
       });
-  }, [accessToken.accessToken]);
+  }, [accessToken.accessToken, selectedPage]);
 
   useEffect(() => {
-    const apiUrl = generateApiUrl(`/api/v1/contacts/page/unified/${pageID}`);
+    const apiUrl = generateApiUrl(
+      `/api/v1/contacts/page/unified/${pageID}/?skip=${skip}&limit=${limit}`
+    );
 
     if (pageID) {
       // Make an Axios GET request to fetch user data
@@ -94,9 +120,12 @@ const Contacts = () => {
           setContacts(response.data);
         })
         .catch((error) => {
-          console.error("Error fetching user data:", error);
-          // Check if the error response contains a message
-          if (
+          console.error("Error fetching contacts data:", error);
+          // Check if the error response is 404 (Not Found)
+          if (error.response && error.response.status === 404) {
+            // Handle the case where no contacts are found
+            setContacts([]); // Set an empty array to trigger the "no contacts" message
+          } else if (
             error.response &&
             error.response.data &&
             error.response.data.detail
@@ -109,7 +138,56 @@ const Contacts = () => {
           }
         });
     }
-  }, [accessToken.accessToken, pageID]);
+  }, [accessToken.accessToken, pageID, limit, skip]);
+
+  const loadMoreContacts = () => {
+    if (pageID && hasMore) {
+      const apiUrl = generateApiUrl(
+        `/api/v1/contacts/page/unified/${pageID}/?skip=${skip}&limit=${limit}`
+      );
+
+      // Make an Axios GET request to fetch more contacts
+      axios
+        .get(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${accessToken.accessToken}`,
+            "Accept-Language": "fa"
+          }
+        })
+        .then((response) => {
+          // Handle the data once it's received
+          const newContacts = response.data;
+
+          // Check if there are more contacts
+          if (newContacts.length > 0) {
+            setContacts((prevContacts) => [...prevContacts, ...newContacts]);
+            setSkip((prevSkip) => prevSkip + limit);
+          } else {
+            setHasMore(false); // No more contacts to load
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          // Check if the error response contains a message
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.detail
+          ) {
+            const errorMessage = error.response.data.detail;
+            toast.error(errorMessage);
+          } else {
+            toast.error("Error: An error occurred.");
+          }
+        });
+    }
+  };
+
+  useEffect(() => {
+    setSkip(0); // Reset skip when pageID changes
+    setHasMore(true); // Reset hasMore when pageID changes
+    setContacts([]); // Clear existing contacts when pageID changes
+  }, [pageID]);
 
   console.log("page id", pageID);
   console.log("contacts", contacts);
@@ -133,7 +211,7 @@ const Contacts = () => {
 
                     {/* <div className=""> */}
                     <button
-                      onClick={handleToggleOptions}
+                      onClick={() => handleToggleOptions()}
                       className="inline-flex w-full justify-center items-center gap-x-1
                         text-sm  font-medium shadow-sm
                         font-ravi truncate
@@ -179,12 +257,9 @@ const Contacts = () => {
                 </div>
               </div>
               {/* tag1 */}
-              <Link
-                href="/"
-                className="col-span-2 border-[1px] border-dark p-[12px] rounded-lg mx-1"
-              >
+              <button className="col-span-2 border-[1px] border-dark p-[12px] rounded-lg mx-1 font-ravi">
                 <ContactsFilterIcon />
-              </Link>
+              </button>
               {/* tag2 */}
               <Link
                 href="/"
@@ -202,15 +277,40 @@ const Contacts = () => {
               افزودن مخاطب
             </Link>
             {/* cards */}
-            {contacts.map((contact) => (
-              <ContactsCards contact={contact} key={contact.id} />
-            ))}
+            {contacts.length === 0 ? (
+              <span
+                className="flex justify-center items-center mt-[130px] bg-muted py-4 
+              opacity-40 rounded-md overflow-hidden"
+              >
+                No contacts for this card
+              </span>
+            ) : (
+              <InfiniteScroll
+                dataLength={contacts.length}
+                next={loadMoreContacts}
+                hasMore={hasMore}
+                loader={<LoadingState />}
+              >
+                {contacts.map((contact) => (
+                  <ContactsCards contact={contact} key={contact.id} />
+                ))}
+              </InfiniteScroll>
+            )}
           </Layout>
           <Footer />
         </>
       ) : (
         <LoadingState />
       )}
+
+      {/* sub menu */}
+      <BottomSheet
+        showSubMenu={showSubMenu}
+        handleSubMenuClose={() => {
+          setShowSubMenu(false);
+        }}
+        childeren={<>test</>}
+      />
     </>
   );
 };

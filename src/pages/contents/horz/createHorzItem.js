@@ -153,12 +153,12 @@ const CreateHorzItem = () => {
                 <div className="flex justify-end items-center">
                   {/* left side btns */}
                   <div className="text-sm flex">
-                    {/* <Link
+                    <Link
                       href="/contentAddItem"
                       className="me-3 border-[1px] border-black px-4 py-1 rounded-lg"
                     >
                       انصراف
-                    </Link> */}
+                    </Link>
                     <button
                       type="submit"
                       className="bg-dark text-white px-4 py-1 rounded-lg border-[1px] border-black font-ravi"

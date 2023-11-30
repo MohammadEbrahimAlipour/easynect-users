@@ -6,7 +6,7 @@ const BottomSheet = ({ showSubMenu, handleSubMenuClose, childeren }) => {
       {/* sub menu Accessory */}
       {/* <div className="relative"> */}
       {showSubMenu && (
-        <div className="!z-100 ]">
+        <div className="!z-100">
           {/* Submenu content */}
           <div
             className="fixed bottom-0 right-0 left-0 mx-2 space-y-1 shadow-sm rounded-ss-2xl rounded-se-2xl text-center
