@@ -311,7 +311,7 @@ const EditProfileInfo = () => {
               {/* bottom side btns */}
               <div className="text-sm text-center w-full flex flex-col mt-5">
                 <Link
-                  href="/"
+                  href={`/contents/horz/contentHorz?id=${id}`}
                   className="border-[1px] border-black px-4 py-3 rounded-lg mb-2 flex justify-center
               items-center"
                 >

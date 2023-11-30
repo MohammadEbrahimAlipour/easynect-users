@@ -350,7 +350,7 @@ const PersonsStats = () => {
          text-sm flex justify-center items-center"
               // onClick={toggleDateMenu}
             >
-              <span className="me-1">انتخواب زمان</span>
+              <span className="me-1">انتخاب زمان</span>
               <ArrowDownIcon />
             </button>
             <div className="flex flex-wrap">

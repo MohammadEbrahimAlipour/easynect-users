@@ -2,25 +2,24 @@ import React, { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import Link from "next/link";
 import axios from "axios";
-import { LinkedIn, PlusSign } from "@/components/Icons";
+import { PlusSign } from "@/components/Icons";
 import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 import HeaderTwo from "@/components/HeaderTwo";
 import { useRouter } from "next/router";
-import { useAccessToken } from "../../context/AccessTokenContext";
+import { useAccessToken } from "../../../../context/AccessTokenContext";
 import { generateApiUrl } from "@/components/ApiUr";
 import { toast } from "react-toastify";
-import Image from "next/image";
 import MediaOptions from "@/components/MediaOptions";
+import ContentHorzItems from "@/components/contents/horz/contntentHorzItems";
 
-const MediaSelection = () => {
+const ContentHorz = () => {
   const router = useRouter();
   const { id } = router.query;
   const accessToken = useAccessToken();
   const [mediaData, setMediaData] = useState([]);
 
   useEffect(() => {
-    const apiUrl = generateApiUrl(`/api/v1/contents/page/${id}`);
+    const apiUrl = generateApiUrl(`/api/v1/horizontal_menu/items/${id}`);
 
     if (id) {
       // Make an Axios GET request to fetch user data
@@ -83,16 +82,16 @@ const MediaSelection = () => {
           {/* items */}
           <div className="mt-10">
             {mediaData.map((item) => (
-              <MediaOptions key={item.id} item={item} />
+              <ContentHorzItems key={item.id} item={item} />
             ))}
           </div>
 
           {/* bottom side btns */}
           <div className="text-sm text-center w-full flex flex-col mt-5">
             <Link
-              href={`/contentAddItem?id=${id}`}
+              href={`/contents/horz/addHorzItem?id=${id}`}
               className="border-[1px] border-black px-4 py-3 rounded-lg mb-2 flex justify-center
-              items-center"
+          items-center"
             >
               <span className="me-1">
                 <PlusSign />
@@ -113,4 +112,4 @@ const MediaSelection = () => {
   );
 };
 
-export default MediaSelection;
+export default ContentHorz;

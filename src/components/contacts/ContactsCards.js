@@ -1,9 +1,9 @@
 import React from "react";
-import ProfileImage from "./ProfileImage";
+import ProfileImage from "../ProfileImage";
 import Link from "next/link";
-import { ContactsWifiIcon } from "./Icons";
+import { ContactsWifiIcon } from "../Icons";
 
-const ContactsCards = () => {
+const ContactsCards = ({ contact }) => {
   return (
     <>
       <Link href="/" className="bg-white w-full my-3 flex py-4 px-5 rounded-lg">
@@ -18,7 +18,11 @@ const ContactsCards = () => {
         </div>
         {/* text */}
         <span className="ms-3">
-          <p>محمدامین خاکشوری</p>
+          <p>
+            {contact.type === "contact"
+              ? contact.data.name
+              : contact.data.card_title}
+          </p>
           <p className="text-[10px] text-muted">طراح محصول در مترا</p>
         </span>
       </Link>

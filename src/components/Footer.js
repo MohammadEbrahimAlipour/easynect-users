@@ -81,7 +81,7 @@ const Footer = ({ className = "" }) => {
           <ul className="flex justify-center items-center">
             <li className="grid 3xl:grid-cols-12 2xl:grid-cols-12 md:grid-cols-12">
               <CustomLink
-                href="/contacts"
+                href="/contacts/contacts"
                 iconName="contacts"
                 title="مخاطبین"
               />

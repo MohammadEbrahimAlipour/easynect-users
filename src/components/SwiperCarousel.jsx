@@ -20,7 +20,6 @@ import {
 } from "./Icons"; // Import your icons
 
 // import required modules
-import { Pagination } from "swiper/modules";
 import Item from "./infoCarousel/Item";
 
 const SwiperCarousel = () => {

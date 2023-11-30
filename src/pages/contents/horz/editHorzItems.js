@@ -5,36 +5,26 @@ import { ChosenTik, InfoIcon, LinkedIn } from "@/components/Icons";
 import Footer from "@/components/Footer";
 import HeaderTwo from "@/components/HeaderTwo";
 import { useRouter } from "next/router";
-import { useAccessToken } from "../../context/AccessTokenContext";
+import { useAccessToken } from "../../../../context/AccessTokenContext";
 import { generateApiUrl } from "@/components/ApiUr";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import LoadingState from "@/components/LoadingState";
 
-const EditMediaSettingsHorz = () => {
+const EditHorzItems = () => {
   const router = useRouter();
   const { id } = router.query;
   const accessToken = useAccessToken();
   const [mediaData, setMediaData] = useState(null);
-  const [placeholder, setPlaceholder] = useState("");
+  const [baseUrl, setBaseUrl] = useState("");
   const [livePreviewDesc, setLivePreviewDesc] = useState("");
   const [livePreviewTitle, setLivePreviewTitle] = useState("");
-
-  const [baseUrl, setBaseUrl] = useState("");
-  const [displayType, setDisplayType] = useState("");
-
-  const [is_square, setIsSquare] = useState(false);
-
   const [showTooltip, setShowTooltip] = useState(false);
-
-  const [type, setType] = useState(""); // to save the type and use it in urls
 
   const [formData, setFormData] = useState({
     title: "",
-    content_val: "",
-    display_type: displayType,
-    description: ""
+    content_val: ""
   });
 
   const handleInputChange = (e) => {
@@ -48,7 +38,6 @@ const EditMediaSettingsHorz = () => {
       [name]: updatedValue
     });
   };
-  console.log("display", displayType); //clg here
 
   const handleIsSquare = () => {
     setIsSquare(true);
@@ -68,19 +57,8 @@ const EditMediaSettingsHorz = () => {
     setShowTooltip(false);
   };
 
-  // useEffect to update formData when displayType changes
   useEffect(() => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      display_type: displayType
-    }));
-
-    // Update is_square based on the initial value of displayType
-    setIsSquare(displayType === "square");
-  }, [displayType]);
-
-  useEffect(() => {
-    const apiUrl = generateApiUrl(`/api/v1/contents/${id}`);
+    const apiUrl = generateApiUrl(`/api/v1/horizontal_menu/${id}`);
 
     if (id) {
       // Make an Axios GET request to fetch user data
@@ -94,10 +72,7 @@ const EditMediaSettingsHorz = () => {
         .then((response) => {
           // Handle the data once it's received
           setMediaData(response.data);
-          setPlaceholder(response.data.placeholder);
-          setType(response.data.type);
           setBaseUrl(response.data.content_store.base_url);
-          setDisplayType(response.data.display_type);
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
@@ -121,7 +96,7 @@ const EditMediaSettingsHorz = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (mediaData.id && mediaData.content_store.type) {
+    if (mediaData.id) {
       try {
         // Create form data object
         const formDataToSend = new FormData();
@@ -129,14 +104,11 @@ const EditMediaSettingsHorz = () => {
           formDataToSend.append(key, formData[key]);
         }
 
-        console.log("display sending", displayType); //clg here
-        console.log("url sending", formDataToSend); //clg here
-
         // Make a POST request to create a new user
         const apiUrl = generateApiUrl(
-          `/api/v1/contents/${mediaData.content_store.type}/${mediaData.id}`
+          `/api/v1/horizontal_menu/${mediaData.id}`
         );
-        console.log("apiUrl", apiUrl);
+
         const response = await axios.patch(apiUrl, formDataToSend, {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`,
@@ -173,7 +145,7 @@ const EditMediaSettingsHorz = () => {
   };
 
   const handleDeleteUser = (contentID) => {
-    const apiUrl = generateApiUrl(`/api/v1/contents/${contentID}`);
+    const apiUrl = generateApiUrl(`/api/v1/horizontal_menu/${contentID}`);
 
     // Set the request headers, including the Authorization header with the token
     const headers = {
@@ -193,6 +165,7 @@ const EditMediaSettingsHorz = () => {
           router.back();
         }
       })
+
       .catch((error) => {
         console.error("Error deleting user:", error);
         if (
@@ -209,12 +182,11 @@ const EditMediaSettingsHorz = () => {
       });
   };
 
-  console.log("media", mediaData);
-  console.log("formData", formData);
+  console.log("mediaData", mediaData);
 
   return (
     <>
-      {mediaData && displayType ? (
+      {mediaData ? (
         <>
           <HeaderTwo />
           <Layout>
@@ -239,16 +211,9 @@ const EditMediaSettingsHorz = () => {
                 </div>
 
                 {/* preview */}
-                <div className="mt-10 flex flex-col items-center">
-                  <div
-                    className={`border-2 rounded-md py-4 px-3 w-[210px] overflow-hidden 
-              ${
-                is_square
-                  ? "flex flex-col"
-                  : "flex justify-start items-center w-[300px]"
-              }`}
-                  >
-                    <span className="bg-dark w-[45px] h-[45px] rounded-full flex justify-center items-center overflow-hidden me-1">
+                <div className="mt-10">
+                  <div className=" py-4 px-3 flex flex-col justify-center items-center">
+                    <span className="bg-dark w-[70px] h-[70px] rounded-md flex justify-center items-center overflow-hidden me-1">
                       <Image
                         className="bg-white p-2 rounded-lg invert"
                         alt="icon"
@@ -261,15 +226,6 @@ const EditMediaSettingsHorz = () => {
                       {livePreviewTitle !== ""
                         ? livePreviewTitle
                         : mediaData.title}
-                    </p>
-                    <p
-                      className={` text-xs overflow-hidden line-clamp-2 ${
-                        is_square ? "text-muted" : "hidden"
-                      }`}
-                    >
-                      {livePreviewDesc !== ""
-                        ? livePreviewDesc
-                        : mediaData.description}
                     </p>
                   </div>
 
@@ -287,6 +243,7 @@ const EditMediaSettingsHorz = () => {
                       }}
                       className="border-2 rounded-md text-sm py-1 px-1 mb-3 font-ravi"
                     />
+
                     <span className="flex justify-between items-center relative">
                       <label htmlFor="icon" className="mb-2">
                         اطلاعات را وارد کنید:
@@ -294,13 +251,15 @@ const EditMediaSettingsHorz = () => {
 
                       <span
                         className={`absolute z-10 w-[140px] left-[22px] -top-6 bg-dark text-white
-                rounded-md overflow-hidden text-xs p-2 opacity-0 transform scale-0 transition-opacity duration-700 
-                ${showTooltip ? "opacity-100 scale-100" : "opacity-0 scale-0"}`}
+                    rounded-md overflow-hidden text-xs p-2 opacity-0 transform scale-0 transition-opacity duration-700 
+                    ${
+                      showTooltip
+                        ? "opacity-100 scale-100"
+                        : "opacity-0 scale-0"
+                    }`}
                       >
-                        <p className="mb-1">
-                          {mediaData.content_store.hint_title}:
-                        </p>
-                        <p>{mediaData.content_store.hint}</p>
+                        <p className="mb-2">{mediaData.hint_title}:</p>
+                        <p>{mediaData.hint}:</p>
                       </span>
                       <span
                         onTouchStart={handleTouchStart}
@@ -324,63 +283,6 @@ const EditMediaSettingsHorz = () => {
                       className="border-2 rounded-md text-sm py-1 px-1 font-ravi"
                       defaultValue={mediaData.content_val}
                     />
-
-                    <>
-                      <label
-                        htmlFor="desc"
-                        className={`my-3 ${is_square ? "" : "text-muted"}`}
-                      >
-                        توضیحات:
-                      </label>
-
-                      <input
-                        id="desc"
-                        type="text"
-                        name="description"
-                        onChange={(e) => {
-                          handleInputChange(e);
-                          setLivePreviewDesc(e.target.value);
-                        }}
-                        className={`border-2 rounded-md text-sm py-1 px-1 font-ravi ${
-                          is_square ? "" : "disabled:opacity-60"
-                        }`}
-                        defaultValue={mediaData.description}
-                        disabled={!is_square}
-                      />
-                    </>
-                  </div>
-                </div>
-
-                <div className="mt-10 py-5 border-[1px] rounded-lg px-2 flex justify-between overflow-hidden ">
-                  <h3>اندازه کارت:</h3>
-                  <div className="flex ">
-                    {/* chosen for rectengle */}
-                    <span
-                      className={`relative left-[-83px] top-[2px] opacity-0 transform scale-0 transition-opacity duration-1000
-                ${is_square ? "opacity-0 scale-0" : "opacity-100 scale-100"} `}
-                    >
-                      <ChosenTik />
-                    </span>
-
-                    {/* chosen for square */}
-                    <span
-                      className={`relative left-[-170px] top-[20px] opacity-0 transform scale-0 transition-opacity duration-1000 
-                ${is_square ? "opacity-100 scale-100" : "opacity-0 scale-0"}`}
-                    >
-                      <ChosenTik />
-                    </span>
-
-                    {/* rectengle */}
-                    <span
-                      onClick={handleNotSquare}
-                      className="w-[120px] h-[20px] bg-muted me-4 rounded-sm opacity-40"
-                    />
-
-                    {/* square */}
-                    <span
-                      onClick={handleIsSquare}
-                      className="w-[55px] h-[55px] bg-muted rounded-sm opacity-40 "
-                    />
                   </div>
                 </div>
               </form>
@@ -402,4 +304,4 @@ const EditMediaSettingsHorz = () => {
   );
 };
 
-export default EditMediaSettingsHorz;
+export default EditHorzItems;
