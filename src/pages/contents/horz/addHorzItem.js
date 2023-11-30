@@ -57,6 +57,7 @@ const AddHorzItem = () => {
         }
       });
   }, [accessToken.accessToken]);
+  console.log("data", contentData);
 
   return (
     <>
@@ -71,7 +72,7 @@ const AddHorzItem = () => {
             >
               {contentData.map((cat) => (
                 <ContentHorizontalItems
-                  key={`${cat.title}-${Math.random()}`}
+                  key={cat.id}
                   cat={cat}
                   setSelectedCategory={setSelectedCategory}
                   selectedCategory={selectedCategory}
