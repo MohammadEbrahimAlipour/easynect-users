@@ -8,9 +8,9 @@ import { toast } from "react-toastify";
 import { generateApiUrl } from "@/components/ApiUr";
 import Link from "next/link";
 import Image from "next/image";
-import ContentHorizontalItems from "@/components/contentHorizontalItems";
 import LoadingState from "@/components/LoadingState";
 import { useRouter } from "next/router";
+import TestCat from "@/components/TestCat";
 
 const AddHorzItem = () => {
   const accessToken = useAccessToken();
@@ -66,23 +66,23 @@ const AddHorzItem = () => {
           <HeaderTwo />
           <Layout>
             {/* top filters */}
-            {/* <div
+            <div
               className="grid grid-flow-col auto-cols-[36%] overscroll-contain overflow-x-auto
-     hide-scrollbar gap-2 snap-x"
+      hide-scrollbar gap-2 snap-x"
             >
               {contentData.map((cat) => (
-                <ContentHorizontalItems
+                <TestCat
                   key={cat.id}
                   cat={cat}
                   setSelectedCategory={setSelectedCategory}
                   selectedCategory={selectedCategory}
                 />
               ))}
-            </div> */}
+            </div>
 
             {/* page data */}
 
-            {/* {selectedCategory && (
+            {selectedCategory && (
               <div>
                 <h3 className="my-8 font-semibold text-lg">
                   {selectedCategory}:
@@ -108,7 +108,7 @@ const AddHorzItem = () => {
                     ))}
                 </div>
               </div>
-            )} */}
+            )}
           </Layout>
           <Footer />
         </>
