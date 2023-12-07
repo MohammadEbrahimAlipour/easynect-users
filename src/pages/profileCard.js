@@ -10,6 +10,7 @@ import { generateApiUrl } from "@/components/ApiUr";
 import axios from "axios";
 import { useAccessToken } from "../../context/AccessTokenContext";
 import LoadingState from "@/components/LoadingState";
+import ProfileCardCarousel from "@/components/ProfileCardCarousel";
 
 const ProfileCard = () => {
   const [cardExist, setCardExist] = useState(true);
@@ -49,7 +50,7 @@ const ProfileCard = () => {
 
   return (
     <>
-      <Header />
+      <Header cardData={cardData} />
       <Layout>
         {isLoading ? (
           <LoadingState />
@@ -66,6 +67,8 @@ const ProfileCard = () => {
                     idFromServer={idFromServer}
                   />
                 ))}
+
+                {/* <ProfileCardCarousel /> */}
               </div>
             </div>
 

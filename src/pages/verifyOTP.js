@@ -3,16 +3,19 @@ import HeaderTwo from "@/components/HeaderTwo";
 import { ConfirmEmailIcon, PasswordCircleImageIcon } from "@/components/Icons";
 import Layout from "@/components/Layout";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { generateApiUrl } from "@/components/ApiUr";
 import { useAccessToken } from "../../context/AccessTokenContext";
 import { toast } from "react-toastify";
+import { motion } from "framer-motion";
 
 const VerifyOTP = () => {
+  const inputRef = useRef(null);
   // Initialize state to store the user-entered code
   const [code, setCode] = useState("");
+  const [timer, setTimer] = useState(120); // Initial timer value in seconds
 
   //   to send email to backend
   const router = useRouter();
@@ -22,11 +25,21 @@ const VerifyOTP = () => {
   const { setAccessToken } = useAccessToken();
 
   // Initialize state to store the user-entered code
-  // Function to generate OTP code
-
-  // Initialize state to store the user-entered code
   const [otp, setOTP] = useState(["", "", "", "", "", ""]);
   const [finalOtp, setFinalOtp] = useState("");
+
+  const startTimer = () => {
+    if (timer > 0) {
+      setTimer((prevTimer) => prevTimer - 1);
+      setTimeout(startTimer, 1000);
+    }
+  };
+
+  // Start the timer when the component mounts and email has a value
+  if (timer === 120 && email) {
+    startTimer();
+  }
+
   const handleInputChange = (index, value) => {
     // Create a copy of the current OTP array
     const updatedOTP = [...otp];
@@ -36,10 +49,11 @@ const VerifyOTP = () => {
 
     // Set the updated OTP array in state
     setOTP(updatedOTP);
-  };
 
-  const generateOTP = () => {
-    return otp.join("");
+    // Move focus to the next input if not the last one and the current input is filled
+    if (index < otp.length - 1 && value !== "") {
+      inputRef.current.childNodes[index + 1].focus();
+    }
   };
 
   // console.log(otp);
@@ -55,13 +69,11 @@ const VerifyOTP = () => {
         // Authorization: `Bearer ${email}`
         "accept-language": "fa"
       };
-      const finalOtp = generateOTP().split("").reverse().join("");
-      console.log(finalOtp);
 
       // Send a POST request with the OTP code and headers
       const response = await axios.post(
         apiUrl,
-        { otp: finalOtp, email: email },
+        { otp: otp, email: email },
         { headers }
       );
       // console.log(response);
@@ -100,15 +112,25 @@ const VerifyOTP = () => {
         <div
           className="w-full h-[290px] rounded-[20px] bg-gold
        bg-[url('../../public/images/backgrounds/passwordImage.jpg')] bg-cover
-       "
+          overflow-hidden "
         >
           <div className=" w-full h-full flex justify-center items-center relative">
-            <span className=" absolute bottom-[60px] ">
+            <motion.span
+              initial={{ y: 0, scale: 3 }}
+              animate={{ y: 0, scale: 1 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+              className=" absolute bottom-[60px] "
+            >
               <PasswordCircleImageIcon />
-            </span>
-            <span className=" absolute -bottom-[45px] flex justify-center items-center w-full h-full">
+            </motion.span>
+            <motion.span
+              initial={{ y: 0, scale: -2 }}
+              animate={{ y: 0, scale: 1 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+              className=" absolute -bottom-[45px] flex justify-center items-center w-full h-full"
+            >
               <ConfirmEmailIcon />
-            </span>
+            </motion.span>
           </div>
         </div>
 
@@ -117,7 +139,9 @@ const VerifyOTP = () => {
           <h3 className="text-lg font-semibold">تایید ایمیل</h3>
           <p className="text-xs text-muted mt-2">
             لطفا کد تایید فرستاده شده به
-            <span className="text-dark mx-1">info@sample.com</span>
+            <span className="text-dark mx-1">
+              {email ? email : "info@sample.com"}
+            </span>
             را وارد نمایید.
           </p>
         </div>
@@ -125,10 +149,11 @@ const VerifyOTP = () => {
         {/* code input field */}
         <form onSubmit={handleSubmit}>
           {/* test */}
-          <div className="flex justify-between">
+          <div ref={inputRef} className="flex flex-row-reverse justify-between">
             {Array.from({ length: 6 }).map((value, index) => (
               <input
                 key={index}
+                id={`otp-input-${index}`}
                 type="text"
                 value={value}
                 maxLength="1"
@@ -151,7 +176,7 @@ const VerifyOTP = () => {
         </form>
         {/* timer */}
         <p className="text-center mt-3 text-muted">
-          ارسال مجدد (۰۰:۵۶ ثانیه دیگر)
+          ارسال مجدد (۰۰:{timer < 10 ? `0${timer}` : timer} ثانیه دیگر)
         </p>
       </Layout>
       <Footer />

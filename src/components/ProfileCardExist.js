@@ -29,7 +29,6 @@ const ProfileCardExist = ({
       }
     }
   });
-  console.log("cardData", cardData);
 
   // close CardQrCode
   const closeCardQrCode = () => {
@@ -83,19 +82,16 @@ const ProfileCardExist = ({
 
   const SubMenuOptions = ({ title, onClick, className = "" }) => {
     return (
-      <div
-        className={`${className} border-b-[1px] font-medium flex justify-center`}
-      >
+      <div className={`${className} border-b font-medium flex justify-center`}>
         <button
           onClick={onClick}
-          className={`block py-3 px-4 hover:bg-gray-100`}
+          className={`block py-2 px-4 hover:bg-gray-100 font-normal font-ravi text-sm`}
         >
           {title}
         </button>
       </div>
     );
   };
-  console.log("cardExist rendering");
 
   return (
     <>
@@ -203,20 +199,20 @@ const ProfileCardExist = ({
       {showSubMenu && (
         <ul
           className={`fixed bottom-0 right-0 left-0 mx-2 space-y-1 shadow-sm 
-        rounded-ss-2xl rounded-se-2xl z-20 text-center bg-white ${
-          showSubMenu ? "block" : "hidden"
+        rounded-ss-2xl rounded-se-2xl z-20 text-center bg-white transition-all duration-300 ${
+          showSubMenu ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         >
           {/* title */}
           <li>
             <SubMenuOptions
-              title="محمدامین خاکشوری"
+              title="test"
               className="text-muted text-xs font-xs"
             />
           </li>
           {/* options */}
-          <li>
-            <SubMenuOptions title="ویرایش کارت" />
+          <li className="border-b py-2 font-normal text-sm">
+            <Link href={`/lead/lead?id=${cardData.id}`}>فرم لید</Link>
           </li>
 
           <li>

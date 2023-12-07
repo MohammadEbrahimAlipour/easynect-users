@@ -1,84 +1,43 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-
-const slides = [
-  {
-    key: 1,
-    content: "1"
-  },
-  {
-    key: 2,
-    content: "2"
-  },
-  {
-    key: 3,
-    content: "3"
-  },
-  {
-    key: 1,
-    content: "4"
-  },
-  {
-    key: 2,
-    content: "5"
-  },
-  {
-    key: 3,
-    content: "6"
-  }
-  // Add more slides as needed
-];
+import { Swiper, SwiperSlide } from "swiper/react";
+import { EffectCards } from "swiper";
+import "swiper/css";
+import "swiper/css/effect-cards";
 
 const ProfileCardCarousel = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  // State to check if we are in the browser
+  const [isClient, setIsClient] = useState(false);
 
-  const offsetRadius = 2;
-  const showNavigation = true;
-  const animationConfig = {
-    damping: 5,
-    stiffness: 80
-  };
+  useEffect(() => {
+    // Set the isClient state to true once component has mounted
+    setIsClient(true);
+  }, []);
 
-  const handleSlideChange = (newSlide) => {
-    setCurrentSlide(newSlide);
-  };
+  if (!isClient) {
+    // If we're not in the client (browser) yet, render nothing or a placeholder
+    return null;
+  }
 
+  // Now we are in the browser, render Swiper component
   return (
-    <div className="w-full flex flex-col justify-center ">
-      {slides.map((slide, index) => (
-        <motion.div
-          key={slide.key}
-          className="carousel-slide mb-5 bg-red-300"
-          style={{
-            transform: `rotateY(${
-              (index - currentSlide) * 360
-            }deg) translateZ(${offsetRadius * 100}px)`
-          }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={animationConfig}
-        >
-          {slide.content}
-        </motion.div>
-      ))}
-      {showNavigation && (
-        <div className="carousel-navigation mt-4 flex justify-center">
-          <button
-            className="bg-blue-500 text-white rounded-full px-4 py-2 mr-2"
-            onClick={() => handleSlideChange(currentSlide - 1)}
-          >
-            &lt;
-          </button>
-          <button
-            className="bg-blue-500 text-white rounded-full px-4 py-2"
-            onClick={() => handleSlideChange(currentSlide + 1)}
-          >
-            &gt;
-          </button>
-        </div>
-      )}
-    </div>
+    <>
+      {/* <Swiper
+        effect="cards"
+        grabCursor={true}
+        modules={[EffectCards]}
+        className="mySwiper"
+      >
+        <SwiperSlide>Slide 1</SwiperSlide>
+        <SwiperSlide>Slide 2</SwiperSlide>
+        <SwiperSlide>Slide 3</SwiperSlide>
+        <SwiperSlide>Slide 4</SwiperSlide>
+        <SwiperSlide>Slide 5</SwiperSlide>
+        <SwiperSlide>Slide 6</SwiperSlide>
+        <SwiperSlide>Slide 7</SwiperSlide>
+        <SwiperSlide>Slide 8</SwiperSlide>
+        <SwiperSlide>Slide 9</SwiperSlide>
+      </Swiper> */}
+    </>
   );
 };
 

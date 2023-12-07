@@ -77,9 +77,7 @@ const SwiperCarousel = () => {
         centeredSlides={true}
         className="mySwiper"
         initialSlide={initialSlide}
-        // loop={true}
         onSlideChange={(swiper) => setCenteredItemIndex(swiper.activeIndex)}
-        // onSlideChange={(swiper) => setCenteredItemIndex(swiper.realIndex)}
       >
         {items.map((item, index) => (
           <SwiperSlide key={index}>

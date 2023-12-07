@@ -42,7 +42,8 @@ module.exports = {
         muted: "#9D9D9D",
         mutedDark: "#858585",
         gold: "#CEA16A",
-        lightMenu: "#FAFAFA"
+        lightMenu: "#FAFAFA",
+        graySubmit: "#C9C9C9"
       },
       animation: {
         "spin-slow": "spin 8s linear infinite"
@@ -52,7 +53,8 @@ module.exports = {
           "repeating-radial-gradient(rgba(0,0,0,0.4) 2px, #f5f5f5 5px, #f5f5f5 100px)"
       },
       boxShadow: {
-        customMenuShadow: "-1px -69px 278px 18px rgba(0, 0, 0, 0.19)" // Add your custom shadow here
+        customMenuShadow: "-1px -69px 278px 18px rgba(0, 0, 0, 0.19)", // Add your custom shadow here
+        customInset: "inset 0px 0px 32px -15px rgba(0,0,0,0.75)"
       }
     },
     screens: {

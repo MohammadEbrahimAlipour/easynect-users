@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="e485ecf0-2a62-4124-95b9-8fcf0d3fef6f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Header.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Icons.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Icons.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/InfoSocialMediaSquare.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/InfoSocialMediaSquare.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ProfileCardCarousel.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ProfileCardCarousel.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ProfileCardExist.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ProfileCardExist.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ProfileImage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ProfileImage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/SwiperCarousel.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SwiperCarousel.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/contacts/contacts.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/contacts/contacts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/infoPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/infoPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/profile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/profileCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/profileCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/tailwind.config.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2ZADZBp74540nbjjZO1DCGVhbet" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e485ecf0-2a62-4124-95b9-8fcf0d3fef6f" name="Changes" comment="" />
+      <created>1701856043799</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1701856043799</updated>
+      <workItem from="1701856045740" duration="136000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

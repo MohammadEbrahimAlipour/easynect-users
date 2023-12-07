@@ -50,12 +50,6 @@ const Profile = () => {
 
         router.push("/loginUser");
         console.log("Logout successful");
-
-        // Clear the access token by setting it to null
-        // setAccessToken(null);
-
-        //  redirect to register page
-        // router.push("/regiserUser");
       } else {
         // Handle logout error, e.g., display an error message
         setAccessToken(null);

@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import bgStartHere from "../../../public/images/intro.jpg";
 import EasynectSquareLogo from "@/components/icons/EasynectSquareLogo";
 import Link from "next/link";
 import { NextStartIcon } from "@/components/Icons";
+import { motion } from "framer-motion";
 
 const InfoLanding = () => {
   const progress = 50; // Set the progress percentage
+
   return (
     <div className="container mb-10">
       <div>
@@ -18,12 +20,18 @@ const InfoLanding = () => {
         </div>
 
         <h3 className="font-bold text-2xl mt-4 mb-3">همه کارت‌ها در یک جیب!</h3>
-        <p className="text-lg text-muted">
+
+        <motion.p
+          initial={{ scale: 5 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
+          className="text-lg text-muted "
+        >
           به جای داشتن یک دسته‌بندی از کارت‌های ویزیت فیزیکی که به راحتی گم یا
           فراموش می‌شوند، این اپ امکان ایجاد و طراحی کارت‌های ویزیت دیجیتال با
           انعطاف‌پذیری بیشتر، به اشتراک‌گذاری آسان و مدیریت بهتر را فراهم
           می‌کند.
-        </p>
+        </motion.p>
 
         <div className="flex justify-between items-center mt-5">
           {/* progress bar */}
@@ -40,11 +48,7 @@ const InfoLanding = () => {
           </div>
           {/* next btn */}
           <Link href="/startHere/startHere" className="">
-            <div
-              className="bg-dark w-[50px] h-[50px] flex justify-center items-center rounded-full 
-        
-         "
-            >
+            <div className="bg-dark w-[50px] h-[50px] flex justify-center items-center rounded-full">
               <NextStartIcon />
             </div>
           </Link>

@@ -1113,6 +1113,25 @@ export const ArrowDownIcon = ({ className, ...rest }) => (
   </svg>
 );
 
+export const ArrowDownIconDark = ({ className, ...rest }) => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M13.2802 5.96667L8.93355 10.3133C8.42021 10.8267 7.58021 10.8267 7.06688 10.3133L2.72021 5.96667"
+      stroke="black"
+      strokeWidth="2"
+      storkemiterlimit="10"
+      storkeLinecap="round"
+      storkeLinejoin="round"
+    />
+  </svg>
+);
+
 export const StatsInstagramIcon = ({ className, ...rest }) => (
   <svg
     width="36"
@@ -1260,8 +1279,8 @@ export const TickSuccess = ({ className, ...rest }) => (
 );
 export const Tickicon = ({ className, ...rest }) => (
   <svg
-    width="16"
-    height="16"
+    width="18"
+    height="18"
     viewBox="0 0 16 16"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -1619,6 +1638,141 @@ export const ChosenTik = ({ className, ...rest }) => (
       d="M7.75 12L10.58 14.83L16.25 9.17004"
       stroke="#ffff"
       stroke-width="3"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+);
+
+export const PlusSignPageView = ({ className, ...rest }) => (
+  <svg
+    width="25"
+    height="25"
+    viewBox="0 0 17 17"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M8.89007 14.6667C12.5934 14.6667 15.6234 11.6667 15.6234 8C15.6234 4.33333 12.5934 1.33333 8.89007 1.33333C5.18674 1.33333 2.15674 4.33333 2.15674 8C2.15674 11.6667 5.18674 14.6667 8.89007 14.6667Z"
+      stroke="#ffff"
+      strokeWidth="2"
+      storkeLinecap="round"
+      storkeLinejoin="round"
+    />
+    <path
+      d="M6.19678 8H11.5834"
+      stroke="#ffff"
+      strokeWidth="1.7"
+      storkeLinecap="round"
+      storkeLinejoin="round"
+    />
+    <path
+      d="M8.89001 10.6667V5.33333"
+      stroke="#ffff"
+      strokeWidth="1.7"
+      storkeLinecap="round"
+      storkeLinejoin="round"
+    />
+  </svg>
+);
+
+export const PlusSignPageViewDark = ({ className, ...rest }) => (
+  <svg
+    width="25"
+    height="25"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M8.89007 14.6667C12.5934 14.6667 15.6234 11.6667 15.6234 8C15.6234 4.33333 12.5934 1.33333 8.89007 1.33333C5.18674 1.33333 2.15674 4.33333 2.15674 8C2.15674 11.6667 5.18674 14.6667 8.89007 14.6667Z"
+      stroke="black"
+      strokeWidth="2"
+      storkeLinecap="round"
+      storkeLinejoin="round"
+    />
+    <path
+      d="M6.19678 8H11.5834"
+      stroke="black"
+      strokeWidth="1.7"
+      storkeLinecap="round"
+      storkeLinejoin="round"
+    />
+    <path
+      d="M8.89001 10.6667V5.33333"
+      stroke="black"
+      strokeWidth="1.7"
+      storkeLinecap="round"
+      storkeLinejoin="round"
+    />
+  </svg>
+);
+
+export const CloseIcon = ({ className, ...rest }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className="w-6 h-6"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+    />
+  </svg>
+);
+
+export const DeleteIconLead = ({ className, ...rest }) => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      opacity="0.4"
+      d="M9.99984 18.3333C14.6022 18.3333 18.3332 14.6023 18.3332 9.99996C18.3332 5.39759 14.6022 1.66663 9.99984 1.66663C5.39746 1.66663 1.6665 5.39759 1.6665 9.99996C1.6665 14.6023 5.39746 18.3333 9.99984 18.3333Z"
+      fill="#141516"
+    />
+    <path
+      d="M10.8831 10L12.7998 8.08338C13.0415 7.84172 13.0415 7.44172 12.7998 7.20005C12.5581 6.95838 12.1581 6.95838 11.9165 7.20005L9.9998 9.11671L8.08314 7.20005C7.84147 6.95838 7.44147 6.95838 7.1998 7.20005C6.95814 7.44172 6.95814 7.84172 7.1998 8.08338L9.11647 10L7.1998 11.9167C6.95814 12.1584 6.95814 12.5584 7.1998 12.8C7.3248 12.925 7.48314 12.9834 7.64147 12.9834C7.7998 12.9834 7.95814 12.925 8.08314 12.8L9.9998 10.8834L11.9165 12.8C12.0415 12.925 12.1998 12.9834 12.3581 12.9834C12.5165 12.9834 12.6748 12.925 12.7998 12.8C13.0415 12.5584 13.0415 12.1584 12.7998 11.9167L10.8831 10Z"
+      fill="#141516"
+    />
+  </svg>
+);
+
+export const EditItemPageView = ({ className, ...rest }) => (
+  <svg
+    width="35"
+    height="35"
+    viewBox="0 0 24 24"
+    fill="#e3e3e3"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M16 2H8C4 2 2 4 2 8V21C2 21.55 2.45 22 3 22H16C20 22 22 20 22 16V8C22 4 20 2 16 2Z"
+      stroke="#ffff"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M12.91 7.83991L7.72004 13.0299C7.52004 13.2299 7.33004 13.6199 7.29004 13.8999L7.01004 15.8799C6.91004 16.5999 7.41004 17.0999 8.13004 16.9999L10.11 16.7199C10.39 16.6799 10.78 16.4899 10.98 16.2899L16.17 11.0999C17.06 10.2099 17.49 9.16991 16.17 7.84991C14.85 6.51991 13.81 6.93991 12.91 7.83991Z"
+      stroke="black"
+      stroke-width="1.5"
+      stroke-miterlimit="10"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M12.17 8.57983C12.61 10.1498 13.84 11.3898 15.42 11.8298"
+      stroke="black"
+      stroke-width="1.5"
+      stroke-miterlimit="10"
       stroke-linecap="round"
       stroke-linejoin="round"
     />

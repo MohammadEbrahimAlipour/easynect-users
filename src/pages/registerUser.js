@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { generateApiUrl } from "@/components/ApiUr";
 import IconReg from "@/components/icons/IconReg";
 import EasynecVertLogo from "@/components/icons/EasynecVertLogo";
+import { motion } from "framer-motion";
 
 const RegisterUser = () => {
   const router = useRouter();
@@ -72,17 +73,39 @@ const RegisterUser = () => {
             <EasynecVertLogo />
           </span>
           <Image className="rounded-[20px]" src={bgGradient} alt="img" />
+
+          {/* animated cards */}
           <div className="absolute bottom-12 w-full flex flex-col justify-center items-center">
             <div className="bg-white opacity-40  w-[54px] h-[15px] relative top-[620px] rounded-lg  "></div>
-            <div className="bg-white opacity-10  w-[80%] h-[230px] relative top-[590px] rounded-lg  "></div>
+            <motion.div
+              initial={{ y: 80, scale: 2 }}
+              animate={{ y: 0, scale: 1 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+              className="bg-white opacity-10  w-[80%] h-[230px] relative top-[590px] rounded-lg  "
+            ></motion.div>
 
-            <div className="bg-white opacity-25 shadow-2xl w-[42%] h-[200px] relative top-[410px] rounded-lg  "></div>
+            <motion.div
+              initial={{ y: 90 }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+              className="bg-white opacity-25 shadow-2xl w-[42%] h-[200px] relative top-[410px] rounded-lg  "
+            ></motion.div>
 
-            <div className="bg-white opacity-40 shadow-2xl w-[52%] h-[200px] relative top-[230px] rounded-lg "></div>
+            <motion.div
+              initial={{ y: 80 }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              className="bg-white opacity-40 shadow-2xl w-[52%] h-[200px] relative top-[230px] rounded-lg "
+            ></motion.div>
             {/* middle of the photo icon */}
-            <div className="w-full relative bottom-[-55px]">
+            <motion.div
+              initial={{ y: 80 }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+              className="w-full relative bottom-[-55px]"
+            >
               <IconReg />
-            </div>
+            </motion.div>
             {/* end of icon */}
           </div>
         </div>

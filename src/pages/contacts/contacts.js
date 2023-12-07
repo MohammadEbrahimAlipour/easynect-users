@@ -27,7 +27,7 @@ const Contacts = () => {
   const [selectedOption, setSelectedOption] = useState("default");
   // const [selectedPage, setSelectedPage] = useState(null);
   const [skip, setSkip] = useState(0);
-  const [limit, setLimit] = useState(3);
+  const [limit, setLimit] = useState(6);
   const [hasMore, setHasMore] = useState(true);
 
   // Initialize selectedPage with the first page from pageData
@@ -189,11 +189,6 @@ const Contacts = () => {
     setContacts([]); // Clear existing contacts when pageID changes
   }, [pageID]);
 
-  console.log("page id", pageID);
-  console.log("contacts", contacts);
-
-  console.log("pageData", pageData);
-
   return (
     <>
       {pageData ? (
@@ -287,6 +282,7 @@ const Contacts = () => {
             ) : (
               <InfiniteScroll
                 dataLength={contacts.length}
+                // dataLength={30}
                 next={loadMoreContacts}
                 hasMore={hasMore}
                 loader={<LoadingState />}
