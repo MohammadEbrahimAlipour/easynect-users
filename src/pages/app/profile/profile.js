@@ -12,7 +12,7 @@ import ProfileImage from "@/components/ProfileImage";
 import Link from "next/link";
 import Header from "@/components/Header";
 import axios from "axios";
-import { useAccessToken } from "../../context/AccessTokenContext";
+import { useAccessToken } from "../../../../context/AccessTokenContext";
 import { useRouter } from "next/router";
 import { generateApiUrl } from "@/components/ApiUr";
 
@@ -84,7 +84,7 @@ const Profile = () => {
               <ProfileInfoIcon />
               <CustomLinkProfile
                 title="اطلاعات کاربری"
-                href="/profileInfo"
+                href="/appNect/profile/info/profileInfo"
                 className="ms-2"
               />
             </li>
@@ -100,7 +100,7 @@ const Profile = () => {
               <ProfileChangePassIcon />
               <CustomLinkProfile
                 title="تغییر ایمیل"
-                href="/changeEmail"
+                href="/appNect/profile/changeMail/changeEmail"
                 className="ms-2"
               />
             </li>
@@ -108,7 +108,7 @@ const Profile = () => {
               <ProfileChangePassIcon />
               <CustomLinkProfile
                 title="تغییر رمز عبور"
-                href="/changePassword"
+                href="/appNect/profile/changePass/changePassword"
                 className="ms-2"
               />
             </li>

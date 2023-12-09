@@ -5,12 +5,14 @@ import Link from "next/link";
 import { PlusSignLight, TickSuccess, Tickicon } from "@/components/Icons";
 import HeaderTwo from "@/components/HeaderTwo";
 import axios from "axios"; // Import Axios for making HTTP requests
-import { useAccessToken } from "../../context/AccessTokenContext";
+import { useAccessToken } from "../../../../../context/AccessTokenContext";
 import { generateApiUrl } from "@/components/ApiUr";
+import {useRouter} from "next/router";
 
 const ProfileInfo = () => {
   const accessToken = useAccessToken();
   const apiUrlInfo = generateApiUrl("/api/v1/users/");
+  const router = useRouter()
 
   // Fetch users data and set it to usersInitialData
   const [usersInitialData, setUsersInitialData] = useState({
@@ -32,6 +34,7 @@ const ProfileInfo = () => {
         if (response.status === 200) {
           // Set usersInitialData with the fetched data
           setUsersInitialData(response.data);
+
         } else {
           console.error("Failed to fetch user data");
         }
@@ -85,6 +88,7 @@ const ProfileInfo = () => {
 
       if (response.status === 200) {
         console.log("User information updated successfully");
+        router.push("/app/profile/profile")
       } else {
         console.error("User information update failed");
       }
@@ -169,7 +173,7 @@ const ProfileInfo = () => {
                   />
                 </div>
                 <span className=" text-white rounded-md  me-5">
-                  <Link href="/forgotPassword" className="text-[10px]">
+                  <Link href="/src/pages/forgotPassword" className="text-[10px]">
                     {isPhoneNumberValid ? <TickSuccess /> : <Tickicon />}
                   </Link>
                 </span>

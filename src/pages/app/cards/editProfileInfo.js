@@ -8,7 +8,7 @@ import Devider from "@/components/Devider";
 import Header from "@/components/Header";
 import ProfileImageUpload from "@/components/ProfileImageUpload";
 import axios from "axios";
-import { useAccessToken } from "../../context/AccessTokenContext";
+import { useAccessToken } from "../../../../context/AccessTokenContext";
 import { useRouter } from "next/router";
 import { generateApiUrl } from "@/components/ApiUr";
 import LoadingState from "@/components/LoadingState";
@@ -167,7 +167,7 @@ const EditProfileInfo = () => {
                 {/* top options */}
                 <div className="my-6">
                   <div className="flex justify-between">
-                    <Link href="/">کارت جدید</Link>
+                    <Link href="/src/pages">کارت جدید</Link>
 
                     {/* left side btns */}
                     <div className="text-sm">
@@ -311,7 +311,7 @@ const EditProfileInfo = () => {
               {/* bottom side btns */}
               <div className="text-sm text-center w-full flex flex-col mt-5">
                 <Link
-                  href={`/contents/horz/contentHorz?id=${id}`}
+                  href={`/appNect/contents/horz/contentHorz?id=${id}`}
                   className="border-[1px] border-black px-4 py-3 rounded-lg mb-2 flex justify-center
               items-center"
                 >

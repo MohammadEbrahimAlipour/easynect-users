@@ -4,11 +4,13 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 import React, { useState } from "react";
 import axios from "axios";
-import { useAccessToken } from "../../context/AccessTokenContext"; // Import your access token context hook
+import { useAccessToken } from "../../../../../context/AccessTokenContext"; // Import your access token context hook
 import { generateApiUrl } from "@/components/ApiUr";
+import {useRouter} from "next/router";
 
 const ChangePassword = () => {
   const { accessToken } = useAccessToken(); // Get the access token from your context
+const router =useRouter()
 
   const [formData, setFormData] = useState({
     current_password: "",
@@ -47,6 +49,7 @@ const ChangePassword = () => {
       if (response.status === 200) {
         // Handle successful password change, e.g., redirect or show a success message
         console.log("Password changed successfully");
+        router.push("/app/profile/profile")
       } else {
         // Handle password change error, e.g., display an error message
         console.error("Password change failed");

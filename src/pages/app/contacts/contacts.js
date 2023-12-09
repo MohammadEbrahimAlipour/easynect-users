@@ -11,7 +11,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useAccessToken } from "../../../context/AccessTokenContext";
+import { useAccessToken } from "../../../../context/AccessTokenContext";
 import { generateApiUrl } from "@/components/ApiUr";
 import LoadingState from "@/components/LoadingState";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -191,6 +191,7 @@ const Contacts = () => {
 
   return (
     <>
+
       {pageData ? (
         <>
           <Header />
@@ -257,7 +258,7 @@ const Contacts = () => {
               </button>
               {/* tag2 */}
               <Link
-                href="/"
+                href="/src/pages"
                 className="col-span-2 border-[1px] border-dark p-[12px] rounded-lg flex justify-center items-center"
               >
                 <ContactsImportIcon />
@@ -265,7 +266,7 @@ const Contacts = () => {
             </div>
             {/* button */}
             <Link
-              href="/confrimEmailCode"
+              href="/src/pages/confrimEmailCode"
               className=" flex items-center justify-center w-full
                   bg-dark text-white py-3 leading-0 rounded-lg mt-4"
             >
@@ -307,7 +308,8 @@ const Contacts = () => {
         }}
         childeren={<>test</>}
       />
-    </>
+      </>
+
   );
 };
 

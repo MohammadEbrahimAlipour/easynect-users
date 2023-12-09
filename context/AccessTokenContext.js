@@ -24,50 +24,44 @@ export const AccessTokenProvider = ({ children, protectedRoutes }) => {
     return null; // Return null if not in a browser environment
   });
 
+  const isProtectedRoute = (pathname) => {
+    return /^\/app(\/.*)?$/.test(pathname);
+  };
+
   const router = useRouter();
 
-  // Check if the user has a valid access token
   useEffect(() => {
-    if (accessToken && !protectedRoutes.includes(router.pathname)) {
-      // If user is authenticated and the current route is not in protectedRoutes,
-      // allow access to the route.
-      return;
+    if (!accessToken && isProtectedRoute(router.pathname)) {
+      router.push('/loginUser');
     }
-
-    if (!accessToken && protectedRoutes.includes(router.pathname)) {
-      // If user is not authenticated and the current route is in protectedRoutes,
-      // redirect to the login page.
-      router.push("/loginUser");
-    }
-  }, [accessToken, router, protectedRoutes, router.pathname]);
+  }, [accessToken, router.pathname]);
 
   useEffect(() => {
-    if (accessToken) {
-      // Check if the code is running in a browser environment before using localStorage
-      if (typeof window !== "undefined") {
-        localStorage.setItem("accessToken", accessToken);
-      }
-
-      // Set up an Axios interceptor to handle 401 errors and redirect to login
-      const interceptor = axios.interceptors.response.use(
-        (response) => {
-          return response;
-        },
+    const interceptor = axios.interceptors.response.use(
+        (response) => response, // Just pass through the response
         (error) => {
           if (error.response && error.response.status === 401) {
-            // Redirect to "/loginUser"
-            if (typeof window !== "undefined") {
-              window.location.href = "/loginUser";
+            setAccessToken(null); // Clear invalid token
+            if (isProtectedRoute(router.pathname)) {
+              router.push('/loginUser');
             }
           }
           return Promise.reject(error);
         }
-      );
+    );
 
-      // Cleanup the interceptor when component unmounts
-      return () => {
-        axios.interceptors.response.eject(interceptor);
-      };
+    return () => {
+      axios.interceptors.response.eject(interceptor);
+    };
+  }, [router]); // router should be in the dependency array to ensure proper redirecting
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (accessToken) {
+        localStorage.setItem('accessToken', accessToken);
+      } else {
+        localStorage.removeItem('accessToken');
+      }
     }
   }, [accessToken]);
 

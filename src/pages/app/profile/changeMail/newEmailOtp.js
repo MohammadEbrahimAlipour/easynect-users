@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { generateApiUrl } from "@/components/ApiUr";
-import { useAccessToken } from "../../context/AccessTokenContext";
+import { useAccessToken } from "../../../../../context/AccessTokenContext";
 
 const VerifyOTP = () => {
   // Initialize state to store the user-entered code
@@ -65,7 +65,7 @@ const VerifyOTP = () => {
 
       if (response.status === 200) {
         // redirect user to login page
-        router.push("/profile");
+        router.push("/app/profile/profile");
 
         // Handle the successful response
         console.log("OTP code verification successful");

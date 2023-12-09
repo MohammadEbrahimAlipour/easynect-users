@@ -1,21 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="e485ecf0-2a62-4124-95b9-8fcf0d3fef6f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Header.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Icons.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Icons.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/InfoSocialMediaSquare.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/InfoSocialMediaSquare.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ProfileCardCarousel.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ProfileCardCarousel.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/context/AccessTokenContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/context/AccessTokenContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Footer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Footer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/ProfileCardExist.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ProfileCardExist.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ProfileImage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ProfileImage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/SwiperCarousel.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/SwiperCarousel.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/contacts/contacts.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/contacts/contacts.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/infoPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/infoPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/profile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/profileCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/profileCard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/tailwind.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/infoPage/empty/EmptyRectangle.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/infoPage/empty/EmptyRectangle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/_app.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/_app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/cards.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/changeEmail.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/profile/changeMail/changeEmail.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/changePassword.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/profile/changePass/changePassword.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/contacts/contacts.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/contacts/contacts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/contents/horz/addHorzItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/contents/horz/addHorzItem.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/contents/horz/contentHorz.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/contents/horz/contentHorz.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/contents/horz/createHorzItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/contents/horz/createHorzItem.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/contents/horz/editHorzItems.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/contents/horz/editHorzItems.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/editProfileInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/editProfileInfo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/forgotPassword.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/forgotPassword.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/lead/createLead.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/lead/createLead.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/lead/lead.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/lead/lead.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/loginUser.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/loginUser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/newEmailOtp.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/profile/changeMail/newEmailOtp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/noticeSettings.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/personsStats.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/stats/personsStats.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/profile/profile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/profileCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/profileCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/profileInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/profile/info/profileInfo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/startHere/startHere.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/startHere/startHere.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/testOne.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/testTow.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/verifyOTP.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/verifyOTP.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,17 +53,56 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="ReactDesignerToolWindowState">
+    <option name="myId2Visible">
+      <map>
+        <entry key="com.haulmont.rcb.reactComponents" value="false" />
+        <entry key="com.haulmont.rcb.reactInspector" value="false" />
+      </map>
+    </option>
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/pages/appNect/cards" />
+      <recent name="$PROJECT_DIR$/src/pages/appNect/profile/info" />
+      <recent name="$PROJECT_DIR$/src/pages/appNect/profile/changePass" />
+      <recent name="$PROJECT_DIR$/src/pages/appNect/profile/changeMail" />
+      <recent name="$PROJECT_DIR$/src/pages/appNect/profile" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.dev" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -53,10 +112,30 @@
       <option name="presentableId" value="Default" />
       <updated>1701856043799</updated>
       <workItem from="1701856045740" duration="136000" />
+      <workItem from="1701975596519" duration="185000" />
+      <workItem from="1701975788681" duration="1325000" />
+      <workItem from="1701977324907" duration="4250000" />
+      <workItem from="1702022511405" duration="7863000" />
+      <workItem from="1702061702986" duration="4327000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

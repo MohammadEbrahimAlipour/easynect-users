@@ -1,29 +1,26 @@
 import Layout from "@/components/Layout";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { InfoIcon } from "@/components/Icons";
+import { ChosenTik, InfoIcon, LinkedIn } from "@/components/Icons";
 import Footer from "@/components/Footer";
 import HeaderTwo from "@/components/HeaderTwo";
 import { useRouter } from "next/router";
-import { useAccessToken } from "../../../../context/AccessTokenContext";
+import { useAccessToken } from "../../../../../context/AccessTokenContext";
 import { generateApiUrl } from "@/components/ApiUr";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import LoadingState from "@/components/LoadingState";
 
-const CreateHorzItem = () => {
+const EditHorzItems = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { pageId } = router.query;
   const accessToken = useAccessToken();
   const [mediaData, setMediaData] = useState(null);
-  const [placeholder, setPlaceholder] = useState("");
-  const [livePreviewTitle, setLivePreviewTitle] = useState("");
   const [baseUrl, setBaseUrl] = useState("");
+  const [livePreviewDesc, setLivePreviewDesc] = useState("");
+  const [livePreviewTitle, setLivePreviewTitle] = useState("");
   const [showTooltip, setShowTooltip] = useState(false);
-
-  // const [type, setType] = useState(""); // to save the type and use it in urls
 
   const [formData, setFormData] = useState({
     title: "",
@@ -34,13 +31,21 @@ const CreateHorzItem = () => {
     const { name, value } = e.target;
 
     // Concatenate baseUrl and content_val if the name is 'content_val'
-    const updatedValue =
-      name === "content_val" && baseUrl !== null ? baseUrl + value : value;
+    const updatedValue = name === "content_val" ? baseUrl + value : value;
 
     setFormData({
       ...formData,
       [name]: updatedValue
     });
+  };
+
+  const handleIsSquare = () => {
+    setIsSquare(true);
+    setDisplayType("square");
+  };
+  const handleNotSquare = () => {
+    setIsSquare(false);
+    setDisplayType("highlight");
   };
 
   // to handle showing tips
@@ -53,7 +58,7 @@ const CreateHorzItem = () => {
   };
 
   useEffect(() => {
-    const apiUrl = generateApiUrl(`/api/v1/contents_store/${id}`);
+    const apiUrl = generateApiUrl(`/api/v1/horizontal_menu/${id}`);
 
     if (id) {
       // Make an Axios GET request to fetch user data
@@ -67,9 +72,7 @@ const CreateHorzItem = () => {
         .then((response) => {
           // Handle the data once it's received
           setMediaData(response.data);
-          setPlaceholder(response.data.placeholder);
-          // setType(response.data.type);
-          setBaseUrl(response.data.base_url);
+          setBaseUrl(response.data.content_store.base_url);
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
@@ -93,7 +96,7 @@ const CreateHorzItem = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (id && pageId && mediaData.id && mediaData.type) {
+    if (mediaData.id) {
       try {
         // Create form data object
         const formDataToSend = new FormData();
@@ -103,10 +106,10 @@ const CreateHorzItem = () => {
 
         // Make a POST request to create a new user
         const apiUrl = generateApiUrl(
-          `/api/v1/contents_store/horizontal_menu/${mediaData.id}/${pageId}`
+          `/api/v1/horizontal_menu/${mediaData.id}`
         );
-        console.log("apiUrl", apiUrl);
-        const response = await axios.post(apiUrl, formDataToSend, {
+
+        const response = await axios.patch(apiUrl, formDataToSend, {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`,
             "Content-Type": "application/x-www-form-urlencoded",
@@ -114,11 +117,10 @@ const CreateHorzItem = () => {
           }
         });
 
-        if (response.status === 201) {
+        if (response.status === 200) {
           // Handle success, for example, redirect to a success page
           console.log("User created successfully!");
           toast.success("updated successfully");
-          router.back();
         } else {
           // Handle other status codes or show an error message if needed
           console.error("Unexpected response status:", response.status);
@@ -142,9 +144,49 @@ const CreateHorzItem = () => {
     }
   };
 
+  const handleDeleteUser = (contentID) => {
+    const apiUrl = generateApiUrl(`/api/v1/horizontal_menu/${contentID}`);
+
+    // Set the request headers, including the Authorization header with the token
+    const headers = {
+      Authorization: `Bearer ${accessToken.accessToken}`, // Assuming accessToken is the token value
+      "Accept-Language": "fa"
+    };
+
+    // Make an Axios DELETE request to delete the user
+    axios
+      .delete(apiUrl, { headers }) // Pass the headers in the request
+      .then((response) => {
+        // Handle the successful deletion (e.g., update the UI)
+        console.log("User deleted successfully.");
+
+        // Check if the status is 204 and navigate to the home page
+        if (response.status === 204) {
+          router.back();
+        }
+      })
+
+      .catch((error) => {
+        console.error("Error deleting user:", error);
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.detail
+        ) {
+          const errorMessage = error.response.data.detail;
+          toast.error(errorMessage);
+        } else {
+          // If there is no specific error message, display a generic one
+          toast.error("Error: An error occurred.");
+        }
+      });
+  };
+
+  console.log("mediaData", mediaData);
+
   return (
     <>
-      {mediaData && placeholder ? (
+      {mediaData ? (
         <>
           <HeaderTwo />
           <Layout>
@@ -154,7 +196,7 @@ const CreateHorzItem = () => {
                   {/* left side btns */}
                   <div className="text-sm flex">
                     <Link
-                      href="/contentAddItem"
+                      href="/src/pages/contentAddItem"
                       className="me-3 border-[1px] border-black px-4 py-1 rounded-lg"
                     >
                       انصراف
@@ -175,7 +217,7 @@ const CreateHorzItem = () => {
                       <Image
                         className="bg-white p-2 rounded-lg invert"
                         alt="icon"
-                        src={mediaData.s3_icon_url}
+                        src={mediaData.icon_url}
                         width={60}
                         height={60}
                       />
@@ -194,7 +236,7 @@ const CreateHorzItem = () => {
                     <input
                       htmlFor="title"
                       name="title"
-                      placeholder={mediaData.title}
+                      defaultValue={mediaData.title}
                       onChange={(e) => {
                         handleInputChange(e);
                         setLivePreviewTitle(e.target.value);
@@ -209,12 +251,12 @@ const CreateHorzItem = () => {
 
                       <span
                         className={`absolute z-10 w-[140px] left-[22px] -top-6 bg-dark text-white
-                        rounded-md overflow-hidden text-xs p-2 opacity-0 transform scale-0 transition-opacity duration-700 
-                        ${
-                          showTooltip
-                            ? "opacity-100 scale-100"
-                            : "opacity-0 scale-0"
-                        }`}
+                    rounded-md overflow-hidden text-xs p-2 opacity-0 transform scale-0 transition-opacity duration-700 
+                    ${
+                      showTooltip
+                        ? "opacity-100 scale-100"
+                        : "opacity-0 scale-0"
+                    }`}
                       >
                         <p className="mb-2">{mediaData.hint_title}:</p>
                         <p>{mediaData.hint}:</p>
@@ -239,11 +281,18 @@ const CreateHorzItem = () => {
                         handleInputChange(e);
                       }}
                       className="border-2 rounded-md text-sm py-1 px-1 font-ravi"
-                      placeholder={mediaData.description}
+                      defaultValue={mediaData.content_val}
                     />
                   </div>
                 </div>
               </form>
+
+              <button
+                onClick={() => handleDeleteUser(mediaData.id)}
+                className="text-[#CB3434] mt-5 border py-1 rounded-md w-full font-ravi"
+              >
+                خذف کردن
+              </button>
             </div>
           </Layout>
           <Footer />
@@ -255,4 +304,4 @@ const CreateHorzItem = () => {
   );
 };
 
-export default CreateHorzItem;
+export default EditHorzItems;

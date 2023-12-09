@@ -1,36 +1,56 @@
 import { CloseIcon } from "@/components/Icons";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { kebabCase } from "lodash";
 
 const EmptyRectangle = ({
   data,
   listItems,
   extractedData,
   setExtractedData,
+  updatedExtractedData,
   setUpdatedExtractedData
 }) => {
   const [showOptionList, setShowOptionList] = useState(false);
   const flattenedData = extractedData.flat();
   const [selectedId, setSelectedId] = useState(null); // New state for holding the selected id.
+  const [myKey, setMyKey] = useState(0); // New state for holding the selected id.
+
+  useEffect(() => {
+    setExtractedData(extractedData);
+  }, [extractedData, setExtractedData]);
 
   const handleItemSelect = (chosenId, title, icon_url) => {
     // Close the option list
     setShowOptionList(false);
 
-    const updatedData = extractedData.map((section) =>
+    const updatedData = extractedData.map((section, key) =>
       section.map((item) => {
         // For each item, check if it's the one that needs updating
         if (item.content_id === selectedId) {
-          // If it is, return a new object with the updated details from the chosen option
+          //   console.log(key);
+          console.log(key);
+
+          console.log(true);
+          setMyKey(key);
+          console.log(myKey);
           return { ...item, content_id: chosenId, title, icon_url };
+          // If it is, return a new object with the updated details from the chosen option
         }
         // Otherwise, return the item unmodified
+
         return item;
       })
     );
 
     // setExtractedData(updatedData);
-    setUpdatedExtractedData(updatedData);
+    if (updatedExtractedData.length !== 0) {
+      const data = updatedExtractedData;
+      data[myKey] = updatedData[myKey];
+      setUpdatedExtractedData(data);
+    } else {
+      setUpdatedExtractedData(updatedData);
+    }
   };
 
   return (

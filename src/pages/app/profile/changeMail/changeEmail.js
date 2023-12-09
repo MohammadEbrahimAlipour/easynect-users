@@ -5,7 +5,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { generateApiUrl } from "@/components/ApiUr";
 import axios from "axios";
-import { useAccessToken } from "../../context/AccessTokenContext";
+import { useAccessToken } from "../../../../../context/AccessTokenContext";
 import { useRouter } from "next/router";
 
 const ChangeEmail = () => {
@@ -58,8 +58,8 @@ const ChangeEmail = () => {
         console.log("email changed successfuly");
 
         // Redirect to OTP confirm page with email as a query parameter
-        router.push(`/newEmailOtp?email=${encodeURIComponent(email)}`);
-        router.push("/newEmailOtp");
+        router.push(`/appNect/profile/changeMail/newEmailOtp?email=${encodeURIComponent(email)}`);
+        router.push("/app/profile/changeMail/newEmailOtp");
       } else {
         // Handle errors (e.g., show an error message)
         console.log("Registration failed");

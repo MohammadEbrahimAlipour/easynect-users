@@ -59,10 +59,10 @@ const Footer = ({ className = "" }) => {
         <div className="3xl:col-span-4 2xl:col-span-4 md:col-span-4">
           <ul className="flex justify-center items-center">
             <li className="grid 3xl:grid-cols-12 2xl:grid-cols-12 md:grid-cols-12">
-              <CustomLink href="/profile" iconName="profile" title="پروفایل" />
+              <CustomLink href="/appNect/profile/profile" iconName="profile" title="پروفایل" />
             </li>
             <li>
-              <CustomLink href="/personsStats" iconName="stats" title="آمار" />
+              <CustomLink href="/appNect/stats/personsStats" iconName="stats" title="آمار" />
             </li>
           </ul>
         </div>
@@ -81,14 +81,14 @@ const Footer = ({ className = "" }) => {
           <ul className="flex justify-center items-center">
             <li className="grid 3xl:grid-cols-12 2xl:grid-cols-12 md:grid-cols-12">
               <CustomLink
-                href="/contacts/contacts"
+                href="/appNect/contacts/contacts"
                 iconName="contacts"
                 title="مخاطبین"
               />
             </li>
             <li>
               <CustomLink
-                href="/profileCard"
+                href="/appNect/cards/profileCard"
                 iconName="cards"
                 title="کارت‌ها"
               />

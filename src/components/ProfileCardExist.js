@@ -153,7 +153,7 @@ const ProfileCardExist = ({
                 <div className="mt-5 mx-4 flex justify-center items-center col-span-10">
                   {/* box right 1 */}
                   <Link
-                    href={`/editProfileInfo?id=${cardData.id}`}
+                    href={`/appNect/cards/editProfileInfo?id=${cardData.id}`}
                     passHref
                     className="w-[28%] h-[32px] border-2 rounded-md flex justify-center items-center"
                   >
@@ -212,7 +212,7 @@ const ProfileCardExist = ({
           </li>
           {/* options */}
           <li className="border-b py-2 font-normal text-sm">
-            <Link href={`/lead/lead?id=${cardData.id}`}>فرم لید</Link>
+            <Link href={`/appNect/lead/lead?id=${cardData.id}`}>فرم لید</Link>
           </li>
 
           <li>

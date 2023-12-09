@@ -31,7 +31,7 @@ const HomePage = () => {
       // Check if access token exists
       if (accessToken.accessToken) {
         // Redirect to "/profile" if access token exists
-        router.push("/profileCard");
+        router.push("/app/cards/profileCard");
       } else {
         // Redirect to "/loginUser" if access token doesn't exist
         router.push("/loginUser");

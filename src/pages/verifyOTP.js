@@ -85,7 +85,7 @@ const VerifyOTP = () => {
         console.log("OTP code verification successful");
         const accessToken = response.data.access_token;
         setAccessToken(accessToken);
-        router.push("/profileCard");
+        router.push("/app/cards/profileCard");
         // Redirect to the confirmation page or perform other actions
       } else {
         // Handle other status codes, e.g., display an error message

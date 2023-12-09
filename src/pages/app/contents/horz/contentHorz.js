@@ -6,7 +6,7 @@ import { PlusSign } from "@/components/Icons";
 import Footer from "@/components/Footer";
 import HeaderTwo from "@/components/HeaderTwo";
 import { useRouter } from "next/router";
-import { useAccessToken } from "../../../../context/AccessTokenContext";
+import { useAccessToken } from "../../../../../context/AccessTokenContext";
 import { generateApiUrl } from "@/components/ApiUr";
 import { toast } from "react-toastify";
 import HorzItems from "@/components/contents/horz/HorzItems";
@@ -64,13 +64,13 @@ const ContentHorz = () => {
             {/* left side btns */}
             <div className="text-sm">
               <Link
-                href="/"
+                href="/src/pages"
                 className="me-3 border-[1px] border-black px-4 py-1 rounded-lg"
               >
                 انصراف
               </Link>
               <Link
-                href="/"
+                href="/src/pages"
                 className="bg-dark text-white px-4 py-1 rounded-lg border-[1px] border-black"
               >
                 ذخیره
@@ -98,7 +98,7 @@ const ContentHorz = () => {
               آیتم جدید
             </Link>
             <Link
-              href="/"
+              href="/src/pages"
               className="bg-dark text-white px-4 py-3 rounded-lg border-[1px] border-black"
             >
               ذخیره

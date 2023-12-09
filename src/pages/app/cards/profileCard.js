@@ -8,7 +8,7 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { generateApiUrl } from "@/components/ApiUr";
 import axios from "axios";
-import { useAccessToken } from "../../context/AccessTokenContext";
+import { useAccessToken } from "../../../../context/AccessTokenContext";
 import LoadingState from "@/components/LoadingState";
 import ProfileCardCarousel from "@/components/ProfileCardCarousel";
 
@@ -73,7 +73,7 @@ const ProfileCard = () => {
             </div>
 
             <Link
-              href="/createCard"
+              href="/src/pages/createCard"
               className="flex items-center justify-center w-full
                   border-[1px] py-3 leading-0 rounded-lg mt-8"
             >

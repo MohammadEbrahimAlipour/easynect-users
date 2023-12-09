@@ -16,26 +16,7 @@ const raviFont = raviFontLocal({
 });
 
 const protectedRoutes = [
-  "/cards",
-  "/changeEmail",
-  "/changePassword",
-  "/confirmEmailCode",
-  "/contacts",
-  "/contentAddItem",
-  "/createCard",
-  "/editMedias",
-  "/editProfileInfo",
-  "/forgotPassword",
-  "/forgotPasswrodSuccessful",
-  "/mediaSelection",
-  "/mediaSettings",
-  "/newEmailOtp",
-  "/noticeSetting",
-  "/personsStats",
-  "/profile",
-  "/profileCard",
-  "/profileInfo",
-  "/infoPage"
+    /\/app\/.*/
 ];
 
 export default function App({ Component, pageProps }) {

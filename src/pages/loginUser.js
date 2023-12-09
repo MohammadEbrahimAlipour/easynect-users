@@ -60,7 +60,7 @@ const LoginUser = () => {
         }
 
         // Redirect to cards page
-        router.push("/profileCard");
+        router.push("/app/cards/profileCard");
 
         // Handle successful login, e.g., redirect or set user authentication state
         console.log("Login successful");
@@ -162,7 +162,7 @@ const LoginUser = () => {
               onChange={handleChange}
             />
             <span className="text-sm bg-muted text-white rounded-md py-2 px-3">
-              <Link href="/forgotPassword">فراموش کرده‌اید؟</Link>
+              <Link href="/forgotPassword" className="whitespace-nowrap">فراموش کرده‌اید؟</Link>
             </span>
           </div>
 
