@@ -84,7 +84,7 @@ const Profile = () => {
               <ProfileInfoIcon />
               <CustomLinkProfile
                 title="اطلاعات کاربری"
-                href="/appNect/profile/info/profileInfo"
+                href="/app/profile/info/profileInfo"
                 className="ms-2"
               />
             </li>
@@ -100,7 +100,7 @@ const Profile = () => {
               <ProfileChangePassIcon />
               <CustomLinkProfile
                 title="تغییر ایمیل"
-                href="/appNect/profile/changeMail/changeEmail"
+                href="/app/profile/changeMail/changeEmail"
                 className="ms-2"
               />
             </li>
@@ -108,7 +108,7 @@ const Profile = () => {
               <ProfileChangePassIcon />
               <CustomLinkProfile
                 title="تغییر رمز عبور"
-                href="/appNect/profile/changePass/changePassword"
+                href="/app/profile/changePass/changePassword"
                 className="ms-2"
               />
             </li>

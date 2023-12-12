@@ -75,6 +75,7 @@ END:VCARD
   // patch functions
   const [extractedData, setExtractedData] = useState([]);
   const [updatedExtractedData, setUpdatedExtractedData] = useState([]);
+  const [syncedExtractedData, setSyncExtractedData] = useState([]);
   console.log("extractedData", extractedData);
   console.log("updatedExtractedData", updatedExtractedData);
   // end of patch functions
@@ -298,7 +299,14 @@ END:VCARD
                     {/* square section */}
 
                     {object.display_box_type === "square" ? (
-                      <SquareDataExists listItems={listItems} data={object} />
+                      <SquareDataExists
+                        setUpdatedExtractedData={setUpdatedExtractedData}
+                        setExtractedData={setExtractedData}
+                        extractedData={extractedData}
+                        updatedExtractedData={updatedExtractedData}
+                        listItems={listItems}
+                        data={object}
+                      />
                     ) : null}
 
                     {/* rectangle */}
@@ -319,7 +327,13 @@ END:VCARD
                 {/* wrapper */}
 
                 <div className="mt-4">
-                  <EmptySquareBox />
+                  <EmptySquareBox
+                    setUpdatedExtractedData={setUpdatedExtractedData}
+                    setExtractedData={setExtractedData}
+                    extractedData={extractedData}
+                    updatedExtractedData={updatedExtractedData}
+                    listItems={listItems}
+                  />
                 </div>
                 <button type="submit">submit</button>
               </div>

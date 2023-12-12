@@ -58,7 +58,11 @@ const ChangeEmail = () => {
         console.log("email changed successfuly");
 
         // Redirect to OTP confirm page with email as a query parameter
-        router.push(`/appNect/profile/changeMail/newEmailOtp?email=${encodeURIComponent(email)}`);
+        router.push(
+          `/app/profile/changeMail/newEmailOtp?email=${encodeURIComponent(
+            email
+          )}`
+        );
         router.push("/app/profile/changeMail/newEmailOtp");
       } else {
         // Handle errors (e.g., show an error message)
