@@ -5,15 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e485ecf0-2a62-4124-95b9-8fcf0d3fef6f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Footer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Footer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ProfileCardExist.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ProfileCardExist.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/infoPage/empty/EmptyRectangle.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/infoPage/empty/EmptyRectangle.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/infoPage/empty/EmptySquareBox.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/infoPage/empty/EmptySquareBox.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/infoPage/exists/SquareDataExists.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/infoPage/exists/SquareDataExists.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/app/cards/editProfileInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/editProfileInfo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/app/profile/changeMail/changeEmail.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/profile/changeMail/changeEmail.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/app/profile/profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/profile/profile.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/infoPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/infoPage.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -97,6 +89,7 @@
       <workItem from="1702022511405" duration="7863000" />
       <workItem from="1702061702986" duration="4327000" />
       <workItem from="1702384318705" duration="612000" />
+      <workItem from="1702409789427" duration="33000" />
     </task>
     <servers />
   </component>

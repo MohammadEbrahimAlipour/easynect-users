@@ -85,6 +85,13 @@ END:VCARD
     setShoOptions(false);
   };
 
+  console.log("syncedExtractedData", syncedExtractedData);
+
+  // syncronizing syncedExtractedData
+  useEffect(() => {
+    setSyncExtractedData(extractedData);
+  }, [extractedData]);
+
   useEffect(() => {
     // Make an Axios GET request to fetch user data based on user_id
     const apiUrl = generateApiUrl("/api/v1/pages/qrcode_info/");
@@ -306,6 +313,7 @@ END:VCARD
                         updatedExtractedData={updatedExtractedData}
                         listItems={listItems}
                         data={object}
+                        syncedExtractedData={syncedExtractedData}
                       />
                     ) : null}
 
@@ -319,6 +327,7 @@ END:VCARD
                         updatedExtractedData={updatedExtractedData}
                         listItems={listItems}
                         data={object}
+                        syncedExtractedData={syncedExtractedData}
                       />
                     ) : null}
                   </div>
