@@ -7,7 +7,8 @@ const EmptySquareBox = ({
   setExtractedData,
   extractedData,
   updatedExtractedData,
-  listItems
+  listItems,
+  setAddedItems
 }) => {
   const [boxType, setBoxType] = useState("");
   const [showAddPopUp, setShowAddPopUp] = useState(false);
@@ -21,6 +22,16 @@ const EmptySquareBox = ({
   const [showOptionListArray, setShowOptionListArray] = useState();
   // Assume we have a state to hold the history of all changes to localItemsSelected
   const [localItemsHistory, setLocalItemsHistory] = useState([]);
+
+  // addedItems to send
+  useEffect(() => {
+    // Filter out items that don't have the addedItem property
+    const itemsToAdd = localItemsSelected.filter((item) => item.addedItem);
+    setAddedItems(itemsToAdd);
+    // Use itemsToAdd for further processing or saving
+
+    // You might want to perform additional actions with the filtered items, e.g., save to the server
+  }, [localItemsSelected, setAddedItems]);
 
   const HandleSquareType = () => {
     setBoxType("squareBox");
@@ -57,14 +68,15 @@ const EmptySquareBox = ({
   const handleRecSelect = (chosenId, title, icon_url) => {
     // Create the rectangle item detail object
     const rectangleItemDetails = {
-      id: chosenId,
+      content_id: chosenId,
       title: title,
       s3_icon_url: icon_url,
       description: "", // Add description if available
       main_order: getNextMainOrder(), // Assign the next order number in sequence
       sub_order: 1, // Set sub_order if needed
       display_box_type: "rectangle",
-      beingEddited: true
+      beingEddited: true,
+      addedItem: true
     };
 
     // Append the new item to localItemsSelected
@@ -76,14 +88,15 @@ const EmptySquareBox = ({
   const handleSquareOneSelect = (chosenId, title, icon_url) => {
     // Create the rectangle item detail object
     const rectangleItemDetails = {
-      id: chosenId,
+      content_id: chosenId,
       title: title,
       s3_icon_url: icon_url,
       description: "", // Add description if available
       main_order: getNextMainOrder(), // Assign the next order number in sequence
       sub_order: 1, // Set sub_order if needed
       display_box_type: "square",
-      beingEddited: true
+      beingEddited: true,
+      addedItem: true
     };
 
     // Append the new item to localItemsSelected
@@ -95,14 +108,15 @@ const EmptySquareBox = ({
   const handleSquareTwoSelect = (chosenId, title, icon_url) => {
     // Create the rectangle item detail object
     const rectangleItemDetails = {
-      id: chosenId,
+      content_id: chosenId,
       title: title,
       s3_icon_url: icon_url,
       description: "", // Add description if available
       main_order: getNextMainOrder(), // Assign the next order number in sequence
       sub_order: 2, // Set sub_order if needed
       display_box_type: "square",
-      beingEddited: true
+      beingEddited: true,
+      addedItem: true
     };
 
     // Append the new item to localItemsSelected
@@ -319,7 +333,9 @@ const EmptySquareBox = ({
                 {object.description}
               </p>
             </div>
-          ) : null}
+          ) : (
+            <span className="hidden" />
+          )}
         </div>
       ))}
 
@@ -356,7 +372,7 @@ const EmptySquareBox = ({
                           handleSquareOneSelect(
                             item.id,
                             item.title,
-                            item.icon_url
+                            item.s3_icon_url
                           )
                         }
                         className={`py-2 border-b `}
@@ -396,7 +412,7 @@ const EmptySquareBox = ({
                           handleSquareTwoSelect(
                             item.id,
                             item.title,
-                            item.icon_url
+                            item.s3_icon_url
                           )
                         }
                         className={`py-2 border-b `}
@@ -428,7 +444,7 @@ const EmptySquareBox = ({
                   <div
                     key={item.id}
                     onClick={() =>
-                      handleRecSelect(item.id, item.title, item.icon_url)
+                      handleRecSelect(item.id, item.title, item.s3_icon_url)
                     }
                     className={`py-2 border-b `}
                   >

@@ -76,6 +76,9 @@ END:VCARD
   const [extractedData, setExtractedData] = useState([]);
   const [updatedExtractedData, setUpdatedExtractedData] = useState([]);
   const [syncedExtractedData, setSyncExtractedData] = useState([]);
+  const [addedItems, setAddedItems] = useState([]);
+  const [dataToSend, setDataToSend] = useState([]);
+
   console.log("extractedData", extractedData);
   console.log("updatedExtractedData", updatedExtractedData);
   // end of patch functions
@@ -85,11 +88,33 @@ END:VCARD
     setShoOptions(false);
   };
 
-  console.log("syncedExtractedData", syncedExtractedData);
+  console.log("********syncedExtractedData********", syncedExtractedData);
+  console.log("added items ************", addedItems);
 
   // syncronizing syncedExtractedData
   useEffect(() => {
     setSyncExtractedData(extractedData);
+  }, [extractedData]);
+
+  // log
+  // syncronizing syncedExtractedData
+  useEffect(() => {
+    // Flatten the updatedExtractedData array
+    // const flattenedData = updatedExtractedData.flat();
+
+    // // Flatten the addedItems array
+    // const flattenedAddedItems = addedItems.flat();
+
+    // // Concatenate flattenedAddedItems to the end of flattenedData
+    // const finalData = [...flattenedData, ...flattenedAddedItems];
+    // setDataToSend(finalData);
+    // Log the final data
+    console.log("&&&&&&&updated data final &&&&&&&", dataToSend);
+  }, [updatedExtractedData, addedItems, dataToSend]);
+
+  // syncronizing syncedExtractedData
+  useEffect(() => {
+    setUpdatedExtractedData(extractedData);
   }, [extractedData]);
 
   useEffect(() => {
@@ -155,7 +180,7 @@ END:VCARD
   useEffect(() => {
     // Make an Axios GET request to fetch user data based on user_id
     const apiUrl = generateApiUrl(
-      `/api/v1/horizontal_menu/items/${selectedOption?.id}`
+      `/api/v1/contents/page/${selectedOption?.id}`
     );
 
     if (selectedOption?.id) {
@@ -185,12 +210,19 @@ END:VCARD
       // Flatten the updatedExtractedData array
       const flattenedData = updatedExtractedData.flat();
 
+      // final data addedItemd appended to updatedExtractedData
+
+      // Flatten the addedItems array
+      const flattenedAddedItems = addedItems.flat();
+
+      // Concatenate flattenedAddedItems to the end of flattenedData
+      const finalData = [...flattenedData, ...flattenedAddedItems];
       // Make an Axios PATCH request to update user data based on user_id
       const apiUrl = generateApiUrl(
         `/api/v1/page_view/contents/order/${selectedOption.id}`
       );
       axios
-        .patch(apiUrl, flattenedData, {
+        .patch(apiUrl, finalData, {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`,
             "Accept-Language": "fa"
@@ -328,6 +360,7 @@ END:VCARD
                         listItems={listItems}
                         data={object}
                         syncedExtractedData={syncedExtractedData}
+                        setSyncExtractedData={setSyncExtractedData}
                       />
                     ) : null}
                   </div>
@@ -342,6 +375,9 @@ END:VCARD
                     extractedData={extractedData}
                     updatedExtractedData={updatedExtractedData}
                     listItems={listItems}
+                    syncedExtractedData={syncedExtractedData}
+                    setSyncExtractedData={setSyncExtractedData}
+                    setAddedItems={setAddedItems}
                   />
                 </div>
                 <button type="submit">submit</button>
