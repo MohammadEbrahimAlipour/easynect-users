@@ -69,13 +69,18 @@ const ProfileCard = () => {
   }, [accessToken.accessToken]);
 
   const handleMouseMove = (e) => {
+    if (!isTouching) return;
+
     const { clientX } = e.touches[0];
-    const { left, width } = cardWrapperRef.current.getBoundingClientRect();
+    const { width } = cardWrapperRef.current.getBoundingClientRect();
     const mouseXTopOfWrapper = clientX - onTouchXPosition;
 
-    const threshold = 0.37;
+    const threshold = 0.1;
 
-    if (mouseXTopOfWrapper > width * threshold && isTouching) {
+    if (
+      mouseXTopOfWrapper > width * threshold ||
+      mouseXTopOfWrapper < -(width * threshold)
+    ) {
       setCards((previousCards) => {
         const newCards = [...previousCards];
         newCards[previousCards.length - 1].isFallen = true;
@@ -87,8 +92,6 @@ const ProfileCard = () => {
 
         const newId = cards[0].id - 1 + Math.random() * 1000;
 
-        newCards.pop();
-
         newCards.unshift({
           id: newId,
           isFallen: false,
@@ -96,6 +99,15 @@ const ProfileCard = () => {
 
         return newCards;
       });
+
+      setTimeout(() => {
+        setCards((previousCards) => {
+          const newCards = [...previousCards];
+          newCards.pop();
+
+          return newCards;
+        });
+      }, 300);
 
       setIsTouching(false);
       return;
@@ -117,11 +129,12 @@ const ProfileCard = () => {
     setOnTouchXPosition(0);
   };
 
-  const getLastCardYPosition = (isFallen) => {
+  const getLastCardXPosition = (isFallen) => {
+    if (isFallen) {
+      return `${cardXPosition < 0 ? "-" : ""}120%`;
+    }
+
     if (isTouching) {
-      if (isFallen) {
-        return "100%";
-      }
       return `${cardXPosition}px`;
     }
 
@@ -142,19 +155,21 @@ const ProfileCard = () => {
               onTouchMove={handleMouseMove}
               ref={cardWrapperRef}
             >
-              {cards.map(({ isFallen, id }, index) => (
-                <Card
-                  key={id}
-                  $isCardFallen={isFallen}
-                  style={
-                    cards.length - 1 === index && {
-                      "--tw-translate-x": `${getLastCardYPosition(isFallen)}`,
+              {cards
+                .slice(cards.length - 3, cards.length)
+                .map(({ isFallen, id }, index) => (
+                  <Card
+                    key={id}
+                    $isCardFallen={isFallen}
+                    style={
+                      2 === index && {
+                        "--tw-translate-x": `${getLastCardXPosition(isFallen)}`,
+                      }
                     }
-                  }
-                >
-                  CARD {id}
-                </Card>
-              ))}
+                  >
+                    CARD {id}
+                  </Card>
+                ))}
             </CardWrapper>
 
             <Link
@@ -199,7 +214,7 @@ const Card = tw.div`
   items-center
   bottom-0
   transition 
-  duration-150 
+  duration-300 
   ease-out
   translate-y-0
 
