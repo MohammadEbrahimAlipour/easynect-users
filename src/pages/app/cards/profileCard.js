@@ -5,12 +5,13 @@ import Layout from "@/components/Layout";
 import ProfileCardEmpty from "@/components/ProfileCardEmpty";
 import ProfileCardExist from "@/components/ProfileCardExist";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { generateApiUrl } from "@/components/ApiUr";
 import axios from "axios";
 import { useAccessToken } from "../../../../context/AccessTokenContext";
 import LoadingState from "@/components/LoadingState";
 import ProfileCardCarousel from "@/components/ProfileCardCarousel";
+import tw from "tailwind-styled-components";
 
 const ProfileCard = () => {
   const [cardExist, setCardExist] = useState(true);
@@ -19,6 +20,25 @@ const ProfileCard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const accessToken = useAccessToken();
   const [idFromServer, setIdFromServer] = useState(null);
+  const [isTouching, setIsTouching] = useState(false);
+  const [cardXPosition, setCardXPosition] = useState(0);
+  const [onTouchXPosition, setOnTouchXPosition] = useState(0);
+  const [cards, setCards] = useState([
+    {
+      id: 1,
+      isFallen: false,
+    },
+    {
+      id: 2,
+      isFallen: false,
+    },
+    {
+      id: 3,
+      isFallen: false,
+    },
+  ]);
+
+  const cardWrapperRef = useRef(null);
 
   // Fetch card data from the API
   useEffect(() => {
@@ -29,8 +49,8 @@ const ProfileCard = () => {
       .get(apiUrl, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
-          "accept-language": "fa" // Include the access token in the headers
-        }
+          "accept-language": "fa", // Include the access token in the headers
+        },
       })
       .then((response) => {
         // setCardData(response.data);
@@ -48,29 +68,94 @@ const ProfileCard = () => {
       });
   }, [accessToken.accessToken]);
 
+  const handleMouseMove = (e) => {
+    const { clientX } = e.touches[0];
+    const { left, width } = cardWrapperRef.current.getBoundingClientRect();
+    const mouseXTopOfWrapper = clientX - onTouchXPosition;
+
+    const threshold = 0.37;
+
+    if (mouseXTopOfWrapper > width * threshold && isTouching) {
+      setCards((previousCards) => {
+        const newCards = [...previousCards];
+        newCards[previousCards.length - 1].isFallen = true;
+        return newCards;
+      });
+
+      setCards((previousCards) => {
+        const newCards = [...previousCards];
+
+        const newId = cards[0].id - 1 + Math.random() * 1000;
+
+        newCards.pop();
+
+        newCards.unshift({
+          id: newId,
+          isFallen: false,
+        });
+
+        return newCards;
+      });
+
+      setIsTouching(false);
+      return;
+    }
+
+    setCardXPosition(mouseXTopOfWrapper);
+  };
+
+  const handleOnTouch = (e) => {
+    const { clientX } = e.touches[0];
+    setIsTouching(true);
+    setOnTouchXPosition(clientX);
+    setCardXPosition(0);
+  };
+
+  const handleOnTouchEnd = () => {
+    setIsTouching(false);
+    setCardXPosition(0);
+    setOnTouchXPosition(0);
+  };
+
+  const getLastCardYPosition = (isFallen) => {
+    if (isTouching) {
+      if (isFallen) {
+        return "100%";
+      }
+      return `${cardXPosition}px`;
+    }
+
+    return 0;
+  };
+
   return (
     <>
       <Header cardData={cardData} />
       <Layout>
-        {isLoading ? (
+        {false ? (
           <LoadingState />
-        ) : cardData.length ? (
+        ) : true ? (
           <>
-            <div className="w-full">
-              <div className="w-full flex flex-col justify-center items-center">
-                {cardData.map((card) => (
-                  <ProfileCardExist
-                    key={card.id}
-                    cardData={card}
-                    className="carousel-slide"
-                    carouselData={cardData} // Pass carouselData to the component
-                    idFromServer={idFromServer}
-                  />
-                ))}
-
-                {/* <ProfileCardCarousel /> */}
-              </div>
-            </div>
+            <CardWrapper
+              onTouchStart={handleOnTouch}
+              onTouchEnd={handleOnTouchEnd}
+              onTouchMove={handleMouseMove}
+              ref={cardWrapperRef}
+            >
+              {cards.map(({ isFallen, id }, index) => (
+                <Card
+                  key={id}
+                  $isCardFallen={isFallen}
+                  style={
+                    cards.length - 1 === index && {
+                      "--tw-translate-x": `${getLastCardYPosition(isFallen)}`,
+                    }
+                  }
+                >
+                  CARD {id}
+                </Card>
+              ))}
+            </CardWrapper>
 
             <Link
               href="/src/pages/createCard"
@@ -82,6 +167,7 @@ const ProfileCard = () => {
               </span>
               کارت جدید
             </Link>
+            {isTouching && "mouse-down"}
           </>
         ) : (
           <ProfileCardEmpty />
@@ -93,3 +179,42 @@ const ProfileCard = () => {
 };
 
 export default ProfileCard;
+
+const CardWrapper = tw.div`
+  relative
+  h-80 
+  select-none
+  group
+`;
+
+const Card = tw.div`
+  rounded-xl
+  bg-white
+  h-64
+  shadow-[0px_4px_64px_0px_rgba(0,0,0,0.10)]
+  w-full
+  absolute
+  flex
+  justify-center
+  items-center
+  bottom-0
+  transition 
+  duration-150 
+  ease-out
+  translate-y-0
+
+  first:scale-[.8]
+  first:-translate-y-24
+  first:shadow-[0px_4px_64px_0px_rgba(0,0,0,0.05)]
+
+  [&:nth-child(2)]:scale-90
+  [&:nth-child(2)]:-translate-y-12
+  [&:nth-child(2)]:shadow-[0px_4px_64px_0px_rgba(0,0,0,0.05)]
+
+  ${({ $isCardFallen }) =>
+    $isCardFallen &&
+    `
+    opacity-0 
+    pointer-events-none
+  `}
+`;
