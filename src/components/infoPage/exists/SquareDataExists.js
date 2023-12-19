@@ -6,7 +6,7 @@ import {
   Telegram
 } from "@/components/Icons";
 import InfoSocialMediaSquare from "@/components/InfoSocialMediaSquare";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import LoadingState from "@/components/LoadingState";
 import EditHorzItems from "@/pages/app/contents/horz/editHorzItems";
@@ -17,10 +17,11 @@ const SquareDataExists = ({
   extractedData,
   setExtractedData,
   updatedExtractedData,
-  setUpdatedExtractedData
+  setUpdatedExtractedData,
+  removeItem
 }) => {
   const [showOptionList, setShowOptionList] = useState(false);
-  const flattenedData = extractedData.flat();
+  // const flattenedData = extractedData.flat();
   const [selectedId, setSelectedId] = useState(null); // New state for holding the selected id.
   const [myKey, setMyKey] = useState(0); // New state for holding the selected id.
 
@@ -29,10 +30,17 @@ const SquareDataExists = ({
     Array(data.data.length).fill(false)
   );
 
-  const [selectedItemsDetails, setSelectedItemsDetails] = useState(data.data);
+  const [selectedItemsDetails, setSelectedItemsDetails] = useState(data?.data);
+
   const [showOptionListSquareOne, setShowOptionListSquareOne] = useState(false);
-  const [showOptionListSquareTwo, setShowOptionListSquareTwo] = useState(false);
   const [selectedSquareOneOption, setSelectedSquareOneOption] = useState(null);
+  const [showOptionListSquareTwo, setShowOptionListSquareTwo] = useState(false);
+
+  const generateUniqueID = () => {
+    return `id-${new Date().getTime()}-${Math.random()
+      .toString(36)
+      .substr(2, 9)}`;
+  };
 
   const handleSquareClick = (index, itemId) => {
     setShowOptionListArray((currentShowOptionListArray) =>
@@ -47,10 +55,6 @@ const SquareDataExists = ({
   useEffect(() => {
     setExtractedData(extractedData);
   }, [extractedData, setExtractedData]);
-
-  useEffect(() => {
-    console.log("selectedItemsDetails&&&&&&&&&", selectedItemsDetails);
-  }, [selectedItemsDetails]);
 
   const handleItemSelect = (
     chosenId,
@@ -121,129 +125,172 @@ const SquareDataExists = ({
     }
   };
 
-  const removeItem = (itemToRemove, index, mainOrder, type) => {
-    const { sub_order, id } = itemToRemove;
+  //   const { sub_order, id } = itemToRemove;
 
-    // Update selectedItemsDetails using the set function callback
-    setSelectedItemsDetails((prevSelectedItemsDetails) => {
-      // Create a copy of the array to avoid mutating the state directly
-      const updatedDetails = [...prevSelectedItemsDetails];
-      // Remove the item at the specified index
-      updatedDetails.splice(index, 1);
+  //   // Update selectedItemsDetails to remove the item at the specified index
+  //   setSelectedItemsDetails((prevSelectedItemsDetails) =>
+  //     prevSelectedItemsDetails.filter((_, idx) => idx !== index)
+  //   );
 
-      return updatedDetails;
+  //   // Create a new updatedExtractedData array, either from updatedExtractedData or from extractedData.
+  //   const newUpdatedExtractedData = updatedExtractedData.length
+  //     ? updatedExtractedData
+  //     : [...extractedData];
+
+  //   // Update updatedExtractedData to reflect the removal of the item
+  //   setUpdatedExtractedData(
+  //     updatedExtractedData.map((section) =>
+  //       section.filter(
+  //         (item) =>
+  //           !(
+  //             item.content_id === id &&
+  //             item.sub_order === sub_order &&
+  //             item.main_order === mainOrder
+  //           )
+  //       )
+  //     )
+  //   );
+
+  //   let updatedData = updatedExtractedData
+  //     .flatMap((section) => section)
+  //     .filter(
+  //       (item) =>
+  //         !(
+  //           item.content_id === id &&
+  //           item.sub_order === sub_order &&
+  //           item.main_order === mainOrder
+  //         )
+  //     );
+
+  //   console.log("********** main", mainOrder, "sub", sub_order, "id", id);
+
+  //   if (sub_order === 1) {
+  //     // Here you might renumber the main_order values for the remaining items,
+  //     // as mentioned in the previous response
+  //     const hasSquareWithSubOrder2 = updatedData.some(
+  //       (item) =>
+  //         item.main_order === mainOrder &&
+  //         item.sub_order === 2 &&
+  //         item.display_box_type === "square"
+  //     );
+
+  //     if (!hasSquareWithSubOrder2) {
+  //       // Iterate over the remaining items and decrement main_order by 1
+  //       updatedData = updatedData.map((item) => {
+  //         if (item.main_order > mainOrder) {
+  //           return {
+  //             ...item,
+  //             main_order: item.main_order - 1
+  //           };
+  //         }
+
+  //         return item;
+  //       });
+  //     }
+  //   }
+  //   console.log("111111121323123123123123123123", updatedData);
+
+  //   if (sub_order === 2) {
+  //     // Here you might renumber the main_order values for the remaining items,
+  //     // as mentioned in the previous response
+  //     const hasSquareWithSubOrder1 = updatedData.some(
+  //       (item) =>
+  //         // 2 === 2 &&
+  //         item.sub_order === 1 && item.display_box_type === "square"
+  //     );
+
+  //     if (!hasSquareWithSubOrder1) {
+  //       // Iterate over the remaining items and decrement main_order by 1
+  //       updatedData = updatedData.map((item) => {
+  //         if (item.main_order > mainOrder) {
+  //           return {
+  //             ...item,
+  //             main_order: item.main_order - 1
+  //           };
+  //         }
+
+  //         return item;
+  //       });
+  //     }
+  //   }
+
+  //   // Group the updated items by main_order and update the state
+  //   const groupedData = updatedData.reduce((acc, item) => {
+  //     const sectionIndex = item.main_order - 1;
+  //     if (!acc[sectionIndex]) {
+  //       acc[sectionIndex] = [];
+  //     }
+  //     acc[sectionIndex].push(item);
+  //     return acc;
+  //   }, []);
+
+  //   setUpdatedExtractedData(groupedData);
+  // };
+
+  // handle adding square one items
+  const handleSquareOneSelect = (chosenId, title, icon_url, squareOne) => {
+    const newData = updatedExtractedData.map((item) => {
+      if (Array.isArray(item.data)) {
+        if (item.data?.[0]?.guid === squareOne.guid) {
+          item.data.push({
+            // Create the rectangle item detail object
+            content_id: chosenId,
+            title: title,
+            s3_icon_url: icon_url,
+            description: "", // Add description if available
+            sub_order: 1, // Set sub_order if needed,
+            main_order: squareOne.main_order,
+            display_box_type: "square",
+            beingEddited: true,
+            addedItem: true,
+            guid: generateUniqueID()
+          });
+        }
+      }
+      return item;
     });
-
-    const newUpdatedExtractedData = updatedExtractedData.length
-      ? updatedExtractedData
-      : [...extractedData];
-
-    // Flatten the updatedExtractedData
-    const flattenedUpdatedExtractedData = newUpdatedExtractedData.flatMap(
-      (section) => section
-    );
-
-    // Filter out the item to remove based on conditions
-    const updatedItems = flattenedUpdatedExtractedData.filter(
-      (item) => !(item.content_id === id)
-    );
-
-    // Handling main order after delete
-    let updatedData = [...updatedItems];
-
-    if (sub_order === 1) {
-      // Here you might renumber the main_order values for the remaining items,
-      // as mentioned in the previous response
-      const hasSquareWithSubOrder2 = updatedData.some(
-        (item) =>
-          item.main_order === mainOrder &&
-          item.sub_order === 2 &&
-          item.display_box_type === "square"
-      );
-
-      if (!hasSquareWithSubOrder2) {
-        // Iterate over the remaining items and decrement main_order by 1
-        updatedData = updatedData.map((item) => {
-          if (item.main_order > mainOrder) {
-            return {
-              ...item,
-              main_order: item.main_order - 1
-            };
-          }
-
-          return item;
-        });
-      }
-    }
-
-    if (sub_order === 2) {
-      // Here you might renumber the main_order values for the remaining items,
-      // as mentioned in the previous response
-      const hasSquareWithSubOrder1 = updatedData.some(
-        (item) =>
-          // 2 === 2 &&
-          item.sub_order === 1 && item.display_box_type === "square"
-      );
-
-      if (!hasSquareWithSubOrder1) {
-        // Iterate over the remaining items and decrement main_order by 1
-        updatedData = updatedData.map((item) => {
-          if (item.main_order > mainOrder) {
-            return {
-              ...item,
-              main_order: item.main_order - 1
-            };
-          }
-
-          return item;
-        });
-      }
-    }
-
-    // Group the updated items by main_order and update the state
-    const groupedData = updatedData.reduce((acc, item) => {
-      const sectionIndex = item.main_order - 1;
-      if (!acc[sectionIndex]) {
-        acc[sectionIndex] = [];
-      }
-      acc[sectionIndex].push(item);
-      return acc;
-    }, []);
-
-    setUpdatedExtractedData(groupedData);
+    setUpdatedExtractedData([...newData]);
   };
 
   // handle adding square one items
-  const handleSquareOneSelect = (chosenId, title, icon_url, mainOrder) => {
-    // Create the rectangle item detail object
-    const ItemDetails = {
-      content_id: chosenId,
-      title: title,
-      s3_icon_url: icon_url,
-      description: "", // Add description if available
-      sub_order: 1, // Set sub_order if needed,
-      main_order: mainOrder,
-      display_box_type: "square",
-      beingEddited: true,
-      addedItem: true
-    };
-
-    // Set the selected option for square one
-    setSelectedSquareOneOption({
-      id: chosenId,
-      title: title,
-      s3_icon_url: icon_url,
-      description: ""
+  const handleSquareTwoSelect = (chosenId, title, icon_url, squareOne) => {
+    const newData = updatedExtractedData.map((item) => {
+      if (Array.isArray(item.data)) {
+        if (item.data?.[0]?.guid === squareOne.guid) {
+          item.data.push({
+            // Create the rectangle item detail object
+            content_id: chosenId,
+            title: title,
+            s3_icon_url: icon_url,
+            description: "", // Add description if available
+            sub_order: 2, // Set sub_order if needed,
+            main_order: squareOne.main_order,
+            display_box_type: "square",
+            beingEddited: true,
+            addedItem: true,
+            guid: generateUniqueID()
+          });
+        }
+      }
+      return item;
     });
-
-    setShowOptionList(false);
-    // Update selectedItemsDetails with the selected option at index 0
-    // const updateList = [selectedSquareOneOption].concat(selectedItemsDetails);
-    // setSelectedItemsDetails(updateList);
-
-    // Update selectedItemsDetails with the selected option at index 0
-    setSelectedItemsDetails((prevDetails) => [ItemDetails, ...prevDetails]);
+    setUpdatedExtractedData([...newData]);
   };
+
+  useEffect(() => {
+    console.log("selectedItemsDetails", selectedItemsDetails);
+  }, [selectedItemsDetails]);
+
+  const firstSquare = useMemo(() => {
+    return data?.data?.filter((item) => item.sub_order === 1);
+  }, [data]);
+
+  const secondSquare = useMemo(() => {
+    return data?.data?.filter((item) => item.sub_order === 2);
+  }, [data]);
+
+  console.log("firstSquare square***", firstSquare);
+  console.log("secondSquare square***", secondSquare);
 
   return (
     <>
@@ -252,279 +299,170 @@ const SquareDataExists = ({
           <div className="grid grid-cols-12 mt-5 gap-5">
             {/* first square */}
             <div className="col-span-6 relative">
-              {selectedItemsDetails[0]?.sub_order === 1 ? (
+              <>
+                {firstSquare?.[0] ? (
+                  // exists
+                  <>
+                    <div className=" px-4 py-3 border-2 rounded-2xl overflow-hidden  ">
+                      <div className="flex items-center justify-center mt-3">
+                        <span
+                          onClick={() => removeItem(firstSquare[0])}
+                          className="absolute left-[15px]"
+                        >
+                          <CloseIcon />
+                        </span>
+                        <span
+                          onClick={() =>
+                            handleSquareClick(0, firstSquare[0]?.id)
+                          }
+                          className="absolute left-[40px]"
+                        >
+                          <PenEditIcon />
+                        </span>
+                      </div>
+                      <div
+                        className="bg-dark w-[45px] h-[45px] rounded-full mb-3
+flex justify-center items-center overflow-hidden"
+                      >
+                        <Image
+                          src={firstSquare[0]?.s3_icon_url}
+                          alt={firstSquare[0]?.title}
+                          width={32}
+                          height={32}
+                          className="bg-white invert"
+                        />
+                      </div>
+                      <p className="font-medium text-xs text-dark ">
+                        {firstSquare[0]?.title}
+                      </p>
+                      <p className="font-medium text-xs text-muted mt-2 mb-5 line-clamp-2">
+                        {firstSquare[0]?.description}
+                      </p>
+                    </div>
+
+                    {/* list options */}
+                    {showOptionListArray[0] && (
+                      <div
+                        className="bg-white shadow-2xl absolute left-[0px] top-0 right-0 p-4 max-h-[150px] overflow-y-scroll 
+                             rounded-md border "
+                      >
+                        <span onClick={() => handleSquareClick(0)}>
+                          <CloseIcon />
+                        </span>
+                        {listItems.map((item) => (
+                          <div
+                            key={item.id}
+                            onClick={() =>
+                              handleItemSelect(
+                                item.id,
+                                item.title,
+                                item.icon_url
+                              )
+                            }
+                            className={`py-2 border-b `}
+                          >
+                            {item.title}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  // empty
+                  <div
+                    onClick={() =>
+                      setShowOptionListSquareOne(!showOptionListSquareOne)
+                    }
+                    className="col-span-6 px-4 py-3 rounded-2xl overflow-hidden h-[140px] bg-graySubmit border border-darkGray
+                 flex justify-center items-center relative"
+                  >
+                    <PlusSignPageView />
+
+                    <div>
+                      {showOptionListSquareOne ? (
+                        <div
+                          className="bg-white absolute shadow-2xl  left-[0px] top-0 right-0 p-4 max-h-[150px] overflow-y-scroll 
+                       rounded-md border "
+                        >
+                          <span
+                            onClick={() => setShowOptionListSquareOne(false)}
+                          >
+                            <CloseIcon />
+                          </span>
+                          {listItems.map((item) => (
+                            <div
+                              key={item.id}
+                              onClick={() =>
+                                handleSquareOneSelect(
+                                  item.id,
+                                  item.title,
+                                  item.s3_icon_url,
+                                  secondSquare[0]
+                                )
+                              }
+                              className={`py-2 border-b `}
+                            >
+                              {item.title}
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                )}
+              </>
+            </div>
+
+            {/* second square */}
+            <div className="col-span-6 relative">
+              {secondSquare?.[0] ? (
+                // exists
                 <>
-                  <div className=" px-4 py-3 border-2 rounded-2xl overflow-hidden  ">
+                  <div className="px-4 py-3 border-2 rounded-2xl overflow-hidden  ">
                     <div className="flex items-center justify-center mt-3">
                       <span
-                        onClick={() =>
-                          removeItem(
-                            selectedItemsDetails[0],
-                            0,
-                            data.main_order,
-                            data.display_box_type
-                          )
-                        }
+                        onClick={() => removeItem(secondSquare[0])}
                         className="absolute left-[15px]"
                       >
                         <CloseIcon />
                       </span>
                       <span
-                        onClick={() => handleSquareClick(0, data.data[0]?.id)}
+                        onClick={() =>
+                          handleSquareClick(1, secondSquare[0]?.id)
+                        }
                         className="absolute left-[40px]"
                       >
                         <PenEditIcon />
                       </span>
                     </div>
+
                     <div
                       className="bg-dark w-[45px] h-[45px] rounded-full mb-3
-      flex justify-center items-center overflow-hidden"
+                  flex justify-center items-center overflow-hidden"
                     >
                       <Image
-                        src={selectedItemsDetails[0]?.s3_icon_url}
-                        alt={selectedItemsDetails[0]?.title}
+                        src={secondSquare[0]?.s3_icon_url}
+                        alt={secondSquare[0]?.title}
                         width={32}
                         height={32}
                         className="bg-white invert"
                       />
                     </div>
                     <p className="font-medium text-xs text-dark ">
-                      {selectedItemsDetails[0]?.title}
+                      {secondSquare[0]?.title}
                     </p>
                     <p className="font-medium text-xs text-muted mt-2 mb-5 line-clamp-2">
-                      {selectedItemsDetails[0]?.description}
+                      {secondSquare[0].title}
                     </p>
                   </div>
 
                   {/* two */}
 
                   {/* list options */}
-                  {showOptionListArray[0] && (
-                    <div
-                      className="bg-white shadow-2xl absolute left-[0px] top-0 right-0 p-4 max-h-[150px] overflow-y-scroll 
-                     rounded-md border "
-                    >
-                      <span onClick={() => handleSquareClick(0)}>
-                        <CloseIcon />
-                      </span>
-                      {listItems.map((item) => (
-                        <div
-                          key={item.id}
-                          onClick={() =>
-                            handleItemSelect(item.id, item.title, item.icon_url)
-                          }
-                          className={`py-2 border-b `}
-                        >
-                          {item.title}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <>
-                  {selectedSquareOneOption ? (
-                    <>
-                      {selectedSquareOneOption ? (
-                        <>
-                          <div
-                            onClick={() =>
-                              setShowOptionListSquareOne(
-                                !showOptionListSquareOne
-                              )
-                            }
-                            className="col-span-6 px-4 py-3 border-2 rounded-2xl overflow-hidden h-[140px] bg-graySubmit shadow-customInset
-      flex justify-center items-center relative"
-                          >
-                            <PlusSignPageView />
-                            <p>step3</p>
-
-                            <div>
-                              {showOptionListSquareOne ? (
-                                <div
-                                  className="bg-white absolute shadow-2xl  left-[0px] top-0 right-0 p-4 max-h-[150px] overflow-y-scroll 
-                   rounded-md border "
-                                >
-                                  <span
-                                    onClick={() =>
-                                      setShowOptionListSquareOne(false)
-                                    }
-                                  >
-                                    <CloseIcon />
-                                  </span>
-                                  {listItems.map((item) => (
-                                    <div
-                                      key={item.id}
-                                      onClick={() =>
-                                        handleSquareOneSelect(
-                                          item.id,
-                                          item.title,
-                                          item.s3_icon_url,
-                                          selectedItemsDetails[0].main_order
-                                        )
-                                      }
-                                      className={`py-2 border-b `}
-                                    >
-                                      {item.title}
-                                    </div>
-                                  ))}
-                                </div>
-                              ) : null}
-                            </div>
-                          </div>
-                          {/* list options */}
-                          {showOptionListArray[0] && (
-                            <div
-                              className="bg-white shadow-2xl absolute left-[0px] top-0 right-0 p-4 max-h-[150px] overflow-y-scroll 
-                     rounded-md border "
-                            >
-                              <span onClick={() => handleSquareClick(0)}>
-                                <CloseIcon />
-                              </span>
-                              {listItems.map((item) => (
-                                <div
-                                  key={item.id}
-                                  onClick={() =>
-                                    handleItemSelect(
-                                      item.id,
-                                      item.title,
-                                      item.icon_url
-                                    )
-                                  }
-                                  className={`py-2 border-b `}
-                                >
-                                  {item.title}
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <p>deleted</p>
-                      )}
-                    </>
-                  ) : (
-                    // empty square
-                    <div
-                      onClick={() =>
-                        setShowOptionListSquareOne(!showOptionListSquareOne)
-                      }
-                      className="col-span-6 px-4 py-3 border-2 rounded-2xl overflow-hidden h-[140px] bg-graySubmit shadow-customInset
-      flex justify-center items-center relative"
-                    >
-                      <PlusSignPageView />
-
-                      <div>
-                        {showOptionListSquareOne ? (
-                          <div
-                            className="bg-white absolute shadow-2xl  left-[0px] top-0 right-0 p-4 max-h-[150px] overflow-y-scroll 
-                   rounded-md border "
-                          >
-                            <span
-                              onClick={() => setShowOptionListSquareOne(false)}
-                            >
-                              <CloseIcon />
-                            </span>
-                            {listItems.map((item) => (
-                              <div
-                                key={item.id}
-                                onClick={() =>
-                                  handleSquareOneSelect(
-                                    item.id,
-                                    item.title,
-                                    item.s3_icon_url,
-                                    selectedItemsDetails[0].main_order
-                                  )
-                                }
-                                className={`py-2 border-b `}
-                              >
-                                {item.title}
-                              </div>
-                            ))}
-                          </div>
-                        ) : null}
-                      </div>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-
-            {/* second square */}
-            <div className="col-span-6 relative">
-              {selectedItemsDetails[1]?.sub_order === 2 ||
-              selectedItemsDetails[0]?.sub_order === 2 ? (
-                <>
-                  {/* first squre */}
-                  <div className="px-4 py-3 border-2 rounded-2xl overflow-hidden  ">
-                    <div className="flex items-center justify-center mt-3">
-                      <span
-                        onClick={() =>
-                          removeItem(
-                            selectedItemsDetails[1]?.sub_order === 2
-                              ? selectedItemsDetails[1]
-                              : selectedItemsDetails[0],
-
-                            selectedItemsDetails[1]?.sub_order === 2 ? 1 : 0,
-
-                            selectedItemsDetails[1]?.sub_order === 2
-                              ? selectedItemsDetails[1].main_order
-                              : selectedItemsDetails[0].main_order,
-
-                            selectedItemsDetails[1]?.sub_order === 2
-                              ? selectedItemsDetails[1].display_box_type
-                              : selectedItemsDetails[0].display_box_type
-                          )
-                        }
-                        className="absolute left-[15px]"
-                      >
-                        <CloseIcon />
-                      </span>
-                      <span
-                        onClick={() => handleSquareClick(1, data.data[1]?.id)}
-                        className="absolute left-[40px]"
-                      >
-                        <PenEditIcon />
-                      </span>
-                    </div>
-
-                    <div
-                      className="bg-dark w-[45px] h-[45px] rounded-full mb-3
-      flex justify-center items-center overflow-hidden"
-                    >
-                      <Image
-                        src={
-                          selectedItemsDetails[1]?.sub_order === 2
-                            ? selectedItemsDetails[1].s3_icon_url
-                            : selectedItemsDetails[0].s3_icon_url
-                        }
-                        alt={
-                          selectedItemsDetails[1]?.sub_order === 2
-                            ? selectedItemsDetails[1].title
-                            : selectedItemsDetails[0].title
-                        }
-                        width={32}
-                        height={32}
-                        className="bg-white invert"
-                      />
-                    </div>
-                    <p className="font-medium text-xs text-dark ">
-                      {selectedItemsDetails[1]?.sub_order === 2
-                        ? selectedItemsDetails[1].title
-                        : selectedItemsDetails[0].title}
-                    </p>
-                    <p className="font-medium text-xs text-muted mt-2 mb-5 line-clamp-2">
-                      {selectedItemsDetails[1]?.sub_order === 2
-                        ? selectedItemsDetails[1].description
-                        : selectedItemsDetails[0].description}
-                    </p>
-                  </div>
-
-                  {/* list options */}
                   {showOptionListArray[1] && (
                     <div
                       className="bg-white shadow-2xl absolute left-[0px] top-0 right-0 p-4 max-h-[150px] overflow-y-scroll 
-                     rounded-md border "
+             rounded-md border "
                     >
                       <span onClick={() => handleSquareClick(1)}>
                         <CloseIcon />
@@ -544,36 +482,36 @@ const SquareDataExists = ({
                   )}
                 </>
               ) : (
+                // empty
                 <div
                   onClick={() =>
-                    setShowOptionListSquareTwo(!showOptionListSquareTwo)
+                    setShowOptionListSquareOne(!showOptionListSquareOne)
                   }
-                  className="col-span-6 px-4 py-3 border-2 rounded-2xl overflow-hidden h-[140px] bg-graySubmit shadow-customInset
-          flex justify-center items-center relative
-  
-          "
+                  className="col-span-6 px-4 py-3 rounded-2xl overflow-hidden h-[140px] bg-graySubmit border border-darkGray
+      flex justify-center items-center relative"
                 >
                   <PlusSignPageView />
 
                   <div>
-                    {showOptionListSquareTwo ? (
+                    {showOptionListSquareOne ? (
                       <div
                         className="bg-white absolute shadow-2xl  left-[0px] top-0 right-0 p-4 max-h-[150px] overflow-y-scroll 
-                       rounded-md border "
+            rounded-md border "
                       >
-                        <span onClick={() => setShowOptionListSquareTwo(false)}>
+                        <span onClick={() => setShowOptionListSquareOne(false)}>
                           <CloseIcon />
                         </span>
                         {listItems.map((item) => (
                           <div
                             key={item.id}
-                            // onClick={() =>
-                            //   handleSquareOneSelect(
-                            //     item.id,
-                            //     item.title,
-                            //     item.s3_icon_url
-                            //   )
-                            // }
+                            onClick={() =>
+                              handleSquareTwoSelect(
+                                item.id,
+                                item.title,
+                                item.s3_icon_url,
+                                firstSquare[0]
+                              )
+                            }
                             className={`py-2 border-b `}
                           >
                             {item.title}
@@ -587,9 +525,8 @@ const SquareDataExists = ({
             </div>
           </div>
         </>
-      ) : (
-        <LoadingState />
-      )}
+      ) : // <LoadingState />
+      null}
     </>
   );
 };

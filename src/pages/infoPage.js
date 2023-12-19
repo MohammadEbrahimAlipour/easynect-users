@@ -77,7 +77,8 @@ END:VCARD
   const [updatedExtractedData, setUpdatedExtractedData] = useState([]);
   const [syncedExtractedData, setSyncExtractedData] = useState([]);
   const [addedItems, setAddedItems] = useState([]);
-  const [dataToSend, setDataToSend] = useState([]);
+
+  const [localItemsSelected, setLocalItemsSelected] = useState([]);
 
   console.log("extractedData", extractedData);
   console.log("updatedExtractedData", updatedExtractedData);
@@ -97,25 +98,12 @@ END:VCARD
   }, [extractedData]);
 
   // log
-  // syncronizing syncedExtractedData
-  useEffect(() => {
-    // Flatten the updatedExtractedData array
-    // const flattenedData = updatedExtractedData.flat();
-
-    // // Flatten the addedItems array
-    // const flattenedAddedItems = addedItems.flat();
-
-    // // Concatenate flattenedAddedItems to the end of flattenedData
-    // const finalData = [...flattenedData, ...flattenedAddedItems];
-    // setDataToSend(finalData);
-    // Log the final data
-    console.log("&&&&&&&updated data final &&&&&&&", dataToSend);
-  }, [updatedExtractedData, addedItems, dataToSend]);
 
   // syncronizing syncedExtractedData
   useEffect(() => {
-    setUpdatedExtractedData(extractedData);
-  }, [extractedData]);
+    // setUpdatedExtractedData(extractedData.contents);
+    console.log("%%%%%%updatedExtractedData", updatedExtractedData);
+  }, [extractedData, updatedExtractedData]);
 
   useEffect(() => {
     // Make an Axios GET request to fetch user data based on user_id
@@ -155,17 +143,9 @@ END:VCARD
         .then((response) => {
           // Handle the data once it's received
           setPageViewData(response.data);
-
+          setExtractedData(response.data);
+          setUpdatedExtractedData(response.data.contents);
           // set extracted data
-          const newData = response.data.contents.map((item) =>
-            item.data.map((item2) => ({
-              main_order: item.main_order,
-              content_id: item2.id,
-              sub_order: item2.sub_order,
-              display_box_type: item.display_box_type
-            }))
-          );
-          setExtractedData(newData);
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
@@ -204,19 +184,24 @@ END:VCARD
   // Function to submit the form
   const handleSubmit = (event) => {
     event.preventDefault();
+
     if (selectedOption.id) {
       console.log("submited");
 
-      // Flatten the updatedExtractedData array
-      const flattenedData = updatedExtractedData.flat();
-
-      // final data addedItemd appended to updatedExtractedData
-
-      // Flatten the addedItems array
-      const flattenedAddedItems = addedItems.flat();
+      const newData = updatedExtractedData.flatMap((item) =>
+        item.data.map((dataItem) => ({
+          content_id: dataItem.id,
+          main_order: item.main_order, // Take the main_order from the outer item
+          sub_order: dataItem.sub_order, // Take the sub_order from the inner dataItem
+          display_box_type: item.display_box_type // Take the display_box_type from the outer item
+        }))
+      );
 
       // Concatenate flattenedAddedItems to the end of flattenedData
-      const finalData = [...flattenedData, ...flattenedAddedItems];
+      const finalData = [...newData, ...localItemsSelected];
+
+      console.log("&&&&&&&updated data finalData &&&&&&&", finalData);
+
       // Make an Axios PATCH request to update user data based on user_id
       const apiUrl = generateApiUrl(
         `/api/v1/page_view/contents/order/${selectedOption.id}`
@@ -249,6 +234,25 @@ END:VCARD
           }
         });
     }
+  };
+
+  const handleRemoveItem = (item) => {
+    debugger;
+    console.log("item => ", item);
+    const oldData = [...updatedExtractedData];
+    const result = oldData.filter((row) => {
+      const oldRow = [...row?.data];
+      let rowResult = [];
+      if (Array.isArray(row?.data)) {
+        rowResult = oldRow?.filter((subRow) => {
+          return subRow.guid != item.guid ? subRow : undefined;
+        });
+      }
+      row.data = rowResult;
+      return row.data?.length ? row : undefined;
+    });
+
+    setUpdatedExtractedData([...result]);
   };
 
   return (
@@ -333,8 +337,8 @@ END:VCARD
               className="border-[3px] mt-5 px-2 pb-6 rounded-lg"
             >
               <div className=" mt-5">
-                {pageViewData?.contents.map((object) => (
-                  <div key={object.id}>
+                {updatedExtractedData?.map((object) => (
+                  <div key={object?.guid + object?.data?.length}>
                     {/* square section */}
 
                     {object.display_box_type === "square" ? (
@@ -346,6 +350,7 @@ END:VCARD
                         listItems={listItems}
                         data={object}
                         syncedExtractedData={syncedExtractedData}
+                        removeItem={handleRemoveItem}
                       />
                     ) : null}
 
@@ -361,6 +366,7 @@ END:VCARD
                         data={object}
                         syncedExtractedData={syncedExtractedData}
                         setSyncExtractedData={setSyncExtractedData}
+                        removeItem={handleRemoveItem}
                       />
                     ) : null}
                   </div>
@@ -378,6 +384,9 @@ END:VCARD
                     syncedExtractedData={syncedExtractedData}
                     setSyncExtractedData={setSyncExtractedData}
                     setAddedItems={setAddedItems}
+                    removeItem={handleRemoveItem}
+                    localItemsSelected={localItemsSelected}
+                    setLocalItemsSelected={setLocalItemsSelected}
                   />
                 </div>
                 <button type="submit">submit</button>

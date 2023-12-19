@@ -1654,21 +1654,21 @@ export const PlusSignPageView = ({ className, ...rest }) => (
   >
     <path
       d="M8.89007 14.6667C12.5934 14.6667 15.6234 11.6667 15.6234 8C15.6234 4.33333 12.5934 1.33333 8.89007 1.33333C5.18674 1.33333 2.15674 4.33333 2.15674 8C2.15674 11.6667 5.18674 14.6667 8.89007 14.6667Z"
-      stroke="#ffff"
-      strokeWidth="2"
+      stroke="#5B5F73"
+      strokeWidth="1.5"
       storkeLinecap="round"
       storkeLinejoin="round"
     />
     <path
       d="M6.19678 8H11.5834"
-      stroke="#ffff"
+      stroke="#5B5F73"
       strokeWidth="1.7"
       storkeLinecap="round"
       storkeLinejoin="round"
     />
     <path
       d="M8.89001 10.6667V5.33333"
-      stroke="#ffff"
+      stroke="#5B5F73"
       strokeWidth="1.7"
       storkeLinecap="round"
       storkeLinejoin="round"
