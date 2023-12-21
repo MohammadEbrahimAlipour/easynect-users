@@ -4,7 +4,7 @@ import { CardsCardIcon, CardsWifiIcon, PlusSign } from "@/components/Icons";
 import Layout from "@/components/Layout";
 import ProfileCardEmpty from "@/components/ProfileCardEmpty";
 import Link from "next/link";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { generateApiUrl } from "@/components/ApiUr";
 import axios from "axios";
 import { useAccessToken } from "../../../../context/AccessTokenContext";
@@ -35,11 +35,10 @@ const ProfileCard = () => {
 
   const cardWrapperRef = useRef(null);
 
-  const handleCarouselShownCards = () => {
+  const finalCardsNumber = useMemo(() => {
     const cardsNumber = cards.length;
-    const finalCardsNumber = cardsNumber <= 3 ? cardsNumber : 3;
-    return finalCardsNumber;
-  };
+    return cardsNumber <= 3 ? cardsNumber : 3;
+  }, [cards.length]);
 
   const handleClickedCardId = (id, card_title) => {
     setClickedCardId({
@@ -192,7 +191,7 @@ const ProfileCard = () => {
               ref={cardWrapperRef}
             >
               {cards
-                .slice(cards.length - handleCarouselShownCards(), cards.length)
+                .slice(cards.length - finalCardsNumber, cards.length)
                 .map(
                   (
                     { isFallen, id, card_title, job_title, profile_s3_url },

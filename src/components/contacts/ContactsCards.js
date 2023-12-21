@@ -4,6 +4,7 @@ import { ContactsWifiIcon } from "../Icons";
 import Image from "next/image";
 
 const ContactsCards = ({ contact }) => {
+  console.log("contacts&&&&&&&", contact);
   return (
     <>
       <Link href="/" className="bg-white w-full my-3 flex py-4 px-5 rounded-lg">

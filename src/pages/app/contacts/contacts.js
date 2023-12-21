@@ -189,9 +189,10 @@ const Contacts = () => {
     setContacts([]); // Clear existing contacts when pageID changes
   }, [pageID]);
 
+  console.log("contacts", contacts);
+
   return (
     <>
-
       {pageData ? (
         <>
           <Header />
@@ -281,17 +282,21 @@ const Contacts = () => {
                 No contacts for this card
               </span>
             ) : (
-              <InfiniteScroll
-                dataLength={contacts.length}
-                // dataLength={30}
-                next={loadMoreContacts}
-                hasMore={hasMore}
-                loader={<LoadingState />}
+              <div
+              // className="max-h-[60px]"
               >
-                {contacts.map((contact) => (
-                  <ContactsCards contact={contact} key={contact.id} />
-                ))}
-              </InfiniteScroll>
+                <InfiniteScroll
+                  dataLength={contacts.length}
+                  // dataLength={30}
+                  next={loadMoreContacts}
+                  hasMore={hasMore}
+                  loader={<LoadingState />}
+                >
+                  {contacts.map((contact) => (
+                    <ContactsCards contact={contact} key={contact.id} />
+                  ))}
+                </InfiniteScroll>
+              </div>
             )}
           </Layout>
           <Footer />
@@ -308,8 +313,7 @@ const Contacts = () => {
         }}
         childeren={<>test</>}
       />
-      </>
-
+    </>
   );
 };
 
