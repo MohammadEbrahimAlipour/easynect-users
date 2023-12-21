@@ -214,7 +214,7 @@ const EditMediaSettingsHorz = () => {
 
   return (
     <>
-      {mediaData && displayType ? (
+      {mediaData ? (
         <>
           <HeaderTwo />
           <Layout>

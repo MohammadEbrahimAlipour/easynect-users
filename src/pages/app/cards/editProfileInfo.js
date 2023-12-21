@@ -304,13 +304,13 @@ const EditProfileInfo = () => {
                   />
                 </div>
               </form>
-              <div className="my-8">
-                <Devider text="انتخواب نوع منو" />
-              </div>
+              {/* <div className="my-8">
+                <Devider text="ویرایش" />
+              </div> */}
 
               {/* bottom side btns */}
               <div className="text-sm text-center w-full flex flex-col mt-5">
-                <Link
+                {/* <Link
                   href={`/app/contents/horz/contentHorz?id=${id}`}
                   className="border-[1px] border-black px-4 py-3 rounded-lg mb-2 flex justify-center
               items-center"
@@ -319,7 +319,7 @@ const EditProfileInfo = () => {
                     <PenEditIcon />
                   </span>
                   ویرایش آیتم ها
-                </Link>
+                </Link> */}
                 <Link
                   href={`/mediaSelection?id=${id}`}
                   className="border-[1px] border-black px-4 py-3 rounded-lg mb-2 flex justify-center
@@ -328,7 +328,7 @@ const EditProfileInfo = () => {
                   <span className="me-1">
                     <PenEditIcon />
                   </span>
-                  ویرایش منوی افقی
+                  ویرایش آیتم ها
                 </Link>
               </div>
             </div>

@@ -3,8 +3,8 @@ import { HeaderBellLogo, HeaderShareLogo } from "./Icons";
 import logo from "../../public/icons/easynect icons/headerLogoBlack.svg";
 import Image from "next/image";
 import { motion, useAnimation } from "framer-motion";
-import HeaderShareSheet from "./bottomSheet/header/HeaderShareSheet";
 import { useGesture } from "react-use-gesture";
+import HeaderShareBSheet from "./bottomSheet/header/HeaderShareBSheet";
 
 const Header = ({ className = "" }) => {
   const [showSheet, setShowSheet] = useState(false);
@@ -27,14 +27,15 @@ const Header = ({ className = "" }) => {
 
       {/* Framer Motion bottom sheet */}
       <div className="w-full flex justify-center items-center">
-        <motion.div
+        {/* <motion.div
           initial={{ height: 0 }}
           animate={{ height: showSheet ? "auto" : 0 }}
           transition={{ duration: 0.3 }}
           className="bg-white shadow-lg rounded-tr-lg rounded-tl-lg w-[90%] absolute bottom-0 z-[999999] overflow-hidden"
-        >
-          <HeaderShareSheet showSheet={showSheet} />
-        </motion.div>
+        > */}
+        {/* <HeaderShareSheet showSheet={showSheet} /> */}
+        <HeaderShareBSheet showSheet={showSheet} setShowSheet={setShowSheet} />
+        {/* </motion.div> */}
       </div>
     </>
   );

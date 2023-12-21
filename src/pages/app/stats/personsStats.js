@@ -15,6 +15,7 @@ import BottomSheet from "@/components/BottomSheet";
 import BottomSheetStatsDate from "@/components/BottomSheetStatsDate";
 import BottomSheetStatsPresets from "@/components/BottomSheetStatsPresets";
 import LoadingState from "@/components/LoadingState";
+import { Drawer } from "@mui/material";
 
 const PersonsStats = () => {
   const [isSelected, setIsSelected] = useState("content");
@@ -478,14 +479,16 @@ const PersonsStats = () => {
         </div>
       </Layout>
       <Footer />
-      <BottomSheet
-        showSubMenu={showSubMenu}
-        handleSubMenuClose={() => {
-          setShowSubMenu(false);
-          setGoToCal(false);
-        }}
-        childeren={
-          goToCal ? (
+      <div>
+        <Drawer
+          anchor="bottom"
+          open={showSubMenu}
+          onClose={() => {
+            setShowSubMenu(false);
+            setGoToCal(false);
+          }}
+        >
+          {goToCal ? (
             <BottomSheetStatsDate
               setFromDate={setFromDate}
               setToDate={setToDate}
@@ -499,9 +502,9 @@ const PersonsStats = () => {
               setToDate={setToDate}
               toDate={toDate}
             />
-          )
-        }
-      />
+          )}
+        </Drawer>
+      </div>
     </>
   );
 };
