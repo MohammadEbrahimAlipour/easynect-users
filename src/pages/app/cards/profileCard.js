@@ -87,23 +87,13 @@ const ProfileCard = () => {
         return newCards;
       });
 
-      setCards((previousCards) => {
-        const newCards = [...previousCards];
-
-        const newId = cards[0].id - 1 + Math.random() * 1000;
-
-        newCards.unshift({
-          id: newId,
-          isFallen: false,
-        });
-
-        return newCards;
-      });
-
       setTimeout(() => {
         setCards((previousCards) => {
           const newCards = [...previousCards];
-          newCards.pop();
+
+          const lastCard = newCards.pop();
+          lastCard.isFallen = false;
+          newCards.unshift(lastCard);
 
           return newCards;
         });
