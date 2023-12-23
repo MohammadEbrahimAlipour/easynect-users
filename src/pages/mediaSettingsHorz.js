@@ -11,6 +11,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import LoadingState from "@/components/LoadingState";
+import UnifiedData from "@/components/mediaItems/UnifiedData";
+import File from "@/components/mediaItems/File";
 
 const MediaSettingsHorz = () => {
   const router = useRouter();
@@ -24,15 +26,13 @@ const MediaSettingsHorz = () => {
   const [is_square, setIsSquare] = useState(true);
   const [baseUrl, setBaseUrl] = useState("");
   const [displayType, setDisplayType] = useState("square");
-
+  const { type } = router.query;
   const [showTooltip, setShowTooltip] = useState(false);
-
-  const [type, setType] = useState(""); // to save the type and use it in urls
+  const [file, setFile] = useState(null);
 
   const [formData, setFormData] = useState({
     title: "",
-    content_val: "",
-    display_type: displayType
+    content_val: ""
   });
 
   const handleInputChange = (e) => {
@@ -46,7 +46,6 @@ const MediaSettingsHorz = () => {
       [name]: updatedValue
     });
   };
-  console.log("display", displayType); //clg here
 
   const handleIsSquare = () => {
     setIsSquare(true);
@@ -90,7 +89,7 @@ const MediaSettingsHorz = () => {
           // Handle the data once it's received
           setMediaData(response.data);
           setPlaceholder(response.data.placeholder);
-          setType(response.data.type);
+
           setBaseUrl(response.data.base_url);
         })
         .catch((error) => {
@@ -123,7 +122,10 @@ const MediaSettingsHorz = () => {
           formDataToSend.append(key, formData[key]);
         }
 
-        console.log("display sending", displayType); //clg here
+        // Append the file to formData before sending
+        if (file) {
+          formDataToSend.append("file", file); // 'file' is the field name for the uploaded file
+        }
 
         // Make a POST request to create a new user
         const apiUrl = generateApiUrl(
@@ -167,7 +169,7 @@ const MediaSettingsHorz = () => {
 
   return (
     <>
-      {mediaData && placeholder ? (
+      {mediaData && placeholder && id && type ? (
         <>
           <HeaderTwo href="/contentAddItem" />
           <Layout>
@@ -191,8 +193,8 @@ const MediaSettingsHorz = () => {
                   </div>
                 </div>
 
-                {/* preview */}
                 <div className="mt-10 flex flex-col items-center">
+                  {/* preview */}
                   <div
                     className={`border-2 rounded-md py-4 px-3 w-[170px] overflow-hidden 
                   ${
@@ -226,75 +228,36 @@ const MediaSettingsHorz = () => {
                     </p>
                   </div>
 
-                  <div className="mt-10 flex flex-col w-full">
-                    <label htmlFor="title" className="mb-2">
-                      عنوان
-                    </label>
-                    <input
-                      htmlFor="title"
-                      name="title"
-                      placeholder={mediaData.title}
-                      onChange={(e) => {
-                        handleInputChange(e);
-                        setLivePreviewTitle(e.target.value);
-                      }}
-                      className="border-2 rounded-md text-sm py-1 px-1 mb-3"
-                    />
-                    <span className="flex justify-between items-center relative">
-                      <label htmlFor="icon" className="mb-2">
-                        اطلاعات را وارد کنید:
-                      </label>
+                  <>
+                    {type !== "file" ? (
+                      //  unified input data
 
-                      <span
-                        className={`absolute z-10 w-[140px] left-[22px] -top-6 bg-dark text-white
-                    rounded-md overflow-hidden text-xs p-2 opacity-0 transform scale-0 transition-opacity duration-700 
-                    ${
-                      showTooltip
-                        ? "opacity-100 scale-100"
-                        : "opacity-0 scale-0"
-                    }`}
-                      >
-                        اطلاعات را وارد کنید: اطلاعات را وارد کنید:
-                      </span>
-                      <span
-                        onTouchStart={handleTouchStart}
-                        onTouchEnd={handleTouchEnd}
-                        onMouseEnter={handleTouchStart}
-                        onMouseLeave={handleTouchEnd}
-                        onMouseDown={handleTouchStart}
-                        onMouseUp={handleTouchEnd}
-                      >
-                        <InfoIcon />
-                      </span>
-                    </span>
+                      <UnifiedData
+                        mediaData={mediaData}
+                        showTooltip={showTooltip}
+                        is_square={is_square}
+                        handleTouchStart={handleTouchStart}
+                        handleTouchEnd={handleTouchEnd}
+                        handleInputChange={handleInputChange}
+                        setLivePreviewTitle={setLivePreviewTitle}
+                        setLivePreviewDesc={setLivePreviewDesc}
+                      />
+                    ) : (
+                      //  file input data
 
-                    <input
-                      id="icon"
-                      type="text"
-                      name="content_val"
-                      onChange={(e) => {
-                        handleInputChange(e);
-                      }}
-                      className="border-2 rounded-md text-sm py-1 px-1"
-                      placeholder={mediaData.placeholder}
-                    />
-
-                    <label className="my-2">توضیحات:</label>
-                    <input
-                      id="icon"
-                      type="text"
-                      name="description"
-                      onChange={(e) => {
-                        handleInputChange(e);
-                        setLivePreviewDesc(e.target.value);
-                      }}
-                      className={`border-2 rounded-md text-sm py-1 px-1 ${
-                        is_square ? "" : "disabled:opacity-60"
-                      }`}
-                      placeholder={mediaData.description}
-                      disabled={!is_square}
-                    />
-                  </div>
+                      <File
+                        mediaData={mediaData}
+                        showTooltip={showTooltip}
+                        is_square={is_square}
+                        handleTouchStart={handleTouchStart}
+                        handleTouchEnd={handleTouchEnd}
+                        handleInputChange={handleInputChange}
+                        setLivePreviewTitle={setLivePreviewTitle}
+                        setLivePreviewDesc={setLivePreviewDesc}
+                        setFile={setFile}
+                      />
+                    )}
+                  </>
                 </div>
 
                 <div className="mt-10 py-5 border-[1px] rounded-lg px-2 flex justify-between overflow-hidden ">

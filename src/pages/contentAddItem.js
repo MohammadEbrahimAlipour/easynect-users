@@ -20,7 +20,7 @@ const ContentStoreAddItem = () => {
   const { id } = router.query;
 
   useEffect(() => {
-    const apiUrl = generateApiUrl(`/api/v1/contents_store/?type_=${"item"}`);
+    const apiUrl = generateApiUrl(`/api/v1/contents_store/`);
 
     // Make an Axios GET request to fetch user data
     axios
@@ -89,7 +89,7 @@ const ContentStoreAddItem = () => {
                     .find((cat) => cat.category === selectedCategory)
                     .contents_store.map((item) => (
                       <Link
-                        href={`/mediaSettingsHorz?id=${item.id}&pageId=${id}`}
+                        href={`/mediaSettingsHorz?id=${item.id}&pageId=${id}&type=${item.type_}`}
                         key={item.id}
                         className="flex flex-col justify-center items-center me-3 mb-5"
                       >

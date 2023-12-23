@@ -85,7 +85,6 @@ const MediaOptions = ({ item }) => {
               </label>
             </div>
           </div>
-          <span className="pe-2">::</span>
         </div>
       </div>
     </>

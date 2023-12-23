@@ -47,7 +47,6 @@ const ProfileCard = () => {
     });
     setShowSheet(true);
   };
-
   const handleSeeMoreOptions = (id, card_title) => {
     setMoreSheetDetails({
       id: id,
@@ -55,7 +54,6 @@ const ProfileCard = () => {
     });
     setShowSheetMore(true);
   };
-
   // Fetch card data from the API
   useEffect(() => {
     // Replace with your API endpoint
@@ -173,10 +171,6 @@ const ProfileCard = () => {
 
     return 0;
   };
-
-  // log
-  console.log("cards", cards);
-  console.log("cardData", cardData);
 
   return (
     <>
