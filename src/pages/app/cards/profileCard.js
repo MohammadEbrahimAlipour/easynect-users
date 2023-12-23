@@ -63,8 +63,8 @@ const ProfileCard = () => {
       .get(apiUrl, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
-          "accept-language": "fa" // Include the access token in the headers
-        }
+          "accept-language": "fa", // Include the access token in the headers
+        },
       })
       .then((response) => {
         // setCardData(response.data);
