@@ -43,7 +43,11 @@ module.exports = {
         mutedDark: "#858585",
         gold: "#CEA16A",
         lightMenu: "#FAFAFA",
-        graySubmit: "#C9C9C9"
+        graySubmit: "#e3e3e3",
+        darkGray: "#c5c8da",
+
+        // empty square page view
+        squareGray: "#d0d2e2"
       },
       animation: {
         "spin-slow": "spin 8s linear infinite"

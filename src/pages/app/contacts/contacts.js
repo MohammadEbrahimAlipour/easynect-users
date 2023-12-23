@@ -189,15 +189,16 @@ const Contacts = () => {
     setContacts([]); // Clear existing contacts when pageID changes
   }, [pageID]);
 
+  console.log("contacts", contacts);
+
   return (
     <>
-
       {pageData ? (
         <>
           <Header />
           <Layout>
             {/* top tags */}
-            <div className="grid grid-cols-12  items-center justify-center">
+            <div className="grid grid-cols-12 items-center justify-center">
               <div className=" col-span-8">
                 <div className="grid grid-cols-12">
                   {/* chose page */}
@@ -281,17 +282,19 @@ const Contacts = () => {
                 No contacts for this card
               </span>
             ) : (
-              <InfiniteScroll
-                dataLength={contacts.length}
-                // dataLength={30}
-                next={loadMoreContacts}
-                hasMore={hasMore}
-                loader={<LoadingState />}
-              >
-                {contacts.map((contact) => (
-                  <ContactsCards contact={contact} key={contact.id} />
-                ))}
-              </InfiniteScroll>
+              <div className="max-h-screen bg-red-400 px-2 overflow-hidden">
+                <InfiniteScroll
+                  dataLength={contacts.length}
+                  // dataLength={10}
+                  next={loadMoreContacts}
+                  hasMore={hasMore}
+                  loader={<LoadingState />}
+                >
+                  {contacts.map((contact) => (
+                    <ContactsCards contact={contact} key={contact.guid} />
+                  ))}
+                </InfiniteScroll>
+              </div>
             )}
           </Layout>
           <Footer />
@@ -308,8 +311,7 @@ const Contacts = () => {
         }}
         childeren={<>test</>}
       />
-      </>
-
+    </>
   );
 };
 

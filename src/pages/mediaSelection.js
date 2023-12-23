@@ -86,7 +86,6 @@ const MediaSelection = () => {
               <MediaOptions key={item.id} item={item} />
             ))}
           </div>
-
           {/* bottom side btns */}
           <div className="text-sm text-center w-full flex flex-col mt-5">
             <Link

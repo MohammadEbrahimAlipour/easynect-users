@@ -1,5 +1,5 @@
 import Layout from "@/components/Layout";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { ChosenTik, InfoIcon, LinkedIn } from "@/components/Icons";
 import Footer from "@/components/Footer";
@@ -11,6 +11,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import LoadingState from "@/components/LoadingState";
+import CreateUnifiedData from "@/components/mediaItems/createItem/CreateUnifiedData";
+import CreateFile from "@/components/mediaItems/createItem/CreateFile";
 
 const EditMediaSettingsHorz = () => {
   const router = useRouter();
@@ -20,6 +22,7 @@ const EditMediaSettingsHorz = () => {
   const [placeholder, setPlaceholder] = useState("");
   const [livePreviewDesc, setLivePreviewDesc] = useState("");
   const [livePreviewTitle, setLivePreviewTitle] = useState("");
+  const [file, setFile] = useState(null);
 
   const [baseUrl, setBaseUrl] = useState("");
   const [displayType, setDisplayType] = useState("");
@@ -33,7 +36,6 @@ const EditMediaSettingsHorz = () => {
   const [formData, setFormData] = useState({
     title: "",
     content_val: "",
-    display_type: displayType,
     description: ""
   });
 
@@ -48,7 +50,7 @@ const EditMediaSettingsHorz = () => {
       [name]: updatedValue
     });
   };
-  console.log("display", displayType); //clg here
+  console.log("display", type); //clg here
 
   const handleIsSquare = () => {
     setIsSquare(true);
@@ -95,9 +97,8 @@ const EditMediaSettingsHorz = () => {
           // Handle the data once it's received
           setMediaData(response.data);
           setPlaceholder(response.data.placeholder);
-          setType(response.data.type);
+          setType(response.data.content_store.type);
           setBaseUrl(response.data.content_store.base_url);
-          setDisplayType(response.data.display_type);
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
@@ -128,9 +129,10 @@ const EditMediaSettingsHorz = () => {
         for (const key in formData) {
           formDataToSend.append(key, formData[key]);
         }
-
-        console.log("display sending", displayType); //clg here
-        console.log("url sending", formDataToSend); //clg here
+        // Append the file to formData before sending
+        if (file) {
+          formDataToSend.append("file", file); // 'file' is the field name for the uploaded file
+        }
 
         // Make a POST request to create a new user
         const apiUrl = generateApiUrl(
@@ -214,7 +216,7 @@ const EditMediaSettingsHorz = () => {
 
   return (
     <>
-      {mediaData && displayType ? (
+      {mediaData ? (
         <>
           <HeaderTwo />
           <Layout>
@@ -273,82 +275,30 @@ const EditMediaSettingsHorz = () => {
                     </p>
                   </div>
 
-                  <div className="mt-10 flex flex-col w-full">
-                    <label htmlFor="title" className="mb-2">
-                      عنوان
-                    </label>
-                    <input
-                      htmlFor="title"
-                      name="title"
-                      defaultValue={mediaData.title}
-                      onChange={(e) => {
-                        handleInputChange(e);
-                        setLivePreviewTitle(e.target.value);
-                      }}
-                      className="border-2 rounded-md text-sm py-1 px-1 mb-3 font-ravi"
+                  {type !== "file" ? (
+                    <CreateUnifiedData
+                      mediaData={mediaData}
+                      showTooltip={showTooltip}
+                      is_square={is_square}
+                      handleTouchStart={handleTouchStart}
+                      handleTouchEnd={handleTouchEnd}
+                      handleInputChange={handleInputChange}
+                      setLivePreviewTitle={setLivePreviewTitle}
+                      setLivePreviewDesc={setLivePreviewDesc}
                     />
-                    <span className="flex justify-between items-center relative">
-                      <label htmlFor="icon" className="mb-2">
-                        اطلاعات را وارد کنید:
-                      </label>
-
-                      <span
-                        className={`absolute z-10 w-[140px] left-[22px] -top-6 bg-dark text-white
-                rounded-md overflow-hidden text-xs p-2 opacity-0 transform scale-0 transition-opacity duration-700 
-                ${showTooltip ? "opacity-100 scale-100" : "opacity-0 scale-0"}`}
-                      >
-                        <p className="mb-1">
-                          {mediaData.content_store.hint_title}:
-                        </p>
-                        <p>{mediaData.content_store.hint}</p>
-                      </span>
-                      <span
-                        onTouchStart={handleTouchStart}
-                        onTouchEnd={handleTouchEnd}
-                        onMouseEnter={handleTouchStart}
-                        onMouseLeave={handleTouchEnd}
-                        onMouseDown={handleTouchStart}
-                        onMouseUp={handleTouchEnd}
-                      >
-                        <InfoIcon />
-                      </span>
-                    </span>
-
-                    <input
-                      id="icon"
-                      type="text"
-                      name="content_val"
-                      onChange={(e) => {
-                        handleInputChange(e);
-                      }}
-                      className="border-2 rounded-md text-sm py-1 px-1 font-ravi"
-                      defaultValue={mediaData.content_val}
+                  ) : (
+                    <CreateFile
+                      mediaData={mediaData}
+                      showTooltip={showTooltip}
+                      is_square={is_square}
+                      handleTouchStart={handleTouchStart}
+                      handleTouchEnd={handleTouchEnd}
+                      handleInputChange={handleInputChange}
+                      setLivePreviewTitle={setLivePreviewTitle}
+                      setLivePreviewDesc={setLivePreviewDesc}
+                      setFile={setFile}
                     />
-
-                    <>
-                      <label
-                        htmlFor="desc"
-                        className={`my-3 ${is_square ? "" : "text-muted"}`}
-                      >
-                        توضیحات:
-                      </label>
-
-                      <input
-                        id="desc"
-                        type="text"
-                        name="description"
-                        onChange={(e) => {
-                          handleInputChange(e);
-                          setLivePreviewDesc(e.target.value);
-                        }}
-                        className={`border-2 rounded-md text-sm py-1 px-1 font-ravi ${
-                          is_square ? "" : "disabled:opacity-60"
-                        }`}
-                        defaultValue={mediaData.description}
-                        disabled={!is_square}
-                      />
-                    </>
-                  </div>
+                  )}
                 </div>
 
                 <div className="mt-10 py-5 border-[1px] rounded-lg px-2 flex justify-between overflow-hidden ">

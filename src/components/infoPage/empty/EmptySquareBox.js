@@ -1,6 +1,7 @@
 import { CloseIcon, PlusSignPageView } from "@/components/Icons";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Fragment } from "react";
 import Image from "next/image";
+import { set } from "lodash";
 
 const EmptySquareBox = ({
   setUpdatedExtractedData,
@@ -8,20 +9,25 @@ const EmptySquareBox = ({
   extractedData,
   updatedExtractedData,
   listItems,
-  setAddedItems
+  setAddedItems,
+  localItemsSelected,
+  setLocalItemsSelected
 }) => {
   const [boxType, setBoxType] = useState("");
   const [showAddPopUp, setShowAddPopUp] = useState(false);
   const [showAddSquareOnePopUp, setShowAddSquareOnePopUp] = useState(false);
   const [showRecPopUp, setShowRecPopUp] = useState(false);
   const [showOptionList, setShowOptionList] = useState(false);
-  const [localItemsSelected, setLocalItemsSelected] = useState([]);
 
   const [showOptionListSquare, setShowOptionListSquare] = useState(false);
   const [showOptionListSquareTwo, setShowOptionListSquareTwo] = useState(false);
   const [showOptionListArray, setShowOptionListArray] = useState();
   // Assume we have a state to hold the history of all changes to localItemsSelected
   const [localItemsHistory, setLocalItemsHistory] = useState([]);
+  const [showOptionListSquareOneAdded, setShowOptionListSquareOneAdded] =
+    useState(false);
+  const [showOptionListSquareTwoAdded, setShowOptionListSquareTwoAdded] =
+    useState(false);
 
   // addedItems to send
   useEffect(() => {
@@ -32,6 +38,12 @@ const EmptySquareBox = ({
 
     // You might want to perform additional actions with the filtered items, e.g., save to the server
   }, [localItemsSelected, setAddedItems]);
+
+  const generateUniqueID = () => {
+    return `id-${new Date().getTime()}-${Math.random()
+      .toString(36)
+      .substr(2, 9)}`;
+  };
 
   const HandleSquareType = () => {
     setBoxType("squareBox");
@@ -47,22 +59,27 @@ const EmptySquareBox = ({
     setShowAddPopUp(true);
   };
 
-  // Use useEffect to initialize localItemsSelected with existing `extractedData`
-  useEffect(() => {
-    // Flattening the `extractedData` as we don't want nested arrays here
-    // Assuming `extractedData` is an array of arrays based on your previously shared code
-    const flatExtractedData = extractedData.flat();
-    setLocalItemsSelected(flatExtractedData);
-  }, [extractedData]);
-
   const getNextMainOrder = () => {
     // Extract all the main_order numbers into a new array
-    const mainOrders = localItemsSelected.map((item) => item.main_order);
+
+    const mainOrders = [...updatedExtractedData, ...localItemsSelected].map(
+      (item) => item.main_order
+    );
 
     // Find the max value in the mainOrders array
     const maxOrder = mainOrders.length > 0 ? Math.max(...mainOrders) : 0;
 
     return maxOrder + 1; // Increment the maxOrder by one to get the next order
+  };
+
+  const removeItem = (item) => {
+    console.log("item => ", item);
+    const oldData = [...localItemsSelected];
+    const result = oldData.filter((row) => {
+      return row?.guid != item.guid ? row : undefined;
+    });
+
+    setLocalItemsSelected([...result]);
   };
 
   const handleRecSelect = (chosenId, title, icon_url) => {
@@ -76,7 +93,8 @@ const EmptySquareBox = ({
       sub_order: 1, // Set sub_order if needed
       display_box_type: "rectangle",
       beingEddited: true,
-      addedItem: true
+      addedItem: true,
+      guid: generateUniqueID()
     };
 
     // Append the new item to localItemsSelected
@@ -96,13 +114,16 @@ const EmptySquareBox = ({
       sub_order: 1, // Set sub_order if needed
       display_box_type: "square",
       beingEddited: true,
-      addedItem: true
+      addedItem: true,
+      guid: generateUniqueID()
     };
 
     // Append the new item to localItemsSelected
-    setLocalItemsSelected((prevItems) => [...prevItems, rectangleItemDetails]);
+    setLocalItemsSelected((prevItems) => [rectangleItemDetails, ...prevItems]);
 
     setShowOptionList(false);
+
+    setShowAddPopUp(false);
   };
 
   const handleSquareTwoSelect = (chosenId, title, icon_url) => {
@@ -116,7 +137,8 @@ const EmptySquareBox = ({
       sub_order: 2, // Set sub_order if needed
       display_box_type: "square",
       beingEddited: true,
-      addedItem: true
+      addedItem: true,
+      guid: generateUniqueID()
     };
 
     // Append the new item to localItemsSelected
@@ -125,219 +147,343 @@ const EmptySquareBox = ({
     setShowOptionList(false);
   };
 
-  const removeItem = (mainOrder, subOrder, type, index) => {
-    // handling main order after delete
-    if (type === "square" && subOrder === 1) {
-      // Here you might renumber the main_order values for the remaining items,
-      // as mentioned in the previous response
-      const hasSquareWithSubOrder2 = localItemsSelected.some(
-        (item) =>
-          item.main_order === mainOrder &&
-          item.sub_order === 2 &&
-          item.display_box_type === "square"
-      );
+  const handleSquareOneSelectAdded = (chosenId, title, icon_url, mainOrder) => {
+    // Check if there is an existing square with sub_order 2 and the same main_order
+    const existingSquareTwo = localItemsSelected.find(
+      (item) =>
+        item.display_box_type === "square" &&
+        item.sub_order === 1 &&
+        item.main_order === mainOrder
+    );
 
-      if (!hasSquareWithSubOrder2) {
-        // Iterate over the remaining items and decrement main_order by 1
-        const updatedItems = localItemsSelected.map((item) => {
-          if (item.main_order > mainOrder) {
-            return {
-              ...item,
-              main_order: item.main_order - 1
-            };
-          }
+    // If there is an existing square with the same main_order and sub_order 2, create a new main_order
+    const newMainOrder = existingSquareTwo ? getNextMainOrder() : mainOrder;
 
-          return item;
-        });
+    // Create the rectangle item detail object for square two
+    const itemDetailsSquareTwo = {
+      content_id: chosenId,
+      title: title,
+      s3_icon_url: icon_url,
+      description: "", // Add description if available
+      sub_order: 1, // Set sub_order to 2 for square two
+      main_order: newMainOrder,
+      display_box_type: "square",
+      beingEddited: true,
+      addedItem: true,
+      guid: generateUniqueID()
+    };
 
-        updatedItems.splice(index, 1);
-        setLocalItemsSelected(updatedItems);
-        setUpdatedExtractedData(updatedItems);
-        // You might also want to update the corresponding data if needed
-      }
-    }
+    // Append the new item to localItemsSelected
+    setLocalItemsSelected((prevItems) => [itemDetailsSquareTwo, ...prevItems]);
 
-    if (type === "square" && subOrder === 2) {
-      const hasSquareWithSubOrder1 = localItemsSelected.some(
-        (item) =>
-          item.main_order === mainOrder &&
-          item.sub_order === 1 &&
-          item.display_box_type === "square"
-      );
-
-      if (!hasSquareWithSubOrder1) {
-        // Iterate over the remaining items and decrement main_order by 1
-        const updatedItems = localItemsSelected.map((item) => {
-          if (item.main_order > mainOrder) {
-            return {
-              ...item,
-              main_order: item.main_order - 1
-            };
-          }
-
-          return item;
-        });
-
-        updatedItems.splice(index, 1);
-        setLocalItemsSelected(updatedItems);
-        setUpdatedExtractedData(updatedItems);
-        // You might also want to update the corresponding data if needed
-      }
-    }
-
-    if (type === "rectangle") {
-      // Iterate over the remaining items and decrement main_order by 1
-      const updatedItems = localItemsSelected.map((item) => {
-        if (item.main_order > mainOrder) {
-          return {
-            ...item,
-            main_order: item.main_order - 1
-          };
-        }
-
-        return item;
-      });
-
-      updatedItems.splice(index, 1);
-      setLocalItemsSelected(updatedItems);
-      setUpdatedExtractedData(updatedItems);
-      // You might also want to update the corresponding data if needed
-    }
+    setShowOptionList(false);
+    setShowOptionListSquareTwoAdded(false);
   };
+
+  const handleSquareTwoSelectAdded = (chosenId, title, icon_url, mainOrder) => {
+    // Check if there is an existing square with sub_order 2 and the same main_order
+    const existingSquareTwo = localItemsSelected.find(
+      (item) =>
+        item.display_box_type === "square" &&
+        item.sub_order === 2 &&
+        item.main_order === mainOrder
+    );
+
+    // If there is an existing square with the same main_order and sub_order 2, create a new main_order
+    const newMainOrder = existingSquareTwo ? getNextMainOrder() : mainOrder;
+
+    // Create the rectangle item detail object for square two
+    const itemDetailsSquareTwo = {
+      content_id: chosenId,
+      title: title,
+      s3_icon_url: icon_url,
+      description: "", // Add description if available
+      sub_order: 2, // Set sub_order to 2 for square two
+      main_order: newMainOrder,
+      display_box_type: "square",
+      beingEddited: true,
+      addedItem: true,
+      guid: generateUniqueID()
+    };
+
+    // Append the new item to localItemsSelected
+    setLocalItemsSelected((prevItems) => [...prevItems, itemDetailsSquareTwo]);
+
+    setShowOptionList(false);
+    setShowOptionListSquareTwoAdded(false);
+  };
+
+  const groupedSquares = localItemsSelected.reduce((acc, item) => {
+    if (!acc[item.main_order]) {
+      acc[item.main_order] = { 1: null, 2: null }; // Initialize null squares for each main_order
+    }
+    acc[item.main_order][item.sub_order] = item; // Assign the item to its sub_order
+    return acc;
+  }, {});
+
+  // const groupedSquaresAndRectangles = localItemsSelected
+  //   .filter((item) => item.beingEddited)
+  //   .reduce((acc, item) => {
+  //     if (item.display_box_type === "square") {
+  //       if (!acc[item.main_order]) {
+  //         acc[item.main_order] = { 1: null, 2: null }; // Initialize null squares for each main_order
+  //       }
+  //       acc[item.main_order][item.sub_order] = item; // Assign the item to its sub_order
+  //     } else if (item.display_box_type === "rectangle") {
+  //       acc[item.main_order] = { ...acc[item.main_order], rectangle: item }; // Add rectangle to the order
+  //     }
+  //     return acc;
+  //   }, {});
+
+  console.log("localItemsSelected", localItemsSelected);
+  console.log("object main order", groupedSquares);
 
   return (
     <>
-      {/* preview */}
+      {/* Preview heading */}
+      {localItemsSelected.some((item) => item.beingEddited) && (
+        <h3 className="text-sm font-medium mt-7">پیش نمایش</h3>
+      )}
 
-      {localItemsSelected?.map((object, index) => (
-        <div key={`${object.main_order}-${object.sub_order}`} className="my-3">
-          {/* square section */}
-
-          {object.display_box_type === "square" && object.beingEddited ? (
-            <div className="grid grid-cols-12 mt-5 gap-5">
-              {/* first square */}
-              <div className="col-span-6 relative">
-                {object.sub_order === 1 ? (
-                  <div className=" px-4 py-3 border-2 rounded-2xl overflow-hidden  ">
-                    {/* delete btn */}
-                    <span
+      {/* Preview display */}
+      {Object.entries(groupedSquares).map(([mainOrder, squares]) => (
+        <Fragment key={`group-main-order-${mainOrder}-${squares}`}>
+          <div
+          // key={`main-order-${mainOrder}`}
+          // className="grid grid-cols-12 mt-5 gap-5"
+          >
+            {/* rec */}
+            {squares?.[1]?.display_box_type == "rectangle" ? (
+              <div className=" grid grid-cols-12 relative items-center text-xs py-3 border-2 rounded-2xl whitespace-nowrap overflow-hidden">
+                {/* delete btn */}
+                <span
+                  onClick={() => removeItem(squares?.[1])}
+                  className="absolute left-[15px]"
+                >
+                  <CloseIcon />
+                </span>
+                <div className="col-span-2  rounded-md flex justify-center items-center overflow-hidden">
+                  <Image
+                    src={squares?.[1]?.s3_icon_url}
+                    alt={squares?.[1]?.title}
+                    width={32}
+                    height={32}
+                    className="bg-white rounded-md invert p-1"
+                  />
+                </div>
+                <p className="col-span-3 font-semibold text-xs ms-1 overflow-hidden">
+                  {squares?.[1]?.title}:
+                </p>
+                <p className="col-span-7 font-semibold text-xs ms-1 overflow-hidden truncate">
+                  {squares?.[1]?.description}
+                </p>
+              </div>
+            ) : (
+              <>
+                <div
+                  // key={`square-1-main-order-${mainOrder}`}
+                  className="col-span-6 relative"
+                >
+                  {squares[1] ? (
+                    <div className="px-4 py-3 border-2 rounded-2xl overflow-hidden">
+                      {/* Delete button */}
+                      <span
+                        onClick={() => removeItem(squares[1])}
+                        className="absolute left-[15px]"
+                      >
+                        <CloseIcon />
+                      </span>
+                      <div className="bg-dark w-[45px] h-[45px] rounded-full mb-3 flex justify-center items-center overflow-hidden">
+                        <Image
+                          src={squares[1]?.s3_icon_url}
+                          alt={squares[1]?.title}
+                          width={32}
+                          height={32}
+                          className="bg-white invert"
+                        />
+                      </div>
+                      <p className="font-medium text-xs text-dark">
+                        {squares[1]?.title}
+                      </p>
+                      <p className="font-medium text-xs text-muted mt-2 mb-5 line-clamp-2">
+                        {squares[1]?.description}
+                      </p>
+                    </div>
+                  ) : (
+                    // empty add
+                    <div
                       onClick={() =>
-                        removeItem(
-                          object.main_order,
-                          object.sub_order,
-                          object.display_box_type,
-                          index
+                        setShowOptionListSquareOneAdded(
+                          !showOptionListSquareOneAdded
                         )
                       }
-                      className="absolute left-[15px]"
+                      className="col-span-6 px-4 py-3 border border-darkGray rounded-2xl overflow-hidden h-[140px] bg-graySubmit 
+            flex justify-center items-center relative"
                     >
-                      <CloseIcon />
-                    </span>
-                    <div
-                      className="bg-dark w-[45px] h-[45px] rounded-full mb-3
-     flex justify-center items-center overflow-hidden"
-                    >
-                      <Image
-                        src={object?.s3_icon_url}
-                        alt={object?.title}
-                        width={32}
-                        height={32}
-                        className="bg-white invert"
-                      />
-                    </div>
-                    <p className="font-medium text-xs text-dark ">
-                      {object?.title}
-                    </p>
-                    <p className="font-medium text-xs text-muted mt-2 mb-5 line-clamp-2">
-                      {object?.description}
-                    </p>
-                  </div>
-                ) : null}
+                      <PlusSignPageView />
 
-                {/* second square */}
-              </div>
-              <div className="col-span-6 relative">
-                {object.sub_order === 2 ? (
-                  <div className=" px-4 py-3 border-2 rounded-2xl overflow-hidden  ">
-                    {/* delete btn */}
-                    <span
+                      <div>
+                        {showOptionListSquareOneAdded ? (
+                          <div
+                            className="bg-white absolute shadow-2xl  left-[0px] top-0 right-0 p-4 max-h-[150px] overflow-y-scroll 
+              rounded-md border "
+                          >
+                            <span
+                              onClick={() =>
+                                setShowOptionListSquareOneAdded(false)
+                              }
+                            >
+                              <CloseIcon />
+                            </span>
+                            {listItems.map((item) => (
+                              <div
+                                key={item.id}
+                                onClick={() =>
+                                  handleSquareOneSelectAdded(
+                                    item.id,
+                                    item.title,
+                                    item.s3_icon_url,
+                                    squares[2]?.main_order
+                                  )
+                                }
+                                className={`py-2 border-b`}
+                              >
+                                {item.title}
+                              </div>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Second Square */}
+                <div
+                  // key={`square-2-main-order-${mainOrder}`}
+                  className="col-span-6 relative"
+                >
+                  {squares[2] ? (
+                    <div className="px-4 py-3 border-2 rounded-2xl overflow-hidden">
+                      {/* Delete button */}
+                      <span
+                        onClick={() => removeItem(squares[2])}
+                        className="absolute left-[15px]"
+                      >
+                        <CloseIcon />
+                      </span>
+                      <div className="bg-dark w-[45px] h-[45px] rounded-full mb-3 flex justify-center items-center overflow-hidden">
+                        <Image
+                          src={squares[2]?.s3_icon_url}
+                          alt={squares[2]?.title}
+                          width={32}
+                          height={32}
+                          className="bg-white invert"
+                        />
+                      </div>
+                      <p className="font-medium text-xs text-dark">
+                        {squares[2]?.title}
+                      </p>
+                      <p className="font-medium text-xs text-muted mt-2 mb-5 line-clamp-2">
+                        {squares[2]?.description}
+                      </p>
+                    </div>
+                  ) : (
+                    // empty add
+                    <div
                       onClick={() =>
-                        removeItem(
-                          object.main_order,
-                          object.sub_order,
-                          object.display_box_type,
-                          index
+                        setShowOptionListSquareTwoAdded(
+                          !showOptionListSquareTwoAdded
                         )
                       }
-                      className="absolute left-[15px]"
+                      className="col-span-6 px-4 py-3 border border-darkGray rounded-2xl overflow-hidden h-[140px] bg-graySubmit 
+           flex justify-center items-center relative"
                     >
-                      <CloseIcon />
-                    </span>
-                    <div
-                      className="bg-dark w-[45px] h-[45px] rounded-full mb-3
-     flex justify-center items-center overflow-hidden"
-                    >
-                      <Image
-                        src={object?.s3_icon_url}
-                        alt={object?.title}
-                        width={32}
-                        height={32}
-                        className="bg-white invert"
-                      />
+                      <PlusSignPageView />
+
+                      <div>
+                        {showOptionListSquareTwoAdded ? (
+                          <div
+                            className="bg-white absolute shadow-2xl  left-[0px] top-0 right-0 p-4 max-h-[150px] overflow-y-scroll 
+             rounded-md border "
+                          >
+                            <span
+                              onClick={() =>
+                                setShowOptionListSquareTwoAdded(false)
+                              }
+                            >
+                              <CloseIcon />
+                            </span>
+                            {listItems.map((item) => (
+                              <div
+                                key={item.id}
+                                onClick={() =>
+                                  handleSquareTwoSelectAdded(
+                                    item.id,
+                                    item.title,
+                                    item.s3_icon_url,
+                                    squares[1]?.main_order
+                                  )
+                                }
+                                className={`py-2 border-b`}
+                              >
+                                {item.title}
+                              </div>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
                     </div>
-                    <p className="font-medium text-xs text-dark ">
-                      {object?.title}
-                    </p>
-                    <p className="font-medium text-xs text-muted mt-2 mb-5 line-clamp-2">
-                      {object?.description}
-                    </p>
-                  </div>
-                ) : null}
+                  )}
+                </div>
+              </>
+            )}
 
-                {/* two */}
-              </div>
-            </div>
-          ) : null}
-
-          {/* rectangle */}
-
-          {object.display_box_type === "rectangle" && object.beingEddited ? (
-            <div className=" grid grid-cols-12 relative items-center text-xs py-3 border-2 rounded-2xl whitespace-nowrap overflow-hidden">
-              {/* delete btn */}
-              <span
-                onClick={() =>
-                  removeItem(
-                    object.main_order,
-                    object.sub_order,
-                    object.display_box_type,
-                    index
-                  )
-                }
-                className="absolute left-[15px]"
-              >
-                <CloseIcon />
-              </span>
-              <div className="col-span-2  rounded-md flex justify-center items-center overflow-hidden">
-                <Image
-                  src={object.s3_icon_url}
-                  alt={object.title}
-                  width={32}
-                  height={32}
-                  className="bg-white rounded-md invert p-1"
-                />
-              </div>
-              <p className="col-span-3 font-semibold text-xs ms-1 overflow-hidden">
-                {object.title}:
-              </p>
-              <p className="col-span-7 font-semibold text-xs ms-1 overflow-hidden truncate">
-                {object.description}
-              </p>
-            </div>
-          ) : (
-            <span className="hidden" />
-          )}
-        </div>
+            {/* squares */}
+            {/* First Square */}
+          </div>
+        </Fragment>
       ))}
+
+      {/* rec */}
+
+      {/* rectangle */}
+
+      {Object.display_box_type === "rectangle" && object.beingEddited ? (
+        <div className=" grid grid-cols-12 relative items-center text-xs py-3 border-2 rounded-2xl whitespace-nowrap overflow-hidden">
+          {/* delete btn */}
+          <span
+            onClick={() =>
+              removeItem(
+                object.main_order,
+                object.sub_order,
+                object.display_box_type,
+                index
+              )
+            }
+            className="absolute left-[15px]"
+          >
+            <CloseIcon />
+          </span>
+          <div className="col-span-2  rounded-md flex justify-center items-center overflow-hidden">
+            <Image
+              src={object.s3_icon_url}
+              alt={object.title}
+              width={32}
+              height={32}
+              className="bg-white rounded-md invert p-1"
+            />
+          </div>
+          <p className="col-span-3 font-semibold text-xs ms-1 overflow-hidden">
+            {object.title}:
+          </p>
+          <p className="col-span-7 font-semibold text-xs ms-1 overflow-hidden truncate">
+            {object.description}
+          </p>
+        </div>
+      ) : (
+        <span className="hidden" />
+      )}
 
       {/* end of preview */}
 
@@ -349,7 +495,7 @@ const EmptySquareBox = ({
 
             <div
               onClick={() => setShowOptionListSquare(!showOptionListSquare)}
-              className="col-span-6 px-4 py-3 border-2 rounded-2xl overflow-hidden h-[140px] bg-graySubmit shadow-customInset
+              className="col-span-6 px-4 py-3 rounded-2xl overflow-hidden h-[140px] bg-graySubmit border border-darkGray
         flex justify-center items-center relative
 
         "
@@ -389,10 +535,8 @@ const EmptySquareBox = ({
               onClick={() =>
                 setShowOptionListSquareTwo(!showOptionListSquareTwo)
               }
-              className="col-span-6 px-4 py-3 border-2 rounded-2xl overflow-hidden h-[140px] bg-graySubmit shadow-customInset
-        flex justify-center items-center relative
-
-        "
+              className="col-span-6 px-4 py-3 rounded-2xl overflow-hidden h-[140px] bg-graySubmit border border-darkGray
+              flex justify-center items-center relative"
             >
               <PlusSignPageView />
 
@@ -431,7 +575,7 @@ const EmptySquareBox = ({
       {/* rectangle */}
       {boxType === "recBox" ? (
         <>
-          <div className="bg-graySubmit shadow-customInset relative rounded-md py-3 flex justify-center items-center mb-4">
+          <div className="bg-graySubmit border border-darkGray relative rounded-xl py-3 flex justify-center items-center mb-4">
             {showOptionList && (
               <div
                 className="bg-white shadow-2xl absolute left-[142px] p-4 max-h-[150px] overflow-y-scroll 
@@ -462,7 +606,7 @@ const EmptySquareBox = ({
       ) : null}
 
       {/* add data */}
-      <div className="bg-graySubmit relative rounded-md py-1 flex justify-center items-center">
+      <div className="bg-graySubmit relative rounded-md py-1 flex justify-center items-center border border-darkGray">
         {/* popUp */}
         <div
           className={`absolute bg-white border shadow-2xl rounded-md px-6 py-3 items-center justify-center  transition-all duration-300 ${

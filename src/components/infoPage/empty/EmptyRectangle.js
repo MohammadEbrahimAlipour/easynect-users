@@ -1,4 +1,4 @@
-import { CloseIcon } from "@/components/Icons";
+import { CloseIcon, PenEditIcon } from "@/components/Icons";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { kebabCase } from "lodash";
@@ -9,15 +9,16 @@ const EmptyRectangle = ({
   extractedData,
   setExtractedData,
   updatedExtractedData,
-  setUpdatedExtractedData
+  setUpdatedExtractedData,
+  removeItem
 }) => {
   const [showOptionList, setShowOptionList] = useState(false);
-  const flattenedData = extractedData.flat();
+  // const flattenedData = extractedData.flat();
   const [selectedId, setSelectedId] = useState(null); // New state for holding the selected id.
   const [myKey, setMyKey] = useState(0); // New state for holding the selected id.
 
   const [selectedItemsDetails, setSelectedItemsDetails] = useState(data.data);
-  console.log("selectedItemsDetails", selectedItemsDetails);
+  // console.log("selectedItemsDetails", selectedItemsDetails);
   console.log("$$$$$$$updatedExtractedData", updatedExtractedData);
 
   useEffect(() => {
@@ -70,59 +71,6 @@ const EmptyRectangle = ({
     }
   };
 
-  const removeItem = (id, mainOrder, subOrder, type, index) => {
-    // Update selectedItemsDetails using the set function callback
-    setSelectedItemsDetails((prevSelectedItemsDetails) => {
-      // Create a copy of the array to avoid mutating the state directly
-      const updatedDetails = [...prevSelectedItemsDetails];
-      // Remove the item at the specified index
-      updatedDetails.splice(index, 1);
-
-      return updatedDetails;
-    });
-
-    const newUpdatedExtractedData = updatedExtractedData.length
-      ? updatedExtractedData
-      : [...extractedData];
-
-    // Flatten the updatedExtractedData
-    const flattenedUpdatedExtractedData = newUpdatedExtractedData.flatMap(
-      (section) => section
-    );
-
-    // Filter out the item to remove based on conditions
-    const updatedItems = flattenedUpdatedExtractedData.filter(
-      (item) => !(item.content_id === id)
-    );
-
-    // Handling main order after delete
-    let updatedData = [...updatedItems];
-
-    // Iterate over the remaining items and decrement main_order by 1
-    updatedData = updatedData.map((item) => {
-      if (item.main_order > mainOrder) {
-        return {
-          ...item,
-          main_order: item.main_order - 1
-        };
-      }
-      return item;
-    });
-
-    // Group the updated items by main_order and update the state
-    const groupedData = updatedData.reduce((acc, item) => {
-      const sectionIndex = item.main_order - 1;
-      if (!acc[sectionIndex]) {
-        acc[sectionIndex] = [];
-      }
-      acc[sectionIndex].push(item);
-      return acc;
-    }, []);
-
-    setUpdatedExtractedData(groupedData);
-    // You might also want to update the corresponding data if needed
-  };
-
   // logs
 
   // Use useEffect to log after the state has been updated
@@ -141,29 +89,28 @@ const EmptyRectangle = ({
         {selectedItemsDetails?.map((item, index) => (
           <div
             key={item.id}
-            // onClick={() => {
-            //   setShowOptionList(!showOptionList);
-            //   setSelectedId(item.id); // Store the selected id when the list is being opened
-            // }}
             className="grid grid-cols-12 items-center text-xs py-3 border-2 rounded-2xl whitespace-nowrap overflow-hidden"
           >
             <>
               <div className="col-span-2  rounded-md flex justify-center items-center overflow-hidden">
-                {/* delete btn */}
-                <span
-                  onClick={() =>
-                    removeItem(
-                      item.id,
-                      item.main_order,
-                      item.sub_order,
-                      item.display_box_type,
-                      index
-                    )
-                  }
-                  className="absolute left-[37px]"
-                >
-                  <CloseIcon />
-                </span>
+                <div className="absolute left-[37px] flex justify-center items-center">
+                  {/* edit */}
+                  <span
+                    onClick={() => {
+                      setShowOptionList(!showOptionList);
+                      setSelectedId(item.id); // Store the selected id when the list is being opened
+                    }}
+                    className="me-[0.7px]"
+                  >
+                    <PenEditIcon />
+                  </span>
+                  {/* delete btn */}
+
+                  <span onClick={() => removeItem(data?.data?.[0])}>
+                    <CloseIcon />
+                  </span>
+                </div>
+
                 <Image
                   src={item.s3_icon_url}
                   alt={item.title}
@@ -195,7 +142,7 @@ const EmptyRectangle = ({
               <div
                 key={item.id}
                 onClick={() =>
-                  handleItemSelect(item.id, item.title, item.icon_url)
+                  handleItemSelect(item.id, item.title, item.s3_icon_url)
                 }
                 className={`py-2 border-b `}
               >

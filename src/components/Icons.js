@@ -1654,21 +1654,21 @@ export const PlusSignPageView = ({ className, ...rest }) => (
   >
     <path
       d="M8.89007 14.6667C12.5934 14.6667 15.6234 11.6667 15.6234 8C15.6234 4.33333 12.5934 1.33333 8.89007 1.33333C5.18674 1.33333 2.15674 4.33333 2.15674 8C2.15674 11.6667 5.18674 14.6667 8.89007 14.6667Z"
-      stroke="#ffff"
-      strokeWidth="2"
+      stroke="#5B5F73"
+      strokeWidth="1.5"
       storkeLinecap="round"
       storkeLinejoin="round"
     />
     <path
       d="M6.19678 8H11.5834"
-      stroke="#ffff"
+      stroke="#5B5F73"
       strokeWidth="1.7"
       storkeLinecap="round"
       storkeLinejoin="round"
     />
     <path
       d="M8.89001 10.6667V5.33333"
-      stroke="#ffff"
+      stroke="#5B5F73"
       strokeWidth="1.7"
       storkeLinecap="round"
       storkeLinejoin="round"
@@ -1773,6 +1773,45 @@ export const EditItemPageView = ({ className, ...rest }) => (
       stroke="black"
       stroke-width="1.5"
       stroke-miterlimit="10"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+);
+
+export const UploadFile = ({ className, ...rest }) => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M9 17V11L7 13"
+      stroke="#ffff"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M9 11L11 13"
+      stroke="#ffff"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M22 10V15C22 20 20 22 15 22H9C4 22 2 20 2 15V9C2 4 4 2 9 2H14"
+      stroke="#ffff"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M22 10H18C15 10 14 9 14 6V2L22 10Z"
+      stroke="#ffff"
+      stroke-width="1.5"
       stroke-linecap="round"
       stroke-linejoin="round"
     />
