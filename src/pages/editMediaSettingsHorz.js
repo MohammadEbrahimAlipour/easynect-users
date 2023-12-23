@@ -11,8 +11,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import LoadingState from "@/components/LoadingState";
-import CreateUnifiedData from "@/components/mediaItems/createItem/createUnifiedData";
-import CreateFile from "@/components/mediaItems/createItem/createFile";
+import CreateUnifiedData from "@/components/mediaItems/createItem/CreateUnifiedData";
+import CreateFile from "@/components/mediaItems/createItem/CreateFile";
 
 const EditMediaSettingsHorz = () => {
   const router = useRouter();
