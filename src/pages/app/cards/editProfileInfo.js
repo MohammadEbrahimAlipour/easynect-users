@@ -167,7 +167,7 @@ const EditProfileInfo = () => {
                 {/* top options */}
                 <div className="my-6">
                   <div className="flex justify-between">
-                    <Link href="/src/pages">کارت جدید</Link>
+                    <Link href="/src/pages">ویرایش کارت</Link>
 
                     {/* left side btns */}
                     <div className="text-sm">
@@ -232,37 +232,37 @@ const EditProfileInfo = () => {
                     راه‌های ارتباطی
                   </p>
                   <EditMenuOptions
-                    label="نام کامل"
+                    label="نام کاربری"
                     name="username"
                     defaultValue={formData.username}
                     onChange={handleInputChange}
                   />
                   <EditMenuOptions
-                    label="نام کامل"
+                    label="نام"
                     name="owner_first_name"
                     defaultValue={formData.owner_first_name}
                     onChange={handleInputChange}
                   />
                   <EditMenuOptions
-                    label="نام کامل"
+                    label="نام خانوادگی"
                     name="owner_last_name"
                     defaultValue={formData.owner_last_name}
                     onChange={handleInputChange}
                   />
                   <EditMenuOptions
-                    label="نام کامل"
+                    label="عنوان کارت"
                     name="card_title"
                     defaultValue={formData.card_title}
                     onChange={handleInputChange}
                   />
                   <EditMenuOptions
-                    label="نام کامل"
+                    label="عنوان شغل"
                     name="job_title"
                     defaultValue={formData.job_title}
                     onChange={handleInputChange}
                   />
                   <EditMenuOptions
-                    label="نام کامل"
+                    label="کمپانی"
                     name="company"
                     defaultValue={formData.company}
                     onChange={handleInputChange}
