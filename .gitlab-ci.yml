@@ -1,8 +1,6 @@
 workflow:
   rules:
-    - if: $CI_COMMIT_BRANCH != "main"
-      when: never
-    - when: always
+    - if: $CI_COMMIT_BRANCH == "main"
 
 
 variables:
@@ -10,16 +8,18 @@ variables:
   DEV_SERVER_HOST: 65.21.148.255
   DEV_ENDPOINT: 65.21.148.255
 
+
 stages:
   - test
-  - build
+  - build_dev
+  - build_prod
   - deploy_dev
   - deploy_staging
   - deploy_prod
 
 
-build_image:
-  stage: build
+build_dev_image:
+  stage: build_dev
   tags:
     - shell
     - hertzner
@@ -28,17 +28,19 @@ build_image:
     - export VERSION=$PACKAGE_JSON_VERSION.$CI_PIPELINE_IID
     - echo $VERSION > version-file.txt
   script:
-    - docker build -t $IMAGE_NAME:$VERSION .
+    - docker build -f Dockerfile.dev -t $IMAGE_NAME:$VERSION .
   artifacts:
     paths:
       - version-file.txt
+  only:
+    - main
 
-push_image:
-  stage: build
+push_dev_image:
+  stage: build_dev
   dependencies:
-    - build_image
+    - build_dev_image
   needs:
-    - build_image
+    - build_dev_image
   tags:
     - shell
     - hertzner
@@ -47,6 +49,9 @@ push_image:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker push $IMAGE_NAME:$VERSION
+  
+  only:
+    - main
 
 
 dev_deploy:
@@ -55,7 +60,7 @@ dev_deploy:
     - shell
     - hertzner
   dependencies:
-    - build_image
+    - build_dev_image
   variables:
     SSH_KEY: $PRIVATE_SSH_KEY
     SERVER_HOST: $DEV_SERVER_HOST
@@ -65,11 +70,8 @@ dev_deploy:
     - chmod 400 deploy-key.pem
     - export VERSION=$(cat version-file.txt)
 
-
   script:
-    - scp -o StrictHostKeyChecking=no -i deploy-key.pem ./docker-compose.yml root@$SERVER_HOST:/home/easynect/
-    - scp -o StrictHostKeyChecking=no -i deploy-key.pem ./Dockerfile.nginx root@$SERVER_HOST:/home/easynect/
-    - scp -o StrictHostKeyChecking=no -i deploy-key.pem ./default.conf root@$SERVER_HOST:/home/easynect/
+    - scp -o StrictHostKeyChecking=no -i deploy-key.pem ./docker-compose-dev.yml root@$SERVER_HOST:/home/easynect/
     - ssh -o StrictHostKeyChecking=no -i deploy-key.pem root@$SERVER_HOST  "
       docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY &&
             cd /home/easynect/ &&
@@ -78,4 +80,5 @@ dev_deploy:
             docker-compose -f docker-compose.yml down &&
             docker-compose -f docker-compose.yml up -d
         "
-  when: manual
+    only: 
+     - main 
