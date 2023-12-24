@@ -27,7 +27,7 @@ build_dev_image:
     - export PACKAGE_JSON_VERSION=$(cat package.json | jq -r .version)
     - export VERSION=$PACKAGE_JSON_VERSION.$CI_PIPELINE_IID
     - echo $VERSION > version-file.txt
-    - cp ${ADMIN_ENV_DEV} ./.env.production
+    - cp ${ENV_DEV} ./.env.production
 
   script:
     - docker build -f Dockerfile.dev -t $IMAGE_NAME:$VERSION .
