@@ -2,7 +2,7 @@ import Devider from "@/components/Devider";
 import EditMenuOptions from "@/components/EditMenuOptions";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import { PenEditIcon, PlusSign } from "@/components/Icons";
+import { ChangePhotoIcon, PenEditIcon, PlusSign } from "@/components/Icons";
 import Layout from "@/components/Layout";
 import ProfileImageUpload from "@/components/ProfileImageUpload";
 import Link from "next/link";
@@ -12,11 +12,15 @@ import { useAccessToken } from "../../context/AccessTokenContext";
 import axios from "axios";
 import ToggleSwitch from "@/components/ToggleSwitch";
 import { useRouter } from "next/router";
-import ProfileImage from "@/components/ProfileImage";
+import Image from "next/image";
+import sampleImage from "../../public/images/intro.jpg";
 
 const CreateCard = () => {
   const { accessToken } = useAccessToken();
+
   const router = useRouter();
+  const [changedFormData, setChangedFormData] = useState({});
+
   // const [data, setData] = useState(null);
   const [formData, setFormData] = useState({
     username: "",
@@ -27,6 +31,17 @@ const CreateCard = () => {
     company: "",
     is_direct: false
   });
+
+  // Handle image file change
+  const handleImageChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setChangedFormData((prevFormData) => ({
+        ...prevFormData,
+        profile_s3_url: selectedFile
+      }));
+    }
+  };
 
   // Handle input changes
   const handleInputChange = (e) => {
@@ -41,22 +56,37 @@ const CreateCard = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // the API endpoint URL
+    // The API endpoint URL
     const apiUrl = generateApiUrl("/api/v1/pages/");
 
-    // headers object with the necessary headers, including the access token
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-      "accept-language": "fa"
+    // Create a FormData object to send the file and other data
+    const formDataToSend = new FormData();
+
+    // Append changed image file to formDataToSend if it's selected
+    if (changedFormData.profile_s3_url) {
+      formDataToSend.append("profile_s3_url", changedFormData.profile_s3_url);
+    }
+
+    // Append all other form data to formDataToSend
+    for (const key in formData) {
+      formDataToSend.append(key, formData[key]);
+    }
+
+    // Do not set Content-Type here; FormData will be auto-configured
+    const config = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "accept-language": "fa",
+        "Content-Type": "application/json"
+      }
     };
 
     // Send a POST request with the form data and headers using Axios
     axios
-      .post(apiUrl, formData, { headers })
+      .post(apiUrl, formDataToSend, config)
       .then((response) => {
         if (response.status === 200) {
-          router.push("/profileCard");
+          router.push("/app/cards/profileCard");
           // Handle successful response, e.g., show a success message
           console.log("Form submitted successfully");
         } else {
@@ -98,7 +128,43 @@ const CreateCard = () => {
               </div>
 
               {/* portfolio Image */}
-              <ProfileImage />
+              <div
+                className="flex justify-center items-center
+              "
+              >
+                <div>
+                  <div
+                    id="photo_here"
+                    className="border-[3px] box-content border-gold w-[80px] h-[80px] rounded-full
+                      overflow-hidden"
+                  >
+                    <Image
+                      priority={true}
+                      className="rounded-full object-contain"
+                      src={sampleImage}
+                      width={80}
+                      height={80}
+                      alt="Person Name"
+                    />
+                  </div>
+                  {/* Upload button */}
+                  <label
+                    htmlFor="fileInput"
+                    id="uploadPhoto"
+                    className="relative right-0 bottom-9 cursor-pointer"
+                  >
+                    <ChangePhotoIcon />
+                    <input
+                      type="file"
+                      name="profile_s3_url"
+                      id="fileInput"
+                      accept=".jpg, .jpeg, .png, .webp"
+                      style={{ display: "none" }}
+                      onChange={handleImageChange}
+                    />
+                  </label>
+                </div>
+              </div>
 
               {/* contact options */}
 
@@ -110,18 +176,21 @@ const CreateCard = () => {
                   name="username"
                   value={formData.username}
                   onChange={handleInputChange}
+                  required
                 />
                 <EditMenuOptions
                   label="نام"
                   name="owner_first_name"
                   value={formData.owner_first_name}
                   onChange={handleInputChange}
+                  required
                 />
                 <EditMenuOptions
                   label="نام خوانوادگی"
                   name="owner_last_name"
                   value={formData.owner_last_name}
                   onChange={handleInputChange}
+                  required
                 />
                 <EditMenuOptions
                   label="اسم کارت"

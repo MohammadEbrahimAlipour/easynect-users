@@ -161,8 +161,10 @@ const LoginUser = () => {
               placeholder=" انتخاب رمز عبور"
               onChange={handleChange}
             />
-            <span className="text-sm bg-muted text-white rounded-md py-2 px-3">
-              <Link href="/forgotPassword" className="whitespace-nowrap">فراموش کرده‌اید؟</Link>
+            <span className="text-xs bg-muted text-white rounded-md py-2 px-3">
+              <Link href="/forgotPassword" className="whitespace-nowrap">
+                فراموش کرده‌اید؟
+              </Link>
             </span>
           </div>
 

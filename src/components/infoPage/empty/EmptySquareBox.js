@@ -221,20 +221,6 @@ const EmptySquareBox = ({
     return acc;
   }, {});
 
-  // const groupedSquaresAndRectangles = localItemsSelected
-  //   .filter((item) => item.beingEddited)
-  //   .reduce((acc, item) => {
-  //     if (item.display_box_type === "square") {
-  //       if (!acc[item.main_order]) {
-  //         acc[item.main_order] = { 1: null, 2: null }; // Initialize null squares for each main_order
-  //       }
-  //       acc[item.main_order][item.sub_order] = item; // Assign the item to its sub_order
-  //     } else if (item.display_box_type === "rectangle") {
-  //       acc[item.main_order] = { ...acc[item.main_order], rectangle: item }; // Add rectangle to the order
-  //     }
-  //     return acc;
-  //   }, {});
-
   console.log("localItemsSelected", localItemsSelected);
   console.log("object main order", groupedSquares);
 
@@ -242,19 +228,16 @@ const EmptySquareBox = ({
     <>
       {/* Preview heading */}
       {localItemsSelected.some((item) => item.beingEddited) && (
-        <h3 className="text-sm font-medium mt-7">پیش نمایش</h3>
+        <h3 className="text-sm font-medium mt-7 mb-3">پیش نمایش</h3>
       )}
 
       {/* Preview display */}
       {Object.entries(groupedSquares).map(([mainOrder, squares]) => (
         <Fragment key={`group-main-order-${mainOrder}-${squares}`}>
-          <div
-          // key={`main-order-${mainOrder}`}
-          // className="grid grid-cols-12 mt-5 gap-5"
-          >
+          <div className="grid grid-cols-12 overflow-hidden gap-5 mb-4">
             {/* rec */}
             {squares?.[1]?.display_box_type == "rectangle" ? (
-              <div className=" grid grid-cols-12 relative items-center text-xs py-3 border-2 rounded-2xl whitespace-nowrap overflow-hidden">
+              <div className=" col-span-12 flex ps-3  relative items-center  text-xs py-3 border-2 rounded-2xl whitespace-nowrap overflow-hidden">
                 {/* delete btn */}
                 <span
                   onClick={() => removeItem(squares?.[1])}
@@ -280,10 +263,8 @@ const EmptySquareBox = ({
               </div>
             ) : (
               <>
-                <div
-                  // key={`square-1-main-order-${mainOrder}`}
-                  className="col-span-6 relative"
-                >
+                {/* square 1 */}
+                <div className="col-span-6 relative">
                   {squares[1] ? (
                     <div className="px-4 py-3 border-2 rounded-2xl overflow-hidden">
                       {/* Delete button */}
@@ -359,10 +340,7 @@ const EmptySquareBox = ({
                 </div>
 
                 {/* Second Square */}
-                <div
-                  // key={`square-2-main-order-${mainOrder}`}
-                  className="col-span-6 relative"
-                >
+                <div className="col-span-6 overflow-hidden relative">
                   {squares[2] ? (
                     <div className="px-4 py-3 border-2 rounded-2xl overflow-hidden">
                       {/* Delete button */}

@@ -28,10 +28,10 @@ const ProfileCard = () => {
   const [clickedCardId, setClickedCardId] = useState({});
   const [moreSheetDetails, setMoreSheetDetails] = useState({});
   const [showSheet, setShowSheet] = useState(false); //share options
-
   const [showSheetMore, setShowSheetMore] = useState(false); //more options
-
   const [cards, setCards] = useState([]);
+
+  const [pageDataDontExist, setPageDAtaDontExist] = useState(false);
 
   const cardWrapperRef = useRef(null);
 
@@ -78,8 +78,12 @@ const ProfileCard = () => {
         }
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
         setIsLoading(false);
+        if (error.response && error.response.status === 404) {
+          setPageDAtaDontExist(true); // Assuming you have this state and its setter declared
+        } else {
+          console.error("Error fetching data:", error);
+        }
       });
   }, [accessToken.accessToken]);
 
@@ -118,23 +122,13 @@ const ProfileCard = () => {
         return newCards;
       });
 
-      setCards((previousCards) => {
-        const newCards = [...previousCards];
-
-        const newId = cards[0].id - 1 + Math.random() * 1000;
-
-        newCards.unshift({
-          id: newId,
-          isFallen: false
-        });
-
-        return newCards;
-      });
-
       setTimeout(() => {
         setCards((previousCards) => {
           const newCards = [...previousCards];
-          newCards.pop();
+
+          const lastCard = newCards.pop();
+          lastCard.isFallen = false;
+          newCards.unshift(lastCard);
 
           return newCards;
         });
@@ -172,11 +166,13 @@ const ProfileCard = () => {
     return 0;
   };
 
+  console.log("exist", pageDataDontExist);
+
   return (
     <>
       <Header cardData={cardData} />
       <Layout>
-        {<LoadingState /> ? (
+        {!pageDataDontExist ? (
           <>
             <CardWrapper
               onTouchStart={handleOnTouch}
@@ -303,7 +299,6 @@ const ProfileCard = () => {
               </span>
               کارت جدید
             </Link>
-            {isTouching && "mouse-down"}
           </>
         ) : (
           <ProfileCardEmpty />

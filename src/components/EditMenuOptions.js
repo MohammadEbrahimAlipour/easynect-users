@@ -7,7 +7,8 @@ const EditMenuOptions = ({
   name = "",
   value,
   onChange,
-  defaultValue
+  defaultValue,
+  required
 }) => {
   return (
     <div
@@ -28,6 +29,7 @@ const EditMenuOptions = ({
           placeholder={placeholder}
           className="bg-lightMenu outline-0 font-medium focus:outline-none"
           onChange={onChange}
+          required={required}
         />
       </div>
     </div>

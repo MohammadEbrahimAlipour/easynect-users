@@ -59,7 +59,9 @@ const VerifyOTP = () => {
   // console.log(otp);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const new_otp = otp;
+
+    // Join otp array into a single string
+    const concatenatedOtp = otp.join("");
     try {
       // Define the API endpoint URL
       const apiUrl = generateApiUrl("/api/v1/users/verify_otp/");
@@ -73,7 +75,7 @@ const VerifyOTP = () => {
       // Send a POST request with the OTP code and headers
       const response = await axios.post(
         apiUrl,
-        { otp: otp, email: email },
+        { otp: concatenatedOtp, email: email },
         { headers }
       );
       // console.log(response);
