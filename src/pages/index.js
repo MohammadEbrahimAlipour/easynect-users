@@ -8,7 +8,6 @@ import LoadingState from "@/components/LoadingState";
 const HomePage = () => {
   const router = useRouter();
   const accessToken = useAccessToken();
-  console.log(accessToken);
 
   const [isVisitorFirstTime, setIsVisitorFirstTime] = useState(false);
 

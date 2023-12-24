@@ -45,7 +45,6 @@ const Contacts = () => {
 
   const handleToggleOptions = () => {
     setShowOptions(!showOptions);
-    console.log("Toggle options clicked");
   };
 
   const handleOptionClick = (value) => {
@@ -188,8 +187,6 @@ const Contacts = () => {
     setHasMore(true); // Reset hasMore when pageID changes
     setContacts([]); // Clear existing contacts when pageID changes
   }, [pageID]);
-
-  console.log("contacts", contacts);
 
   return (
     <>

@@ -73,14 +73,10 @@ const EditProfileInfo = () => {
         });
     }
   }, [accessToken.accessToken, apiUrl, id]);
-  console.log("page Data", pageData);
 
   // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
-    // Debug: Log the changes
-    console.log(`Field "${name}" changed to "${value}"`);
 
     // Update the changedFormData object with the changed field
     setChangedFormData((prevFormData) => ({
@@ -152,10 +148,7 @@ const EditProfileInfo = () => {
         // Handle network errors or other exceptions
         console.error("An error occurred:", error);
       });
-    console.log("forDatatosend", formDataToSend);
   };
-
-  console.log("edit", formData);
 
   return (
     <main>

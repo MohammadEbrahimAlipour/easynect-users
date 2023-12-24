@@ -63,8 +63,8 @@ const ProfileCard = () => {
       .get(apiUrl, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
-          "accept-language": "fa", // Include the access token in the headers
-        },
+          "accept-language": "fa" // Include the access token in the headers
+        }
       })
       .then((response) => {
         // setCardData(response.data);
@@ -165,8 +165,6 @@ const ProfileCard = () => {
 
     return 0;
   };
-
-  console.log("exist", pageDataDontExist);
 
   return (
     <>
@@ -274,7 +272,7 @@ const ProfileCard = () => {
                             <button
                               href="/"
                               className="border-2 w-[32px] h-[32px] rounded-md col-span-2 mt-5
-            flex justify-center items-center font-ravi"
+                              flex justify-center items-center font-ravi"
                               onClick={() =>
                                 handleSeeMoreOptions(id, card_title)
                               }

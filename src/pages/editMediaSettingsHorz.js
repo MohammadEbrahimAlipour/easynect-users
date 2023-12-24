@@ -50,7 +50,6 @@ const EditMediaSettingsHorz = () => {
       [name]: updatedValue
     });
   };
-  console.log("display", type); //clg here
 
   const handleIsSquare = () => {
     setIsSquare(true);
@@ -138,7 +137,6 @@ const EditMediaSettingsHorz = () => {
         const apiUrl = generateApiUrl(
           `/api/v1/contents/${mediaData.content_store.type}/${mediaData.id}`
         );
-        console.log("apiUrl", apiUrl);
         const response = await axios.patch(apiUrl, formDataToSend, {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`,
@@ -210,9 +208,6 @@ const EditMediaSettingsHorz = () => {
         }
       });
   };
-
-  console.log("media", mediaData);
-  console.log("formData", formData);
 
   return (
     <>

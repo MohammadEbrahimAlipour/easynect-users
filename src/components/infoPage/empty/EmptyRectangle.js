@@ -10,7 +10,8 @@ const EmptyRectangle = ({
   setExtractedData,
   updatedExtractedData,
   setUpdatedExtractedData,
-  removeItem
+  removeItem,
+  editItem
 }) => {
   const [showOptionList, setShowOptionList] = useState(false);
   // const flattenedData = extractedData.flat();
@@ -18,6 +19,7 @@ const EmptyRectangle = ({
   const [myKey, setMyKey] = useState(0); // New state for holding the selected id.
 
   const [selectedItemsDetails, setSelectedItemsDetails] = useState(data.data);
+  const [saveItemIdForEdit, setSaveItemIdForEdit] = useState(null);
   // console.log("selectedItemsDetails", selectedItemsDetails);
   console.log("$$$$$$$updatedExtractedData", updatedExtractedData);
 
@@ -33,42 +35,52 @@ const EmptyRectangle = ({
     // Close the option list
     setShowOptionList(false);
 
-    const newSelectedItemsDetails = selectedItemsDetails.map((item) => {
-      if (item.id === selectedId) {
-        return { ...item, id: chosenId, title, title, s3_icon_url: icon_url };
-      }
-      return item;
-    });
+    const updatedItemDetails = {
+      id: chosenId, // assuming 'id' is the correct property name
+      title: title,
+      s3_icon_url: icon_url,
+      description: "" // if description data is available, use it here
+    };
 
-    setSelectedItemsDetails(newSelectedItemsDetails);
+    editItem(saveItemIdForEdit, updatedItemDetails);
+    setSaveItemIdForEdit(null);
 
-    const updatedData = extractedData.map((section, key) =>
-      section.map((item) => {
-        // For each item, check if it's the one that needs updating
-        if (item.content_id === selectedId) {
-          //   console.log(key);
-          console.log(key);
+    // const newSelectedItemsDetails = selectedItemsDetails.map((item) => {
+    //   if (item.id === selectedId) {
+    //     return { ...item, id: chosenId, title, title, s3_icon_url: icon_url };
+    //   }
+    //   return item;
+    // });
 
-          console.log(true);
-          setMyKey(key);
-          console.log(myKey);
-          return { ...item, content_id: chosenId, title, icon_url };
-          // If it is, return a new object with the updated details from the chosen option
-        }
-        // Otherwise, return the item unmodified
+    // setSelectedItemsDetails(newSelectedItemsDetails);
 
-        return item;
-      })
-    );
+    // const updatedData = extractedData.map((section, key) =>
+    //   section.map((item) => {
+    //     // For each item, check if it's the one that needs updating
+    //     if (item.content_id === selectedId) {
+    //       //   console.log(key);
+    //       console.log(key);
 
-    // setExtractedData(updatedData);
-    if (updatedExtractedData.length !== 0) {
-      const data = updatedExtractedData;
-      data[myKey] = updatedData[myKey];
-      setUpdatedExtractedData(data);
-    } else {
-      setUpdatedExtractedData(updatedData);
-    }
+    //       console.log(true);
+    //       setMyKey(key);
+    //       console.log(myKey);
+    //       return { ...item, content_id: chosenId, title, icon_url };
+    //       // If it is, return a new object with the updated details from the chosen option
+    //     }
+    //     // Otherwise, return the item unmodified
+
+    //     return item;
+    //   })
+    // );
+
+    // // setExtractedData(updatedData);
+    // if (updatedExtractedData.length !== 0) {
+    //   const data = updatedExtractedData;
+    //   data[myKey] = updatedData[myKey];
+    //   setUpdatedExtractedData(data);
+    // } else {
+    //   setUpdatedExtractedData(updatedData);
+    // }
   };
 
   // logs
@@ -97,6 +109,7 @@ const EmptyRectangle = ({
                   {/* edit */}
                   <span
                     onClick={() => {
+                      setSaveItemIdForEdit(item?.guid);
                       setShowOptionList(!showOptionList);
                       setSelectedId(item.id); // Store the selected id when the list is being opened
                     }}

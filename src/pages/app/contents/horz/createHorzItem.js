@@ -105,7 +105,6 @@ const CreateHorzItem = () => {
         const apiUrl = generateApiUrl(
           `/api/v1/contents_store/horizontal_menu/${mediaData.id}/${pageId}`
         );
-        console.log("apiUrl", apiUrl);
         const response = await axios.post(apiUrl, formDataToSend, {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`,

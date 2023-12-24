@@ -56,7 +56,6 @@ const VerifyOTP = () => {
     }
   };
 
-  // console.log(otp);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -78,7 +77,6 @@ const VerifyOTP = () => {
         { otp: concatenatedOtp, email: email },
         { headers }
       );
-      // console.log(response);
 
       if (response.status === 200) {
         // redirect user to login page

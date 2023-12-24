@@ -19,7 +19,7 @@ const SquareDataExists = ({
   updatedExtractedData,
   setUpdatedExtractedData,
   removeItem,
-  editItem,
+  editItem
 }) => {
   const [showOptionList, setShowOptionList] = useState(false);
   // const flattenedData = extractedData.flat();
@@ -319,7 +319,7 @@ const SquareDataExists = ({
                         <span
                           onClick={() => {
                             setSaveItemIdForEdit(firstSquare[0]?.guid);
-                            handleSquareClick(0, firstSquare[0]?.id)
+                            handleSquareClick(0, firstSquare[0]?.id);
                           }}
                           className="absolute left-[40px]"
                         >
@@ -362,7 +362,7 @@ flex justify-center items-center overflow-hidden"
                               handleItemSelect(
                                 item.id,
                                 item.title,
-                                item.icon_url
+                                item.s3_icon_url
                               )
                             }
                             className={`py-2 border-b `}
@@ -434,7 +434,7 @@ flex justify-center items-center overflow-hidden"
                       </span>
                       <span
                         onClick={() => {
-                          setSaveItemIdForEdit(firstSquare[0]?.guid);
+                          setSaveItemIdForEdit(secondSquare[0]?.guid);
                           handleSquareClick(1, secondSquare[0]?.id);
                         }}
                         className="absolute left-[40px]"
@@ -478,7 +478,11 @@ flex justify-center items-center overflow-hidden"
                         <div
                           key={item.id}
                           onClick={() =>
-                            handleItemSelect(item.id, item.title, item.icon_url)
+                            handleItemSelect(
+                              item.id,
+                              item.title,
+                              item.s3_icon_url
+                            )
                           }
                           className={`py-2 border-b `}
                         >
@@ -533,7 +537,7 @@ flex justify-center items-center overflow-hidden"
           </div>
         </>
       ) : // <LoadingState />
-        null}
+      null}
     </>
   );
 };

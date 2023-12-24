@@ -144,9 +144,6 @@ const CreateLead = () => {
   //     );
   //   };
 
-  console.log("selectedFields", selectedFields);
-  console.log("leadOptions", leadOptions);
-
   return (
     <>
       <HeaderTwo />

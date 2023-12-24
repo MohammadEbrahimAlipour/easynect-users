@@ -1,7 +1,7 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Layout from "@/components/Layout";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { useAccessToken } from "../../../../context/AccessTokenContext";
 import { generateApiUrl } from "@/components/ApiUr";
 import { useRouter } from "next/router";
@@ -23,6 +23,7 @@ import HeaderTwo from "@/components/HeaderTwo";
 const Lead = () => {
   const [leadData, setLeadData] = useState([]);
   const accessToken = useAccessToken();
+  const [noData, setNoData] = useState(null);
   const router = useRouter();
   const { id } = router.query;
 
@@ -41,20 +42,26 @@ const Lead = () => {
         .then((response) => {
           // Handle the data once it's received
           setLeadData(response.data);
+          setNoData(false);
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
-          // Check if the error response contains a message
-          if (
-            error.response &&
-            error.response.data &&
-            error.response.data.detail
-          ) {
-            const errorMessage = error.response.data.detail;
-            toast.error(errorMessage);
+          if (error.response) {
+            // Handle the 404 status specifically
+            if (error.response.status === 404) {
+              setNoData(true);
+              // No toast displayed for 404 errors
+            } else if (error.response.data && error.response.data.detail) {
+              // Check if the error response contains a more specific message
+              const errorMessage = error.response.data.detail;
+              toast.error(errorMessage);
+            } else {
+              // Handle any other errors without specific status codes
+              toast.error("Error: An unexpected error occurred.");
+            }
           } else {
-            // If there is no specific error message, display a generic one
-            toast.error("Error: An error occurred.");
+            // Handle cases where the error response is not available
+            toast.error("Error: Could not connect to the API.");
           }
         });
     }
@@ -96,45 +103,52 @@ const Lead = () => {
       <HeaderTwo />
       <Layout>
         <h3 className="font-semibold mb-6">فرم لید</h3>
+        {/* to check if data exist handle noData */}
 
-        {/* each item */}
-
-        {leadData.fields !== undefined ? (
-          <>
-            {leadData.fields.map((item) => (
-              <div
-                key={item.id}
-                className="bg-lightMenu rounded-lg mb-2 border-2 box-border overflow-hidden"
-              >
-                <div className="grid grid-cols-12 justify-start items-center py-3">
-                  {/* title */}
-                  <p className="col-span-3 font-medium text-sm border-e-2  ps-2 truncate">
-                    {item.title}
-                  </p>
-
-                  {/* placeholder */}
-                  <span className="col-span-6 ms-1 bg-lightMenu flex  justify-between items-center me-3 w-full overflow-hidden">
-                    <p className="font-medium text-sm">{item.placeholder}</p>
-                  </span>
-
-                  {/* is active */}
-                  <span className="col-span-2 ms-2">
-                    {leadData.is_active ? <TickSuccess /> : <Tickicon />}
-                  </span>
-                  {/* delete */}
-                  <button
-                    onClick={() => handleDeleteUser(item.id)}
-                    className="col-span-1"
+        {noData !== undefined && !noData && (
+          <Fragment>
+            {/* each item */}
+            {leadData.fields !== undefined ? (
+              <>
+                {leadData.fields.map((item) => (
+                  <div
+                    key={item.id}
+                    className="bg-lightMenu rounded-lg mb-2 border-2 box-border overflow-hidden"
                   >
-                    <DeleteIconLead />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </>
-        ) : (
-          <LoadingState />
+                    <div className="grid grid-cols-12 justify-start items-center py-3">
+                      {/* title */}
+                      <p className="col-span-3 font-medium text-sm border-e-2  ps-2 truncate">
+                        {item.title}
+                      </p>
+
+                      {/* placeholder */}
+                      <span className="col-span-6 ms-1 bg-lightMenu flex  justify-between items-center me-3 w-full overflow-hidden">
+                        <p className="font-medium text-sm">
+                          {item.placeholder}
+                        </p>
+                      </span>
+
+                      {/* is active */}
+                      <span className="col-span-2 ms-2">
+                        {leadData.is_active ? <TickSuccess /> : <Tickicon />}
+                      </span>
+                      {/* delete */}
+                      <button
+                        onClick={() => handleDeleteUser(item.id)}
+                        className="col-span-1"
+                      >
+                        <DeleteIconLead />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </>
+            ) : (
+              <LoadingState />
+            )}
+          </Fragment>
         )}
+
         {/* add item field */}
         <h3 className="font-semibold mb-2 mt-7">ساخت لید</h3>
 

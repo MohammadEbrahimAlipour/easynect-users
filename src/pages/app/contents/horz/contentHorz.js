@@ -51,8 +51,6 @@ const ContentHorz = () => {
     }
   }, [accessToken.accessToken, id]);
 
-  console.log("mediaData", mediaData);
-
   return (
     <>
       {/* add id to back route */}

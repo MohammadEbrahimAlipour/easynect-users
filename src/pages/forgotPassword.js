@@ -9,16 +9,13 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import EasynectSquareLogo from "@/components/icons/EasynectSquareLogo";
 import EasynecVertLogo from "@/components/icons/EasynecVertLogo";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
 const ForgotPassword = () => {
-  const router=useRouter()
+  const router = useRouter();
   const handleBack = () => {
     router.back();
-    console.log("btn clicked")
   };
-
-
 
   return (
     <div className="container">
@@ -27,12 +24,10 @@ const ForgotPassword = () => {
        bg-[url('../../public/images/backgrounds/passwordImage.jpg')] bg-cover
        "
       >
-
         <div className=" w-full h-full flex justify-center items-center relative overflow-hidden">
-
-             <span className="absolute z-100 flex items-center justify-center w-full top-[60px]">
-        <EasynecVertLogo/>
-        </span>
+          <span className="absolute z-100 flex items-center justify-center w-full top-[60px]">
+            <EasynecVertLogo />
+          </span>
 
           <motion.span
             initial={{ y: 0, scale: 3 }}
@@ -42,7 +37,7 @@ const ForgotPassword = () => {
           >
             <PasswordCircleImageIcon />
           </motion.span>
-          <span className=" absolute -bottom-[50px] flex justify-center items-center w-full h-full overflow-hidden" >
+          <span className=" absolute -bottom-[50px] flex justify-center items-center w-full h-full overflow-hidden">
             <motion.span
               initial={{ y: 0, scale: -2 }}
               animate={{ y: 0, scale: 1 }}

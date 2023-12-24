@@ -86,7 +86,6 @@ const PersonsStats = () => {
       .then((response) => {
         // Handle the API response here
         const data = response.data;
-        console.log(data); // Log the data to see what you've received
         setStatsData(data); // Update the state with the fetched data
       })
       .catch((error) => {
@@ -116,7 +115,6 @@ const PersonsStats = () => {
         })
         .then((response) => {
           const data = response.data;
-          console.log(data); // Log the data to see what you've received
           setPageData(data); // Update the state with the fetched data
         })
         .catch((error) => {
@@ -146,7 +144,6 @@ const PersonsStats = () => {
         })
         .then((response) => {
           const data = response.data;
-          console.log("statsData", data);
           setChartView(data);
         })
         .catch((error) => {
@@ -182,7 +179,6 @@ const PersonsStats = () => {
         })
         .then((response) => {
           const data = response.data;
-          console.log("statsData", data);
           setChartConnection(data);
         })
         .catch((error) => {
@@ -196,8 +192,6 @@ const PersonsStats = () => {
     toDate,
     selectedOption
   ]);
-
-  console.log("connectionStats", chartConnection);
 
   // Fetch data for chart share
   useEffect(() => {
@@ -220,7 +214,6 @@ const PersonsStats = () => {
         })
         .then((response) => {
           const data = response.data;
-          console.log("statsData", data);
           setChartShare(data);
         })
         .catch((error) => {
@@ -256,7 +249,6 @@ const PersonsStats = () => {
         })
         .then((response) => {
           const data = response.data;
-          console.log("statsData", data);
           setChartConvert(data);
         })
         .catch((error) => {
@@ -282,7 +274,6 @@ const PersonsStats = () => {
   // Function to handle card selection
   const handleCardSelect = (cardId) => {
     setSelectedCardId(cardId);
-    console.log("cardId", cardId); // Set the selected card's id when a card is clicked
   };
 
   // options

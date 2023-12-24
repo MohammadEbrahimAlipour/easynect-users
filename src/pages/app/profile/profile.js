@@ -29,7 +29,6 @@ const Profile = () => {
   // const { accessToken, setAccessToken } = useAccessToken();
   const accessToken = useAccessToken();
   const { setAccessToken } = useAccessToken();
-  console.log(accessToken);
 
   // logout
   const handleLogout = async () => {
@@ -64,10 +63,7 @@ const Profile = () => {
       // Handle network errors or other exceptions
       console.error("An error occurred during logout:", error);
     }
-    console.log("Logout clicked"); // Add this line
-    console.log(accessToken.accessToken);
   };
-  console.log("token", accessToken.accessToken);
   return (
     <>
       <Header />

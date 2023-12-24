@@ -57,7 +57,6 @@ const AddHorzItem = () => {
         }
       });
   }, [accessToken.accessToken]);
-  console.log("data", contentData);
 
   return (
     <>

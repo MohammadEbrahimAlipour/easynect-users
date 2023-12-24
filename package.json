@@ -24,6 +24,7 @@
     "file-saver": "^2.0.5",
     "framer-motion": "^10.16.12",
     "html2canvas": "^1.4.1",
+    "jsqr": "^1.4.0",
     "lodash": "^4.17.21",
     "materialize-css": "^1.0.0-rc.2",
     "next": "13.2.4",

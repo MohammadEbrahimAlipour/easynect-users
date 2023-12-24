@@ -39,7 +39,6 @@ const VerifyOTP = () => {
     return otp.join("");
   };
 
-  // console.log(otp);
   const handleSubmit = async (e) => {
     e.preventDefault();
     // const new_otp = otp;
@@ -53,7 +52,6 @@ const VerifyOTP = () => {
         Authorization: `Bearer ${accessToken.accessToken}`
       };
       const finalOtp = generateOTP().split("").reverse().join("");
-      console.log(finalOtp);
 
       // Send a POST request with the OTP code and headers
       const response = await axios.post(
@@ -61,7 +59,6 @@ const VerifyOTP = () => {
         { otp: finalOtp, email: email },
         { headers }
       );
-      // console.log(response);
 
       if (response.status === 200) {
         // redirect user to login page

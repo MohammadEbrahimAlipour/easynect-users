@@ -2,6 +2,7 @@ import React, { Fragment, useState } from "react";
 import BottomSheetWrapper from "../BottomSheetWrapper";
 import AccessoryConnect from "@/components/AccessoryConnect";
 import LoadingState from "@/components/LoadingState";
+import Link from "next/link";
 
 const BottomSheetMore = ({
   showSheetMore,
@@ -9,7 +10,7 @@ const BottomSheetMore = ({
   moreSheetDetails
 }) => {
   const [showAccessory, setShowAccessory] = useState(false);
-
+  console.log("moreSheetDetails", moreSheetDetails);
   const SubMenuOptions = ({ title, onClick, className = "" }) => {
     return (
       <div
@@ -46,7 +47,14 @@ const BottomSheetMore = ({
                 </li>
                 {/* options */}
                 <li className="font-ravi">
-                  <SubMenuOptions title="ویرایش کارت" />
+                  <Link
+                    href={`/app/lead/lead?id=${moreSheetDetails.id}`}
+                    className=" border-b-[1px] font-medium flex justify-center font-ravi"
+                  >
+                    <button className="block py-3 px-4 hover:bg-gray-100 font-ravi">
+                      فرم لید
+                    </button>
+                  </Link>
                 </li>
 
                 <li className="border-b-[1px] font-medium ">

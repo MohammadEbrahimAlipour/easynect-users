@@ -25,7 +25,6 @@ const RegisterUser = () => {
   };
 
   const onSubmit = async (e) => {
-    console.log("submit");
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
