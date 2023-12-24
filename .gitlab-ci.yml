@@ -27,6 +27,8 @@ build_dev_image:
     - export PACKAGE_JSON_VERSION=$(cat package.json | jq -r .version)
     - export VERSION=$PACKAGE_JSON_VERSION.$CI_PIPELINE_IID
     - echo $VERSION > version-file.txt
+    - cp ${ADMIN_ENV_DEV} ./.env.production
+
   script:
     - docker build -f Dockerfile.dev -t $IMAGE_NAME:$VERSION .
   artifacts:
@@ -66,7 +68,7 @@ dev_deploy:
     SERVER_HOST: $DEV_SERVER_HOST
 
   before_script:
-    - echo $SSH_KEY | sed -e "s/-----BEGIN RSA PRIVATE KEY-----/&\n/" -e "s/-----END RSA PRIVATE KEY-----/\n&/" -e "s/\S\{64\}/&\n/g"\ > deploy-key.pem
+    - echo $SSH_KEY | sed -e "s/-----BEGIN OPENSSH PRIVATE KEY-----/&\n/" -e "s/-----END OPENSSH PRIVATE KEY-----/\n&/" -e "s/\S\{64\}/&\n/g"\ > deploy-key.pem
     - chmod 400 deploy-key.pem
     - export VERSION=$(cat version-file.txt)
 
