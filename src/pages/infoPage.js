@@ -261,6 +261,30 @@ END:VCARD
     setUpdatedExtractedData([...result]);
   };
 
+  const handleEditItem = (guid, newItem) => {
+    const oldData = [...updatedExtractedData];
+    const result = oldData.filter((row) => {
+      const oldRow = [...row?.data];
+      let rowResult = [];
+      if (Array.isArray(row?.data)) {
+        rowResult = oldRow?.filter((subRow) => {
+          if (subRow.guid == guid) {
+            subRow.id = newItem?.id;
+            subRow.title = newItem?.title;
+            subRow.description = newItem?.description;
+            subRow.s3_icon_url = newItem?.s3_icon_url;
+            return subRow
+          }
+          return subRow
+        });
+      }
+      row.data = rowResult;
+      return row.data?.length ? row : undefined;
+    });
+
+    setUpdatedExtractedData([...result]);
+  };
+
   return (
     <>
       {/* chose */}
@@ -281,12 +305,12 @@ END:VCARD
           <div className="absolute bg-white shadow-2xl border py-2 px-4 rounded-md top-8">
             {pagesData.map((data) => (
               <div
-                key={data.id}
-                className={`py-1 border-b ${
-                  selectedOption && selectedOption.id === data.id
-                    ? "font-bold"
-                    : ""
-                }`}
+              key={data.id}
+              className={`py-1 border-b ${
+                selectedOption && selectedOption.id === data.id
+                  ? "font-bold"
+                  : ""
+              }`}
                 onClick={() => handleOptionClick(data)}
               >
                 {data.card_title}
@@ -395,9 +419,11 @@ END:VCARD
                         setSyncExtractedData={setSyncExtractedData}
                         setAddedItems={setAddedItems}
                         removeItem={handleRemoveItem}
+                        editItem={handleEditItem}
                         localItemsSelected={localItemsSelected}
                         setLocalItemsSelected={setLocalItemsSelected}
                       />
+
                     </div>
                     <button
                       type="submit"

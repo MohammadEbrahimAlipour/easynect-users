@@ -18,7 +18,8 @@ const SquareDataExists = ({
   setExtractedData,
   updatedExtractedData,
   setUpdatedExtractedData,
-  removeItem
+  removeItem,
+  editItem,
 }) => {
   const [showOptionList, setShowOptionList] = useState(false);
   // const flattenedData = extractedData.flat();
@@ -35,6 +36,7 @@ const SquareDataExists = ({
   const [showOptionListSquareOne, setShowOptionListSquareOne] = useState(false);
   const [selectedSquareOneOption, setSelectedSquareOneOption] = useState(null);
   const [showOptionListSquareTwo, setShowOptionListSquareTwo] = useState(false);
+  const [saveItemIdForEdit, setSaveItemIdForEdit] = useState(null);
 
   const generateUniqueID = () => {
     return `id-${new Date().getTime()}-${Math.random()
@@ -66,18 +68,18 @@ const SquareDataExists = ({
     // Close all option lists
     setShowOptionListArray(Array(data.data.length).fill(false));
 
-    const updatedData = [...extractedData].map((section) =>
-      section.map((item) =>
-        item.content_id === selectedId
-          ? {
-              ...item,
-              content_id: chosenId,
-              title,
-              icon_url
-            }
-          : item
-      )
-    );
+    // const updatedData = [...extractedData].map((section) =>
+    //   section.map((item) =>
+    //     item.content_id === selectedId
+    //       ? {
+    //           ...item,
+    //           content_id: chosenId,
+    //           title,
+    //           icon_url
+    //         }
+    //       : item
+    //   )
+    // );
 
     // Correctly declared and constructed updatedItemDetails object within the function
     const updatedItemDetails = {
@@ -87,42 +89,45 @@ const SquareDataExists = ({
       description: "" // if description data is available, use it here
     };
 
+    editItem(saveItemIdForEdit, updatedItemDetails);
+    setSaveItemIdForEdit(null);
+
     // Now updatedItemDetails is recognized within this scope
-    setSelectedItemsDetails((currentDetails) =>
-      currentDetails.map((item, index) =>
-        index === myKey ? updatedItemDetails : item
-      )
-    );
-    const updatedItemDetailsFromSelection = {
-      // ... other fields ...
-      description: "" // Add actual description if available
-    };
+    // setSelectedItemsDetails((currentDetails) =>
+    //   currentDetails.map((item, index) =>
+    //     index === myKey ? updatedItemDetails : item
+    //   )
+    // );
+    // const updatedItemDetailsFromSelection = {
+    //   // ... other fields ...
+    //   description: "" // Add actual description if available
+    // };
 
-    // Update the details for the correct square based on 'myKey'
-    setSelectedItemsDetails((currentDetails) =>
-      currentDetails.map((item, index) =>
-        index === myKey ? { ...item, ...updatedItemDetailsFromSelection } : item
-      )
-    );
+    // // Update the details for the correct square based on 'myKey'
+    // setSelectedItemsDetails((currentDetails) =>
+    //   currentDetails.map((item, index) =>
+    //     index === myKey ? { ...item, ...updatedItemDetailsFromSelection } : item
+    //   )
+    // );
 
-    // Identify the section that contains the item with the selectedId
-    const sectionIndex = extractedData.findIndex((section) =>
-      section.some((item) => item.content_id === selectedId)
-    );
+    // // Identify the section that contains the item with the selectedId
+    // const sectionIndex = extractedData.findIndex((section) =>
+    //   section.some((item) => item.content_id === selectedId)
+    // );
 
-    setExtractedData(updatedData);
+    // setExtractedData(updatedData);
 
-    if (updatedExtractedData.length !== 0 && sectionIndex !== -1) {
-      // Note that I'm using a functional state update here because I'm relying
-      // on the previous state value for updatedExtractedData
-      setUpdatedExtractedData((prevData) => {
-        const newData = [...prevData];
-        newData[sectionIndex] = updatedData[sectionIndex];
-        return newData;
-      });
-    } else {
-      setUpdatedExtractedData(updatedData);
-    }
+    // if (updatedExtractedData.length !== 0 && sectionIndex !== -1) {
+    //   // Note that I'm using a functional state update here because I'm relying
+    //   // on the previous state value for updatedExtractedData
+    //   setUpdatedExtractedData((prevData) => {
+    //     const newData = [...prevData];
+    //     newData[sectionIndex] = updatedData[sectionIndex];
+    //     return newData;
+    //   });
+    // } else {
+    //   setUpdatedExtractedData(updatedData);
+    // }
   };
 
   //   const { sub_order, id } = itemToRemove;
@@ -312,9 +317,10 @@ const SquareDataExists = ({
                           <CloseIcon />
                         </span>
                         <span
-                          onClick={() =>
+                          onClick={() => {
+                            setSaveItemIdForEdit(firstSquare[0]?.guid);
                             handleSquareClick(0, firstSquare[0]?.id)
-                          }
+                          }}
                           className="absolute left-[40px]"
                         >
                           <PenEditIcon />
@@ -427,9 +433,10 @@ flex justify-center items-center overflow-hidden"
                         <CloseIcon />
                       </span>
                       <span
-                        onClick={() =>
-                          handleSquareClick(1, secondSquare[0]?.id)
-                        }
+                        onClick={() => {
+                          setSaveItemIdForEdit(firstSquare[0]?.guid);
+                          handleSquareClick(1, secondSquare[0]?.id);
+                        }}
                         className="absolute left-[40px]"
                       >
                         <PenEditIcon />
@@ -526,7 +533,7 @@ flex justify-center items-center overflow-hidden"
           </div>
         </>
       ) : // <LoadingState />
-      null}
+        null}
     </>
   );
 };
