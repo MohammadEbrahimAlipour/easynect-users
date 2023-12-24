@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import axios from "axios";
 import InfoSocialMediaSquare from "@/components/InfoSocialMediaSquare";
 import PortfolioLink from "@/components/PortfolioLink";
@@ -29,6 +29,7 @@ import EmptyItemsAddBox from "@/components/infoPage/empty/EmptyItemsAddBox";
 import { generateApiUrl } from "@/components/ApiUr";
 import LoadingState from "@/components/LoadingState";
 import EmptyRectangle from "@/components/infoPage/empty/EmptyRectangle";
+import NoData from "@/components/pageView/NoData";
 
 const InfoPage = () => {
   const handleSaveContact = () => {
@@ -77,7 +78,7 @@ END:VCARD
   const [updatedExtractedData, setUpdatedExtractedData] = useState([]);
   const [syncedExtractedData, setSyncExtractedData] = useState([]);
   const [addedItems, setAddedItems] = useState([]);
-
+  const [noData, setNoData] = useState(null);
   const [localItemsSelected, setLocalItemsSelected] = useState([]);
 
   console.log("extractedData", extractedData);
@@ -91,6 +92,8 @@ END:VCARD
 
   console.log("********syncedExtractedData********", syncedExtractedData);
   console.log("added items ************", addedItems);
+  console.log("selected id", selectedOption);
+  console.log("listItems$$$$$$$$", listItems);
 
   // syncronizing syncedExtractedData
   useEffect(() => {
@@ -173,10 +176,15 @@ END:VCARD
         })
         .then((response) => {
           // Handle the data once it's received
+          setNoData(false);
           setListItems(response.data);
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
+          if (error.response && error.response.status === 404) {
+            // If the status code is 404, set noData to true
+            setNoData(true);
+          }
         });
     }
   }, [selectedOption?.id, accessToken.accessToken]);
@@ -237,8 +245,6 @@ END:VCARD
   };
 
   const handleRemoveItem = (item) => {
-    debugger;
-    console.log("item => ", item);
     const oldData = [...updatedExtractedData];
     const result = oldData.filter((row) => {
       const oldRow = [...row?.data];
@@ -307,98 +313,109 @@ END:VCARD
               چاپ و تبلیغات نیکبخت
             </p>
           </div>
-
-          {/* horizontal scroll menu */}
-          <div className="border-[3px]  rounded-lg mx-2 my-4 ">
-            <div className="grid grid-flow-col justify-center items-center w-full">
-              <div className="my-5 overflow-x-hidden overscroll-y-contain ">
-                {/* <SwiperCarousel /> */}
-                <EmptyItemsAddBox
-                  listItems={listItems}
-                  pageId={selectedOption.id}
-                  horizontalData={pageViewData.horizontal_menu}
-                />
+          {/* to show no Data component in case of 404 for listOptions */}
+          {noData !== null && noData ? (
+            <NoData />
+          ) : (
+            <Fragment>
+              {/* horizontal scroll menu */}
+              <div className="border-[3px]  rounded-lg mx-2 my-4 ">
+                <div className="grid grid-flow-col justify-center items-center w-full">
+                  <div className="my-5 overflow-x-hidden overscroll-y-contain ">
+                    {/* <SwiperCarousel /> */}
+                    <EmptyItemsAddBox
+                      listItems={listItems}
+                      pageId={selectedOption.id}
+                      horizontalData={pageViewData.horizontal_menu}
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <Layout className="!bg-white !px-3 !py-0 !h-fit">
-            {/* save btn */}
-            <button
-              disabled
-              onClick={handleSaveContact}
-              className="bg-dark text-white text-sm font-bold w-full h-[44px] rounded-[8px] opacity-10"
-            >
-              ذخیره مخاطب
-            </button>
+              <Layout className="!bg-white !px-3 !py-0 !h-fit">
+                {/* save btn */}
+                <button
+                  disabled
+                  onClick={handleSaveContact}
+                  className="bg-dark text-white text-sm font-bold w-full h-[44px] rounded-[8px] opacity-10"
+                >
+                  ذخیره مخاطب
+                </button>
 
-            <form
-              onSubmit={handleSubmit}
-              className="border-[3px] mt-5 px-2 pb-6 rounded-lg"
-            >
-              <div className=" mt-5">
-                {updatedExtractedData?.map((object) => (
-                  <div key={object?.guid + object?.data?.length}>
-                    {/* square section */}
+                <form
+                  onSubmit={handleSubmit}
+                  className="border-[3px] mt-5 px-2 pb-6 rounded-lg"
+                >
+                  <div className=" mt-5">
+                    {updatedExtractedData?.map((object) => (
+                      <div key={object?.guid + object?.data?.length}>
+                        {/* square section */}
 
-                    {object.display_box_type === "square" ? (
-                      <SquareDataExists
+                        {object.display_box_type === "square" ? (
+                          <SquareDataExists
+                            setUpdatedExtractedData={setUpdatedExtractedData}
+                            setExtractedData={setExtractedData}
+                            extractedData={extractedData}
+                            updatedExtractedData={updatedExtractedData}
+                            listItems={listItems}
+                            data={object}
+                            syncedExtractedData={syncedExtractedData}
+                            removeItem={handleRemoveItem}
+                          />
+                        ) : null}
+
+                        {/* rectangle */}
+
+                        {object.display_box_type === "rectangle" ? (
+                          <EmptyRectangle
+                            setUpdatedExtractedData={setUpdatedExtractedData}
+                            setExtractedData={setExtractedData}
+                            extractedData={extractedData}
+                            updatedExtractedData={updatedExtractedData}
+                            listItems={listItems}
+                            data={object}
+                            syncedExtractedData={syncedExtractedData}
+                            setSyncExtractedData={setSyncExtractedData}
+                            removeItem={handleRemoveItem}
+                          />
+                        ) : null}
+                      </div>
+                    ))}
+
+                    {/* wrapper */}
+
+                    <div className="mt-4">
+                      <EmptySquareBox
                         setUpdatedExtractedData={setUpdatedExtractedData}
                         setExtractedData={setExtractedData}
                         extractedData={extractedData}
                         updatedExtractedData={updatedExtractedData}
                         listItems={listItems}
-                        data={object}
-                        syncedExtractedData={syncedExtractedData}
-                        removeItem={handleRemoveItem}
-                      />
-                    ) : null}
-
-                    {/* rectangle */}
-
-                    {object.display_box_type === "rectangle" ? (
-                      <EmptyRectangle
-                        setUpdatedExtractedData={setUpdatedExtractedData}
-                        setExtractedData={setExtractedData}
-                        extractedData={extractedData}
-                        updatedExtractedData={updatedExtractedData}
-                        listItems={listItems}
-                        data={object}
                         syncedExtractedData={syncedExtractedData}
                         setSyncExtractedData={setSyncExtractedData}
+                        setAddedItems={setAddedItems}
                         removeItem={handleRemoveItem}
+                        localItemsSelected={localItemsSelected}
+                        setLocalItemsSelected={setLocalItemsSelected}
                       />
-                    ) : null}
+                    </div>
+                    <button
+                      type="submit"
+                      className="font-ravi bg-dark text-white w-full mt-4 rounded-md py-2 font-medium"
+                    >
+                      اعمال تغییرات
+                    </button>
                   </div>
-                ))}
+                  {/* end of wrapper */}
+                </form>
 
-                {/* wrapper */}
-
-                <div className="mt-4">
-                  <EmptySquareBox
-                    setUpdatedExtractedData={setUpdatedExtractedData}
-                    setExtractedData={setExtractedData}
-                    extractedData={extractedData}
-                    updatedExtractedData={updatedExtractedData}
-                    listItems={listItems}
-                    syncedExtractedData={syncedExtractedData}
-                    setSyncExtractedData={setSyncExtractedData}
-                    setAddedItems={setAddedItems}
-                    removeItem={handleRemoveItem}
-                    localItemsSelected={localItemsSelected}
-                    setLocalItemsSelected={setLocalItemsSelected}
-                  />
+                {/* logo */}
+                <div>
+                  <ClientPageFooter />
                 </div>
-                <button type="submit">submit</button>
-              </div>
-              {/* end of wrapper */}
-            </form>
-
-            {/* logo */}
-            <div>
-              <ClientPageFooter />
-            </div>
-          </Layout>
+              </Layout>
+            </Fragment>
+          )}
         </>
       ) : (
         <LoadingState />

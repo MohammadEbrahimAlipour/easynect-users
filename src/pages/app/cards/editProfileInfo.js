@@ -140,6 +140,7 @@ const EditProfileInfo = () => {
           // Handle successful response, e.g., show a success message
           console.log("Form submitted successfully");
           setChangedFormData({}); // Clear the changedFormData object
+          router.push("/app/cards/profileCard");
           // to reload the page
           // window.location.reload();
         } else {
