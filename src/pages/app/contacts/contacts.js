@@ -137,7 +137,7 @@ const Contacts = () => {
           }
         });
     }
-  }, [accessToken.accessToken, pageID, limit, skip]);
+  }, [accessToken.accessToken, pageID /* , limit, skip */]);
 
   const loadMoreContacts = () => {
     if (pageID && hasMore) {
@@ -276,10 +276,10 @@ const Contacts = () => {
                 className="flex justify-center items-center mt-[130px] bg-muted py-4 
               opacity-40 rounded-md overflow-hidden"
               >
-                No contacts for this card
+                هیچ مخاطبی برای این کارت یافت نشد
               </span>
             ) : (
-              <div className="max-h-screen bg-red-400 px-2 overflow-hidden">
+              <div className="max-h-full px-2 overflow-hidden">
                 <InfiniteScroll
                   dataLength={contacts.length}
                   // dataLength={10}

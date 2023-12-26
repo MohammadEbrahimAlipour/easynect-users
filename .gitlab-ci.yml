@@ -2,7 +2,7 @@ workflow:
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
     - if: $CI_COMMIT_BRANCH == "production"
-
+    - if: $CI_COMMIT_BRANCH == "production"
 
 variables:
   IMAGE_NAME: $CI_REGISTRY_IMAGE
@@ -12,7 +12,6 @@ variables:
   PROD_SERVER_HOST: 91.107.197.9
   PROD_ENDPOINT: https://app.easynect.com
 
-
 stages:
   - test
   - build_dev
@@ -20,7 +19,6 @@ stages:
   - deploy_dev
   - deploy_staging
   - deploy_prod
-
 
 build_dev_image:
   stage: build_dev
@@ -55,10 +53,9 @@ push_dev_image:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker push $IMAGE_NAME:$VERSION
-  
+
   only:
     - main
-
 
 dev_deploy:
   stage: deploy_dev
@@ -80,15 +77,14 @@ dev_deploy:
     - scp -o StrictHostKeyChecking=no -i deploy-key.pem ./docker-compose-dev.yml root@$SERVER_HOST:/home/easynect/
     - ssh -o StrictHostKeyChecking=no -i deploy-key.pem root@$SERVER_HOST  "
       docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY &&
-            cd /home/easynect/ &&
-            export DC_IMAGE_NAME=$IMAGE_NAME && 
-            export DC_IMAGE_TAG=$VERSION &&
-            docker-compose -f docker-compose.yml down &&
-            docker-compose -f docker-compose.yml up -d
-        "
-  only: 
-    - main 
-
+      cd /home/easynect/ &&
+      export DC_IMAGE_NAME=$IMAGE_NAME &&
+      export DC_IMAGE_TAG=$VERSION &&
+      docker-compose -f docker-compose.yml down &&
+      docker-compose -f docker-compose.yml up -d
+      "
+  only:
+    - main
 
 build_prod_image:
   stage: build_prod
@@ -123,10 +119,9 @@ push_prod_image:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker push $IMAGE_NAME:$VERSION
-  
+
   only:
     - production
-
 
 prod_deploy:
   stage: deploy_prod
@@ -148,11 +143,11 @@ prod_deploy:
     - scp -o StrictHostKeyChecking=no -i deploy-key.pem ./docker-compose.yml root@$SERVER_HOST:/home/frontend/user/
     - ssh -o StrictHostKeyChecking=no -i deploy-key.pem root@$SERVER_HOST  "
       docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY &&
-            cd /home/frontend/user/ &&
-            export DC_IMAGE_NAME=$IMAGE_NAME && 
-            export DC_IMAGE_TAG=$VERSION &&
-            docker-compose -f docker-compose.yml down &&
-            docker-compose -f docker-compose.yml up -d
-        "
-  only: 
-    - production 
+      cd /home/frontend/user/ &&
+      export DC_IMAGE_NAME=$IMAGE_NAME &&
+      export DC_IMAGE_TAG=$VERSION &&
+      docker-compose -f docker-compose.yml down &&
+      docker-compose -f docker-compose.yml up -d
+      "
+  only:
+    - production

@@ -96,14 +96,18 @@ const EditProfileInfo = () => {
     }
   };
   const handleToggleDirect = () => {
-    // Use a functional update to ensure the state is updated correctly
-    setIsDirect((prevIsDirect) => !prevIsDirect);
+    setIsDirect((prevIsDirect) => {
+      const newIsDirect = !prevIsDirect;
 
-    // Update formData.is_direct
-    setChangedFormData((prevFormData) => ({
-      ...prevFormData,
-      is_direct: !prevFormData.is_direct
-    }));
+      // Update the formData object with the changed field value and
+      // ensure it can be submitted with the form later as changed data
+      setChangedFormData((prevFormData) => ({
+        ...prevFormData,
+        is_direct: newIsDirect
+      }));
+
+      return newIsDirect;
+    });
   };
 
   // Handle form submission

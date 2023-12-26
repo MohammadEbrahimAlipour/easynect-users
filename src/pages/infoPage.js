@@ -93,14 +93,6 @@ END:VCARD
     setSyncExtractedData(extractedData);
   }, [extractedData]);
 
-  // log
-
-  // syncronizing syncedExtractedData
-  // useEffect(() => {
-  //   // setUpdatedExtractedData(extractedData.contents);
-  //   console.log("%%%%%%updatedExtractedData", updatedExtractedData);
-  // }, [extractedData, updatedExtractedData]);
-
   useEffect(() => {
     // Make an Axios GET request to fetch user data based on user_id
     const apiUrl = generateApiUrl("/api/v1/pages/qrcode_info/");

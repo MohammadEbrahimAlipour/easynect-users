@@ -6,7 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="e485ecf0-2a62-4124-95b9-8fcf0d3fef6f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/editMediaSettingsHorz.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/editMediaSettingsHorz.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ProfileCardEmpty.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ProfileCardEmpty.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/cards/editProfileInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/editProfileInfo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/cards/profileCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/profileCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/contacts/contacts.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/contacts/contacts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/contents/horz/editHorzItems.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/contents/horz/editHorzItems.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/lead/createLead.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/lead/createLead.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/lead/lead.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/lead/lead.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/profile/profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/profile/profile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/createCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/createCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/infoPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/infoPage.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,11 +59,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/pages/app/cards" />
       <recent name="$PROJECT_DIR$/src/pages/appNect/cards" />
       <recent name="$PROJECT_DIR$/src/pages/appNect/profile/info" />
       <recent name="$PROJECT_DIR$/src/pages/appNect/profile/changePass" />
       <recent name="$PROJECT_DIR$/src/pages/appNect/profile/changeMail" />
-      <recent name="$PROJECT_DIR$/src/pages/appNect/profile" />
     </key>
   </component>
   <component name="RunManager">
@@ -91,6 +100,7 @@
       <workItem from="1702384318705" duration="612000" />
       <workItem from="1702409789427" duration="33000" />
       <workItem from="1703325002626" duration="185000" />
+      <workItem from="1703496340439" duration="2489000" />
     </task>
     <servers />
   </component>

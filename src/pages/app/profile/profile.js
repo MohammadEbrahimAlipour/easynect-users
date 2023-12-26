@@ -84,14 +84,7 @@ const Profile = () => {
                 className="ms-2"
               />
             </li>
-            <li className="py-5 border-b-[1px] flex justify-start items-center">
-              <ProfileLeadIcon />
-              <CustomLinkProfile
-                title="مدیریت فرم‌های لید"
-                href="/"
-                className="ms-2"
-              />
-            </li>
+
             <li className="py-5 border-b-[1px] flex justify-start items-center">
               <ProfileChangePassIcon />
               <CustomLinkProfile

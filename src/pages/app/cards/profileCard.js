@@ -169,7 +169,7 @@ const ProfileCard = () => {
   return (
     <>
       <Header cardData={cardData} />
-      <Layout>
+      <Layout className="!h-fit !fixed  ">
         {!pageDataDontExist ? (
           <>
             <CardWrapper
@@ -288,9 +288,9 @@ const ProfileCard = () => {
             </CardWrapper>
 
             <Link
-              href="/createCard"
+              href="/app/cards/createCard"
               className="flex items-center justify-center w-full
-                  border-[1px] py-3 leading-0 rounded-lg mt-8"
+                  border-[1px] py-3 leading-0 rounded-lg mt-1 "
             >
               <span className="me-1">
                 <PlusSign className=" w-[18px] leading-0 " />
@@ -302,7 +302,7 @@ const ProfileCard = () => {
           <ProfileCardEmpty />
         )}
       </Layout>
-      <Footer />
+      <Footer className="!fixed !bottom-0 !mb-0" />
 
       {/* bottom sheet */}
       <BottomSheetShareById

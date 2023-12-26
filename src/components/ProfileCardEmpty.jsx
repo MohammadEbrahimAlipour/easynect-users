@@ -60,7 +60,7 @@ const ProfileCardEmpty = () => {
       {/* bottom btn */}
       <div className="">
         <Link
-          href="/createCard"
+          href="/app/cards/createCard"
           className="w-full flex justify-center items-center mt-7 bg-dark text-white font-semibold
     text-lg py-3 rounded-lg"
         >
