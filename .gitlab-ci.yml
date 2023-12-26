@@ -2,7 +2,6 @@ workflow:
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
     - if: $CI_COMMIT_BRANCH == "production"
-    - if: $CI_COMMIT_BRANCH == "production"
 
 variables:
   IMAGE_NAME: $CI_REGISTRY_IMAGE
@@ -80,8 +79,8 @@ dev_deploy:
       cd /home/easynect/ &&
       export DC_IMAGE_NAME=$IMAGE_NAME &&
       export DC_IMAGE_TAG=$VERSION &&
-      docker-compose -f docker-compose.yml down &&
-      docker-compose -f docker-compose.yml up -d
+      docker-compose -f docker-compose-dev.yml down &&
+      docker-compose -f docker-compose-dev.yml up -d
       "
   only:
     - main
