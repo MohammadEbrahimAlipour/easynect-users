@@ -97,7 +97,7 @@ build_prod_image:
     - hertzner
   before_script:
     - export PACKAGE_JSON_VERSION=$(cat package.json | jq -r .version)
-    - export VERSION=$PACKAGE_JSON_VERSION.$CI_PIPELINE_IID
+    - export VERSION=$PACKAGE_JSON_VERSION.$CI_PIPELINE_IID.production
     - echo $VERSION > version-file.txt
     - cp ${ENV_PROD} ./.env.production
 
