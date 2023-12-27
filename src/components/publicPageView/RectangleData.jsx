@@ -1,10 +1,36 @@
-import React from "react";
+import React, { Fragment } from "react";
 import Image from "next/image";
 
 const RectangleData = ({ object }) => {
-  console.log("objectRec", object);
+  const handleRecTypeDetection = (squareIndex) => {
+    const squareData = object?.data[squareIndex];
+    // Early return to handle any potential 'null' or 'undefined'
+    if (!squareData) return;
+
+    if (squareData.type === "phone" && squareData.content_val) {
+      const telLink = `tel:${squareData.content_val}`;
+      window.location.href = telLink;
+    } else if (squareData.type === "link" && squareData.content_val) {
+      const externalLink = squareData.content_val;
+      window.open(externalLink, "_blank", "noopener,noreferrer");
+    } else if (squareData.type === "file" && squareData.content_val) {
+      const fileLink = squareData.content_val;
+      const a = document.createElement("a");
+      a.href = fileLink;
+      a.download = squareData.content_val.split("/").pop(); // Set a custom filename or fallback
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } else if (squareData.type === "email" && squareData.content_val) {
+      const emailLink = `mailto:${squareData.content_val}`;
+      window.location.href = emailLink;
+    }
+  };
   return (
-    <div className="grid grid-cols-12 mb-5 items-center text-xs py-3 border-2 rounded-2xl whitespace-nowrap overflow-hidden">
+    <div
+      onClick={() => handleRecTypeDetection(0)}
+      className="grid grid-cols-12 mb-5 items-center text-xs py-3 border-2 rounded-2xl whitespace-nowrap overflow-hidden"
+    >
       <>
         <div className="col-span-2  rounded-md flex justify-center items-center overflow-hidden">
           <Image

@@ -177,7 +177,7 @@ END:VCARD
     if (selectedOption.id) {
       const newData = updatedExtractedData.flatMap((item) =>
         item.data.map((dataItem) => ({
-          content_id: dataItem.id,
+          content_id: dataItem?.id || dataItem?.content_id,
           main_order: item.main_order, // Take the main_order from the outer item
           sub_order: dataItem.sub_order, // Take the sub_order from the inner dataItem
           display_box_type: item.display_box_type // Take the display_box_type from the outer item
@@ -192,12 +192,16 @@ END:VCARD
         `/api/v1/page_view/contents/order/${selectedOption.id}`
       );
       axios
-        .patch(apiUrl, finalData, {
-          headers: {
-            Authorization: `Bearer ${accessToken.accessToken}`,
-            "Accept-Language": "fa"
+        .patch(
+          apiUrl,
+          finalData.sort((a, b) => a?.main_order - b?.main_order),
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken.accessToken}`,
+              "Accept-Language": "fa"
+            }
           }
-        })
+        )
         .then((response) => {
           // Handle the response as needed (e.g., show a success message)
           console.log("User data updated successfully.");

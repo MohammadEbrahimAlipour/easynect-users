@@ -2,8 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import jsQR from "jsqr";
 import tw from "tailwind-styled-components";
 
-export default function QrReader() {
-  const [result, setResult] = useState("No Result");
+export default function QrReader({ result, setResult }) {
   const [error, setError] = useState(false);
 
   const canvasRef = useRef(null);

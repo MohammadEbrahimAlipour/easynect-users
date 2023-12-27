@@ -12,6 +12,7 @@ import NoData from "@/components/pageView/NoData";
 import Image from "next/image";
 import EmptyItemsAddBox from "@/components/infoPage/empty/EmptyItemsAddBox";
 import CarouselView from "@/components/publicPageView/CarouselView";
+import LeadForm from "@/components/leadForm/LeadForm";
 
 export default function Username() {
   const router = useRouter();
@@ -20,42 +21,8 @@ export default function Username() {
   const [usersData, setUsersData] = useState();
   const [noData, setNoData] = useState(false);
   const [vCardList, setVCardList] = useState([]);
-
-  console.log("userData", usersData);
-
-  //   const handleSaveContact = () => {
-  //     // create Vcard
-
-  //     const vCardString = `
-  // BEGIN:VCARD
-  // VERSION:3.0
-  // N;CHARSET=utf-8:چاپ و تبلیغات نیکبخت
-  // TEL;TYPE=Number:05138842010
-  // TEL;TYPE=Number:09150032020
-  // TEL;TYPE=Number:09150042020
-  // EMAIL;INTERNET;TYPE=Email:nikbakhtprint@gmail.com
-  // URL;TYPE=WhatsApp:https://nikbakhtprint.com/
-  // URL;TYPE=Instagram:https://www.instagram.com/nikbakhtprint/
-  // URL;TYPE=Telegram:https://t.me/nikbakhtprint
-  // URL;TYPE=Website:https://maps.app.goo.gl/mJSte6hmxcvH6ToJ7
-  // END:VCARD
-  // `;
-
-  //     // andnoiasidn aindians inains d adnaid
-
-  //     // Download the vCard
-  //     const blob = new Blob([vCardString], {
-  //       type: "text/vcard"
-  //     });
-  //     const url = window.URL.createObjectURL(blob);
-  //     const a = document.createElement("a");
-  //     a.href = url;
-  //     a.download = "contact.vcf"; // Set the filename
-  //     document.body.appendChild(a);
-  //     a.click();
-  //     document.body.removeChild(a);
-  //     window.URL.revokeObjectURL(url);
-  //   };
+  const [hasLeadForm, setHasLeadForm] = useState(false);
+  console.log("usersData", usersData);
 
   const handleSaveContact = () => {
     let vCardData = vCardList
@@ -122,6 +89,10 @@ END:VCARD
         .then((response) => {
           // Handle the data once it's received
           setUsersData(response.data);
+
+          if (response.data?.lead_form?.length > 0) {
+            setHasLeadForm(true);
+          }
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
@@ -149,7 +120,6 @@ END:VCARD
     }
   }, [usersData]); // This effect depends on usersData state
 
-  console.log("vcard", vCardList);
   return (
     <>
       {/* main */}
@@ -236,6 +206,17 @@ END:VCARD
       ) : (
         <LoadingState />
       )}
+
+      {/* lead form */}
+      <>
+        {hasLeadForm && (
+          <LeadForm
+            open={hasLeadForm}
+            onClose={() => setHasLeadForm(false)}
+            leadFormData={usersData.lead_form}
+          />
+        )}
+      </>
     </>
   );
 }

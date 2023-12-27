@@ -131,7 +131,6 @@ const MediaSettingsHorz = () => {
         const apiUrl = generateApiUrl(
           `/api/v1/contents_store/${mediaData.type}/${mediaData.id}/${pageId}`
         );
-        console.log("apiUrl", apiUrl);
         const response = await axios.post(apiUrl, formDataToSend, {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`,
@@ -144,6 +143,7 @@ const MediaSettingsHorz = () => {
           // Handle success, for example, redirect to a success page
           console.log("User created successfully!");
           toast.success("updated successfully");
+          router.push(`/mediaSelection?id=${pageId}`);
         } else {
           // Handle other status codes or show an error message if needed
           console.error("Unexpected response status:", response.status);

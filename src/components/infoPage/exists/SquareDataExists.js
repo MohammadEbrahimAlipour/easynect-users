@@ -45,11 +45,13 @@ const SquareDataExists = ({
   };
 
   const handleSquareClick = (index, itemId) => {
-    setShowOptionListArray((currentShowOptionListArray) =>
-      currentShowOptionListArray.map((value, i) =>
+    setShowOptionListArray((currentShowOptionListArray) => {
+      if (currentShowOptionListArray && currentShowOptionListArray?.length == 1)
+        currentShowOptionListArray.push(false);
+      return currentShowOptionListArray.map((value, i) =>
         i === index ? !value : false
-      )
-    );
+      );
+    });
     setSelectedId(itemId);
     setMyKey(index); // This will keep track of which square is being interacted with.
   };

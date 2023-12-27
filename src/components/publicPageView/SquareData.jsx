@@ -2,13 +2,40 @@ import React from "react";
 import Image from "next/image";
 
 const SquareData = ({ object }) => {
-  console.log("object", object);
-  console.log("subOrder", object.data[0].sub_order);
+  const handleSquareTypeDetection = (squareIndex) => {
+    const squareData = object?.data[squareIndex];
+
+    // Early return to handle any potential 'null' or 'undefined'
+    if (!squareData) return;
+
+    if (squareData.type === "phone" && squareData.content_val) {
+      const telLink = `tel:${squareData.content_val}`;
+      window.location.href = telLink;
+    } else if (squareData.type === "link" && squareData.content_val) {
+      const externalLink = squareData.content_val;
+      window.open(externalLink, "_blank", "noopener,noreferrer");
+    } else if (squareData.type === "file" && squareData.content_val) {
+      const fileLink = squareData.content_val;
+      const a = document.createElement("a");
+      a.href = fileLink;
+      a.download = squareData.content_val.split("/").pop(); // Set a custom filename or fallback
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } else if (squareData.type === "email" && squareData.content_val) {
+      const emailLink = `mailto:${squareData.content_val}`;
+      window.location.href = emailLink;
+    }
+  };
+
   return (
     <>
       <div className="grid grid-cols-12 mb-5 gap-5">
         {/* first square */}
-        <div className="col-span-6 relative">
+        <div
+          onClick={() => handleSquareTypeDetection(0)} // adjusted for first square
+          className="col-span-6 relative"
+        >
           {object?.data[0]?.sub_order === 1 ? (
             // exists
             <>
@@ -38,6 +65,8 @@ const SquareData = ({ object }) => {
                 <p className="font-medium text-xs text-muted mt-2 mb-5 line-clamp-2">
                   {object?.data[0]?.sub_order === 1 &&
                     object?.data[0]?.description}
+                  {/* empty space to keep the hight */}
+                  {"\u00A0"}
                 </p>
               </div>
 
@@ -48,7 +77,10 @@ const SquareData = ({ object }) => {
         </div>
 
         {/* second square */}
-        <div className="col-span-6 relative">
+        <div
+          onClick={() => handleSquareTypeDetection(1)} // adjusted for second square
+          className="col-span-6 relative"
+        >
           {object?.data[0]?.sub_order === 2 ||
           object?.data[1]?.sub_order === 2 ? (
             // exists
@@ -83,6 +115,8 @@ const SquareData = ({ object }) => {
                   {object?.data[1]?.sub_order === 2
                     ? object?.data[1].description
                     : object?.data[0].description}
+                  {/* empty space to keep the hight */}
+                  {"\u00A0"}
                 </p>
               </div>
 

@@ -28,7 +28,7 @@ const UnifiedData = ({
       />
       <span className="flex justify-between items-center relative">
         <label htmlFor="icon" className="mb-2">
-          اطلاعات را وارد کنید:
+          {mediaData.title}
         </label>
 
         <span
@@ -36,7 +36,8 @@ const UnifiedData = ({
   rounded-md overflow-hidden text-xs p-2 opacity-0 transform scale-0 transition-opacity duration-700 
   ${showTooltip ? "opacity-100 scale-100" : "opacity-0 scale-0"}`}
         >
-          اطلاعات را وارد کنید: اطلاعات را وارد کنید:
+          {mediaData.hint_title}:
+          <span className="block mt-1">{mediaData.hint}</span>
         </span>
         <span
           onTouchStart={handleTouchStart}
