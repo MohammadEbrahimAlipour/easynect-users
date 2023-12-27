@@ -6,4 +6,4 @@ services:
     container_name: nextjs-container
     restart: always
   ports:
-    - 3000:3000
+    - '3000:3000'
