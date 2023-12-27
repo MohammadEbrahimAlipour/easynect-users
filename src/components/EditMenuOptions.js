@@ -16,7 +16,7 @@ const EditMenuOptions = ({
     >
       <div className="flex justify-start items-center py-3">
         <label
-          className="font-semibold border-e-2 text-muted me-2 pe-2 ps-4"
+          className="font-semibold border-e-2 text-muted me-2 pe-2 ps-4 whitespace-nowrap"
           htmlFor={name}
         >
           {label}

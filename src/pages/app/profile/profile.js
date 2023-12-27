@@ -68,11 +68,6 @@ const Profile = () => {
     <>
       <Header />
       <Layout className="!px-9">
-        {/* <div className="flex flex-col justify-center items-center w-full overflow-hidden border-b-[1px]">
-          <ProfileImage />
-          <h1 className="mt-4 mb-9 text-lg font-semibold ">محمدامین خاکشوری</h1>
-        </div> */}
-
         {/* menu */}
         <section className="w-full ">
           <ul>
@@ -84,14 +79,7 @@ const Profile = () => {
                 className="ms-2"
               />
             </li>
-            <li className="py-5 border-b-[1px] flex justify-start items-center">
-              <ProfileLeadIcon />
-              <CustomLinkProfile
-                title="مدیریت فرم‌های لید"
-                href="/"
-                className="ms-2"
-              />
-            </li>
+
             <li className="py-5 border-b-[1px] flex justify-start items-center">
               <ProfileChangePassIcon />
               <CustomLinkProfile

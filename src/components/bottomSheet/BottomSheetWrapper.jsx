@@ -13,7 +13,8 @@ const BottomSheetWrapper = ({ onClose, open, children }) => {
           mx: "0.75rem", // This applies margin-left and margin-right
           borderTopLeftRadius: "1rem", // rounded-lg for top left
           borderTopRightRadius: "1rem", // rounded-lg for top right
-          fontFamily: "ravi"
+          fontFamily: "ravi",
+          maxHeight: "600px"
         }
       }}
     >

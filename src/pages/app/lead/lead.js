@@ -27,6 +27,8 @@ const Lead = () => {
   const router = useRouter();
   const { id } = router.query;
 
+  console.log("leadData", leadData);
+
   useEffect(() => {
     const apiUrl = generateApiUrl(`/api/v1/leads/${id}`);
     // Make an Axios GET request to fetch user data
@@ -154,7 +156,7 @@ const Lead = () => {
 
         {/* add item botton */}
         <Link
-          href={`/lead/createLead?id=${leadData.id}`}
+          href={`/app/lead/createLead`}
           className="bg-lightMenu rounded-lg mb-2 border-2 box-border overflow-hidden
           py-3 font-ravi w-full flex justify-center items-center font-medium"
         >

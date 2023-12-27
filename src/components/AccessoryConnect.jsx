@@ -21,6 +21,9 @@ const AccessoryConnect = ({
 
   const [showCamera, setShowCamera] = useState(false);
 
+  // camera result
+  const [result, setResult] = useState("No Result");
+
   const handleChange = (e) => {
     // Append the "device/" prefix to the entered code
     setAccessCode(`device/${e.target.value}`);
@@ -71,6 +74,54 @@ const AccessoryConnect = ({
           toast.error("Error: An error occurred.");
         }
       }
+    }
+  };
+
+  // camera
+  // Function to submit the form
+  const handleCameraSubmit = (event) => {
+    event.preventDefault();
+
+    const toRemove = "https://api.easynect.com/";
+
+    const username = result.replace(toRemove, "");
+
+    console.log(username);
+
+    if (moreSheetDetails?.id) {
+      // Make an Axios POST request to update product data based on product_id
+      const apiUrl = generateApiUrl(`/api/v1/devices/${moreSheetDetails.id}`);
+      axios
+        .post(
+          apiUrl,
+          { url: username },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken.accessToken}`,
+              "Accept-Language": "fa",
+              "Content-Type": "application/json"
+            }
+          }
+        )
+        .then((response) => {
+          // Handle the response as needed (e.g., show a success message)
+          console.log("Product data updated successfully.");
+        })
+        .catch((error) => {
+          console.error("Error updating product data:", error);
+          // Check if the error response contains a message
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.detail
+          ) {
+            const errorMessage = error.response.data.detail;
+            toast.error(errorMessage);
+          } else {
+            // If there is no specific error message, display a generic one
+            toast.error("Error: An error occurred.");
+          }
+        });
     }
   };
   return (
@@ -167,7 +218,7 @@ const AccessoryConnect = ({
 
         {/* byCamera */}
         {useCamera && (
-          <form>
+          <form onSubmit={handleCameraSubmit}>
             <div className="flex justify-center items-center mt-8">
               {/* main square */}
               {!showCamera ? (
@@ -179,7 +230,7 @@ const AccessoryConnect = ({
                   <div className="bg-dark w-[66px] h-[66px] rounded-full " />
                 </div>
               ) : (
-                <QrReader />
+                <QrReader result={result} setResult={setResult} />
               )}
             </div>
             {/* button */}

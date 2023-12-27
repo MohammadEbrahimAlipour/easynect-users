@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e485ecf0-2a62-4124-95b9-8fcf0d3fef6f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/pages/[username].js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/editMediaSettingsHorz.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/editMediaSettingsHorz.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/[pageView].js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/profile/profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/profile/profile.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,11 +53,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/pages/app/cards" />
       <recent name="$PROJECT_DIR$/src/pages/appNect/cards" />
       <recent name="$PROJECT_DIR$/src/pages/appNect/profile/info" />
       <recent name="$PROJECT_DIR$/src/pages/appNect/profile/changePass" />
       <recent name="$PROJECT_DIR$/src/pages/appNect/profile/changeMail" />
-      <recent name="$PROJECT_DIR$/src/pages/appNect/profile" />
     </key>
   </component>
   <component name="RunManager">
@@ -91,6 +94,9 @@
       <workItem from="1702384318705" duration="612000" />
       <workItem from="1702409789427" duration="33000" />
       <workItem from="1703325002626" duration="185000" />
+      <workItem from="1703496340439" duration="2489000" />
+      <workItem from="1703589001658" duration="41000" />
+      <workItem from="1703589044925" duration="118000" />
     </task>
     <servers />
   </component>

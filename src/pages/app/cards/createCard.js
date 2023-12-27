@@ -1,27 +1,23 @@
-import Devider from "@/components/Devider";
-import EditMenuOptions from "@/components/EditMenuOptions";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import { ChangePhotoIcon, PenEditIcon, PlusSign } from "@/components/Icons";
-import Layout from "@/components/Layout";
-import ProfileImageUpload from "@/components/ProfileImageUpload";
-import Link from "next/link";
-import { generateApiUrl } from "@/components/ApiUr";
 import React, { useState } from "react";
-import { useAccessToken } from "../../context/AccessTokenContext";
-import axios from "axios";
-import ToggleSwitch from "@/components/ToggleSwitch";
-import { useRouter } from "next/router";
 import Image from "next/image";
-import sampleImage from "../../public/images/intro.jpg";
+import sampleImage from "../../../../public/images/intro.jpg";
+import { ChangePhotoIcon } from "@/components/Icons";
+import { generateApiUrl } from "@/components/ApiUr";
+import axios from "axios";
+import { useAccessToken } from "../../../../context/AccessTokenContext";
+import { useRouter } from "next/router";
+import Layout from "@/components/Layout";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import Link from "next/link";
+import EditMenuOptions from "@/components/EditMenuOptions";
+import Devider from "@/components/Devider";
+import ToggleSwitch from "@/components/ToggleSwitch";
 
 const CreateCard = () => {
   const { accessToken } = useAccessToken();
-
   const router = useRouter();
   const [changedFormData, setChangedFormData] = useState({});
-
-  // const [data, setData] = useState(null);
   const [formData, setFormData] = useState({
     username: "",
     owner_first_name: "",
@@ -32,10 +28,17 @@ const CreateCard = () => {
     is_direct: false
   });
 
+  // State to hold the URL of the selected image for preview
+  const [imagePreview, setImagePreview] = useState(null);
+
   // Handle image file change
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
+      // Set the image preview URL
+      setImagePreview(URL.createObjectURL(selectedFile));
+
+      // Update the formData
       setChangedFormData((prevFormData) => ({
         ...prevFormData,
         profile_s3_url: selectedFile
@@ -64,7 +67,7 @@ const CreateCard = () => {
 
     // Append changed image file to formDataToSend if it's selected
     if (changedFormData.profile_s3_url) {
-      formDataToSend.append("profile_s3_url", changedFormData.profile_s3_url);
+      formDataToSend.append("profile", changedFormData.profile_s3_url);
     }
 
     // Append all other form data to formDataToSend
@@ -77,7 +80,7 @@ const CreateCard = () => {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "accept-language": "fa",
-        "Content-Type": "application/json"
+        "Content-Type": "multipart/form-data"
       }
     };
 
@@ -110,13 +113,13 @@ const CreateCard = () => {
               {/* top options */}
               <div className="my-6">
                 <div className="flex justify-between">
-                  <Link href="/">کارت جدید</Link>
+                  <Link href="/src/pages">کارت جدید</Link>
 
                   {/* left side btns */}
                   <div className="text-sm">
-                    <button className="me-2 border-[1px] border-black px-4 py-1 rounded-lg">
+                    <span className="me-2 border-[1px] border-black px-4 py-1 rounded-lg">
                       انصراف
-                    </button>
+                    </span>
                     <button
                       type="submit" // This makes it a submit button
                       className="bg-dark text-white px-4 py-1 rounded-lg border-[1px] border-black"
@@ -128,24 +131,33 @@ const CreateCard = () => {
               </div>
 
               {/* portfolio Image */}
-              <div
-                className="flex justify-center items-center
-              "
-              >
+              <div className="flex justify-center items-center">
                 <div>
                   <div
                     id="photo_here"
                     className="border-[3px] box-content border-gold w-[80px] h-[80px] rounded-full
                       overflow-hidden"
                   >
-                    <Image
-                      priority={true}
-                      className="rounded-full object-contain"
-                      src={sampleImage}
-                      width={80}
-                      height={80}
-                      alt="Person Name"
-                    />
+                    {/* Display the image preview */}
+                    {imagePreview ? (
+                      <Image
+                        className="rounded-full object-cover w-full h-full"
+                        src={imagePreview}
+                        alt="Preview"
+                        width={80}
+                        height={80}
+                      />
+                    ) : (
+                      // Display the default image if no preview available
+                      <Image
+                        priority={true}
+                        className="rounded-full object-contain"
+                        src={sampleImage}
+                        width={80}
+                        height={80}
+                        alt="Person Name"
+                      />
+                    )}
                   </div>
                   {/* Upload button */}
                   <label
@@ -167,7 +179,6 @@ const CreateCard = () => {
               </div>
 
               {/* contact options */}
-
               <div>
                 <p className="text-lg ps-3 font-semibold mb-3">اطلاعات کارت</p>
                 <EditMenuOptions

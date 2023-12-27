@@ -45,11 +45,13 @@ const SquareDataExists = ({
   };
 
   const handleSquareClick = (index, itemId) => {
-    setShowOptionListArray((currentShowOptionListArray) =>
-      currentShowOptionListArray.map((value, i) =>
+    setShowOptionListArray((currentShowOptionListArray) => {
+      if (currentShowOptionListArray && currentShowOptionListArray?.length == 1)
+        currentShowOptionListArray.push(false);
+      return currentShowOptionListArray.map((value, i) =>
         i === index ? !value : false
-      )
-    );
+      );
+    });
     setSelectedId(itemId);
     setMyKey(index); // This will keep track of which square is being interacted with.
   };
@@ -58,28 +60,9 @@ const SquareDataExists = ({
     setExtractedData(extractedData);
   }, [extractedData, setExtractedData]);
 
-  const handleItemSelect = (
-    chosenId,
-    title,
-    icon_url
-    // sub_order,
-    // main_order
-  ) => {
+  const handleItemSelect = (chosenId, title, icon_url) => {
     // Close all option lists
     setShowOptionListArray(Array(data.data.length).fill(false));
-
-    // const updatedData = [...extractedData].map((section) =>
-    //   section.map((item) =>
-    //     item.content_id === selectedId
-    //       ? {
-    //           ...item,
-    //           content_id: chosenId,
-    //           title,
-    //           icon_url
-    //         }
-    //       : item
-    //   )
-    // );
 
     // Correctly declared and constructed updatedItemDetails object within the function
     const updatedItemDetails = {
@@ -91,146 +74,7 @@ const SquareDataExists = ({
 
     editItem(saveItemIdForEdit, updatedItemDetails);
     setSaveItemIdForEdit(null);
-
-    // Now updatedItemDetails is recognized within this scope
-    // setSelectedItemsDetails((currentDetails) =>
-    //   currentDetails.map((item, index) =>
-    //     index === myKey ? updatedItemDetails : item
-    //   )
-    // );
-    // const updatedItemDetailsFromSelection = {
-    //   // ... other fields ...
-    //   description: "" // Add actual description if available
-    // };
-
-    // // Update the details for the correct square based on 'myKey'
-    // setSelectedItemsDetails((currentDetails) =>
-    //   currentDetails.map((item, index) =>
-    //     index === myKey ? { ...item, ...updatedItemDetailsFromSelection } : item
-    //   )
-    // );
-
-    // // Identify the section that contains the item with the selectedId
-    // const sectionIndex = extractedData.findIndex((section) =>
-    //   section.some((item) => item.content_id === selectedId)
-    // );
-
-    // setExtractedData(updatedData);
-
-    // if (updatedExtractedData.length !== 0 && sectionIndex !== -1) {
-    //   // Note that I'm using a functional state update here because I'm relying
-    //   // on the previous state value for updatedExtractedData
-    //   setUpdatedExtractedData((prevData) => {
-    //     const newData = [...prevData];
-    //     newData[sectionIndex] = updatedData[sectionIndex];
-    //     return newData;
-    //   });
-    // } else {
-    //   setUpdatedExtractedData(updatedData);
-    // }
   };
-
-  //   const { sub_order, id } = itemToRemove;
-
-  //   // Update selectedItemsDetails to remove the item at the specified index
-  //   setSelectedItemsDetails((prevSelectedItemsDetails) =>
-  //     prevSelectedItemsDetails.filter((_, idx) => idx !== index)
-  //   );
-
-  //   // Create a new updatedExtractedData array, either from updatedExtractedData or from extractedData.
-  //   const newUpdatedExtractedData = updatedExtractedData.length
-  //     ? updatedExtractedData
-  //     : [...extractedData];
-
-  //   // Update updatedExtractedData to reflect the removal of the item
-  //   setUpdatedExtractedData(
-  //     updatedExtractedData.map((section) =>
-  //       section.filter(
-  //         (item) =>
-  //           !(
-  //             item.content_id === id &&
-  //             item.sub_order === sub_order &&
-  //             item.main_order === mainOrder
-  //           )
-  //       )
-  //     )
-  //   );
-
-  //   let updatedData = updatedExtractedData
-  //     .flatMap((section) => section)
-  //     .filter(
-  //       (item) =>
-  //         !(
-  //           item.content_id === id &&
-  //           item.sub_order === sub_order &&
-  //           item.main_order === mainOrder
-  //         )
-  //     );
-
-  //   console.log("********** main", mainOrder, "sub", sub_order, "id", id);
-
-  //   if (sub_order === 1) {
-  //     // Here you might renumber the main_order values for the remaining items,
-  //     // as mentioned in the previous response
-  //     const hasSquareWithSubOrder2 = updatedData.some(
-  //       (item) =>
-  //         item.main_order === mainOrder &&
-  //         item.sub_order === 2 &&
-  //         item.display_box_type === "square"
-  //     );
-
-  //     if (!hasSquareWithSubOrder2) {
-  //       // Iterate over the remaining items and decrement main_order by 1
-  //       updatedData = updatedData.map((item) => {
-  //         if (item.main_order > mainOrder) {
-  //           return {
-  //             ...item,
-  //             main_order: item.main_order - 1
-  //           };
-  //         }
-
-  //         return item;
-  //       });
-  //     }
-  //   }
-  //   console.log("111111121323123123123123123123", updatedData);
-
-  //   if (sub_order === 2) {
-  //     // Here you might renumber the main_order values for the remaining items,
-  //     // as mentioned in the previous response
-  //     const hasSquareWithSubOrder1 = updatedData.some(
-  //       (item) =>
-  //         // 2 === 2 &&
-  //         item.sub_order === 1 && item.display_box_type === "square"
-  //     );
-
-  //     if (!hasSquareWithSubOrder1) {
-  //       // Iterate over the remaining items and decrement main_order by 1
-  //       updatedData = updatedData.map((item) => {
-  //         if (item.main_order > mainOrder) {
-  //           return {
-  //             ...item,
-  //             main_order: item.main_order - 1
-  //           };
-  //         }
-
-  //         return item;
-  //       });
-  //     }
-  //   }
-
-  //   // Group the updated items by main_order and update the state
-  //   const groupedData = updatedData.reduce((acc, item) => {
-  //     const sectionIndex = item.main_order - 1;
-  //     if (!acc[sectionIndex]) {
-  //       acc[sectionIndex] = [];
-  //     }
-  //     acc[sectionIndex].push(item);
-  //     return acc;
-  //   }, []);
-
-  //   setUpdatedExtractedData(groupedData);
-  // };
 
   // handle adding square one items
   const handleSquareOneSelect = (chosenId, title, icon_url, squareOne) => {
@@ -282,9 +126,9 @@ const SquareDataExists = ({
     setUpdatedExtractedData([...newData]);
   };
 
-  useEffect(() => {
-    console.log("selectedItemsDetails", selectedItemsDetails);
-  }, [selectedItemsDetails]);
+  // useEffect(() => {
+  //   console.log("selectedItemsDetails", selectedItemsDetails);
+  // }, [selectedItemsDetails]);
 
   const firstSquare = useMemo(() => {
     return data?.data?.filter((item) => item.sub_order === 1);
@@ -293,9 +137,6 @@ const SquareDataExists = ({
   const secondSquare = useMemo(() => {
     return data?.data?.filter((item) => item.sub_order === 2);
   }, [data]);
-
-  console.log("firstSquare square***", firstSquare);
-  console.log("secondSquare square***", secondSquare);
 
   return (
     <>

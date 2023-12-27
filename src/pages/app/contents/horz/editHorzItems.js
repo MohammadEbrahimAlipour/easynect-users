@@ -182,8 +182,6 @@ const EditHorzItems = () => {
       });
   };
 
-  console.log("mediaData", mediaData);
-
   return (
     <>
       {mediaData ? (

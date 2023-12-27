@@ -31,33 +31,36 @@ const CreateLead = () => {
   useEffect(() => {
     const apiUrl = generateApiUrl(`/api/v1/lead_capture_store/`);
     // Make an Axios GET request to fetch user data
-    axios
-      .get(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${accessToken.accessToken}`, // Add your access token here
-          "Accept-Language": "fa" // Language header
-        }
-      })
-      .then((response) => {
-        // Handle the data once it's received
-        setLeadOptions(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching user data:", error);
-        // Check if the error response contains a message
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.detail
-        ) {
-          const errorMessage = error.response.data.detail;
-          toast.error(errorMessage);
-        } else {
-          // If there is no specific error message, display a generic one
-          toast.error("Error: An error occurred.");
-        }
-      });
-  }, [accessToken.accessToken]);
+    if (id) {
+      axios
+        .get(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${accessToken.accessToken}`, // Add your access token here
+            "Accept-Language": "fa", // Language header
+            "Content-Type": "application-json"
+          }
+        })
+        .then((response) => {
+          // Handle the data once it's received
+          setLeadOptions(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          // Check if the error response contains a message
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.detail
+          ) {
+            const errorMessage = error.response.data.detail;
+            toast.error(errorMessage);
+          } else {
+            // If there is no specific error message, display a generic one
+            toast.error("Error: An error occurred.");
+          }
+        });
+    }
+  }, [id, accessToken.accessToken]);
 
   // Function to submit the form
   const handleSubmit = (event) => {
@@ -122,27 +125,6 @@ const CreateLead = () => {
     // Update the selected fields array
     setSelectedFields(updatedFields);
   };
-
-  //   const handleExtractId = (id, title) => {
-  //     // Generate a unique ID using the current timestamp
-  //     const uniqueId = new Date().getTime();
-
-  //     // Extracted ID and title
-  //     const extractedField = { id: uniqueId, title };
-
-  //     // Update the selected fields array
-  //     setSelectedFields((prevFields) => [...prevFields, extractedField]);
-
-  //     // Close the dropdown
-  //     setShowList(false);
-  //   };
-
-  //   const handleDeleteField = (id) => {
-  //     // Update the selected fields array using functional update
-  //     setSelectedFields((prevFields) =>
-  //       prevFields.filter((field) => field.id !== id)
-  //     );
-  //   };
 
   return (
     <>
