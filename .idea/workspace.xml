@@ -5,17 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e485ecf0-2a62-4124-95b9-8fcf0d3fef6f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/pages/[username].js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ProfileCardEmpty.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ProfileCardEmpty.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/app/cards/editProfileInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/editProfileInfo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/app/cards/profileCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/profileCard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/app/contacts/contacts.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/contacts/contacts.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/app/contents/horz/editHorzItems.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/contents/horz/editHorzItems.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/app/lead/createLead.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/lead/createLead.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/app/lead/lead.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/lead/lead.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/[pageView].js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/app/profile/profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/profile/profile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/createCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/createCard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/infoPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/infoPage.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,6 +95,8 @@
       <workItem from="1702409789427" duration="33000" />
       <workItem from="1703325002626" duration="185000" />
       <workItem from="1703496340439" duration="2489000" />
+      <workItem from="1703589001658" duration="41000" />
+      <workItem from="1703589044925" duration="118000" />
     </task>
     <servers />
   </component>

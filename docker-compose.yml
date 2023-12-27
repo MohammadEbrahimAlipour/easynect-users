@@ -38,7 +38,3 @@ networks:
   easynect_network:
     external:
       name: easynect
-    expose:
-      - 3000
-    networks:
-      - easynect_network

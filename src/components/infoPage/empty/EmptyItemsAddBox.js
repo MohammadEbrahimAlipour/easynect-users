@@ -9,8 +9,6 @@ import { toast } from "react-toastify";
 import plusSign from "../../../../public/images/add-circle.png";
 import { CloseIcon } from "@/components/Icons";
 
-// ... (import statements)
-
 const EmptyItemsAddBox = ({ horizontalData, pageId, listItems }) => {
   const [itemCounter, setItemCounter] = useState(horizontalData.length);
   const [centeredItemIndex, setCenteredItemIndex] = useState(0);
