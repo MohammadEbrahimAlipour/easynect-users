@@ -15,6 +15,7 @@ import {
   ArrowDownIcon,
   CloseIcon,
   Instagram,
+  LinkedIn,
   Maps,
   MapsSmall,
   Phone,
@@ -262,6 +263,7 @@ END:VCARD
     setUpdatedExtractedData(newData);
   };
 
+  console.log("data", pageViewData);
   return (
     <>
       {/* chose */}
@@ -305,13 +307,29 @@ END:VCARD
             <div
               id="photo_here"
               className=" box-contentw-[80px] h-[80px] rounded-full
-                      overflow-hidden flex items-center justify-center"
+                      overflow-hidden flex items-center justify-center mt-1"
             >
-              <ProfileImage src={sampleImage} width={80} height={80} />
+              <ProfileImage
+                src={pageViewData.profile_s3_url}
+                width={80}
+                height={80}
+              />
             </div>
-            <p className="mt-3 text-xl font-semibold"> چاپ و تبلیغات نیکبخت</p>
+            <h3 className="mt-3 text-xl font-semibold">
+              {pageViewData.card_title}
+            </h3>
             <p className="text-muted mt-2 font-medium text-xs">
-              چاپ و تبلیغات نیکبخت
+              {pageViewData.job_title &&
+                pageViewData.company &&
+                `${pageViewData.job_title} در ${pageViewData.company}`}
+
+              {/* in case of job title and no company */}
+              {pageViewData.job_title !== null && pageViewData.job_title}
+
+              {/* in case of company and no job title */}
+              {pageViewData.company &&
+                pageViewData.job_title === null &&
+                pageViewData.company}
             </p>
           </div>
           {/* to show no Data component in case of 404 for listOptions */}

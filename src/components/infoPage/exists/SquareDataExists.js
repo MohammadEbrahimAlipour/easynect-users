@@ -169,7 +169,7 @@ const SquareDataExists = ({
                       </div>
                       <div
                         className="bg-dark w-[45px] h-[45px] rounded-full mb-3
-flex justify-center items-center overflow-hidden"
+                        flex justify-center items-center overflow-hidden"
                       >
                         <Image
                           src={firstSquare[0]?.s3_icon_url}
@@ -184,6 +184,7 @@ flex justify-center items-center overflow-hidden"
                       </p>
                       <p className="font-medium text-xs text-muted mt-2 mb-5 line-clamp-2">
                         {firstSquare[0]?.description}
+                        {"\u00A0"}
                       </p>
                     </div>
 
@@ -300,7 +301,8 @@ flex justify-center items-center overflow-hidden"
                       {secondSquare[0]?.title}
                     </p>
                     <p className="font-medium text-xs text-muted mt-2 mb-5 line-clamp-2">
-                      {secondSquare[0].title}
+                      {secondSquare[0].description}
+                      {"\u00A0"}
                     </p>
                   </div>
 
