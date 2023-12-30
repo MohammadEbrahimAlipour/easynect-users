@@ -25,7 +25,7 @@ const NFCTag = ({ result, setResult }) => {
             case "text":
               const textDecoder = new TextDecoder(record.encoding);
               setNfcMessage(`NFC Tag Text: ${textDecoder.decode(record.data)}`);
-              setResult(`NFC Tag Text: ${textDecoder.decode(record.data)}`);
+              setResult(`${textDecoder.decode(record.data)}`);
               break;
             // Handle other record types as necessary
             default:
