@@ -116,6 +116,15 @@ const VerifyOTP = () => {
                 key={index}
                 type="text"
                 value={value}
+                pattern="[0-9]*"
+                inputMode="numeric" // ensures iOS brings up the numeric keypad
+                onKeyDown={(e) => {
+                  if (!/[0-9]/.test(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
+                autoComplete="off" // aid to prevent browsers from autocompleting values
+                autoFocus={index === 0}
                 maxLength="1"
                 onChange={(e) => handleInputChange(index, e.target.value)}
                 className="w-[50px] h-[50px] bg-[#EDEDED] 

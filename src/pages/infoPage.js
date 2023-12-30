@@ -11,18 +11,7 @@ import { useAccessToken } from "../../context/AccessTokenContext";
 import Link from "next/link";
 import { toast } from "react-toastify";
 
-import {
-  ArrowDownIcon,
-  CloseIcon,
-  Instagram,
-  LinkedIn,
-  Maps,
-  MapsSmall,
-  Phone,
-  PortfolioLinkIcon,
-  Telegram,
-  WebsiteSmall
-} from "@/components/Icons";
+import { ArrowDownIcon } from "@/components/Icons";
 import SwiperCarousel from "@/components/SwiperCarousel";
 import SquareDataExists from "@/components/infoPage/exists/SquareDataExists";
 import EmptySquareBox from "@/components/infoPage/empty/EmptySquareBox";
@@ -81,6 +70,24 @@ END:VCARD
   const [addedItems, setAddedItems] = useState([]);
   const [noData, setNoData] = useState(null);
   const [localItemsSelected, setLocalItemsSelected] = useState([]);
+
+  const getJobTitle = () => {
+    if (pageViewData.job_title !== null && pageViewData.company === null) {
+      return `${pageViewData.job_title}`;
+    } else if (
+      pageViewData.company !== null &&
+      pageViewData.job_title === null
+    ) {
+      return `${pageViewData.company}`;
+    } else if (
+      pageViewData.job_title !== null &&
+      pageViewData.company !== null
+    ) {
+      return `${pageViewData.job_title} در ${pageViewData.company}`;
+    } else {
+      return " ";
+    }
+  };
 
   // end of patch functions
 
@@ -319,17 +326,7 @@ END:VCARD
               {pageViewData.card_title}
             </h3>
             <p className="text-muted mt-2 font-medium text-xs">
-              {pageViewData.job_title &&
-                pageViewData.company &&
-                `${pageViewData.job_title} در ${pageViewData.company}`}
-
-              {/* in case of job title and no company */}
-              {pageViewData.job_title !== null && pageViewData.job_title}
-
-              {/* in case of company and no job title */}
-              {pageViewData.company &&
-                pageViewData.job_title === null &&
-                pageViewData.company}
+              {getJobTitle()}
             </p>
           </div>
           {/* to show no Data component in case of 404 for listOptions */}

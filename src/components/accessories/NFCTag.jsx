@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { CloseIconSmall, TickSuccess } from "../Icons";
 
 const NFCTag = ({ result, setResult }) => {
   const [nfcMessage, setNfcMessage] = useState("");
@@ -42,12 +43,11 @@ const NFCTag = ({ result, setResult }) => {
   };
 
   return (
-    <div>
-      <div>NFCTag</div>
-      {nfcMessage && <p>{nfcMessage}</p>}
-      <p>result: {result}</p>
-      {nfcError && <p className="error">{nfcError}</p>}
-      {/* You can also place a button here to manually start scanning */}
+    <div className="flex items-center justify-start mt-2">
+      <span className="me-2 ">
+        {result !== null ? <TickSuccess /> : <CloseIconSmall />}
+      </span>
+      <p>{error && "NFC کارت خود را اسکن کنید."}</p>
     </div>
   );
 };

@@ -16,6 +16,7 @@ import BottomSheetStatsDate from "@/components/BottomSheetStatsDate";
 import BottomSheetStatsPresets from "@/components/BottomSheetStatsPresets";
 import LoadingState from "@/components/LoadingState";
 import { Drawer } from "@mui/material";
+import ComingSoon from "@/components/ComingSoon";
 
 const PersonsStats = () => {
   const [isSelected, setIsSelected] = useState("content");
@@ -39,6 +40,7 @@ const PersonsStats = () => {
 
   // below code handles two buttons above chart
   const [showSubMenu, setShowSubMenu] = useState(false);
+  const [comingSoon, setComingSoon] = useState(true);
 
   const [selectedOption, setSelectedOption] = useState("view"); //value to pass to chart
 
@@ -297,178 +299,191 @@ const PersonsStats = () => {
   return (
     <>
       <Header />
-      <Layout className="!pt-1 !h-fit min-h-screen !px-5">
-        {selectedCardId ? (
-          <>
-            <p className="text-xl font-medium text-right mb-4">
-              آمار به تفکیک کارت‌
-            </p>
-          </>
-        ) : (
-          <p className="text-xl font-medium text-right mb-4">
-            کارت را انتخواب کنید
-          </p>
-        )}
+      <>
+        {!comingSoon ? (
+          <Layout className="!pt-1 !h-fit min-h-screen !px-5">
+            {selectedCardId ? (
+              <>
+                <p className="text-xl font-medium text-right mb-4">
+                  آمار به تفکیک کارت‌
+                </p>
+              </>
+            ) : (
+              <p className="text-xl font-medium text-right mb-4">
+                کارت را انتخواب کنید
+              </p>
+            )}
 
-        {/* card section */}
+            {/* card section */}
 
-        {statsData ? (
-          <div className="">
-            <div
-              className="grid grid-flow-col auto-cols-[36%] gap-2 overscroll-contain
+            {statsData ? (
+              <div className="">
+                <div
+                  className="grid grid-flow-col auto-cols-[36%] gap-2 overscroll-contain
           overflow-x-auto hide-scrollbar
           snap-x"
-            >
-              {statsData.map((item) => (
-                <StatsCard
-                  key={item.id}
-                  item={item}
-                  selectedCardId={selectedCardId}
-                  onClick={() => handleCardSelect(item.id)} // Call handleCardSelect when a card is clicked
-                />
-              ))}
-            </div>
-          </div>
-        ) : (
-          <LoadingState />
-        )}
+                >
+                  {statsData.map((item) => (
+                    <StatsCard
+                      key={item.id}
+                      item={item}
+                      selectedCardId={selectedCardId}
+                      onClick={() => handleCardSelect(item.id)} // Call handleCardSelect when a card is clicked
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <LoadingState />
+            )}
 
-        {/* stats */}
-        <div className="my-5 w-full">
-          <div className="flex justify-between items-center mb-5">
-            <button
-              onClick={() => setShowSubMenu(!showSubMenu)}
-              className="bg-dark text-white rounded-2xl px-3 py-[6px] focus:outline-none
+            {/* stats */}
+            <div className="my-5 w-full">
+              <div className="flex justify-between items-center mb-5">
+                <button
+                  onClick={() => setShowSubMenu(!showSubMenu)}
+                  className="bg-dark text-white rounded-2xl px-3 py-[6px] focus:outline-none
          text-sm flex justify-center items-center"
-              // onClick={toggleDateMenu}
-            >
-              <span className="me-1">انتخاب زمان</span>
-              <ArrowDownIcon />
-            </button>
-            <div className="flex flex-wrap">
-              {/* <label htmlFor="options">Choose a car:</label> */}
+                  // onClick={toggleDateMenu}
+                >
+                  <span className="me-1">انتخاب زمان</span>
+                  <ArrowDownIcon />
+                </button>
+                <div className="flex flex-wrap">
+                  {/* <label htmlFor="options">Choose a car:</label> */}
 
-              {/* drop down chart options */}
-              <div class="relative inline-block text-left">
-                <div>
+                  {/* drop down chart options */}
+                  <div class="relative inline-block text-left">
+                    <div>
+                      <button
+                        onClick={toggleShowOption}
+                        type="button"
+                        class="inline-flex w-full justify-center items-center gap-x-1 rounded-2xl bg-dark text-white px-3 py-[6px] text-sm font-medium shadow-sm  "
+                        id="menu-button"
+                        aria-expanded="true"
+                        aria-haspopup="true"
+                      >
+                        {optionTexts[selectedOption]}
+                        {/* Display the selected option text */}
+                        <ArrowDownIcon />
+                      </button>
+                    </div>
+
+                    {showOption ? (
+                      <div
+                        class="absolute left-0 z-10 mt-2 w-28 origin-top-right rounded-md bg-white shadow-lg "
+                        role="menu"
+                        aria-orientation="vertical"
+                        aria-labelledby="menu-button"
+                        tabindex="-1"
+                      >
+                        <div class="" role="none">
+                          {Object.keys(optionTexts).map((value) => (
+                            <button
+                              key={value}
+                              onClick={() => handleMenuItemClick(value)} // Handle click and set option
+                              value={value}
+                              class="text-gray-700 block px-4 py-2 text-xs w-full border-b-[1px]"
+                              role="menuitem"
+                              tabindex="-1"
+                              id={`menu-item-${value}`}
+                            >
+                              {optionTexts[value]}{" "}
+                              {/* Display the option text */}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+
+              {/* chart */}
+
+              <Chart
+                chartView={chartView}
+                selectedOption={selectedOption}
+                chartConnection={chartConnection}
+                chartShare={chartShare}
+                chartConvert={chartConvert}
+              />
+
+              {/* text */}
+            </div>
+
+            {/* list */}
+            <div>
+              <div className="flex justify-between items-center mt-9 mb-6">
+                <p className="text-lg font-medium ">
+                  {selectedButton === "content" &&
+                    // Render content for the "content" button
+
+                    "content"}
+
+                  {selectedButton === "hm_item" && "hm_item"}
+                </p>
+
+                {/* left side btns */}
+                <div className="text-sm">
                   <button
-                    onClick={toggleShowOption}
-                    type="button"
-                    class="inline-flex w-full justify-center items-center gap-x-1 rounded-2xl bg-dark text-white px-3 py-[6px] text-sm font-medium shadow-sm  "
-                    id="menu-button"
-                    aria-expanded="true"
-                    aria-haspopup="true"
+                    id="horz"
+                    value="content"
+                    className={`me-3 border-[1px] border-black px-4 py-1 rounded-lg ${
+                      isSelected === "content"
+                        ? "bg-dark text-white"
+                        : "bg-white"
+                    }`}
+                    onClick={() => {
+                      handleButtonClick("content");
+                      setIsSelected("content"); // Update isSelected state
+                    }}
                   >
-                    {optionTexts[selectedOption]}
-                    {/* Display the selected option text */}
-                    <ArrowDownIcon />
+                    افقی
+                  </button>
+                  <button
+                    id="vert"
+                    value="hm_item"
+                    className={`${
+                      isSelected === "hm_item"
+                        ? "bg-dark text-white"
+                        : "bg-white"
+                    } px-4 py-1 rounded-lg border-[1px] border-black`}
+                    onClick={() => {
+                      handleButtonClick("hm_item");
+                      setIsSelected("hm_item"); // Update isSelected state
+                    }}
+                  >
+                    عمودی
                   </button>
                 </div>
+              </div>
+              <div>
+                {/* Conditionally render content based on selectedButton */}
 
-                {showOption ? (
-                  <div
-                    class="absolute left-0 z-10 mt-2 w-28 origin-top-right rounded-md bg-white shadow-lg "
-                    role="menu"
-                    aria-orientation="vertical"
-                    aria-labelledby="menu-button"
-                    tabindex="-1"
-                  >
-                    <div class="" role="none">
-                      {Object.keys(optionTexts).map((value) => (
-                        <button
-                          key={value}
-                          onClick={() => handleMenuItemClick(value)} // Handle click and set option
-                          value={value}
-                          class="text-gray-700 block px-4 py-2 text-xs w-full border-b-[1px]"
-                          role="menuitem"
-                          tabindex="-1"
-                          id={`menu-item-${value}`}
-                        >
-                          {optionTexts[value]} {/* Display the option text */}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ) : null}
+                {selectedButton === "content" &&
+                  // Render content for the "content" button
+
+                  pageData.map((item) => (
+                    <StatsHorz
+                      key={item.id}
+                      item={item}
+                      // s3_icon_url={item.s3_icon_url}
+                    />
+                  ))}
+
+                {selectedButton === "hm_item" &&
+                  // Render content for the "hm_item" button
+                  pageData.map((item) => (
+                    <StatsVert key={item.id} item={item} />
+                  ))}
               </div>
             </div>
-          </div>
-
-          {/* chart */}
-
-          <Chart
-            chartView={chartView}
-            selectedOption={selectedOption}
-            chartConnection={chartConnection}
-            chartShare={chartShare}
-            chartConvert={chartConvert}
-          />
-
-          {/* text */}
-        </div>
-
-        {/* list */}
-        <div>
-          <div className="flex justify-between items-center mt-9 mb-6">
-            <p className="text-lg font-medium ">
-              {selectedButton === "content" &&
-                // Render content for the "content" button
-
-                "content"}
-
-              {selectedButton === "hm_item" && "hm_item"}
-            </p>
-
-            {/* left side btns */}
-            <div className="text-sm">
-              <button
-                id="horz"
-                value="content"
-                className={`me-3 border-[1px] border-black px-4 py-1 rounded-lg ${
-                  isSelected === "content" ? "bg-dark text-white" : "bg-white"
-                }`}
-                onClick={() => {
-                  handleButtonClick("content");
-                  setIsSelected("content"); // Update isSelected state
-                }}
-              >
-                افقی
-              </button>
-              <button
-                id="vert"
-                value="hm_item"
-                className={`${
-                  isSelected === "hm_item" ? "bg-dark text-white" : "bg-white"
-                } px-4 py-1 rounded-lg border-[1px] border-black`}
-                onClick={() => {
-                  handleButtonClick("hm_item");
-                  setIsSelected("hm_item"); // Update isSelected state
-                }}
-              >
-                عمودی
-              </button>
-            </div>
-          </div>
-          <div>
-            {/* Conditionally render content based on selectedButton */}
-
-            {selectedButton === "content" &&
-              // Render content for the "content" button
-
-              pageData.map((item) => (
-                <StatsHorz
-                  key={item.id}
-                  item={item}
-                  // s3_icon_url={item.s3_icon_url}
-                />
-              ))}
-
-            {selectedButton === "hm_item" &&
-              // Render content for the "hm_item" button
-              pageData.map((item) => <StatsVert key={item.id} item={item} />)}
-          </div>
-        </div>
-      </Layout>
+          </Layout>
+        ) : (
+          <ComingSoon />
+        )}
+      </>
       <Footer />
       <div>
         <Drawer

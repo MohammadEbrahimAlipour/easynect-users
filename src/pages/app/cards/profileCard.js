@@ -169,7 +169,8 @@ const ProfileCard = () => {
   return (
     <>
       <Header cardData={cardData} />
-      <Layout className="!h-fit !fixed  ">
+      <Layout className="!h-fit  ">
+        {/* <div className="fixed w-fit"> */}
         {!pageDataDontExist ? (
           <>
             <CardWrapper
@@ -196,7 +197,7 @@ const ProfileCard = () => {
                         }
                       }
                     >
-                      <div className="w-full px-5 h-full py-5">
+                      <div className="w-full px-5 h-full py-5 ">
                         <div className="relative">
                           {/* two items left side */}
                           <div className=" absolute left-5 top-5">
@@ -301,6 +302,7 @@ const ProfileCard = () => {
         ) : (
           <ProfileCardEmpty />
         )}
+        {/* </div> */}
       </Layout>
       <Footer className="!fixed !bottom-0 !mb-0" />
 
@@ -345,6 +347,10 @@ const Card = tw.div`
   duration-300 
   ease-out
   translate-y-0
+
+  overflow-hidden 
+
+  
 
   first:scale-[.8]
   first:-translate-y-24

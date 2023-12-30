@@ -107,7 +107,6 @@ const VerifyOTP = () => {
 
   return (
     <>
-      <HeaderTwo href="/" className="!pb-0" />
       <Layout className="!mb-0 !pb-0">
         <div
           className="w-full h-[290px] rounded-[20px] bg-gold
@@ -154,9 +153,18 @@ const VerifyOTP = () => {
               <input
                 key={index}
                 id={`otp-input-${index}`}
-                type="text"
+                type="tel"
                 value={value}
                 maxLength="1"
+                pattern="[0-9]*"
+                inputMode="numeric" // ensures iOS brings up the numeric keypad
+                onKeyDown={(e) => {
+                  if (!/[0-9]/.test(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
+                autoComplete="off" // aid to prevent browsers from autocompleting values
+                autoFocus={index === 0} // autofocus on the first input
                 onChange={(e) => handleInputChange(index, e.target.value)}
                 className="w-[50px] h-[50px] bg-[#EDEDED] 
               border-[1px] border-muted border-opacity-40
@@ -179,7 +187,6 @@ const VerifyOTP = () => {
           ارسال مجدد (۰۰:{timer < 10 ? `0${timer}` : timer} ثانیه دیگر)
         </p>
       </Layout>
-      <Footer />
     </>
   );
 };

@@ -92,10 +92,15 @@ const LoginUser = () => {
           <span className="absolute z-100 flex items-center justify-center w-full top-10">
             <EasynecVertLogo />
           </span>
-          <Image className="rounded-[20px]" src={bgGradient} alt="img" />
+          <Image
+            className="rounded-[20px]"
+            priority={true}
+            src={bgGradient}
+            alt="img"
+          />
           {/* animated cards */}
           <div className="absolute bottom-12 w-full flex flex-col justify-center items-center">
-            <div className="bg-white opacity-40  w-[54px] h-[15px] relative top-[620px] rounded-lg  "></div>
+            <div className="bg-white opacity-40  w-[54px] h-[15px] relative top-[620px] rounded-lg "></div>
             <motion.div
               initial={{ y: 80, scale: 2 }}
               animate={{ y: 0, scale: 1 }}

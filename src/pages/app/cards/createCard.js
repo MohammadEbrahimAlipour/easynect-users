@@ -55,6 +55,10 @@ const CreateCard = () => {
     }));
   };
 
+  const handleRouterBack = () => {
+    router.back();
+  };
+
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -117,7 +121,10 @@ const CreateCard = () => {
 
                   {/* left side btns */}
                   <div className="text-sm">
-                    <span className="me-2 border-[1px] border-black px-4 py-1 rounded-lg">
+                    <span
+                      onClick={handleRouterBack}
+                      className="me-2 border-[1px] border-black px-4 py-1 rounded-lg"
+                    >
                       انصراف
                     </span>
                     <button
