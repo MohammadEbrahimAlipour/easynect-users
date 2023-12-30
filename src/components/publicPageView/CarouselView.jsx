@@ -20,7 +20,7 @@ const CarouselView = ({ horizontalData }) => {
   const initialSlide = middleIndex >= 0 ? middleIndex : 0;
 
   const handleItemTypeDetection = (item) => {
-    const itemData = horizontalData;
+    const itemData = item;
     console.log();
     // Early return to handle any potential 'null' or 'undefined'
     if (!itemData) return;
@@ -43,8 +43,6 @@ const CarouselView = ({ horizontalData }) => {
       const emailLink = `mailto:${itemData.content_val}`;
       window.location.href = emailLink;
     }
-
-    console.log("clicked item", item);
   };
 
   return (

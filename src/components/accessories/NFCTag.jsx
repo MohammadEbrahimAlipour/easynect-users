@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const NFCTag = () => {
+const NFCTag = ({ result, setResult }) => {
   const [nfcMessage, setNfcMessage] = useState("");
   const [nfcError, setNfcError] = useState("");
 
@@ -25,10 +25,12 @@ const NFCTag = () => {
             case "text":
               const textDecoder = new TextDecoder(record.encoding);
               setNfcMessage(`NFC Tag Text: ${textDecoder.decode(record.data)}`);
+              setResult(`NFC Tag Text: ${textDecoder.decode(record.data)}`);
               break;
             // Handle other record types as necessary
             default:
               setNfcMessage("NFC Tag data received.");
+              setResult("NFC Tag data received.");
               break;
           }
         }

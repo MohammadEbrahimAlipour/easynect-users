@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import jsQR from "jsqr";
 import tw from "tailwind-styled-components";
+import { CloseIcon, CloseIconSmall, TickSuccess } from "../Icons";
 
 export default function QrReader({ result, setResult }) {
   const [error, setError] = useState(false);
@@ -56,8 +57,13 @@ export default function QrReader({ result, setResult }) {
     <div>
       <Canvas ref={canvasRef}></Canvas>
       <VideoPreview ref={videoRef} onLoadedData={videoPlayed} />
-      <p>result: {result}</p>
-      <p>error: {error ? "has error" : "no error"}</p>
+      <div className="flex items-center justify-start mt-2">
+        {/* <p>{result}</p> */}
+        <span className="me-2 ">
+          {result !== null ? <TickSuccess /> : <CloseIconSmall />}
+        </span>
+        <p>{error && "qr code کارت خود را اسکن کنید."}</p>
+      </div>
     </div>
   );
 }
