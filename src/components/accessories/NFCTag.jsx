@@ -25,12 +25,11 @@ const NFCTag = ({ result, setResult }) => {
             case "text":
               const textDecoder = new TextDecoder(record.encoding);
               setNfcMessage(`NFC Tag Text: ${textDecoder.decode(record.data)}`);
-              setResult(`NFC Tag Text: ${textDecoder.decode(record.data)}`);
+              setResult(`${textDecoder.decode(record.data)}`);
               break;
             // Handle other record types as necessary
             default:
               setNfcMessage("NFC Tag data received.");
-              setResult("NFC Tag data received.");
               break;
           }
         }
@@ -47,6 +46,7 @@ const NFCTag = ({ result, setResult }) => {
     <div>
       <div>NFCTag</div>
       {nfcMessage && <p>{nfcMessage}</p>}
+      <p>result: {result}</p>
       {nfcError && <p className="error">{nfcError}</p>}
       {/* You can also place a button here to manually start scanning */}
     </div>
