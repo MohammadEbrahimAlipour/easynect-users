@@ -41,7 +41,6 @@ export default function Username() {
         }
       })
       .join("\n");
-    console.log("&&&&&", encodeURIComponent);
     // Add static parts of the vCard around the dynamic data
     const vCardString = `
 BEGIN:VCARD

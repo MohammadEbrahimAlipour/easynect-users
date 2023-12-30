@@ -32,22 +32,22 @@ export const AccessTokenProvider = ({ children, protectedRoutes }) => {
 
   useEffect(() => {
     if (!accessToken && isProtectedRoute(router.pathname)) {
-      router.push('/loginUser');
+      router.push("/loginUser");
     }
-  }, [accessToken, router.pathname]);
+  }, [accessToken, router.pathname, router]);
 
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(
-        (response) => response, // Just pass through the response
-        (error) => {
-          if (error.response && error.response.status === 401) {
-            setAccessToken(null); // Clear invalid token
-            if (isProtectedRoute(router.pathname)) {
-              router.push('/loginUser');
-            }
+      (response) => response, // Just pass through the response
+      (error) => {
+        if (error.response && error.response.status === 401) {
+          setAccessToken(null); // Clear invalid token
+          if (isProtectedRoute(router.pathname)) {
+            router.push("/loginUser");
           }
-          return Promise.reject(error);
         }
+        return Promise.reject(error);
+      }
     );
 
     return () => {
@@ -56,11 +56,11 @@ export const AccessTokenProvider = ({ children, protectedRoutes }) => {
   }, [router]); // router should be in the dependency array to ensure proper redirecting
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       if (accessToken) {
-        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem("accessToken", accessToken);
       } else {
-        localStorage.removeItem('accessToken');
+        localStorage.removeItem("accessToken");
       }
     }
   }, [accessToken]);
