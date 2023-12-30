@@ -208,7 +208,7 @@ const AccessoryConnect = ({
         )}
 
         {useNfc && (
-          <form>
+          <form onSubmit={handleCameraSubmit}>
             <NFCTag result={result} setResult={setResult} />
 
             {/* button */}
