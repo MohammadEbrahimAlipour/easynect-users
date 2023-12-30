@@ -30,7 +30,6 @@ const NFCTag = ({ result, setResult }) => {
             // Handle other record types as necessary
             default:
               setNfcMessage("NFC Tag data received.");
-              setResult("NFC Tag data received.");
               break;
           }
         }
@@ -47,6 +46,7 @@ const NFCTag = ({ result, setResult }) => {
     <div>
       <div>NFCTag</div>
       {nfcMessage && <p>{nfcMessage}</p>}
+      <p>result: {result}</p>
       {nfcError && <p className="error">{nfcError}</p>}
       {/* You can also place a button here to manually start scanning */}
     </div>
