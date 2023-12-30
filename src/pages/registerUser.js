@@ -122,6 +122,7 @@ const RegisterUser = () => {
           <div>
             {/* email */}
             <input
+              required
               onChange={onChange}
               name="email"
               value={email}
@@ -132,7 +133,9 @@ const RegisterUser = () => {
             {/* password */}
             <div className="border-2 px-3 py-4 w-full rounded-lg mb-4 bg-lightMenu">
               <input
+                required
                 onChange={onChange}
+                type="password"
                 name="password1"
                 value={password1}
                 className="bg-lightMenu outline-none"
@@ -142,7 +145,9 @@ const RegisterUser = () => {
             {/* password2 */}
             <div className="border-2 px-3 py-4 w-full rounded-lg bg-lightMenu">
               <input
+                required
                 onChange={onChange}
+                type="password"
                 name="password2"
                 value={password2}
                 className="bg-lightMenu outline-none"

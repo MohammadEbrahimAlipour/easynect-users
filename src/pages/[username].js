@@ -22,7 +22,18 @@ export default function Username() {
   const [noData, setNoData] = useState(false);
   const [vCardList, setVCardList] = useState([]);
   const [hasLeadForm, setHasLeadForm] = useState(false);
-  console.log("usersData", usersData);
+
+  const getJobTitle = () => {
+    if (usersData.job_title !== null && usersData.company === null) {
+      return `${usersData.job_title}`;
+    } else if (usersData.company !== null && usersData.job_title === null) {
+      return `${usersData.company}`;
+    } else if (usersData.job_title !== null && usersData.company !== null) {
+      return `${usersData.job_title} در ${usersData.company}`;
+    } else {
+      return " ";
+    }
+  };
 
   const handleSaveContact = () => {
     let vCardData = vCardList
@@ -45,7 +56,7 @@ export default function Username() {
     const vCardString = `
 BEGIN:VCARD
 VERSION:3.0
-N;CHARSET=utf-8:چاپ و تبلیغات نیکبخت
+N;CHARSET=utf-8:${usersData.owner_last_name};${usersData.owner_first_name};;;
 ${vCardData}
 END:VCARD
 `;
@@ -147,7 +158,7 @@ END:VCARD
               {usersData?.card_title}
             </p>
             <p className="text-muted mt-2 font-medium text-xs">
-              {usersData?.job_title}
+              {getJobTitle()}
             </p>
           </div>
           {/* to show no Data component in case of 404 for listOptions */}

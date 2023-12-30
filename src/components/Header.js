@@ -16,26 +16,19 @@ const Header = ({ className = "" }) => {
   return (
     <>
       <div className={`${className} bg-light pt-12 pb-6 container`}>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-start relative">
           <span onClick={handleToggleSheet}>
             <HeaderShareLogo />
           </span>
-          <Image width={32} src={logo} alt="EasyNect" />
-          <HeaderBellLogo />
+          <span className="absolute left-[50%] ">
+            <Image width={32} src={logo} alt="EasyNect" />
+          </span>
+          {/* <HeaderBellLogo /> */}
         </div>
       </div>
 
-      {/* Framer Motion bottom sheet */}
       <div className="w-full flex justify-center items-center">
-        {/* <motion.div
-          initial={{ height: 0 }}
-          animate={{ height: showSheet ? "auto" : 0 }}
-          transition={{ duration: 0.3 }}
-          className="bg-white shadow-lg rounded-tr-lg rounded-tl-lg w-[90%] absolute bottom-0 z-[999999] overflow-hidden"
-        > */}
-        {/* <HeaderShareSheet showSheet={showSheet} /> */}
         <HeaderShareBSheet showSheet={showSheet} setShowSheet={setShowSheet} />
-        {/* </motion.div> */}
       </div>
     </>
   );
