@@ -19,6 +19,34 @@ const CarouselView = ({ horizontalData }) => {
   const middleIndex = Math.floor(itemsArray.length / 2);
   const initialSlide = middleIndex >= 0 ? middleIndex : 0;
 
+  const handleItemTypeDetection = (item) => {
+    const itemData = horizontalData;
+    console.log();
+    // Early return to handle any potential 'null' or 'undefined'
+    if (!itemData) return;
+
+    if (itemData.type === "phone" && itemData.content_val) {
+      const telLink = `tel:${itemData.content_val}`;
+      window.location.href = telLink;
+    } else if (itemData.type === "link" && itemData.content_val) {
+      const externalLink = itemData.content_val;
+      window.open(externalLink, "_blank", "noopener,noreferrer");
+    } else if (itemData.type === "file" && itemData.content_val) {
+      const fileLink = itemData.content_val;
+      const a = document.createElement("a");
+      a.href = fileLink;
+      a.download = itemData.content_val.split("/").pop(); // Set a custom filename or fallback
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } else if (itemData.type === "email" && itemData.content_val) {
+      const emailLink = `mailto:${itemData.content_val}`;
+      window.location.href = emailLink;
+    }
+
+    console.log("clicked item", item);
+  };
+
   return (
     <>
       {dataToSend ? (
@@ -32,7 +60,10 @@ const CarouselView = ({ horizontalData }) => {
             onSlideChange={(swiper) => setCenteredItemIndex(swiper.activeIndex)}
           >
             {dataToSend.map((item, index) => (
-              <SwiperSlide key={index}>
+              <SwiperSlide
+                key={index}
+                onClick={() => handleItemTypeDetection(item)}
+              >
                 <CarouselItems
                   showOptionList={showOptionList}
                   onClick={() =>

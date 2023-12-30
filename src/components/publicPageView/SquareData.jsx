@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 
 const SquareData = ({ object }) => {
+  // condition to detect type of each squares data and redirect based on type
   const handleSquareTypeDetection = (squareIndex) => {
     const squareData = object?.data[squareIndex];
 

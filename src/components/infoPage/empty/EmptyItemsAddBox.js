@@ -163,7 +163,7 @@ const EmptyItemsAddBox = ({ horizontalData, pageId, listItems }) => {
             <div className="relative inline-block">
               <button
                 onClick={toggleOptions}
-                className="bg-gray-300 text-gray-700 py-2 px-4 rounded inline-flex items-center"
+                className="bg-graySubmit text-gray-700 py-2 px-4 rounded inline-flex items-center"
               >
                 <span className="mr-1">{selectedOption}</span>
                 <svg
@@ -183,7 +183,7 @@ const EmptyItemsAddBox = ({ horizontalData, pageId, listItems }) => {
                   {[4, 6].map((option) => (
                     <div
                       key={option}
-                      className="bg-white shadow-md rounded py-1 px-3 text-gray-700 cursor-pointer hover:bg-gray-200"
+                      className="bg-white shadow-md rounded py-1 px-3 text-gray-700 cursor-pointer "
                       onClick={() => handleSelectChange(option)}
                     >
                       {option}
@@ -255,10 +255,10 @@ const EmptyItemsAddBox = ({ horizontalData, pageId, listItems }) => {
                 <div
                   key={item.id}
                   onClick={() =>
-                    handleItemSelect(item.id, item.title, item.icon_url)
+                    handleItemSelect(item.id, item.title, item.s3_icon_url)
                   }
                   className={`py-2 border-b ${
-                    item.id === selectedId ? "bg-gray-200" : ""
+                    item.id === selectedId ? "" : ""
                   }`}
                 >
                   {item.title}
@@ -270,9 +270,9 @@ const EmptyItemsAddBox = ({ horizontalData, pageId, listItems }) => {
           <form onSubmit={handleSubmit} className="mx-5 mt-8">
             <button
               type="submit"
-              className="w-full bg-graySubmit rounded-md text-white py-2 "
+              className="w-full bg-dark rounded-md text-white py-2 "
             >
-              Submit
+              اعمال تغییرات
             </button>
           </form>
         </>
