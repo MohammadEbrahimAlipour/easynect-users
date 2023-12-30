@@ -19,21 +19,20 @@ const NFCTag = ({ result, setResult }) => {
       await ndef.scan();
 
       ndef.onreading = (event) => {
-        const decoder = new TextDecoder();
         for (const record of event.message.records) {
-          switch (record.recordType) {
-            case "text":
-              const textDecoder = new TextDecoder(record.encoding);
-              setNfcMessage(`NFC Tag Text: ${textDecoder.decode(record.data)}`);
-              setResult(`${textDecoder.decode(record.data)}`);
-              break;
-            // Handle other record types as necessary
-            default:
-              setNfcMessage("NFC Tag data received.");
-              break;
+          // Handle URL records
+          if (record.recordType === "url") {
+            const textDecoder = new TextDecoder();
+            const url = textDecoder.decode(record.data);
+            setNfcMessage(`NFC Tag URL: ${url}`);
+            setResult(url); // Assuming `setResult` updates the parent component's state with the URL.
+          } else {
+            // Handle any non-URL records if necessary
+            setNfcMessage("Unhandled NFC Tag data received.");
           }
         }
       };
+
       ndef.onerror = () => {
         setNfcError("Error reading NFC tag.");
       };
