@@ -44,9 +44,6 @@ const RectangleData = ({ object }) => {
         <p className="col-span-3 font-semibold text-xs ms-1 overflow-hidden">
           {object?.data[0]?.title}:
         </p>
-        <p className="col-span-7 font-semibold text-xs ms-1 overflow-hidden truncate">
-          {object?.data[0]?.description}
-        </p>
       </>
     </div>
   );

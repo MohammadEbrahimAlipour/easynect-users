@@ -452,12 +452,12 @@ const EmptySquareBox = ({
               className="bg-white rounded-md invert p-1"
             />
           </div>
-          <p className="col-span-3 font-semibold text-xs ms-1 overflow-hidden">
+          <p className="col-span-5 font-semibold text-xs ms-1 overflow-hidden">
             {object.title}:
           </p>
-          <p className="col-span-7 font-semibold text-xs ms-1 overflow-hidden truncate">
+          {/* <p className="col-span-7 font-semibold text-xs ms-1 overflow-hidden truncate">
             {object.description}
-          </p>
+          </p> */}
         </div>
       ) : (
         <span className="hidden" />

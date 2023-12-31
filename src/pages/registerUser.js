@@ -20,6 +20,50 @@ const RegisterUser = () => {
   });
   const { email, password1, password2 } = formData;
 
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordStrength, setPasswordStrength] = useState(0);
+
+  const passwordRequirements = {
+    minChar: 8,
+    upperChar: /[A-Z]/,
+    lowerChar: /[a-z]/,
+    number: /[0-9]/
+    // specialChar: /[^A-Za-z0-9]/
+  };
+
+  // pass strength
+  const checkPasswordStrength = (password) => {
+    let strength = 0;
+    const requirements = [
+      passwordRequirements.upperChar,
+      passwordRequirements.lowerChar,
+      passwordRequirements.number
+      // passwordRequirements.specialChar
+    ];
+
+    // Increment the strength for each requirement met
+    requirements.forEach((requirement) => {
+      if (requirement.test(password)) {
+        strength++;
+      }
+    });
+
+    // Increment further based on length
+    if (password.length >= passwordRequirements.minChar) {
+      strength++;
+    }
+
+    // Set password strength to state (e.g., strength can be from 0 to 5)
+    setPasswordStrength(strength);
+  };
+
+  const onChangePassword = (e) => {
+    const { name, value } = e.target;
+    checkPasswordStrength(value);
+    // Call the original onChange handler
+    onChange(e);
+  };
+
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -63,6 +107,51 @@ const RegisterUser = () => {
       console.log("Network error:");
     }
   };
+
+  //  pass colors
+  // Define colors based on the strength
+  const strengthColors = ["#dc3545", "#ffc107", "#28a745"];
+  const strengthText = [
+    "کلمه عبور شما باید شامل حداقل یک عدد و حرف کوچک و حرف بزرگ و حداقل ۸ کاراکتر باشد "
+  ];
+
+  // This returns a color and width for the strength bar based on the password strength level
+  const getStrengthBarStyle = (strengthLevel) => {
+    let width;
+    let color;
+    let text;
+
+    switch (strengthLevel) {
+      case 0:
+        width = "0%";
+        color = "";
+        text = "";
+        break;
+      case 1:
+        width = "33%";
+        color = strengthColors[0]; // Weak
+        text = strengthText[0];
+        break;
+      case 2:
+      case 3:
+        width = "66%";
+        color = strengthColors[1]; // Moderate
+        text = strengthText[0];
+        break;
+      case 4:
+        width = "100%";
+        color = strengthColors[2]; // Strong
+        text = strengthText[0];
+        break;
+      default:
+        break;
+    }
+
+    return { width, backgroundColor: color, text };
+  };
+
+  // Inside your return statement, add the strength bar UI component
+  const strengthBarStyle = getStrengthBarStyle(passwordStrength);
 
   return (
     <>
@@ -134,7 +223,8 @@ const RegisterUser = () => {
             <div className="border-2 px-3 py-4 w-full rounded-lg mb-4 bg-lightMenu">
               <input
                 required
-                onChange={onChange}
+                // onChange={onChange}
+                onChange={onChangePassword}
                 type="password"
                 name="password1"
                 value={password1}
@@ -155,11 +245,28 @@ const RegisterUser = () => {
               />
             </div>
 
+            {/* pass strength*/}
+            <div className="w-full bg-gray-200 rounded h-3 overflow-hidden mt-3 mb-1">
+              <div
+                style={{
+                  width: strengthBarStyle.width,
+                  backgroundColor: strengthBarStyle.backgroundColor,
+                  transition: "width 0.5s"
+                }}
+                className="h-3 rounded"
+              ></div>
+            </div>
+            {strengthBarStyle.text && (
+              <div className="text-xs text-gray-600">
+                {strengthBarStyle.text}
+              </div>
+            )}
+
             {/* register btn */}
             <div>
               <button
                 type="submit"
-                className="w-full mt-7 bg-dark text-white font-semibold
+                className="w-full mt-6 bg-dark text-white font-semibold
             text-lg py-3 rounded-lg"
               >
                 ثبت‌ نام

@@ -39,14 +39,7 @@ ${showTooltip ? "opacity-100 scale-100" : "opacity-0 scale-0"}`}
           <p className="mb-1">{mediaData.content_store.hint_title}:</p>
           <p>{mediaData.content_store.hint}</p>
         </span>
-        <span
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-          onMouseEnter={handleTouchStart}
-          onMouseLeave={handleTouchEnd}
-          onMouseDown={handleTouchStart}
-          onMouseUp={handleTouchEnd}
-        >
+        <span onClick={() => setShowTooltip(!showTooltip)}>
           <InfoIcon />
         </span>
       </span>

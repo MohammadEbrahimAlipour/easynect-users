@@ -48,19 +48,6 @@ const MediaSettingsHorz = () => {
     setUploadProgress(percentCompleted);
   };
 
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-
-  //   if (baseUrl !== null) {
-  //     // Concatenate baseUrl and content_val if the name is 'content_val'
-  //     const updatedValue = name === "content_val" ? baseUrl + value : value;
-  //   }
-  //   setFormData({
-  //     ...formData,
-  //     [name]: updatedValue
-  //   });
-  // };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     let updatedValue = value; // Declare updatedValue with initial value
@@ -243,23 +230,27 @@ const MediaSettingsHorz = () => {
     value: PropTypes.number.isRequired
   };
 
+  const goBack = () => {
+    router.back();
+  };
+
   return (
     <>
       {mediaData && placeholder && id && type ? (
         <>
-          <HeaderTwo href="/contentAddItem" />
+          <HeaderTwo />
           <Layout>
             <div className="bg-white rounded-lg container py-10">
               <form onSubmit={handleSubmit}>
                 <div className="flex justify-end items-center">
                   {/* left side btns */}
                   <div className="text-sm flex">
-                    <Link
-                      href="/contentAddItem"
+                    <span
+                      onClick={goBack}
                       className="me-3 border-[1px] border-black px-4 py-1 rounded-lg"
                     >
                       انصراف
-                    </Link>
+                    </span>
                     <button
                       type="submit"
                       className="bg-dark text-white px-4 py-1 rounded-lg border-[1px] border-black"
@@ -309,6 +300,7 @@ const MediaSettingsHorz = () => {
                       //  unified input data
 
                       <UnifiedData
+                        setShowTooltip={setShowTooltip}
                         mediaData={mediaData}
                         showTooltip={showTooltip}
                         is_square={is_square}
@@ -350,7 +342,8 @@ const MediaSettingsHorz = () => {
                 </div>
 
                 <div className="mt-10 py-5 border-[1px] rounded-lg px-2 flex justify-between overflow-hidden ">
-                  <h3>اندازه کارت:</h3>
+                  <h3 className="text-sm">پیش نمایش</h3>
+
                   <div className="flex ">
                     {/* chosen for rectengle */}
                     <span

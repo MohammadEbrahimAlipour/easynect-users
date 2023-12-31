@@ -47,7 +47,7 @@ const NFCTag = ({ result, setResult }) => {
       <span className="me-2 ">
         {result !== null ? <TickSuccess /> : <CloseIconSmall />}
       </span>
-      <p>{error && "NFC کارت خود را اسکن کنید."}</p>
+      <p>{nfcError && "NFC کارت خود را اسکن کنید."}</p>
     </div>
   );
 };

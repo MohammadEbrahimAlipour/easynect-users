@@ -3,9 +3,6 @@ import { UploadFile } from "../Icons";
 
 const File = ({
   mediaData,
-  showTooltip,
-  handleTouchStart,
-  handleTouchEnd,
   is_square,
   handleInputChange,
   setLivePreviewTitle,

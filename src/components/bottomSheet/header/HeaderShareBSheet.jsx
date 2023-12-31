@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import BottomSheetWrapper from "../BottomSheetWrapper";
 import axios from "axios";
 import QRCode from "qrcode.react";
@@ -6,13 +6,17 @@ import { useAccessToken } from "../../../../context/AccessTokenContext";
 import { generateApiUrl } from "@/components/ApiUr";
 import { ArrowDownIcon } from "@/components/Icons";
 import LoadingState from "@/components/LoadingState";
+import { saveAs } from "file-saver";
+import { toast } from "react-toastify";
 
 const HeaderShareBSheet = ({ showSheet, setShowSheet, clickedCardId }) => {
   const accessToken = useAccessToken();
   const [showOptions, setShoOptions] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [pagesData, setPagesData] = useState(null);
-  console.log("selectedOption", selectedOption);
+  const qrRef = useRef();
+
+  const [isQrCodeReady, setIsQrCodeReady] = useState(false); // to check if QR code is ready
 
   // to fetch the data
   if (showSheet && !pagesData) {
@@ -26,6 +30,7 @@ const HeaderShareBSheet = ({ showSheet, setShowSheet, clickedCardId }) => {
         }
       })
       .then((response) => {
+        setIsQrCodeReady(true);
         // Handle the data once it's received
         setPagesData(response.data);
         // Set the first option as selected
@@ -40,6 +45,53 @@ const HeaderShareBSheet = ({ showSheet, setShowSheet, clickedCardId }) => {
     setSelectedOption(option);
     setShoOptions(false);
   };
+
+  const saveQRCode = () => {
+    if (isQrCodeReady && qrRef.current) {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const svgElement = qrRef.current.querySelector("svg");
+      if (!svgElement) {
+        console.error("SVG element not found");
+        return;
+      }
+      const xml = new XMLSerializer().serializeToString(svgElement);
+      const svg64 = btoa(unescape(encodeURIComponent(xml)));
+      const image64 = "data:image/svg+xml;base64," + svg64;
+
+      const image = new Image();
+
+      image.onload = () => {
+        canvas.width = image.width;
+        canvas.height = image.height;
+        ctx.drawImage(image, 0, 0);
+        canvas.toBlob((blob) => {
+          saveAs(blob, "qrcode.png"); // Uses file-saver's saveAs function
+        }, "image/png");
+      };
+
+      image.src = image64;
+    } else {
+      console.error("QR Code is not yet available.");
+    }
+  };
+
+  const copyLinkToClipboard = () => {
+    if (navigator.clipboard && selectedOption) {
+      navigator.clipboard
+        .writeText(selectedOption.page_url)
+        .then(() => {
+          toast.success("لینک با موفقیت کپی شد.");
+        })
+        .catch((error) => {
+          console.error("Error copying link to clipboard:", error);
+          toast.error("خطا در کپی کردن لینک.");
+        });
+    } else {
+      console.error("Clipboard API not supported or no selected option.");
+    }
+  };
+
   return (
     <>
       {selectedOption && (
@@ -93,7 +145,7 @@ const HeaderShareBSheet = ({ showSheet, setShowSheet, clickedCardId }) => {
             {/* qr code */}
             <div className="flex flex-col justify-center items-center my-4">
               {/* Add the ref to the QR code container */}
-              <div>
+              <div ref={qrRef}>
                 <QRCode
                   value={selectedOption ? selectedOption.page_url : ""}
                   size={200}
@@ -104,13 +156,25 @@ const HeaderShareBSheet = ({ showSheet, setShowSheet, clickedCardId }) => {
                 />
               </div>
 
-              {/* button */}
-              <button
-                className="flex items-center justify-center  px-[57px]
+              {/* save button */}
+              <div className="flex flex-col">
+                <button
+                  onClick={saveQRCode}
+                  className="flex items-center justify-center  px-[57px]
               bg-dark text-white py-3 leading-0 rounded-lg mt-4"
-              >
-                اشتراک گذاری
-              </button>
+                >
+                  ذخیره در گالری
+                </button>
+
+                {/* copy Link button */}
+                <button
+                  onClick={copyLinkToClipboard}
+                  className="flex items-center justify-center  px-[57px]
+              bg-dark text-white py-3 leading-0 rounded-lg mt-2"
+                >
+                  کپی لینک
+                </button>
+              </div>
             </div>
           </div>
         </BottomSheetWrapper>

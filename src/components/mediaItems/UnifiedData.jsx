@@ -4,12 +4,12 @@ import { InfoIcon } from "../Icons";
 const UnifiedData = ({
   mediaData,
   showTooltip,
-  handleTouchStart,
-  handleTouchEnd,
+
   is_square,
   handleInputChange,
   setLivePreviewTitle,
-  setLivePreviewDesc
+  setLivePreviewDesc,
+  setShowTooltip
 }) => {
   return (
     <div className="mt-10 flex flex-col w-full">
@@ -39,14 +39,7 @@ const UnifiedData = ({
           {mediaData.hint_title}:
           <span className="block mt-1">{mediaData.hint}</span>
         </span>
-        <span
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-          onMouseEnter={handleTouchStart}
-          onMouseLeave={handleTouchEnd}
-          onMouseDown={handleTouchStart}
-          onMouseUp={handleTouchEnd}
-        >
+        <span onClick={() => setShowTooltip(!showTooltip)}>
           <InfoIcon />
         </span>
       </span>

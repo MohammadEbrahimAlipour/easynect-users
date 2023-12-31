@@ -41,9 +41,15 @@ const EditMediaSettingsHorz = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    let updatedValue = value; // Declare updatedValue with initial value
 
     // Concatenate baseUrl and content_val if the name is 'content_val'
-    const updatedValue = name === "content_val" ? baseUrl + value : value;
+    // and if baseUrl is not null or empty
+    if (baseUrl && name === "content_val") {
+      updatedValue = baseUrl + value;
+    } else if (name === "content_val") {
+      updatedValue = value;
+    }
 
     setFormData({
       ...formData,
@@ -209,9 +215,12 @@ const EditMediaSettingsHorz = () => {
       });
   };
 
+  const goBack = () => {
+    router.back();
+  };
   return (
     <>
-      {mediaData ? (
+      {mediaData && id ? (
         <>
           <HeaderTwo />
           <Layout>
@@ -220,12 +229,12 @@ const EditMediaSettingsHorz = () => {
                 <div className="flex justify-end items-center">
                   {/* left side btns */}
                   <div className="text-sm flex">
-                    <Link
-                      href="/contentAddItem"
+                    <span
+                      onClick={goBack}
                       className="me-3 border-[1px] border-black px-4 py-1 rounded-lg"
                     >
                       انصراف
-                    </Link>
+                    </span>
                     <button
                       type="submit"
                       className="bg-dark text-white px-4 py-1 rounded-lg border-[1px] border-black font-ravi"
@@ -274,6 +283,7 @@ const EditMediaSettingsHorz = () => {
                     <CreateUnifiedData
                       mediaData={mediaData}
                       showTooltip={showTooltip}
+                      setShowTooltip={setShowTooltip}
                       is_square={is_square}
                       handleTouchStart={handleTouchStart}
                       handleTouchEnd={handleTouchEnd}
@@ -297,7 +307,7 @@ const EditMediaSettingsHorz = () => {
                 </div>
 
                 <div className="mt-10 py-5 border-[1px] rounded-lg px-2 flex justify-between overflow-hidden ">
-                  <h3>اندازه کارت:</h3>
+                  <h3 className="text-sm">پیش نمایش</h3>
                   <div className="flex ">
                     {/* chosen for rectengle */}
                     <span
@@ -334,7 +344,7 @@ const EditMediaSettingsHorz = () => {
                 onClick={() => handleDeleteUser(mediaData.id)}
                 className="text-[#CB3434] mt-5 border py-1 rounded-md w-full font-ravi"
               >
-                خذف کردن
+                حذف کردن
               </button>
             </div>
           </Layout>
