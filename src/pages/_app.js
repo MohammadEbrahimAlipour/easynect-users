@@ -15,9 +15,7 @@ const raviFont = raviFontLocal({
   variable: "--font-rav"
 });
 
-const protectedRoutes = [
-    /\/app\/.*/
-];
+const protectedRoutes = [/\/app\/.*/];
 
 export default function App({ Component, pageProps }) {
   return (

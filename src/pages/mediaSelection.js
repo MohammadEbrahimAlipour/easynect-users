@@ -96,12 +96,6 @@ const MediaSelection = () => {
               </span>
               آیتم جدید
             </Link>
-            <Link
-              href="/"
-              className="bg-dark text-white px-4 py-3 rounded-lg border-[1px] border-black"
-            >
-              ذخیره
-            </Link>
           </div>
         </div>
       </Layout>
