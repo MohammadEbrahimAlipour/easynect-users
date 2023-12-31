@@ -44,43 +44,6 @@ const EmptyRectangle = ({
 
     editItem(saveItemIdForEdit, updatedItemDetails);
     setSaveItemIdForEdit(null);
-
-    // const newSelectedItemsDetails = selectedItemsDetails.map((item) => {
-    //   if (item.id === selectedId) {
-    //     return { ...item, id: chosenId, title, title, s3_icon_url: icon_url };
-    //   }
-    //   return item;
-    // });
-
-    // setSelectedItemsDetails(newSelectedItemsDetails);
-
-    // const updatedData = extractedData.map((section, key) =>
-    //   section.map((item) => {
-    //     // For each item, check if it's the one that needs updating
-    //     if (item.content_id === selectedId) {
-    //       //   console.log(key);
-    //       console.log(key);
-
-    //       console.log(true);
-    //       setMyKey(key);
-    //       console.log(myKey);
-    //       return { ...item, content_id: chosenId, title, icon_url };
-    //       // If it is, return a new object with the updated details from the chosen option
-    //     }
-    //     // Otherwise, return the item unmodified
-
-    //     return item;
-    //   })
-    // );
-
-    // // setExtractedData(updatedData);
-    // if (updatedExtractedData.length !== 0) {
-    //   const data = updatedExtractedData;
-    //   data[myKey] = updatedData[myKey];
-    //   setUpdatedExtractedData(data);
-    // } else {
-    //   setUpdatedExtractedData(updatedData);
-    // }
   };
 
   // logs
@@ -96,16 +59,16 @@ const EmptyRectangle = ({
     <>
       <div
         //   onClick={() => setShowOptionList(!showOptionList)}
-        className="mt-4 overflow-hidden"
+        className="mt-4 overflow-hidden "
       >
         {selectedItemsDetails?.map((item, index) => (
           <div
             key={item.id}
-            className="grid grid-cols-12 items-center text-xs py-3 border-2 rounded-2xl whitespace-nowrap overflow-hidden"
+            className="grid grid-cols-12 relative items-center text-xs py-3 border-2 rounded-2xl whitespace-nowrap overflow-hidden"
           >
             <>
-              <div className="col-span-2  rounded-md flex justify-center items-center overflow-hidden">
-                <div className="absolute left-[37px] flex justify-center items-center">
+              <div className=" col-span-2  rounded-md flex justify-center items-center overflow-hidden">
+                <div className="absolute left-[10px] flex justify-center items-center">
                   {/* edit */}
                   <span
                     onClick={() => {
@@ -135,18 +98,16 @@ const EmptyRectangle = ({
               <p className="col-span-3 font-semibold text-xs ms-1 overflow-hidden">
                 {item.title}:
               </p>
-              <p className="col-span-7 font-semibold text-xs ms-1 overflow-hidden truncate">
-                {item.description}
-              </p>
             </>
           </div>
         ))}
 
         {/* list options */}
+
         {showOptionList && (
           <div
             className="bg-white shadow-2xl absolute left-[142px] p-4 max-h-[150px] overflow-y-scroll 
-                     rounded-md border z-10"
+                     rounded-md border z-10 "
           >
             <span onClick={() => setShowOptionList(false)}>
               <CloseIcon />
@@ -157,7 +118,7 @@ const EmptyRectangle = ({
                 onClick={() =>
                   handleItemSelect(item.id, item.title, item.s3_icon_url)
                 }
-                className={`py-2 border-b `}
+                className={`py-2 border-b`}
               >
                 {item.title}
               </div>

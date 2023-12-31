@@ -37,8 +37,12 @@ const MediaSelection = () => {
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
-          // Check if the error response contains a message
-          if (
+
+          // Check if the response is 404 and ignore the toast if it is
+          if (error.response && error.response.status === 404) {
+            // Maybe handle the 404 error by updating the state or routing the user elsewhere
+            // DO NOT show the toast
+          } else if (
             error.response &&
             error.response.data &&
             error.response.data.detail

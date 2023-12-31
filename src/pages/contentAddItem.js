@@ -58,7 +58,7 @@ const ContentStoreAddItem = () => {
 
   return (
     <>
-      {contentData ? (
+      {contentData && id ? (
         <>
           <HeaderTwo href="/mediaSelection" />
           <Layout>

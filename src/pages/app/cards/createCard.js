@@ -229,29 +229,6 @@ const CreateCard = () => {
                   onChange={handleInputChange}
                 />
               </div>
-
-              <div className="my-8">
-                <Devider text="انتخواب نوع منو" />
-              </div>
-
-              {/* bottom side booleans */}
-              <div
-                className="w-full bg-lightMenu border-2 py-3 flex justify-between
-              items-center px-3 rounded-lg"
-              >
-                <p className="font-medium">لینک مستقیم</p>
-                <ToggleSwitch
-                  id="isDirect" // Replace with a unique ID
-                  isChecked={formData.is_direct} // Use the value of is_direct from your formData
-                  toggleSwitch={() => {
-                    // Define a function to toggle the switch and update the formData
-                    setFormData((prevFormData) => ({
-                      ...prevFormData,
-                      is_direct: !prevFormData.is_direct // Toggle the value
-                    }));
-                  }}
-                />
-              </div>
             </form>
           </div>
         </div>

@@ -154,6 +154,10 @@ const EditProfileInfo = () => {
       });
   };
 
+  const goBack = () => {
+    router.back();
+  };
+
   return (
     <main>
       <Header />
@@ -169,9 +173,12 @@ const EditProfileInfo = () => {
 
                     {/* left side btns */}
                     <div className="text-sm">
-                      <button className="me-3 border-[1px] border-black px-4 py-1 rounded-lg">
+                      <span
+                        onClick={goBack}
+                        className="me-3 border-[1px] border-black px-4 py-1 rounded-lg"
+                      >
                         انصراف
-                      </button>
+                      </span>
                       <button
                         type="submit"
                         className="bg-dark text-white px-4 py-1 rounded-lg border-[1px] border-black"
@@ -269,25 +276,6 @@ const EditProfileInfo = () => {
                   {/* bottom side booleans */}
 
                   {/* is_direct */}
-                  <div
-                    className="w-full bg-lightMenu border-2 py-3 flex justify-between
-              items-center px-3 rounded-lg mb-3"
-                  >
-                    <p className="font-medium">لینک مستقیم</p>
-                    {/* toggle */}
-                    <div className="text-lg font-medium">
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          value=""
-                          className="sr-only peer"
-                          onChange={handleToggleDirect}
-                          checked={isDirect}
-                        />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-dark peer-checked:bg-dark"></div>
-                      </label>
-                    </div>
-                  </div>
 
                   {/* bio */}
 
