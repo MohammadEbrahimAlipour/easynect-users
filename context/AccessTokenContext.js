@@ -24,23 +24,8 @@ export const AccessTokenProvider = ({ children, protectedRoutes }) => {
     return null; // Return null if not in a browser environment
   });
 
-  // const isProtectedRoute = (pathname) => {
-  //   return /^\/app(\/.*)?$/.test(pathname);
-  // };
-
   const isProtectedRoute = (pathname) => {
-    // return /^\/app(\/.*)?$/.test(pathname);
-
-    // Assuming protectedRoutes is an array of strings or regex patterns of protected routes
-    return protectedRoutes.some((routePattern) => {
-      if (typeof routePattern === "string") {
-        return pathname === routePattern; // Exact match for string patterns
-      } else if (routePattern instanceof RegExp) {
-        return routePattern.test(pathname); // Regex test for RegExp patterns
-      } else {
-        return false; // If the pattern is neither string nor regex, ignore it
-      }
-    });
+    return /^\/app(\/.*)?$/.test(pathname);
   };
 
   const router = useRouter();

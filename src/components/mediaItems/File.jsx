@@ -35,6 +35,7 @@ const File = ({
         عنوان
       </label>
       <input
+        required
         htmlFor="title"
         name="title"
         placeholder={mediaData?.title}
@@ -66,6 +67,7 @@ const File = ({
       <div className="w-full border-2 rounded-lg flex flex-row-reverse justify-between py-1 items-center px-1 overflow-hidden">
         <div className="file-uploader bg-black py-1 w-[15%] rounded-lg flex justify-center items-center overflow-hidden">
           <input
+            required
             type="file"
             ref={fileInputRef}
             onChange={handleFileChange}

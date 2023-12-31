@@ -14,6 +14,11 @@ import LoadingState from "@/components/LoadingState";
 import UnifiedData from "@/components/mediaItems/UnifiedData";
 import File from "@/components/mediaItems/File";
 
+import PropTypes from "prop-types";
+import LinearProgress from "@mui/material/LinearProgress";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+
 const MediaSettingsHorz = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -29,17 +34,44 @@ const MediaSettingsHorz = () => {
   const { type } = router.query;
   const [showTooltip, setShowTooltip] = useState(false);
   const [file, setFile] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const [formData, setFormData] = useState({
     title: "",
     content_val: ""
   });
 
+  const onUploadProgress = (progressEvent) => {
+    const percentCompleted = Math.round(
+      (progressEvent.loaded * 100) / progressEvent.total
+    );
+    setUploadProgress(percentCompleted);
+  };
+
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+
+  //   if (baseUrl !== null) {
+  //     // Concatenate baseUrl and content_val if the name is 'content_val'
+  //     const updatedValue = name === "content_val" ? baseUrl + value : value;
+  //   }
+  //   setFormData({
+  //     ...formData,
+  //     [name]: updatedValue
+  //   });
+  // };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    let updatedValue = value; // Declare updatedValue with initial value
 
     // Concatenate baseUrl and content_val if the name is 'content_val'
-    const updatedValue = name === "content_val" ? baseUrl + value : value;
+    // and if baseUrl is not null or empty
+    if (baseUrl && name === "content_val") {
+      updatedValue = baseUrl + value;
+    } else if (name === "content_val") {
+      updatedValue = value;
+    }
 
     setFormData({
       ...formData,
@@ -136,6 +168,12 @@ const MediaSettingsHorz = () => {
             Authorization: `Bearer ${accessToken.accessToken}`,
             "Content-Type": "application/x-www-form-urlencoded",
             "Accept-Language": "fa"
+          },
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setUploadProgress(percentCompleted);
           }
         });
 
@@ -149,22 +187,60 @@ const MediaSettingsHorz = () => {
           console.error("Unexpected response status:", response.status);
         }
       } catch (error) {
-        // Handle any errors, e.g., display an error message to the user
+        // Log the error object
         console.error("Error:", error);
-        // Check if the error response contains a message
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.detail
-        ) {
-          const errorMessage = error.response.data.detail;
-          toast.error(errorMessage);
+
+        if (axios.isAxiosError(error)) {
+          // The error is related to axios
+          if (error.response) {
+            if (error.response.status === 422) {
+              // Handle specific error when status is 422
+              const errorMessage = error.response.data.detail[0].msg;
+              toast.error(`Error 422: ${errorMessage}`);
+            } else if (error.response.data && error.response.data.detail) {
+              // Handle general case with details
+              const errorMessage = error.response.data.detail;
+              toast.error(errorMessage);
+            } else {
+              // Handle general case without details
+              toast.error("An error occurred while processing your request.");
+            }
+          } else if (error.request) {
+            // The request was made, but no response was received
+            toast.error("No response received from the server.");
+          } else {
+            // Something happened in setting up the request that triggered an error
+            toast.error("Error: " + error.message);
+          }
         } else {
-          // If there is no specific error message, display a generic one
-          toast.error("Error: An error occurred.");
+          // The error is not related to axios
+          toast.error("An unexpected error occurred.");
         }
       }
     }
+  };
+
+  function LinearProgressWithLabel(props) {
+    return (
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Box sx={{ width: "100%", mr: 1 }}>
+          <LinearProgress variant="determinate" {...props} />
+        </Box>
+        <Box sx={{ minWidth: 35 }}>
+          <Typography variant="body2" color="text.secondary">{`${Math.round(
+            props.value
+          )}%`}</Typography>
+        </Box>
+      </Box>
+    );
+  }
+
+  LinearProgressWithLabel.propTypes = {
+    /**
+     * The value of the progress indicator for the determinate and buffer variants.
+     * Value between 0 and 100.
+     */
+    value: PropTypes.number.isRequired
   };
 
   return (
@@ -244,18 +320,31 @@ const MediaSettingsHorz = () => {
                       />
                     ) : (
                       //  file input data
+                      <>
+                        <File
+                          mediaData={mediaData}
+                          showTooltip={showTooltip}
+                          is_square={is_square}
+                          handleTouchStart={handleTouchStart}
+                          handleTouchEnd={handleTouchEnd}
+                          handleInputChange={handleInputChange}
+                          setLivePreviewTitle={setLivePreviewTitle}
+                          setLivePreviewDesc={setLivePreviewDesc}
+                          setFile={setFile}
+                        />
 
-                      <File
-                        mediaData={mediaData}
-                        showTooltip={showTooltip}
-                        is_square={is_square}
-                        handleTouchStart={handleTouchStart}
-                        handleTouchEnd={handleTouchEnd}
-                        handleInputChange={handleInputChange}
-                        setLivePreviewTitle={setLivePreviewTitle}
-                        setLivePreviewDesc={setLivePreviewDesc}
-                        setFile={setFile}
-                      />
+                        <Box sx={{ width: "100%" }}>
+                          <LinearProgressWithLabel
+                            sx={{
+                              backgroundColor: "#e3e3e3",
+                              "& .MuiLinearProgress-bar": {
+                                backgroundColor: "#141516" // Put your custom color value here
+                              }
+                            }}
+                            value={uploadProgress}
+                          />
+                        </Box>
+                      </>
                     )}
                   </>
                 </div>
