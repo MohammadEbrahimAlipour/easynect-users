@@ -20,6 +20,9 @@ import { generateApiUrl } from "@/components/ApiUr";
 import LoadingState from "@/components/LoadingState";
 import EmptyRectangle from "@/components/infoPage/empty/EmptyRectangle";
 import NoData from "@/components/pageView/NoData";
+import HeaderTwo from "@/components/HeaderTwo";
+import Footer from "@/components/Footer";
+import NoCardExist from "@/components/infoPage/NoCardExist";
 
 const InfoPage = () => {
   const handleSaveContact = () => {
@@ -71,6 +74,8 @@ END:VCARD
   const [noData, setNoData] = useState(null);
   const [localItemsSelected, setLocalItemsSelected] = useState([]);
 
+  const [noCard, setNoCard] = useState(null);
+
   const getJobTitle = () => {
     if (pageViewData.job_title !== null && pageViewData.company === null) {
       return `${pageViewData.job_title}`;
@@ -89,6 +94,7 @@ END:VCARD
     }
   };
 
+  console.log("pageViewData", pageViewData);
   // end of patch functions
 
   const handleOptionClick = (option) => {
@@ -141,10 +147,14 @@ END:VCARD
           setPageViewData(response.data);
           setExtractedData(response.data);
           setUpdatedExtractedData(response.data.contents);
+          setNoCard(false);
           // set extracted data
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
+          if (error.response && error.response.status === 404) {
+            setNoCard(true); // Set to true if a 404 error occurs
+          }
         });
     }
   }, [selectedOption?.id, accessToken.accessToken]);
@@ -273,171 +283,182 @@ END:VCARD
   console.log("data", pageViewData);
   return (
     <>
-      {/* chose */}
-      <div className="flex justify-center relative mt-10">
-        <button
-          onClick={() => setShoOptions(!showOptions)}
-          className="bg-dark text-white rounded-2xl w-[40%] px-3 py-[6px] focus:outline-none
-         text-sm flex justify-center items-center"
-        >
-          <span className="me-1">
-            {selectedOption ? selectedOption.card_title : "انتخاب کارت"}
-          </span>
-          <ArrowDownIcon />
-        </button>
-
-        {/* options */}
-        {showOptions && (
-          <div className="absolute bg-white shadow-2xl border py-2 px-4 rounded-md top-8">
-            {pagesData.map((data) => (
-              <div
-                key={data.id}
-                className={`py-1 border-b ${
-                  selectedOption && selectedOption.id === data.id
-                    ? "font-bold"
-                    : ""
-                }`}
-                onClick={() => handleOptionClick(data)}
-              >
-                {data.card_title}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* main */}
-
-      {selectedOption && pageViewData?.horizontal_menu ? (
+      {noCard !== null ? (
         <>
-          <div className="flex flex-col justify-center items-center mt-3">
-            <div
-              id="photo_here"
-              className=" box-contentw-[80px] h-[80px] rounded-full
-                      overflow-hidden flex items-center justify-center mt-1"
+          {/* chose */}
+          <div className="flex justify-center relative mt-10">
+            <button
+              onClick={() => setShoOptions(!showOptions)}
+              className="bg-dark text-white rounded-2xl w-[40%] px-3 py-[6px] focus:outline-none
+         text-sm flex justify-center items-center"
             >
-              <ProfileImage
-                src={pageViewData.profile_s3_url}
-                width={80}
-                height={80}
-              />
-            </div>
-            <h3 className="mt-3 text-xl font-semibold">
-              {pageViewData.card_title}
-            </h3>
-            <p className="text-muted mt-2 font-medium text-xs">
-              {getJobTitle()}
-            </p>
-          </div>
-          {/* to show no Data component in case of 404 for listOptions */}
-          {noData !== null && noData ? (
-            <NoData />
-          ) : (
-            <Fragment>
-              {/* horizontal scroll menu */}
-              <div className="border-[3px]  rounded-lg mx-2 my-4 ">
-                <div className="grid grid-flow-col justify-center items-center w-full">
-                  <div className="my-5 overflow-x-hidden overscroll-y-contain ">
-                    {/* <SwiperCarousel /> */}
-                    <EmptyItemsAddBox
-                      listItems={listItems}
-                      pageId={selectedOption.id}
-                      horizontalData={pageViewData.horizontal_menu}
-                    />
+              <span className="me-1">
+                {selectedOption ? selectedOption.card_title : "انتخاب کارت"}
+              </span>
+              <ArrowDownIcon />
+            </button>
+
+            {/* options */}
+            {showOptions && (
+              <div className="absolute bg-white shadow-2xl border py-2 px-4 rounded-md top-8">
+                {pagesData.map((data) => (
+                  <div
+                    key={data.id}
+                    className={`py-1 border-b ${
+                      selectedOption && selectedOption.id === data.id
+                        ? "font-bold"
+                        : ""
+                    }`}
+                    onClick={() => handleOptionClick(data)}
+                  >
+                    {data.card_title}
                   </div>
-                </div>
+                ))}
               </div>
+            )}
+          </div>
 
-              <Layout className="!bg-white !px-3 !py-0 !h-fit">
-                {/* save btn */}
-                <button
-                  disabled
-                  onClick={handleSaveContact}
-                  className="bg-dark text-white text-sm font-bold w-full h-[44px] rounded-[8px] opacity-10"
+          {/* main */}
+
+          {selectedOption && pageViewData?.horizontal_menu ? (
+            <>
+              <div className="flex flex-col justify-center items-center mt-3">
+                <div
+                  id="photo_here"
+                  className=" box-contentw-[80px] h-[80px] rounded-full
+                      overflow-hidden flex items-center justify-center mt-1"
                 >
-                  ذخیره مخاطب
-                </button>
+                  <ProfileImage
+                    src={pageViewData.profile_s3_url}
+                    width={80}
+                    height={80}
+                  />
+                </div>
+                <h3 className="mt-3 text-xl font-semibold">
+                  {pageViewData.card_title}
+                </h3>
+                <p className="text-muted mt-2 font-medium text-xs">
+                  {getJobTitle()}
+                </p>
+              </div>
+              {/* to show no Data component in case of 404 for listOptions */}
+              {noData !== null && noData ? (
+                <NoData />
+              ) : (
+                <Fragment>
+                  {/* horizontal scroll menu */}
+                  <div className="border-[3px]  rounded-lg mx-2 my-4 ">
+                    <div className="grid grid-flow-col justify-center items-center w-full">
+                      <div className="my-5 overflow-x-hidden overscroll-y-contain ">
+                        {/* <SwiperCarousel /> */}
+                        <EmptyItemsAddBox
+                          listItems={listItems}
+                          pageId={selectedOption.id}
+                          horizontalData={pageViewData.horizontal_menu}
+                        />
+                      </div>
+                    </div>
+                  </div>
 
-                <form
-                  onSubmit={handleSubmit}
-                  className="border-[3px] mt-5 px-2 pb-6 rounded-lg"
-                >
-                  <div className=" mt-5">
-                    {updatedExtractedData?.map((object) => (
-                      <div key={object?.guid + object?.data?.length}>
-                        {/* square section */}
+                  <Layout className="!bg-white !px-3 !py-0 !h-fit">
+                    {/* save btn */}
+                    <button
+                      disabled
+                      onClick={handleSaveContact}
+                      className="bg-dark text-white text-sm font-bold w-full h-[44px] rounded-[8px] opacity-10"
+                    >
+                      ذخیره مخاطب
+                    </button>
 
-                        {object.display_box_type === "square" ? (
-                          <SquareDataExists
+                    <form
+                      onSubmit={handleSubmit}
+                      className="border-[3px] mt-5 px-2 pb-6 rounded-lg"
+                    >
+                      <div className=" mt-5">
+                        {updatedExtractedData?.map((object) => (
+                          <div key={object?.guid + object?.data?.length}>
+                            {/* square section */}
+
+                            {object.display_box_type === "square" ? (
+                              <SquareDataExists
+                                setUpdatedExtractedData={
+                                  setUpdatedExtractedData
+                                }
+                                setExtractedData={setExtractedData}
+                                extractedData={extractedData}
+                                updatedExtractedData={updatedExtractedData}
+                                listItems={listItems}
+                                data={object}
+                                syncedExtractedData={syncedExtractedData}
+                                removeItem={handleRemoveItem}
+                                editItem={handleEditItem}
+                              />
+                            ) : null}
+
+                            {/* rectangle */}
+
+                            {object.display_box_type === "rectangle" ? (
+                              <EmptyRectangle
+                                setUpdatedExtractedData={
+                                  setUpdatedExtractedData
+                                }
+                                setExtractedData={setExtractedData}
+                                extractedData={extractedData}
+                                updatedExtractedData={updatedExtractedData}
+                                listItems={listItems}
+                                data={object}
+                                syncedExtractedData={syncedExtractedData}
+                                setSyncExtractedData={setSyncExtractedData}
+                                removeItem={handleRemoveItem}
+                                editItem={handleEditItem}
+                              />
+                            ) : null}
+                          </div>
+                        ))}
+
+                        {/* wrapper */}
+
+                        <div className="mt-4">
+                          <EmptySquareBox
                             setUpdatedExtractedData={setUpdatedExtractedData}
                             setExtractedData={setExtractedData}
                             extractedData={extractedData}
                             updatedExtractedData={updatedExtractedData}
                             listItems={listItems}
-                            data={object}
-                            syncedExtractedData={syncedExtractedData}
-                            removeItem={handleRemoveItem}
-                            editItem={handleEditItem}
-                          />
-                        ) : null}
-
-                        {/* rectangle */}
-
-                        {object.display_box_type === "rectangle" ? (
-                          <EmptyRectangle
-                            setUpdatedExtractedData={setUpdatedExtractedData}
-                            setExtractedData={setExtractedData}
-                            extractedData={extractedData}
-                            updatedExtractedData={updatedExtractedData}
-                            listItems={listItems}
-                            data={object}
                             syncedExtractedData={syncedExtractedData}
                             setSyncExtractedData={setSyncExtractedData}
+                            setAddedItems={setAddedItems}
                             removeItem={handleRemoveItem}
-                            editItem={handleEditItem}
+                            localItemsSelected={localItemsSelected}
+                            setLocalItemsSelected={setLocalItemsSelected}
                           />
-                        ) : null}
+                        </div>
+                        <button
+                          type="submit"
+                          className="font-ravi bg-dark text-white w-full mt-4 rounded-md py-2 font-medium"
+                        >
+                          اعمال تغییرات
+                        </button>
                       </div>
-                    ))}
+                      {/* end of wrapper */}
+                    </form>
 
-                    {/* wrapper */}
-
-                    <div className="mt-4">
-                      <EmptySquareBox
-                        setUpdatedExtractedData={setUpdatedExtractedData}
-                        setExtractedData={setExtractedData}
-                        extractedData={extractedData}
-                        updatedExtractedData={updatedExtractedData}
-                        listItems={listItems}
-                        syncedExtractedData={syncedExtractedData}
-                        setSyncExtractedData={setSyncExtractedData}
-                        setAddedItems={setAddedItems}
-                        removeItem={handleRemoveItem}
-                        localItemsSelected={localItemsSelected}
-                        setLocalItemsSelected={setLocalItemsSelected}
-                      />
+                    {/* logo */}
+                    <div>
+                      <ClientPageFooter />
                     </div>
-                    <button
-                      type="submit"
-                      className="font-ravi bg-dark text-white w-full mt-4 rounded-md py-2 font-medium"
-                    >
-                      اعمال تغییرات
-                    </button>
-                  </div>
-                  {/* end of wrapper */}
-                </form>
-
-                {/* logo */}
-                <div>
-                  <ClientPageFooter />
-                </div>
-              </Layout>
-            </Fragment>
+                  </Layout>
+                </Fragment>
+              )}
+            </>
+          ) : (
+            <LoadingState />
           )}
         </>
       ) : (
-        <LoadingState />
+        <NoCardExist />
       )}
+      {/* if card exists below will be shown */}
     </>
   );
 };

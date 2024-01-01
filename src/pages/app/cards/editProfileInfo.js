@@ -161,7 +161,7 @@ const EditProfileInfo = () => {
   return (
     <main>
       <Header />
-      <Layout className="!px-3 !pt-3 !h-fit !mb-10">
+      <Layout className="!px-3 2xs:!px-1 !pt-3 !h-fit !mb-10">
         {pageData ? (
           <div className="flex flex-col ">
             <div className="bg-white w-full h-auto rounded-lg pb-10 container">
