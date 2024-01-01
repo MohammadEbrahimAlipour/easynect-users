@@ -148,7 +148,10 @@ const VerifyOTP = () => {
         {/* code input field */}
         <form onSubmit={handleSubmit}>
           {/* test */}
-          <div ref={inputRef} className="flex flex-row-reverse justify-between">
+          <div
+            ref={inputRef}
+            className="flex flex-row-reverse justify-between "
+          >
             {Array.from({ length: 6 }).map((value, index) => (
               <input
                 key={index}
@@ -166,7 +169,7 @@ const VerifyOTP = () => {
                 autoComplete="off" // aid to prevent browsers from autocompleting values
                 autoFocus={index === 0} // autofocus on the first input
                 onChange={(e) => handleInputChange(index, e.target.value)}
-                className="w-[50px] h-[50px] bg-[#EDEDED] 
+                className="w-[50px] h-[50px] 2xs:w-[42px] 2xs:h-[45px] bg-[#EDEDED] 
               border-[1px] border-muted border-opacity-40
                text-center rounded-md text-2xl font-semibold"
               />

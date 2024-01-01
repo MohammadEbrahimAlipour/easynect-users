@@ -10,7 +10,6 @@ const BottomSheetMore = ({
   moreSheetDetails
 }) => {
   const [showAccessory, setShowAccessory] = useState(false);
-  console.log("moreSheetDetails", moreSheetDetails);
   const SubMenuOptions = ({ title, onClick, className = "" }) => {
     return (
       <div

@@ -9,6 +9,7 @@ import { generateApiUrl } from "@/components/ApiUr";
 import IconReg from "@/components/icons/IconReg";
 import EasynecVertLogo from "@/components/icons/EasynecVertLogo";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 
 const RegisterUser = () => {
   const router = useRouter();
@@ -70,6 +71,13 @@ const RegisterUser = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+
+    // Check for password match before submitting
+    if (password1 !== password2) {
+      toast.error("Passwords do not match.");
+      return; // stop the function if passwords do not match
+    }
+
     const form = e.target;
     const formData = new FormData(form);
     // Convert form data to a plain object
@@ -103,8 +111,20 @@ const RegisterUser = () => {
         console.log("Registration failed");
       }
     } catch (error) {
-      // Handle network errors
-      console.log("Network error:");
+      if (error.response) {
+        // If the server responded with a conflict error and provided detail message
+        if (error.response.status === 409 && error.response.data?.detail) {
+          toast.error(error.response.data.detail);
+        } else {
+          // Handle other errors with a status code from the server
+          toast.error(`Error: ${error.response.statusText}`);
+        }
+        console.error("Error response:", error.response);
+      } else {
+        // Handle network error (no response received)
+        toast.error("Network error, please try again later.");
+        console.error("Network error:", error);
+      }
     }
   };
 
