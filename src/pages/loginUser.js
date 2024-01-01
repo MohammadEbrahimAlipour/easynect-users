@@ -156,7 +156,7 @@ const LoginUser = () => {
 
           {/* password */}
           <div
-            className="border-2 px-3 py-3 w-full rounded-lg mb-4 bg-lightMenu overflow-hidden
+            className="relative border-2 px-3 py-3 w-full rounded-lg mb-4 bg-lightMenu overflow-hidden
           flex flex-row justify-between items-center"
           >
             <input
@@ -166,8 +166,8 @@ const LoginUser = () => {
               placeholder=" انتخاب رمز عبور"
               onChange={handleChange}
             />
-            <span className="text-xs bg-muted text-white rounded-md py-2 px-3">
-              <Link href="/forgotPassword" className="whitespace-nowrap">
+            <span className="absolute left-1 text-xs bg-muted text-white rounded-md py-2 px-3 overflow-hidden">
+              <Link href="/forgotPassword" className=" whitespace-nowrap ">
                 فراموش کرده‌اید؟
               </Link>
             </span>
