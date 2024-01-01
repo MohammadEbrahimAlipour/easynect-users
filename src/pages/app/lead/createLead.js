@@ -9,18 +9,24 @@ import { generateApiUrl } from "@/components/ApiUr";
 import { useRouter } from "next/router";
 import HeaderTwo from "@/components/HeaderTwo";
 import BottomSheet from "@/components/BottomSheet";
+import LeadBottomSheet from "@/components/bottomSheet/leadForm/LeadBottomSheet";
 
 const CreateLead = () => {
   const router = useRouter();
   const { id } = router.query;
+  const { formId } = router.query;
   const [showList, setShowList] = useState(false);
   const accessToken = useAccessToken();
   const [leadOptions, setLeadOptions] = useState([]);
   const [selectedFields, setSelectedFields] = useState([]);
-  const [inputValue, setInputValue] = useState(""); // State for input value
-
   const [inputValues, setInputValues] = useState({});
+  const [apiUrl, setApiUrl] = useState(null);
 
+  const toggleDropdown = () => {
+    setShowList(!showList);
+  };
+
+  console.log("leadOps", leadOptions);
   // Function to handle change in input value for a specific field
   const handleInputChange = (index, value) => {
     setInputValues((prevInputValues) => ({
@@ -32,36 +38,47 @@ const CreateLead = () => {
   useEffect(() => {
     const apiUrl = generateApiUrl(`/api/v1/lead_capture_store/`);
     // Make an Axios GET request to fetch user data
-    if (id) {
-      axios
-        .get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${accessToken.accessToken}`, // Add your access token here
-            "Accept-Language": "fa", // Language header
-            "Content-Type": "application-json"
-          }
-        })
-        .then((response) => {
-          // Handle the data once it's received
-          setLeadOptions(response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-          // Check if the error response contains a message
-          if (
-            error.response &&
-            error.response.data &&
-            error.response.data.detail
-          ) {
-            const errorMessage = error.response.data.detail;
-            toast.error(errorMessage);
-          } else {
-            // If there is no specific error message, display a generic one
-            toast.error("Error: An error occurred.");
-          }
-        });
-    }
+
+    axios
+      .get(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${accessToken.accessToken}`, // Add your access token here
+          "Accept-Language": "fa", // Language header
+          "Content-Type": "application/json"
+        }
+      })
+      .then((response) => {
+        console.log("response ", response);
+        // Handle the data once it's received
+        setLeadOptions(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+        // Check if the error response contains a message
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.detail
+        ) {
+          const errorMessage = error.response.data.detail;
+          toast.error(errorMessage);
+        } else {
+          // If there is no specific error message, display a generic one
+          toast.error("Error: An error occurred.");
+        }
+      });
   }, [id, accessToken.accessToken]);
+
+  useEffect(() => {
+    // only run the code when router is ready and you have all the query params
+    if (router.isReady) {
+      if (formId !== "undefined") {
+        setApiUrl(generateApiUrl(`/api/v1/leads/form_fields/${formId}`));
+      } else {
+        setApiUrl(generateApiUrl(`/api/v1/leads/${id}`));
+      }
+    }
+  }, [router.isReady, formId, id]);
 
   // Function to submit the form
   const handleSubmit = (event) => {
@@ -70,42 +87,38 @@ const CreateLead = () => {
     // Get the values from the selectedFields array
     const fieldValues = selectedFields.map((field, index) => ({
       lead_capture_store_id: field.id,
-      title:
-        inputValues[index] !== undefined ? inputValues[index] : field.title,
+      title: (leadOptions[index] = field.title),
       order: index + 1 //order here
     }));
 
-    if (id) {
-      // Make an Axios PATCH request to update user data based on user_id
-      const apiUrl = generateApiUrl(`/api/v1/leads/form_fields/${id}`);
-      axios
-        .post(apiUrl, fieldValues, {
-          headers: {
-            Authorization: `Bearer ${accessToken.accessToken}`,
-            "Accept-Language": "fa"
-          }
-        })
-        .then((response) => {
-          // Handle the response as needed (e.g., show a success message)
-          console.log("User data updated successfully.");
-          toast.success("updated successfully");
-        })
-        .catch((error) => {
-          console.error("Error updating user data:", error);
-          // Check if the error response contains a message
-          if (
-            error.response &&
-            error.response.data &&
-            error.response.data.detail
-          ) {
-            const errorMessage = error.response.data.detail;
-            toast.error(errorMessage);
-          } else {
-            // If there is no specific error message, display a generic one
-            toast.error("Error: An error occurred.");
-          }
-        });
-    }
+    axios
+      .post(apiUrl, fieldValues, {
+        headers: {
+          Authorization: `Bearer ${accessToken.accessToken}`,
+          "Accept-Language": "fa"
+        }
+      })
+      .then((response) => {
+        // Handle the response as needed (e.g., show a success message)
+        console.log("User data updated successfully.");
+        toast.success("updated successfully");
+        router.push(`/app/lead/lead?id=${id}`);
+      })
+      .catch((error) => {
+        console.error("Error updating user data:", error);
+        // Check if the error response contains a message
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.detail
+        ) {
+          const errorMessage = error.response.data.detail;
+          toast.error(errorMessage);
+        } else {
+          // If there is no specific error message, display a generic one
+          toast.error("Error: An error occurred.");
+        }
+      });
   };
 
   const handleExtractId = (id, title) => {
@@ -142,23 +155,18 @@ const CreateLead = () => {
             >
               <div className="flex justify-between w-full items-center  py-3">
                 <div>
-                  <label
-                    className="font-medium text-sm border-e-2 text-muted me-2 pe-2 ps-4"
-                    htmlFor={`create-${index}`}
+                  {/* input to send */}
+                  <p
+                    id={`create-${index}`}
+                    // type="text"
+                    // placeholder="عنوان دلخواه خود را وارد کنید."
+                    className="bg-lightMenu outline-0 font-medium ms-3 "
+                    // name="title"
+                    // value={inputValues[index] || ""}
+                    // onChange={(e) => handleInputChange(index, e.target.value)}
                   >
                     {field.title}
-                  </label>
-
-                  {/* input to send */}
-                  <input
-                    id={`create-${index}`}
-                    type="text"
-                    placeholder="عنوان دلخواه خود را وارد کنید."
-                    className="bg-lightMenu outline-0 font-medium "
-                    name="title"
-                    value={inputValues[index] || ""}
-                    onChange={(e) => handleInputChange(index, e.target.value)}
-                  />
+                  </p>
                 </div>
 
                 {/* delete field */}
@@ -174,7 +182,7 @@ const CreateLead = () => {
 
           {/* dropdown */}
           <div
-            onClick={() => setShowList(!showList)}
+            onClick={toggleDropdown}
             className="bg-lightMenu rounded-lg border-black mb-3 border py-3 px-4 box-border flex justify-between
               items-center relative
               "
@@ -215,6 +223,15 @@ const CreateLead = () => {
         {/* each item */}
       </Layout>
       <Footer />
+
+      {/* bottom sheet:  */}
+      {/* {showList && (
+        <LeadBottomSheet
+          showList={showList}
+          setShowList={setShowList}
+          leadOption={leadOptions}
+        />
+      )} */}
     </>
   );
 };

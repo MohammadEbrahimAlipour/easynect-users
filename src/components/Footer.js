@@ -37,14 +37,14 @@ const CustomLink = ({ href, title, iconName, className = "" }) => {
   return (
     <Link
       href={href}
-      className={`lg:col-span-6 md:col-span-6 flex flex-col justify-center items-center ${className}`}
+      className={`lg:col-span-6 md:col-span-6 flex flex-col justify-center items-center  ${className}`}
     >
       {isSelected ? iconMappingSelected[iconName] : iconMapping[iconName]}
-      <p
+      <span
         className={`text-xs  mt-2 ${isSelected ? "text-gold" : " text-muted"} `}
       >
         {title}
-      </p>
+      </span>
     </Link>
   );
 };
@@ -52,9 +52,9 @@ const CustomLink = ({ href, title, iconName, className = "" }) => {
 const Footer = ({ className = "" }) => {
   return (
     <div
-      className={`text-center my-5 container sticky bottom-0 bg-white pt-2 ${className}`}
+      className={`text-center my-5 container sticky bottom-0 bg-white pt-2  ${className}`}
     >
-      <div className="grid  3xl:grid-cols-12  2xl:grid-cols-12  md:grid-cols-12 gap-1">
+      <div className="grid grid-cols-12 gap-1">
         {/* right side */}
         <div className="3xl:col-span-4 2xl:col-span-4 md:col-span-4">
           <ul className="flex justify-center items-center">
