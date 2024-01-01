@@ -26,6 +26,7 @@ const Lead = () => {
   const [noData, setNoData] = useState(null);
   const router = useRouter();
   const { id } = router.query;
+  const [hasLeadForm, setHasLeadForm] = useState(null);
 
   console.log("leadData", leadData);
 
@@ -45,6 +46,7 @@ const Lead = () => {
           // Handle the data once it's received
           setLeadData(response.data);
           setNoData(false);
+          setHasLeadForm(true);
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
@@ -52,6 +54,8 @@ const Lead = () => {
             // Handle the 404 status specifically
             if (error.response.status === 404) {
               setNoData(true);
+              setHasLeadForm(true);
+
               // No toast displayed for 404 errors
             } else if (error.response.data && error.response.data.detail) {
               // Check if the error response contains a more specific message
@@ -100,6 +104,41 @@ const Lead = () => {
         }
       });
   };
+
+  const handleIsActiveChanges = (leadId) => {
+    const apiUrl = generateApiUrl(
+      `/api/v1/leads/form_fields/is_active/${leadId}`
+    );
+
+    // Set the request headers, including the Authorization header with the token
+    const headers = {
+      Authorization: `Bearer ${accessToken.accessToken}`, // Assuming accessToken is the token value
+      "Accept-Language": "fa"
+    };
+
+    // Make an Axios DELETE request to delete the user
+    axios
+      .get(apiUrl, { headers }) // Pass the headers in the request
+      .then((response) => {
+        // Handle the successful deletion (e.g., update the UI)
+        console.log("Is active state changed.");
+      })
+      .catch((error) => {
+        console.error("Error deleting item:", error);
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.detail
+        ) {
+          const errorMessage = error.response.data.detail;
+          toast.error(errorMessage);
+        } else {
+          // If there is no specific error message, display a generic one
+          toast.error("Error: An error occurred.");
+        }
+      });
+  };
+
   return (
     <>
       <HeaderTwo />
@@ -131,8 +170,11 @@ const Lead = () => {
                       </span>
 
                       {/* is active */}
-                      <span className="col-span-2 ms-2">
-                        {leadData.is_active ? <TickSuccess /> : <Tickicon />}
+                      <span
+                        className="col-span-2 ms-2"
+                        onClick={() => handleIsActiveChanges(item.id)}
+                      >
+                        {item.is_active ? <TickSuccess /> : <Tickicon />}
                       </span>
                       {/* delete */}
                       <button
@@ -156,11 +198,11 @@ const Lead = () => {
 
         {/* add item botton */}
         <Link
-          href={`/app/lead/createLead`}
+          href={`/app/lead/createLead?id=${id}&formId=${leadData.id}`}
           className="bg-lightMenu rounded-lg mb-2 border-2 box-border overflow-hidden
           py-3 font-ravi w-full flex justify-center items-center font-medium"
         >
-          اظافه کردن
+          اضافه کردن
           <span className="ms-1">
             <PlusSign />
           </span>

@@ -208,7 +208,7 @@ const ProfileCard = () => {
 
                             <div
                               className="w-[28px] h-[24px] bg-white rounded-md mt-3 flex flex-col
-                justify-start "
+                                 justify-start "
                             >
                               <div className="w-full h-[40%] rounded-se-md rounded-ss-md">
                                 <CardsCardIcon />
@@ -304,7 +304,7 @@ const ProfileCard = () => {
         )}
         {/* </div> */}
       </Layout>
-      <Footer className="!fixed !bottom-0 !mb-0" />
+      <Footer className=" !bottom-0 !mb-0" />
 
       {/* bottom sheet */}
       <BottomSheetShareById
