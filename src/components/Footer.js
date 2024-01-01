@@ -37,7 +37,7 @@ const CustomLink = ({ href, title, iconName, className = "" }) => {
   return (
     <Link
       href={href}
-      className={`lg:col-span-6 md:col-span-6 flex flex-col justify-center items-center  ${className}`}
+      className={`grid col-span-6 justify-center items-center  ${className}`}
     >
       {isSelected ? iconMappingSelected[iconName] : iconMapping[iconName]}
       <span
