@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import BottomSheetWrapper from "../BottomSheetWrapper";
 import axios from "axios";
 import QRCode from "qrcode.react";
@@ -7,6 +7,7 @@ import { generateApiUrl } from "@/components/ApiUr";
 import { ArrowDownIcon } from "@/components/Icons";
 import LoadingState from "@/components/LoadingState";
 import { toast } from "react-toastify";
+import { saveAs } from "file-saver";
 
 const BottomSheetShareById = ({ showSheet, setShowSheet, clickedCardId }) => {
   const accessToken = useAccessToken();
@@ -14,13 +15,63 @@ const BottomSheetShareById = ({ showSheet, setShowSheet, clickedCardId }) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [pagesData, setPagesData] = useState(null);
 
+  const [isQrCodeReady, setIsQrCodeReady] = useState(false); // to check if QR code is ready
+  const [qrCodeValue, setQRCodeValue] = useState(""); // State to hold the QR code value
+  const qrRef = useRef();
+
+  const saveQRCode = () => {
+    if (isQrCodeReady && qrRef.current) {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const svgElement = qrRef.current.querySelector("svg");
+      if (!svgElement) {
+        console.error("SVG element not found");
+        return;
+      }
+      const xml = new XMLSerializer().serializeToString(svgElement);
+      const svg64 = btoa(unescape(encodeURIComponent(xml)));
+      const image64 = "data:image/svg+xml;base64," + svg64;
+
+      const image = new Image();
+
+      image.onload = () => {
+        canvas.width = image.width;
+        canvas.height = image.height;
+        ctx.drawImage(image, 0, 0);
+        canvas.toBlob((blob) => {
+          saveAs(blob, "qrcode.png"); // Uses file-saver's saveAs function
+        }, "image/png");
+      };
+
+      image.src = image64;
+    } else {
+      console.error("QR Code is not yet available.");
+    }
+    console.log("ref", qrRef.current);
+  };
+
+  useEffect(() => {
+    if (pagesData && clickedCardId) {
+      // Filter pagesData to find the page with matching id
+      const matchedPage = pagesData.find(
+        (page) => page.id === clickedCardId.id
+      );
+      // If a match is found, update the QR code value
+      if (matchedPage) {
+        setQRCodeValue(matchedPage.page_url);
+        setIsQrCodeReady(true);
+      }
+    }
+  }, [pagesData, clickedCardId]); // Run the effect whenever pagesData or clickedCardId changes
+
   const copyLinkToClipboard = async () => {
-    if (selectedOption && selectedOption.page_url) {
+    if (qrCodeValue) {
+      // Use qrCodeValue which is already set for the QR code value
       try {
-        await navigator.clipboard.writeText(selectedOption.page_url);
-        toast.success("لینک کارت کپی شد"); // You can handle the UI feedback here instead of alert
+        await navigator.clipboard.writeText(qrCodeValue);
+        toast.success("لینک کارت کپی شد"); // The link is copied successfully
       } catch (err) {
-        console.error("خطایی رخ داده است:", err);
+        console.error("خطایی رخ داده است:", err); // An error occurred
       }
     }
   };
@@ -49,7 +100,7 @@ const BottomSheetShareById = ({ showSheet, setShowSheet, clickedCardId }) => {
 
   return (
     <>
-      {clickedCardId && (
+      {clickedCardId && isQrCodeReady && (
         <BottomSheetWrapper
           open={showSheet}
           onClose={() => setShowSheet(false)}
@@ -69,9 +120,9 @@ const BottomSheetShareById = ({ showSheet, setShowSheet, clickedCardId }) => {
             {/* qr code */}
             <div className="flex flex-col justify-center items-center my-4">
               {/* Add the ref to the QR code container */}
-              <div>
+              <div ref={qrRef}>
                 <QRCode
-                  value={selectedOption ? selectedOption.page_url : ""}
+                  value={qrCodeValue}
                   size={200}
                   fgColor="#000"
                   bgColor="#fff"
@@ -82,9 +133,16 @@ const BottomSheetShareById = ({ showSheet, setShowSheet, clickedCardId }) => {
 
               {/* button */}
               <button
-                onClick={copyLinkToClipboard}
+                onClick={saveQRCode}
                 className="flex items-center justify-center  px-[57px]
               bg-dark text-white py-3 leading-0 rounded-lg mt-4"
+              >
+                ذخیره در گالری
+              </button>
+              <button
+                onClick={copyLinkToClipboard}
+                className="flex items-center justify-center  px-[57px]
+              bg-dark text-white py-3 leading-0 rounded-lg mt-2"
               >
                 کپی لینک کارت
               </button>

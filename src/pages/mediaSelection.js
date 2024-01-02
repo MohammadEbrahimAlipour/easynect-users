@@ -64,22 +64,7 @@ const MediaSelection = () => {
       <Layout>
         <div className="bg-white rounded-lg container py-10">
           <div className="flex justify-between items-center">
-            <h3 className="font-semibold text-lg"> نمایش افقی</h3>
-            {/* left side btns */}
-            <div className="text-sm">
-              <Link
-                href="/"
-                className="me-3 border-[1px] border-black px-4 py-1 rounded-lg"
-              >
-                انصراف
-              </Link>
-              <Link
-                href="/"
-                className="bg-dark text-white px-4 py-1 rounded-lg border-[1px] border-black"
-              >
-                ذخیره
-              </Link>
-            </div>
+            <h3 className="font-semibold text-lg">لیست آیتم‌ها</h3>
           </div>
 
           {/* items */}

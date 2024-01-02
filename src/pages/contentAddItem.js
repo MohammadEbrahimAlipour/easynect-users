@@ -60,7 +60,7 @@ const ContentStoreAddItem = () => {
     <>
       {contentData && id ? (
         <>
-          <HeaderTwo href="/mediaSelection" />
+          <HeaderTwo />
           <Layout>
             {/* top filters */}
             <div
