@@ -16,6 +16,7 @@ import { generateApiUrl } from "@/components/ApiUr";
 import LoadingState from "@/components/LoadingState";
 import InfiniteScroll from "react-infinite-scroll-component";
 import BottomSheet from "@/components/BottomSheet";
+import ContactDetails from "@/components/contacts/bottomSheet/ContactDetails";
 
 const Contacts = () => {
   const accessToken = useAccessToken();
@@ -29,7 +30,6 @@ const Contacts = () => {
   const [skip, setSkip] = useState(0);
   const [limit, setLimit] = useState(6);
   const [hasMore, setHasMore] = useState(true);
-
   // Initialize selectedPage with the first page from pageData
   const [selectedPage, setSelectedPage] = useState(pageData[0] || null);
 
@@ -138,6 +138,9 @@ const Contacts = () => {
         });
     }
   }, [accessToken.accessToken, pageID /* , limit, skip */]);
+
+  console.log("pageData", pageData);
+  console.log("contacts", contacts);
 
   const loadMoreContacts = () => {
     if (pageID && hasMore) {
@@ -263,13 +266,13 @@ const Contacts = () => {
               </Link>
             </div>
             {/* button */}
-            <Link
+            {/* <Link
               href="/src/pages/confrimEmailCode"
               className=" flex items-center justify-center w-full
                   bg-dark text-white py-3 leading-0 rounded-lg mt-4"
             >
               افزودن مخاطب
-            </Link>
+            </Link> */}
             {/* cards */}
             {contacts.length === 0 ? (
               <span
@@ -308,6 +311,11 @@ const Contacts = () => {
         }}
         childeren={<>test</>}
       />
+
+      {/* <ContactsCards
+      // showContactDetails={showContactDetails}
+      // setShowContactDetails={setShowContactDetails}
+      /> */}
     </>
   );
 };

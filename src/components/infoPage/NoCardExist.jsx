@@ -1,6 +1,7 @@
 import React from "react";
 import Layout from "../Layout";
 import HeaderTwo from "../HeaderTwo";
+import Link from "next/link";
 
 const NoCardExist = () => {
   return (
@@ -11,7 +12,9 @@ const NoCardExist = () => {
           برای شما هنوز کارتی ساخته نشده است. لطفا ابتدا یک کارت برای خود
           بسازید.
         </p>
-        <p className="underline mt-2">برای ساخت کارت اینجا کلیک کنید.</p>
+        <Link href="/app/cards/createCard" className="underline mt-2">
+          برای ساخت کارت اینجا کلیک کنید.
+        </Link>
       </div>
     </Layout>
   );

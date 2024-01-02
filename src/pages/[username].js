@@ -130,8 +130,6 @@ END:VCARD
     }
   }, [usersData]); // This effect depends on usersData state
 
-  console.log("usersData", usersData);
-
   return (
     <>
       {/* main */}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import sampleImage from "../../../../public/images/intro.jpg";
+import sampleImage from "../../../../public/images/defaultProfile.jpeg";
 import { ChangePhotoIcon } from "@/components/Icons";
 import { generateApiUrl } from "@/components/ApiUr";
 import axios from "axios";
@@ -215,6 +215,7 @@ const CreateCard = () => {
                   name="card_title"
                   value={formData.card_title}
                   onChange={handleInputChange}
+                  required
                 />
                 <EditMenuOptions
                   label="تیتر شغل"

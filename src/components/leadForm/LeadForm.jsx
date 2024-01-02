@@ -13,43 +13,42 @@ const LeadForm = ({ open, onClose, leadFormData, pageId }) => {
     name: "" // Add other fields if necessary
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e, item) => {
     const { name, value } = e.target;
+
+    // If the field is a link and has a base URL, prepend it to the value
+    const fieldValue =
+      item && item.type === "link" && item.base_url
+        ? `${item.base_url}${value}`
+        : value;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: fieldValue
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // // Assuming 'name' in your state is directly linked to the static 'name input'.
-    // const formDataToSend = {
-    //   name: formData.name,
-    //   fields: leadFormData.map((field) => ({
-    //     title: field.title,
-    //     value: formData[field.title], // Accessing dynamic fields from formData based on title
-    //     field_type: field.type
-    //   }))
-    // };
-
-    // Filter out fields that have undefined values
+    // Filter out fields with undefined values
     const fieldsToSend = leadFormData
-      .filter((field) => formData[field.title] !== undefined)
-      .map((field) => ({
-        title: field.title,
-        value: formData[field.title],
-        field_type: field.type
-      }));
+      .filter((field) => field.is_active && formData[field.title] !== undefined)
+      .map((field) => {
+        // The check for base_url and 'link' type is included when constructing the payload for submission
+        const value = formData[field.title];
 
-    // Assuming 'name' in your state is directly linked to the static 'name input'.
+        return {
+          title: field.title,
+          value: value,
+          field_type: field.type
+        };
+      });
+
+    // Construct the payload to be sent
     const formDataToSend = {
       name: formData.name,
       fields: fieldsToSend
     };
-
-    console.log("formDataToSend", formDataToSend);
 
     if (pageId) {
       try {
@@ -137,10 +136,16 @@ const LeadForm = ({ open, onClose, leadFormData, pageId }) => {
                     <input
                       id={`input_${item.id}`}
                       name={item.title}
-                      onChange={handleChange}
-                      value={formData[item.title] || ""}
+                      onChange={(e) => handleChange(e, item)}
                       placeholder={item.placeholder}
                       className="bg-lightMenu outline-0 py-1 text-sm font-medium"
+                      value={
+                        item.type === "link" &&
+                        item.base_url &&
+                        formData[item.title]
+                          ? formData[item.title].replace(item.base_url, "")
+                          : formData[item.title] || ""
+                      }
                     />
                   </div>
                 </div>
@@ -153,7 +158,7 @@ const LeadForm = ({ open, onClose, leadFormData, pageId }) => {
               className="flex items-center justify-center w-full
                       bg-dark text-white py-3 leading-0 rounded-lg mt-7"
             >
-              تغییر ایمیل
+              ذخیره
             </button>
           </form>
         </BottomSheetWrapper>

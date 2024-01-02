@@ -97,7 +97,7 @@ const ProfileInfo = () => {
 
   return (
     <>
-      <HeaderTwo href="/profile" />
+      <HeaderTwo />
       <Layout>
         <div>
           <p className="text-lg ps-3 font-semibold mb-3">اطلاعات کاربری</p>
@@ -113,9 +113,10 @@ const ProfileInfo = () => {
                     نام
                   </label>
                   <input
+                    required={true}
                     type="text"
                     id="name_inp"
-                    placeholder="محمد"
+                    placeholder="نام"
                     className="bg-lightMenu outline-0 font-medium "
                     name="first_name"
                     value={formData.first_name}
@@ -136,8 +137,9 @@ const ProfileInfo = () => {
                     فامیل
                   </label>
                   <input
+                    required={true}
                     id="last_name_inp"
-                    placeholder="خاکشوری"
+                    placeholder="نام خانوادگی"
                     className="bg-lightMenu outline-0 font-medium "
                     name="last_name"
                     value={formData.last_name}
@@ -161,23 +163,16 @@ const ProfileInfo = () => {
                     شماره موبایل
                   </label>
                   <input
+                    required={true}
                     id="phone_number_inp"
                     type="text"
-                    placeholder="09123456789"
+                    placeholder="09121234567"
                     className="bg-lightMenu outline-0 font-medium "
                     name="phone_number"
                     value={formData.phone_number}
                     onChange={handlePhoneNumberInputChange}
                   />
                 </div>
-                <span className=" text-white rounded-md  me-5">
-                  <Link
-                    href="/src/pages/forgotPassword"
-                    className="text-[10px]"
-                  >
-                    {isPhoneNumberValid ? <TickSuccess /> : <Tickicon />}
-                  </Link>
-                </span>
               </div>
 
               {/* button */}
