@@ -39,7 +39,9 @@ const CustomLink = ({ href, title, iconName, className = "" }) => {
       href={href}
       className={`grid col-span-6 justify-center items-center  ${className}`}
     >
-      {isSelected ? iconMappingSelected[iconName] : iconMapping[iconName]}
+      <span>
+        {isSelected ? iconMappingSelected[iconName] : iconMapping[iconName]}
+      </span>
       <span
         className={`text-xs mt-2 ${isSelected ? "text-gold" : " text-muted"} `}
       >

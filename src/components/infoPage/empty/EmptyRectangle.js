@@ -96,7 +96,7 @@ const EmptyRectangle = ({
                 />
               </div>
               <p className="col-span-3 font-semibold text-xs ms-1 overflow-hidden">
-                {item.title}:
+                {item.title}
               </p>
             </>
           </div>
