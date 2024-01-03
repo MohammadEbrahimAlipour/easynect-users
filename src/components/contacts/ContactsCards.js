@@ -4,18 +4,61 @@ import { ContactsWifiIcon } from "../Icons";
 import Image from "next/image";
 import ContactDetails from "./bottomSheet/ContactDetails";
 import { useRouter } from "next/router";
+import { useAccessToken } from "../../../context/AccessTokenContext";
+import { generateApiUrl } from "../ApiUr";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const ContactsCards = ({ contact }) => {
   const router = useRouter();
+  const accessToken = useAccessToken();
+  const [contactData, setContactData] = useState();
+
   const [showContactDetails, setShowContactDetails] = useState(false);
 
-  const handleContactRedirect = (type, username) => {
-    if (type === "contact") {
-      setShowContactDetails(true);
-    } else {
-      router.push(`http://localhost:3000/${username}`);
+  const handleFetchDetails = () => {
+    if (contact?.data.id) {
+      // Make an Axios GET request to fetch user data based on user_id
+      const apiUrl = generateApiUrl(`/api/v1/contacts/${contact?.data.id}`);
+      axios
+        .get(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${accessToken.accessToken}`,
+            "Accept-Language": "fa"
+            // "Content-Type": "application/json"
+          }
+        })
+        .then((response) => {
+          // Handle the data once it's received
+          setContactData(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          // Check if the error response contains a message
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.detail
+          ) {
+            const errorMessage = error.response.data.detail;
+            toast.error(errorMessage);
+          } else {
+            // If there is no specific error message, display a generic one
+            toast.error("Error: An error occurred.");
+          }
+        });
     }
   };
+
+  const handleContactRedirect = async (type, username) => {
+    if (type === "contact") {
+      setShowContactDetails(true);
+      await handleFetchDetails(contact?.data.id);
+    } else {
+      router.push(`${process.env.NEXT_PUBLIC_FRONTEND_SERVER}/${username}`);
+    }
+  };
+
   return (
     <>
       {contact?.data && (
@@ -60,6 +103,7 @@ const ContactsCards = ({ contact }) => {
         showContactDetails={showContactDetails}
         setShowContactDetails={setShowContactDetails}
         contact={contact}
+        contactData={contactData}
       />
     </>
   );

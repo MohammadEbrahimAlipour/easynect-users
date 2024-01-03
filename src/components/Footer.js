@@ -41,7 +41,7 @@ const CustomLink = ({ href, title, iconName, className = "" }) => {
     >
       {isSelected ? iconMappingSelected[iconName] : iconMapping[iconName]}
       <span
-        className={`text-xs  mt-2 ${isSelected ? "text-gold" : " text-muted"} `}
+        className={`text-xs mt-2 ${isSelected ? "text-gold" : " text-muted"} `}
       >
         {title}
       </span>

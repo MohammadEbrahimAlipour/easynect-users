@@ -9,48 +9,68 @@ import Image from "next/image";
 const ContactDetails = ({
   showContactDetails,
   setShowContactDetails,
-  contact
+  contact,
+  contactData
 }) => {
   const accessToken = useAccessToken();
 
-  const [contactData, setContactData] = useState();
+  // const [contactData, setContactData] = useState();
 
   console.log("id", contact?.data?.id);
   console.log("contactData", contactData);
   // to fetch the data
-  useEffect(() => {
-    if (contact?.data.id) {
-      // Make an Axios GET request to fetch user data based on user_id
-      const apiUrl = generateApiUrl(`/api/v1/contacts/${contact?.data.id}`);
-      axios
-        .get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${accessToken.accessToken}`,
-            "Accept-Language": "fa"
-            // "Content-Type": "application/json"
-          }
-        })
-        .then((response) => {
-          // Handle the data once it's received
-          setContactData(response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-          // Check if the error response contains a message
-          if (
-            error.response &&
-            error.response.data &&
-            error.response.data.detail
-          ) {
-            const errorMessage = error.response.data.detail;
-            toast.error(errorMessage);
-          } else {
-            // If there is no specific error message, display a generic one
-            toast.error("Error: An error occurred.");
-          }
-        });
+  // useEffect(() => {
+  //   if (contact?.data.id) {
+  //     // Make an Axios GET request to fetch user data based on user_id
+  //     const apiUrl = generateApiUrl(`/api/v1/contacts/${contact?.data.id}`);
+  //     axios
+  //       .get(apiUrl, {
+  //         headers: {
+  //           Authorization: `Bearer ${accessToken.accessToken}`,
+  //           "Accept-Language": "fa"
+  //           // "Content-Type": "application/json"
+  //         }
+  //       })
+  //       .then((response) => {
+  //         // Handle the data once it's received
+  //         setContactData(response.data);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error fetching user data:", error);
+  //         // Check if the error response contains a message
+  //         if (
+  //           error.response &&
+  //           error.response.data &&
+  //           error.response.data.detail
+  //         ) {
+  //           const errorMessage = error.response.data.detail;
+  //           toast.error(errorMessage);
+  //         } else {
+  //           // If there is no specific error message, display a generic one
+  //           toast.error("Error: An error occurred.");
+  //         }
+  //       });
+  //   }
+  // }, [contact?.data?.id, accessToken.accessToken]);
+
+  const handleTypeDetection = (field) => {
+    switch (field.field_type) {
+      case "phone":
+        if (field.value) window.location.href = `tel:${field.value}`;
+        break;
+      case "email":
+        if (field.value) window.location.href = `mailto:${field.value}`;
+        break;
+      case "link":
+        if (field.value)
+          window.open(field.value, "_blank", "noopener,noreferrer");
+        break;
+
+      default:
+        console.log("Unsupported field type or action");
+        break;
     }
-  }, [contact?.data?.id, accessToken.accessToken]);
+  };
 
   return (
     <BottomSheetWrapper
@@ -88,7 +108,14 @@ const ContactDetails = ({
             className="bg-white rounded-md py-1 px-3 shadow-sm mb-4"
           >
             <p className="font-semibold">{field.title}</p>
-            <p className="underline">{field.value}</p>
+            <span
+              onClick={() => handleTypeDetection(field)}
+              className={`${
+                field.field_type === "regular field" ? "" : "underline"
+              }`}
+            >
+              {field.value}
+            </span>
           </div>
         ))}
       </div>
