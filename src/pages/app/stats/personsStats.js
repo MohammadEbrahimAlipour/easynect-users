@@ -17,6 +17,7 @@ import BottomSheetStatsPresets from "@/components/BottomSheetStatsPresets";
 import LoadingState from "@/components/LoadingState";
 import { Drawer } from "@mui/material";
 import ComingSoon from "@/components/ComingSoon";
+import BottomSheetWrapper from "@/components/bottomSheet/BottomSheetWrapper";
 
 const PersonsStats = () => {
   const [isSelected, setIsSelected] = useState("content");
@@ -89,6 +90,10 @@ const PersonsStats = () => {
         // Handle the API response here
         const data = response.data;
         setStatsData(data); // Update the state with the fetched data
+        // Set the selectedCardId to the id of the first item in statsData
+        if (data.length > 0) {
+          setSelectedCardId(data[0].id);
+        }
       })
       .catch((error) => {
         // Handle any errors here
@@ -353,12 +358,12 @@ const PersonsStats = () => {
                   {/* <label htmlFor="options">Choose a car:</label> */}
 
                   {/* drop down chart options */}
-                  <div class="relative inline-block text-left">
+                  <div className="relative inline-block text-left">
                     <div>
                       <button
                         onClick={toggleShowOption}
                         type="button"
-                        class="inline-flex w-full justify-center items-center gap-x-1 rounded-2xl bg-dark text-white px-3 py-[6px] text-sm font-medium shadow-sm  "
+                        className="inline-flex w-full justify-center items-center gap-x-1 rounded-2xl bg-dark text-white px-3 py-[6px] text-sm font-medium shadow-sm  "
                         id="menu-button"
                         aria-expanded="true"
                         aria-haspopup="true"
@@ -371,19 +376,19 @@ const PersonsStats = () => {
 
                     {showOption ? (
                       <div
-                        class="absolute left-0 z-10 mt-2 w-28 origin-top-right rounded-md bg-white shadow-lg "
+                        className="absolute left-0 z-10 mt-2 w-28 origin-top-right rounded-md bg-white shadow-lg "
                         role="menu"
                         aria-orientation="vertical"
                         aria-labelledby="menu-button"
                         tabindex="-1"
                       >
-                        <div class="" role="none">
+                        <div className="" role="none">
                           {Object.keys(optionTexts).map((value) => (
                             <button
                               key={value}
                               onClick={() => handleMenuItemClick(value)} // Handle click and set option
                               value={value}
-                              class="text-gray-700 block px-4 py-2 text-xs w-full border-b-[1px]"
+                              className="text-gray-700 block px-4 py-2 text-xs w-full border-b-[1px]"
                               role="menuitem"
                               tabindex="-1"
                               id={`menu-item-${value}`}
@@ -486,7 +491,7 @@ const PersonsStats = () => {
       </>
       <Footer />
       <div>
-        <Drawer
+        {/* <Drawer
           anchor="bottom"
           open={showSubMenu}
           onClose={() => {
@@ -509,7 +514,16 @@ const PersonsStats = () => {
               toDate={toDate}
             />
           )}
-        </Drawer>
+        </Drawer> */}
+
+        <BottomSheetStatsPresets
+          setFromDate={setFromDate}
+          setToDate={setToDate}
+          open={showSubMenu}
+          onClose={() => {
+            setShowSubMenu(false);
+          }}
+        />
       </div>
     </>
   );

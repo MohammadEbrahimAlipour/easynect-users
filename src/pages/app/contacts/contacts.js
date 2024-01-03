@@ -60,7 +60,7 @@ const Contacts = () => {
         searchQuery
       });
     }, 500),
-    [pageID, skip, limit, fromDate, toDate]
+    [pageID, fromDate, toDate]
   );
 
   const getAllContactsAsync = ({
@@ -181,51 +181,6 @@ const Contacts = () => {
       });
   }, [accessToken.accessToken, selectedPage]);
 
-  useEffect(() => {
-    const apiUrl = generateApiUrl(
-      `/api/v1/contacts/page/unified/${pageID}?skip=${skip}&limit=${limit}`
-    );
-
-    const params = {
-      from_date: fromDate,
-      to_date: toDate
-    };
-
-    if (pageID) {
-      // Make an Axios GET request to fetch user data
-      axios
-        .get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${accessToken.accessToken}`, // Add your access token here
-            "Accept-Language": "fa" // Language header
-          },
-          params: params
-        })
-        .then((response) => {
-          // Handle the data once it's received
-          setContacts(response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching contacts data:", error);
-          // Check if the error response is 404 (Not Found)
-          if (error.response && error.response.status === 404) {
-            // Handle the case where no contacts are found
-            setContacts([]); // Set an empty array to trigger the "no contacts" message
-          } else if (
-            error.response &&
-            error.response.data &&
-            error.response.data.detail
-          ) {
-            const errorMessage = error.response.data.detail;
-            toast.error(errorMessage);
-          } else {
-            // If there is no specific error message, display a generic one
-            toast.error("Error: An error occurred.");
-          }
-        });
-    }
-  }, [accessToken.accessToken, pageID /* , limit, skip */]);
-
   const loadMoreContacts = () => {
     if (pageID && hasMore) {
       const apiUrl = generateApiUrl(
@@ -298,12 +253,12 @@ const Contacts = () => {
 
                     <button
                       onClick={() => handleToggleOptions()}
-                      className="inline-flex w-full justify-center items-center gap-x-1
+                      className="inline-flex w-full justify-start items-center gap-x-1 
                         text-sm  font-medium shadow-sm
                         font-ravi truncate
                         border rounded-lg p-1 h-full border-black me-1 bg-dark text-white"
                     >
-                      {selectedPage ? selectedPage.card_title : "Select"}
+                      {selectedPage ? selectedPage.card_title : "انتخاب"}
                     </button>
 
                     {showOptions && (
@@ -396,14 +351,14 @@ const Contacts = () => {
         <LoadingState />
       )}
 
-      {/* sub menu */}
+      {/* sub menu
       <BottomSheet
         showSubMenu={showSubMenu}
         handleSubMenuClose={() => {
           setShowSubMenu(false);
         }}
         childeren={<>test</>}
-      />
+      /> */}
 
       <ExelBottomSheet
         showExelSheet={showExelSheet}

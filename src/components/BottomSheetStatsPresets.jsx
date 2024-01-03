@@ -1,16 +1,12 @@
 import Link from "next/link";
 import React, { useState } from "react";
+import BottomSheetWrapper from "./bottomSheet/BottomSheetWrapper";
 
-const BottomSheetStatsPresets = ({
-  goToCal,
-  setGoToCal,
-  setFromDate,
-  setToDate
-}) => {
-  const handleBottomSheetSwitch = () => {
-    setGoToCal(!goToCal);
-  };
+import "react-modern-calendar-datepicker/lib/DatePicker.css";
+import { Calendar } from "react-modern-calendar-datepicker";
 
+const BottomSheetStatsPresets = ({ setFromDate, setToDate, onClose, open }) => {
+  const [showCal, setShowCal] = useState(false);
   const today = new Date(); // todays date
 
   // Create date objects for the preset dates
@@ -30,47 +26,85 @@ const BottomSheetStatsPresets = ({
     return `${year}-${month}-${day}`;
   };
 
+  // calendar
+
+  const defaultFrom = {
+    year: 2019,
+    month: 3,
+    day: 4
+  };
+
+  const defaultTo = {
+    year: 2019,
+    month: 3,
+    day: 7
+  };
+
+  const defaultRange = {
+    from: defaultFrom,
+    to: defaultTo
+  };
+
+  const [selectedDayRange, setSelectedDayRange] = useState(defaultRange);
+
   return (
-    <div className="mx-5">
-      <div className="flex justify-between ">
-        <button
-          onClick={() => {
-            setFromDate(formatDate(thirtyDaysAgo));
-            setToDate(formatDate(today));
-          }}
-          className="text-xs border-[1px] bg-black border-black text-white py-2 px-3 rounded-lg "
-        >
-          ۳۰ روز گذشته
-        </button>
-        <button
-          onClick={() => {
-            setFromDate(formatDate(fifteenDaysAgo));
-            setToDate(formatDate(today));
-          }}
-          className="text-xs border-[1px] bg-black border-black text-white py-2 px-3 rounded-lg "
-        >
-          ۱۵ روز گذشته
-        </button>
-        <button
-          onClick={() => {
-            setFromDate(formatDate(sevenDaysAgo));
-            setToDate(formatDate(today));
-          }}
-          className="text-xs border-[1px] bg-black border-black text-white py-2 px-3 rounded-lg "
-        >
-          ۷ روز گذشته
-        </button>
-      </div>
-      <div className="mt-5">
-        <button
-          onClick={handleBottomSheetSwitch}
-          className="flex justify-center items-center w-full py-2 rounded-lg border-[1px]
+    <BottomSheetWrapper onClose={onClose} open={open}>
+      <div className="py-5 ">
+        {/* presets */}
+        {!showCal && (
+          <div className="flex justify-between  ">
+            <button
+              onClick={() => {
+                setFromDate(formatDate(thirtyDaysAgo));
+                setToDate(formatDate(today));
+              }}
+              className="text-xs border-[1px] bg-black border-black text-white py-2 px-3 rounded-lg "
+            >
+              ۳۰ روز گذشته
+            </button>
+            <button
+              onClick={() => {
+                setFromDate(formatDate(fifteenDaysAgo));
+                setToDate(formatDate(today));
+              }}
+              className="text-xs border-[1px] bg-black border-black text-white py-2 px-3 rounded-lg "
+            >
+              ۱۵ روز گذشته
+            </button>
+            <button
+              onClick={() => {
+                setFromDate(formatDate(sevenDaysAgo));
+                setToDate(formatDate(today));
+              }}
+              className="text-xs border-[1px] bg-black border-black text-white py-2 px-3 rounded-lg "
+            >
+              ۷ روز گذشته
+            </button>
+          </div>
+        )}
+        {/* end of presets */}
+
+        {showCal && (
+          <div>
+            <Calendar
+              value={selectedDayRange}
+              onChange={setSelectedDayRange}
+              shouldHighlightWeekends
+            />
+          </div>
+        )}
+
+        <div className="mt-5">
+          <button
+            onClick={() => setShowCal(!showCal)}
+            className="flex justify-center items-center w-full py-2 rounded-lg border-[1px]
            border-black text-sm font-medium"
-        >
-          تنظیمات دلخواه
-        </button>
+          >
+            {showCal ? "تنظیمات دلخواه" : "پریست ها"}
+          </button>
+        </div>
       </div>
-    </div>
+    </BottomSheetWrapper>
   );
 };
 
