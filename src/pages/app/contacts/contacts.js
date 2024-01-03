@@ -8,7 +8,7 @@ import {
 } from "@/components/Icons";
 import Layout from "@/components/Layout";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useAccessToken } from "../../../../context/AccessTokenContext";
@@ -17,6 +17,10 @@ import LoadingState from "@/components/LoadingState";
 import InfiniteScroll from "react-infinite-scroll-component";
 import BottomSheet from "@/components/BottomSheet";
 import ContactDetails from "@/components/contacts/bottomSheet/ContactDetails";
+import ExelBottomSheet from "@/components/contacts/bottomSheet/ExelBottomSheet";
+import ContactFilters from "@/components/contacts/bottomSheet/ContactFilters";
+import _debounce from "lodash/debounce";
+import _ from "lodash";
 
 const Contacts = () => {
   const accessToken = useAccessToken();
@@ -33,7 +37,84 @@ const Contacts = () => {
   // Initialize selectedPage with the first page from pageData
   const [selectedPage, setSelectedPage] = useState(pageData[0] || null);
 
+  const [showExelSheet, setShowExelSheet] = useState(false);
+
   const [showOption, setShowOption] = useState(false);
+
+  const [showContactFilters, setShowContactFilters] = useState(false);
+
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const debouncedApiCall = useCallback(
+    _.debounce((searchQuery) => {
+      // Call the API with the search query
+      getAllContactsAsync({
+        pageID,
+        skip,
+        limit,
+        fromDate,
+        toDate,
+        searchQuery
+      });
+    }, 500),
+    [pageID, skip, limit, fromDate, toDate]
+  );
+
+  const getAllContactsAsync = ({
+    pageID,
+    skip,
+    limit,
+    fromDate,
+    toDate,
+    searchQuery
+  }) => {
+    if (pageID) {
+      const apiUrl = generateApiUrl(
+        `/api/v1/contacts/page/unified/${pageID}?skip=${skip}&limit=${limit}`
+      );
+
+      const params = {
+        from_date: fromDate,
+        to_date: toDate,
+        search: searchQuery
+      };
+
+      axios
+        .get(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${accessToken.accessToken}`,
+            "Accept-Language": "fa"
+          },
+          params: params
+        })
+        .then((response) => {
+          setContacts(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching contacts data:", error);
+          if (error.response && error.response.status === 404) {
+            setContacts([]);
+          } else if (
+            error.response &&
+            error.response.data &&
+            error.response.data.detail
+          ) {
+            const errorMessage = error.response.data.detail;
+            toast.error(errorMessage);
+          } else {
+            toast.error("Error: An error occurred.");
+          }
+        });
+    }
+  };
+
+  useEffect(() => {
+    debouncedApiCall(searchQuery);
+  }, [debouncedApiCall, searchQuery]);
+
   const toggleShowOption = () => {
     setShowOption(!showOption);
   };
@@ -102,8 +183,13 @@ const Contacts = () => {
 
   useEffect(() => {
     const apiUrl = generateApiUrl(
-      `/api/v1/contacts/page/unified/${pageID}/?skip=${skip}&limit=${limit}`
+      `/api/v1/contacts/page/unified/${pageID}?skip=${skip}&limit=${limit}`
     );
+
+    const params = {
+      from_date: fromDate,
+      to_date: toDate
+    };
 
     if (pageID) {
       // Make an Axios GET request to fetch user data
@@ -112,7 +198,8 @@ const Contacts = () => {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`, // Add your access token here
             "Accept-Language": "fa" // Language header
-          }
+          },
+          params: params
         })
         .then((response) => {
           // Handle the data once it's received
@@ -138,9 +225,6 @@ const Contacts = () => {
         });
     }
   }, [accessToken.accessToken, pageID /* , limit, skip */]);
-
-  console.log("pageData", pageData);
-  console.log("contacts", contacts);
 
   const loadMoreContacts = () => {
     if (pageID && hasMore) {
@@ -191,6 +275,12 @@ const Contacts = () => {
     setContacts([]); // Clear existing contacts when pageID changes
   }, [pageID]);
 
+  const handleSearchInputChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    debouncedApiCall(value);
+  };
+
   return (
     <>
       {pageData ? (
@@ -206,7 +296,6 @@ const Contacts = () => {
                   <div className="col-span-4 flex justify-center items-center relative">
                     {/* <span className="truncate">{page.card_title}</span> */}
 
-                    {/* <div className=""> */}
                     <button
                       onClick={() => handleToggleOptions()}
                       className="inline-flex w-full justify-center items-center gap-x-1
@@ -234,7 +323,6 @@ const Contacts = () => {
                         </div>
                       </div>
                     )}
-                    {/* </div> */}
                   </div>
 
                   {/* wide */}
@@ -248,22 +336,27 @@ const Contacts = () => {
                     <input
                       type="search"
                       placeholder=""
-                      className="bg-light ms-2 px-3 w-1"
+                      className="bg-light ms-2 px-3 w-full outline-none"
+                      value={searchQuery}
+                      onChange={handleSearchInputChange}
                     />
                   </div>
                 </div>
               </div>
               {/* tag1 */}
-              <button className="col-span-2 border-[1px] border-dark p-[12px] rounded-lg mx-1 font-ravi">
+              <span
+                onClick={() => setShowContactFilters(true)}
+                className="col-span-2 border-[1px] border-dark p-[12px] rounded-lg mx-1 font-ravi"
+              >
                 <ContactsFilterIcon />
-              </button>
+              </span>
               {/* tag2 */}
-              <Link
-                href="/src/pages"
+              <span
+                onClick={() => setShowExelSheet(true)}
                 className="col-span-2 border-[1px] border-dark p-[12px] rounded-lg flex justify-center items-center"
               >
                 <ContactsImportIcon />
-              </Link>
+              </span>
             </div>
             {/* button */}
             {/* <Link
@@ -279,7 +372,7 @@ const Contacts = () => {
                 className="flex justify-center items-center mt-[130px] bg-muted py-4 
               opacity-40 rounded-md overflow-hidden"
               >
-                هیچ مخاطبی برای این کارت یافت نشد
+                هیچ مخاطبی یافت نشد
               </span>
             ) : (
               <div className="max-h-full px-2 overflow-hidden">
@@ -312,10 +405,20 @@ const Contacts = () => {
         childeren={<>test</>}
       />
 
-      {/* <ContactsCards
-      // showContactDetails={showContactDetails}
-      // setShowContactDetails={setShowContactDetails}
-      /> */}
+      <ExelBottomSheet
+        showExelSheet={showExelSheet}
+        setShowExelSheet={setShowExelSheet}
+        pageID={pageID}
+      />
+
+      <ContactFilters
+        showContactFilters={showContactFilters}
+        setShowContactFilters={setShowContactFilters}
+        fromDate={fromDate}
+        setFromDate={setFromDate}
+        toDate={toDate}
+        setToDate={setToDate}
+      />
     </>
   );
 };
