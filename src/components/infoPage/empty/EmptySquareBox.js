@@ -73,7 +73,6 @@ const EmptySquareBox = ({
   };
 
   const removeItem = (item) => {
-    console.log("item => ", item);
     const oldData = [...localItemsSelected];
     const result = oldData.filter((row) => {
       return row?.guid != item.guid ? row : undefined;
@@ -221,9 +220,6 @@ const EmptySquareBox = ({
     return acc;
   }, {});
 
-  console.log("localItemsSelected", localItemsSelected);
-  console.log("object main order", groupedSquares);
-
   return (
     <>
       {/* Preview heading */}
@@ -288,6 +284,7 @@ const EmptySquareBox = ({
                       </p>
                       <p className="font-medium text-xs text-muted mt-2 mb-5 line-clamp-2">
                         {squares[1]?.description}
+                        {"\u00A0"}
                       </p>
                     </div>
                   ) : (
@@ -364,6 +361,7 @@ const EmptySquareBox = ({
                       </p>
                       <p className="font-medium text-xs text-muted mt-2 mb-5 line-clamp-2">
                         {squares[2]?.description}
+                        {"\u00A0"}
                       </p>
                     </div>
                   ) : (

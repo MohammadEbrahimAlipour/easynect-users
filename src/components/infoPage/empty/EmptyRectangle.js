@@ -14,14 +14,11 @@ const EmptyRectangle = ({
   editItem
 }) => {
   const [showOptionList, setShowOptionList] = useState(false);
-  // const flattenedData = extractedData.flat();
   const [selectedId, setSelectedId] = useState(null); // New state for holding the selected id.
   const [myKey, setMyKey] = useState(0); // New state for holding the selected id.
 
   const [selectedItemsDetails, setSelectedItemsDetails] = useState(data.data);
   const [saveItemIdForEdit, setSaveItemIdForEdit] = useState(null);
-  // console.log("selectedItemsDetails", selectedItemsDetails);
-  console.log("$$$$$$$updatedExtractedData", updatedExtractedData);
 
   useEffect(() => {
     setExtractedData(extractedData);
@@ -49,11 +46,11 @@ const EmptyRectangle = ({
   // logs
 
   // Use useEffect to log after the state has been updated
-  useEffect(() => {
-    console.log("selectedItemsDetails updated", selectedItemsDetails);
+  // useEffect(() => {
+  //   console.log("selectedItemsDetails updated", selectedItemsDetails);
 
-    console.log("updated", updatedExtractedData);
-  }, [selectedItemsDetails, updatedExtractedData]);
+  //   console.log("updated", updatedExtractedData);
+  // }, [selectedItemsDetails, updatedExtractedData]);
 
   return (
     <>
