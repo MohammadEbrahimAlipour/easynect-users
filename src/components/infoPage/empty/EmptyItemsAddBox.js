@@ -94,7 +94,6 @@ const EmptyItemsAddBox = ({ horizontalData, pageId, listItems }) => {
     setDataToSend(newDataToSend);
 
     // Do something with the selected object, for example, log it
-    console.log("Selected Object:", selectedObject);
   };
 
   // Function to submit the form

@@ -42,7 +42,7 @@ const RectangleData = ({ object }) => {
           />
         </div>
         <p className="col-span-3 font-semibold text-xs ms-1 overflow-hidden">
-          {object?.data[0]?.title}:
+          {object?.data[0]?.title}
         </p>
       </>
     </div>

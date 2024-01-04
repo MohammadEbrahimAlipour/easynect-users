@@ -99,7 +99,6 @@ END:VCARD
     }
   };
 
-  console.log("pageViewData", pageViewData);
   // end of patch functions
 
   const handleOptionClick = (option) => {
@@ -285,7 +284,6 @@ END:VCARD
     setUpdatedExtractedData(newData);
   };
 
-  console.log("data", pageViewData);
   return (
     <>
       {noCard !== null ? (

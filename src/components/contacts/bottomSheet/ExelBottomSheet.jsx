@@ -114,7 +114,7 @@ const ExelBottomSheet = ({ showExelSheet, setShowExelSheet, pageID }) => {
                 setFromDate(formatDate(thirtyDaysAgo));
                 setToDate(formatDate(today));
               }}
-              className={`text-xs border-[1px] border-black text-white py-2 px-3 rounded-lg whitespace-nowrap overflow-hidden
+              className={`text-xs border-[1px] border-black  py-2 px-3 rounded-lg whitespace-nowrap overflow-hidden
               ${
                 fromDate === formatDate(thirtyDaysAgo) &&
                 toDate === formatDate(today)
@@ -130,7 +130,7 @@ const ExelBottomSheet = ({ showExelSheet, setShowExelSheet, pageID }) => {
                 setFromDate(formatDate(fifteenDaysAgo));
                 setToDate(formatDate(today));
               }}
-              className={`text-xs border-[1px] border-black text-white py-2 px-3 rounded-lg mx-2 whitespace-nowrap overflow-hidden
+              className={`text-xs border-[1px] border-black  py-2 px-3 rounded-lg mx-2 whitespace-nowrap overflow-hidden
               ${
                 fromDate === formatDate(fifteenDaysAgo) &&
                 toDate === formatDate(today)
@@ -146,7 +146,7 @@ const ExelBottomSheet = ({ showExelSheet, setShowExelSheet, pageID }) => {
                 setFromDate(formatDate(sevenDaysAgo));
                 setToDate(formatDate(today));
               }}
-              className={`text-xs border-[1px]  border-black text-white py-2 px-3 rounded-lg whitespace-nowrap overflow-hidden
+              className={`text-xs border-[1px]  border-black  py-2 px-3 rounded-lg whitespace-nowrap overflow-hidden
               ${
                 fromDate === formatDate(sevenDaysAgo) &&
                 toDate === formatDate(today)
