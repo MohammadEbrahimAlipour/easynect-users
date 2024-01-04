@@ -67,12 +67,12 @@ const BottomSheetMore = ({
                 </li>
 
                 {/* delete option */}
-                <li>
+                {/* <li>
                   <SubMenuOptions
                     title="غیر فعال سازی"
                     className="text-[#EB5757]"
                   />
-                </li>
+                </li> */}
               </ul>
             </div>
           </BottomSheetWrapper>

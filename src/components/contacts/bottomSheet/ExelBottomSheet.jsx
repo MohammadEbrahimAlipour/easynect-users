@@ -157,7 +157,7 @@ const ExelBottomSheet = ({ showExelSheet, setShowExelSheet, pageID }) => {
               ۷ روز گذشته
             </span>
           </div>
-          <div className="mt-5">
+          {/* <div className="mt-5">
             <span
               onClick={handleBottomSheetSwitch}
               className="flex justify-center items-center w-full py-2 rounded-lg border-[1px]
@@ -165,7 +165,7 @@ const ExelBottomSheet = ({ showExelSheet, setShowExelSheet, pageID }) => {
             >
               تنظیمات دلخواه
             </span>
-          </div>
+          </div> */}
         </div>
 
         <button

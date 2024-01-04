@@ -106,21 +106,26 @@ END:VCARD
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
-          // Check if the error response contains a message
-          if (
-            error.response &&
-            error.response.data &&
-            error.response.data.detail
-          ) {
-            const errorMessage = error.response.data.detail;
-            toast.error(errorMessage);
+          // Check if the error response is a 404 Not Found
+          if (error.response && error.response.status === 404) {
+            // Redirect to the custom 404 page using Next.js router
+            router.push("/404"); // Adjust the path as needed
           } else {
-            // If there is no specific error message, display a generic one
-            toast.error("Error: An error occurred.");
+            // Handle other errors
+            if (
+              error.response &&
+              error.response.data &&
+              error.response.data.detail
+            ) {
+              const errorMessage = error.response.data.detail;
+              toast.error(errorMessage);
+            } else {
+              toast.error("Error: An error occurred.");
+            }
           }
         });
     }
-  }, [username]);
+  }, [username, router]);
 
   useEffect(() => {
     // Ensure usersData.contents exists and is an array before trying to flatten it
@@ -133,13 +138,18 @@ END:VCARD
   return (
     <>
       {/* main */}
-
+      {/* lead btn */}
+      {/* <span className="flex justify-end mt-8 ml-5">
+        <span className=" bg-dark text-white px-2 py-1 rounded-md text-xs">
+          فرم لید
+        </span>
+      </span> */}
       {usersData?.horizontal_menu ? (
         <>
           <div className="flex flex-col justify-center items-center mt-[45px]">
             <div
               id="photo_here"
-              className=" box-contentw-[80px] h-[80px] rounded-full
+              className=" box-content rounded-full
                   overflow-hidden flex items-center justify-center"
             >
               {/* profile photo */}
@@ -225,6 +235,7 @@ END:VCARD
             onClose={() => setHasLeadForm(false)}
             leadFormData={usersData.lead_form}
             pageId={usersData.page_id}
+            setHasLeadForm={setHasLeadForm}
           />
         )}
       </>

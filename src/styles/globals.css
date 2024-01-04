@@ -22,3 +22,16 @@ body {
   -ms-transform: translateX(-100%);
   -o-transform: translateX(-100%);
 }
+
+/* text shadow  */
+.custom-text-shadow-zero {
+  text-shadow: 10px 9px 4px rgba(0, 0, 0, 0.6);
+}
+/* text shadow  */
+.custom-text-shadow-left4 {
+  text-shadow: 5px 9px 4px rgba(0, 0, 0, 0.2);
+}
+
+.custom-text-shadow-right4 {
+  text-shadow: 11px 11px 8px rgba(0, 0, 0, 0.6);
+}
