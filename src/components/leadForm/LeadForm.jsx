@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { useAccessToken } from "../../../context/AccessTokenContext";
 import { generateApiUrl } from "../ApiUr";
 
-const LeadForm = ({ open, onClose, leadFormData, pageId }) => {
+const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
   const accessToken = useAccessToken();
 
   const [formData, setFormData] = useState({
@@ -68,8 +68,9 @@ const LeadForm = ({ open, onClose, leadFormData, pageId }) => {
         // Send PATCH request using Axios, add the formDataToSend
         const response = await axios.post(apiUrl, formDataToSend);
 
-        if (response.status === 200) {
-          toast.success("Content updated successfully");
+        if (response.status === 204) {
+          toast.success("فرم لید ارسال شد");
+          setHasLeadForm(false);
         } else {
           console.error("Unexpected response status:", response.status);
         }

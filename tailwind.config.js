@@ -30,6 +30,15 @@ module.exports = {
         }
       },
 
+      textShadow: {
+        // Default text shadow utility
+        default: "1px 1px 2px rgba(0, 0, 0, 0.1)",
+        // Customizable shadow styles
+        md: "2px 2px 3px rgba(0, 0, 0, 0.1)",
+        lg: "3px 3px 5px rgba(0, 0, 0, 0.2)"
+        // ... More styles as needed
+      },
+
       // extend: {
       //   fontFamily: {
       //     ravi: ["var(--font-rav)", ...fontFamily.sans]
