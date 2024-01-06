@@ -307,7 +307,7 @@ const EditProfileInfo = () => {
                   ویرایش آیتم ها
                 </Link> */}
                 <Link
-                  href={`/mediaSelection?id=${id}`}
+                  href={`/app/cards/items/mediaSelection?id=${id}`}
                   className="border-[1px] border-black px-4 py-3 rounded-lg mb-2 flex justify-center
               items-center"
                 >

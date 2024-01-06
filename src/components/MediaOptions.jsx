@@ -26,7 +26,7 @@ const MediaOptions = ({ item }) => {
           </label>
           <div className="flex flex-row w-full justify-between items-center pe-3">
             <Link
-              href={`/editMediaSettingsHorz?id=${item.id}`}
+              href={`/app/cards/items/editMediaSettingsHorz?id=${item.id}`}
               className="bg-lightMenu outline-0 font-semibold text-sm"
             >
               {item.title}

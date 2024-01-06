@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Devider from "@/components/Devider";
 import { useRouter } from "next/router";
-import { useAccessToken } from "../../context/AccessTokenContext";
+import { useAccessToken } from "../../../../context/AccessTokenContext";
 import axios from "axios";
 import { generateApiUrl } from "@/components/ApiUr";
 import { toast } from "react-toastify";
 import EasynecVertLogo from "@/components/icons/EasynecVertLogo";
 import Image from "next/image";
 import IconReg from "@/components/icons/IconReg";
-import bgGradient from "../../public/images/backgrounds/bgGradient.jpg";
+import bgGradient from "../../../../public/images/backgrounds/bgGradient.jpg";
 import { motion } from "framer-motion";
 
 const LoginUser = () => {
@@ -62,10 +62,10 @@ const LoginUser = () => {
         // Redirect to cards page
         router.push("/app/cards/profileCard");
 
-        // Handle successful login, e.g., redirect or set user authentication state
+        // Handle successful signIn, e.g., redirect or set user authentication state
         console.log("Login successful");
       } else {
-        // Handle login error, e.g., display an error message
+        // Handle signIn error, e.g., display an error message
         console.error("Login failed");
 
         // const errorMessage = response.data?.detail || "An error occurred";
@@ -135,7 +135,7 @@ const LoginUser = () => {
         </div>
 
         <h3 className="font-semibold text-lg mt-7 mb-3">ورود</h3>
-        <Link href="/registerUser" className="flex justify-start items-center">
+        <Link href="/registration/signUp/registerUser" className="flex justify-start items-center">
           <span className="text-muted me-1">تازه اومدین؟ </span>
           ثبت‌نام کنید
         </Link>
@@ -167,7 +167,7 @@ const LoginUser = () => {
               onChange={handleChange}
             />
             <span className="absolute left-1 text-xs bg-muted text-white rounded-md py-2 px-3 overflow-hidden">
-              <Link href="/forgotPassword" className=" whitespace-nowrap ">
+              <Link href="/registration/signIn/forgotPassword" className=" whitespace-nowrap ">
                 فراموش کرده‌اید؟
               </Link>
             </span>

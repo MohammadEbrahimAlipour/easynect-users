@@ -3,7 +3,7 @@ import HeaderTwo from "@/components/HeaderTwo";
 import Layout from "@/components/Layout";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useAccessToken } from "../../context/AccessTokenContext";
+import { useAccessToken } from "../../../../../context/AccessTokenContext";
 import { toast } from "react-toastify";
 import { generateApiUrl } from "@/components/ApiUr";
 import Link from "next/link";
@@ -89,7 +89,7 @@ const ContentStoreAddItem = () => {
                     .find((cat) => cat.category === selectedCategory)
                     .contents_store.map((item) => (
                       <Link
-                        href={`/mediaSettingsHorz?id=${item.id}&pageId=${id}&type=${item.type_}`}
+                        href={`/app/cards/items/mediaSettingsHorz?id=${item.id}&pageId=${id}&type=${item.type_}`}
                         key={item.id}
                         className="flex flex-col justify-center items-center me-3 mb-5"
                       >

@@ -33,7 +33,7 @@ const HomePage = () => {
         router.push("/app/cards/profileCard");
       } else {
         // Redirect to "/loginUser" if access token doesn't exist
-        router.push("/loginUser");
+        router.push("/registration/signIn/loginUser");
       }
     }
   }, [isVisitorFirstTime, router, accessToken.accessToken]);

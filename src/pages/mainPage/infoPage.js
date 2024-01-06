@@ -6,8 +6,8 @@ import ProfileImage from "@/components/ProfileImage";
 import ClientPageFooter from "@/components/ClientPageFooter";
 import HorzCarousel from "@/components/infoCarousel/HorzCarousel";
 import Layout from "@/components/Layout";
-import sampleImage from "../../public/images/NIKBAKHT.png";
-import { useAccessToken } from "../../context/AccessTokenContext";
+import sampleImage from "../../../public/images/NIKBAKHT.png";
+import { useAccessToken } from "../../../context/AccessTokenContext";
 import Link from "next/link";
 import { toast } from "react-toastify";
 

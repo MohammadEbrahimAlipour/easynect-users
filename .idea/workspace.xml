@@ -5,11 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e485ecf0-2a62-4124-95b9-8fcf0d3fef6f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pages/[username].js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitlab-ci.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.gitlab-ci.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/[pageView].js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/context/AccessTokenContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/context/AccessTokenContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Footer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Footer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/MediaOptions.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MediaOptions.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/cards/editProfileInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/editProfileInfo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/contents/horz/createHorzItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/contents/horz/createHorzItem.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/contents/horz/editHorzItems.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/contents/horz/editHorzItems.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/profile/changeMail/newEmailOtp.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/profile/changeMail/newEmailOtp.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/app/profile/profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/profile/profile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/confrimEmailCode.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/contentAddItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/items/contentAddItem.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/editMediaSettingsHorz.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/items/editMediaSettingsHorz.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/editMedias.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/forgotPassword.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/registration/signIn/forgotPassword.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/forgotPasswordSuccessful.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/registration/signIn/forgotPasswordSuccessful.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/infoPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/mainPage/infoPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/loginUser.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/registration/signIn/loginUser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/mediaSelection.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/items/mediaSelection.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/mediaSettingsHorz.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/items/mediaSettingsHorz.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/registerUser.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/registration/signUp/registerUser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/startHere/startHere.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/startHere/startHere.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/verifyOTP.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/registration/signUp/verifyOTP.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,11 +72,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/pages/app/cards" />
-      <recent name="$PROJECT_DIR$/src/pages/appNect/cards" />
-      <recent name="$PROJECT_DIR$/src/pages/appNect/profile/info" />
-      <recent name="$PROJECT_DIR$/src/pages/appNect/profile/changePass" />
-      <recent name="$PROJECT_DIR$/src/pages/appNect/profile/changeMail" />
+      <recent name="$PROJECT_DIR$/src/pages/mainPage" />
+      <recent name="$PROJECT_DIR$/src/pages/registration/signIn" />
+      <recent name="$PROJECT_DIR$/src/pages/app/cards/items" />
+      <recent name="$PROJECT_DIR$/src/pages/registration/signUp" />
+      <recent name="$PROJECT_DIR$/src/pages/registration/login" />
     </key>
   </component>
   <component name="RunManager">
@@ -97,6 +116,7 @@
       <workItem from="1703496340439" duration="2489000" />
       <workItem from="1703589001658" duration="41000" />
       <workItem from="1703589044925" duration="118000" />
+      <workItem from="1704447673256" duration="5294000" />
     </task>
     <servers />
   </component>

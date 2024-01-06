@@ -70,7 +70,7 @@ const StartHere = () => {
           </div>
           {/* next btn */}
           <Link
-            href="/registerUser"
+            href="/registration/signUp/registerUser"
             className=" bg-dark text-white py-3 px-14 rounded-md"
           >
             {/* <div className="bg-dark w-[50px] h-[50px] flex justify-center items-center rounded-full">

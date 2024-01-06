@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import HeaderTwo from "@/components/HeaderTwo";
 import { useRouter } from "next/router";
-import { useAccessToken } from "../../context/AccessTokenContext";
+import { useAccessToken } from "../../../../../context/AccessTokenContext";
 import { generateApiUrl } from "@/components/ApiUr";
 import { toast } from "react-toastify";
 import Image from "next/image";
@@ -76,7 +76,7 @@ const MediaSelection = () => {
           {/* bottom side btns */}
           <div className="text-sm text-center w-full flex flex-col mt-5">
             <Link
-              href={`/contentAddItem?id=${id}`}
+              href={`/app/cards/items/contentAddItem?id=${id}`}
               className="border-[1px] border-black px-4 py-3 rounded-lg mb-2 flex justify-center
               items-center"
             >

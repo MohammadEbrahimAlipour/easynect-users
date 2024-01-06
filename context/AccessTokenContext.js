@@ -32,7 +32,7 @@ export const AccessTokenProvider = ({ children, protectedRoutes }) => {
 
   useEffect(() => {
     if (!accessToken && isProtectedRoute(router.pathname)) {
-      router.push("/loginUser");
+      router.push("/registration/signIn/loginUser");
     }
   }, [accessToken, router.pathname, router]);
 
@@ -43,7 +43,7 @@ export const AccessTokenProvider = ({ children, protectedRoutes }) => {
         if (error.response && error.response.status === 401) {
           setAccessToken(null); // Clear invalid token
           if (isProtectedRoute(router.pathname)) {
-            router.push("/loginUser");
+            router.push("/registration/signIn/loginUser");
           }
         }
         return Promise.reject(error);

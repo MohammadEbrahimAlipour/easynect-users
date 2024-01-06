@@ -5,7 +5,7 @@ import { ChosenTik, InfoIcon, LinkedIn } from "@/components/Icons";
 import Footer from "@/components/Footer";
 import HeaderTwo from "@/components/HeaderTwo";
 import { useRouter } from "next/router";
-import { useAccessToken } from "../../context/AccessTokenContext";
+import { useAccessToken } from "../../../../../context/AccessTokenContext";
 import { generateApiUrl } from "@/components/ApiUr";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -168,7 +168,7 @@ const MediaSettingsHorz = () => {
           // Handle success, for example, redirect to a success page
           console.log("User created successfully!");
           toast.success("updated successfully");
-          router.push(`/mediaSelection?id=${pageId}`);
+          router.push(`/app/cards/items/mediaSelection?id=${pageId}`);
         } else {
           // Handle other status codes or show an error message if needed
           console.error("Unexpected response status:", response.status);

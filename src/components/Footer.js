@@ -79,7 +79,7 @@ const Footer = ({ className = "" }) => {
 
         {/* logo */}
         <Link
-          href="/infoPage"
+          href="/mainPage/infoPage"
           className="relative bottom-8 3xl:col-span-4 2xl:col-span-4 md:col-span-4 me-1"
         >
           <div className="w-[75px] h-[75px] bg-dark rounded-full flex justify-center items-center m-auto">

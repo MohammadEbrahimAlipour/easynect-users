@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { generateApiUrl } from "@/components/ApiUr";
-import { useAccessToken } from "../../context/AccessTokenContext";
+import { useAccessToken } from "../../../../context/AccessTokenContext";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -41,7 +41,7 @@ const ForgotPassword = () => {
         // Handle success, for example, redirect to a success page
         console.log("Password sent successfully");
         toast.success("ایمیل بازیابی رمز عبور با موفقیت ارسال شد");
-        router.push("/loginUser");
+        router.push("/registration/signIn/forgotPasswordSuccessful");
       } else {
         // Handle other status codes or show an error message if needed
         console.error("Unexpected response status:", response.status);

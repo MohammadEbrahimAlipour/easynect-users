@@ -43,7 +43,7 @@ const Profile = () => {
       });
 
       if (response.status === 204) {
-        // Logout was successful, you can redirect to a login page or perform any other actions
+        // Logout was successful, you can redirect to a signIn page or perform any other actions
         setAccessToken(null);
         localStorage.removeItem("accessToken");
 
