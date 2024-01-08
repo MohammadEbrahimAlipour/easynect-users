@@ -11,7 +11,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 import {
-  CloseIcon,
   DeleteIconLead,
   PlusSign,
   TickSuccess,
@@ -27,8 +26,13 @@ const Lead = () => {
   const router = useRouter();
   const { id } = router.query;
   const [hasLeadForm, setHasLeadForm] = useState(null);
+  const [leadFields, setLeadFields] = useState([]);
 
   console.log("leadData", leadData);
+
+  useEffect(() => {
+    setLeadFields(leadData?.fields);
+  }, [leadData]);
 
   useEffect(() => {
     const apiUrl = generateApiUrl(`/api/v1/leads/${id}`);
@@ -88,6 +92,10 @@ const Lead = () => {
       .then((response) => {
         // Handle the successful deletion (e.g., update the UI)
         console.log("User deleted successfully.");
+        // Update the UI by removing the deleted item from leadFields state
+        setLeadFields((prevLeadFields) =>
+          prevLeadFields.filter((field) => field.id !== leadId)
+        );
       })
       .catch((error) => {
         console.error("Error deleting item:", error);
@@ -122,6 +130,22 @@ const Lead = () => {
       .then((response) => {
         // Handle the successful deletion (e.g., update the UI)
         console.log("Is active state changed.");
+        // Find the index of the field in leadFields
+        const updatedIndex = leadFields.findIndex(
+          (field) => field.id === leadId
+        );
+
+        // Update the is_active property in the leadFields state
+        if (updatedIndex !== -1) {
+          setLeadFields((prevLeadFields) => {
+            const newLeadFields = [...prevLeadFields];
+            newLeadFields[updatedIndex] = {
+              ...newLeadFields[updatedIndex],
+              is_active: !newLeadFields[updatedIndex].is_active // Toggle is_active state
+            };
+            return newLeadFields;
+          });
+        }
       })
       .catch((error) => {
         console.error("Error deleting item:", error);
@@ -139,6 +163,7 @@ const Lead = () => {
       });
   };
 
+  console.log("leadData999", leadFields);
   return (
     <>
       <HeaderTwo />
@@ -149,18 +174,25 @@ const Lead = () => {
         {noData !== undefined && !noData && (
           <Fragment>
             {/* each item */}
-            {leadData.fields !== undefined ? (
+            {leadFields ? (
               <>
-                {leadData.fields.map((item) => (
+                {leadFields.map((item) => (
                   <div
                     key={item.id}
                     className="bg-lightMenu rounded-lg mb-2 border-2 box-border overflow-hidden"
                   >
                     <div className="grid grid-cols-12 justify-start items-center py-3">
                       {/* title */}
-                      <p className="col-span-3 font-medium text-sm border-e-2  ps-2 truncate">
-                        {item.title}
-                      </p>
+
+                      <span className="col-span-3 rounded-md flex justify-center items-center overflow-hidden me-1">
+                        <Image
+                          className="rounded-md"
+                          alt="icon"
+                          src={item.s3_icon_url}
+                          width={34}
+                          height={34}
+                        />
+                      </span>
 
                       {/* placeholder */}
                       <span className="col-span-6 ms-1 bg-lightMenu flex  justify-between items-center me-3 w-full overflow-hidden">

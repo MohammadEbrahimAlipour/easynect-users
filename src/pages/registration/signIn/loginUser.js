@@ -5,16 +5,15 @@ import { useRouter } from "next/router";
 import { useAccessToken } from "../../../../context/AccessTokenContext";
 import axios from "axios";
 import { generateApiUrl } from "@/components/ApiUr";
-import { toast } from "react-toastify";
 import EasynecVertLogo from "@/components/icons/EasynecVertLogo";
 import Image from "next/image";
 import IconReg from "@/components/icons/IconReg";
 import bgGradient from "../../../../public/images/backgrounds/bgGradient.jpg";
 import { motion } from "framer-motion";
+import { loginUser } from "@/services/api";
 
 const LoginUser = () => {
   const router = useRouter();
-  // const [serverErrorMessage, setServerErrorMessage] = useState("");
 
   // To fill access token
   const { setAccessToken } = useAccessToken();
@@ -33,55 +32,20 @@ const LoginUser = () => {
     e.preventDefault();
 
     try {
-      // Define the API endpoint URL
-      const apiUrl = generateApiUrl("/api/v1/login/");
+      const accessToken = await loginUser(formData);
 
-      // Define the headers object with the necessary headers
-      const headers = {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "accept-language": "fa"
-      };
-
-      // Send a POST request with the form data and headers using Axios
-      const response = await axios.post(apiUrl, formData, { headers });
-
-      if (response.status === 200) {
-        // Parse the JSON response to extract the access_token
-        const data = response.data;
-        const accessToken = data.access_token;
-
-        // Set the accessToken using the context
+      if (accessToken) {
         setAccessToken(accessToken);
 
-        // Check if localStorage is available before using it
         if (typeof localStorage !== "undefined") {
-          // Store the accessToken in localStorage
           localStorage.setItem("accessToken", accessToken);
         }
 
-        // Redirect to cards page
         router.push("/app/cards/profileCard");
-
-        // Handle successful signIn, e.g., redirect or set user authentication state
-        console.log("Login successful");
-      } else {
-        // Handle signIn error, e.g., display an error message
-        console.error("Login failed");
-
-        // const errorMessage = response.data?.detail || "An error occurred";
-        // setServerErrorMessage(errorMessage);
       }
     } catch (error) {
-      // Handle network errors or other exceptions
-      console.error("An error occurred:", error);
-      // Check if the error response contains a message
-      if (error.response && error.response.data && error.response.data.detail) {
-        const errorMessage = error.response.data.detail;
-        toast.error(errorMessage);
-      } else {
-        // If there is no specific error message, display a generic one
-        toast.error("ارور ناشناخته");
-      }
+      // The error has already been logged in the `loginUser` function
+      // You can add additional error handling here if needed
     }
   };
 
@@ -135,7 +99,10 @@ const LoginUser = () => {
         </div>
 
         <h3 className="font-semibold text-lg mt-7 mb-3">ورود</h3>
-        <Link href="/registration/signUp/registerUser" className="flex justify-start items-center">
+        <Link
+          href="/registration/signUp/registerUser"
+          className="flex justify-start items-center"
+        >
           <span className="text-muted me-1">تازه اومدین؟ </span>
           ثبت‌نام کنید
         </Link>
@@ -167,7 +134,10 @@ const LoginUser = () => {
               onChange={handleChange}
             />
             <span className="absolute left-1 text-xs bg-muted text-white rounded-md py-2 px-3 overflow-hidden">
-              <Link href="/registration/signIn/forgotPassword" className=" whitespace-nowrap ">
+              <Link
+                href="/registration/signIn/forgotPassword"
+                className=" whitespace-nowrap "
+              >
                 فراموش کرده‌اید؟
               </Link>
             </span>

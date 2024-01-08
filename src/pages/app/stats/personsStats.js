@@ -36,14 +36,16 @@ const PersonsStats = () => {
   const [goToCal, setGoToCal] = useState(false); //to navigate inside bottom sheet setting
 
   // handle date values for custom date
-  const [fromDate, setFromDate] = useState("2023-10-01");
-  const [toDate, setToDate] = useState("2023-10-08");
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
 
   // below code handles two buttons above chart
   const [showSubMenu, setShowSubMenu] = useState(false);
   const [comingSoon, setComingSoon] = useState(true);
 
   const [selectedOption, setSelectedOption] = useState("view"); //value to pass to chart
+
+  console.log("statsData");
 
   // options
   const handleOptionChange = (event) => {
@@ -428,60 +430,11 @@ const PersonsStats = () => {
 
                   {selectedButton === "hm_item" && "hm_item"}
                 </p>
-
-                {/* left side btns */}
-                <div className="text-sm">
-                  <button
-                    id="horz"
-                    value="content"
-                    className={`me-3 border-[1px] border-black px-4 py-1 rounded-lg ${
-                      isSelected === "content"
-                        ? "bg-dark text-white"
-                        : "bg-white"
-                    }`}
-                    onClick={() => {
-                      handleButtonClick("content");
-                      setIsSelected("content"); // Update isSelected state
-                    }}
-                  >
-                    افقی
-                  </button>
-                  <button
-                    id="vert"
-                    value="hm_item"
-                    className={`${
-                      isSelected === "hm_item"
-                        ? "bg-dark text-white"
-                        : "bg-white"
-                    } px-4 py-1 rounded-lg border-[1px] border-black`}
-                    onClick={() => {
-                      handleButtonClick("hm_item");
-                      setIsSelected("hm_item"); // Update isSelected state
-                    }}
-                  >
-                    عمودی
-                  </button>
-                </div>
               </div>
               <div>
                 {/* Conditionally render content based on selectedButton */}
 
-                {selectedButton === "content" &&
-                  // Render content for the "content" button
-
-                  pageData.map((item) => (
-                    <StatsHorz
-                      key={item.id}
-                      item={item}
-                      // s3_icon_url={item.s3_icon_url}
-                    />
-                  ))}
-
-                {selectedButton === "hm_item" &&
-                  // Render content for the "hm_item" button
-                  pageData.map((item) => (
-                    <StatsVert key={item.id} item={item} />
-                  ))}
+                <p>آیتم های بیشتر</p>
               </div>
             </div>
           </Layout>

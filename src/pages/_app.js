@@ -9,6 +9,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "swiper/css";
+import ErrorBoundary from "@/components/Errors/ErrorBoundary";
 
 const raviFont = raviFontLocal({
   src: "../RaviPro/Ravi Variable/Webfonts/woff2/Ravi-VF.woff2",
@@ -29,9 +30,11 @@ export default function App({ Component, pageProps }) {
         className={`${raviFont.variable} font-ravi w-full flex justify-center`}
       >
         <div className=" 3xl:w-[414px] 2xl:w-[414px] lg:w-[414px]">
-          <AccessTokenProvider protectedRoutes={protectedRoutes}>
-            <Component {...pageProps} />
-          </AccessTokenProvider>
+          <ErrorBoundary>
+            <AccessTokenProvider protectedRoutes={protectedRoutes}>
+              <Component {...pageProps} />
+            </AccessTokenProvider>
+          </ErrorBoundary>
         </div>
       </main>
 

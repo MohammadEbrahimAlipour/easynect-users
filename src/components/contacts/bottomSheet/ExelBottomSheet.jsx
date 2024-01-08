@@ -4,13 +4,74 @@ import React, { useState, useEffect } from "react";
 import { useAccessToken } from "../../../../context/AccessTokenContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import "@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css";
+import { Calendar } from "@hassanmojab/react-modern-calendar-datepicker";
+
+// Import the jalaali-js library for converting Shamsi to Gregorian dates
+import jalaali from "jalaali-js";
+
+const formatDate = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const today = new Date(); // todays date
+
+// Create date objects for the preset dates
+const thirtyDaysAgo = new Date();
+thirtyDaysAgo.setDate(today.getDate() - 30);
+
+const fifteenDaysAgo = new Date();
+fifteenDaysAgo.setDate(today.getDate() - 15);
+
+const sevenDaysAgo = new Date();
+sevenDaysAgo.setDate(today.getDate() - 7);
 
 const ExelBottomSheet = ({ showExelSheet, setShowExelSheet, pageID }) => {
   const accessToken = useAccessToken();
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
-  const [exelFile, setExelFile] = useState(null);
+  const [fromDate, setFromDate] = useState(formatDate(sevenDaysAgo));
+  const [toDate, setToDate] = useState(formatDate(today));
   const [downloading, setDownloading] = useState(false);
+  const [showCal, setShowCal] = useState(false);
+
+  const [selectedDayRange, setSelectedDayRange] = useState({
+    from: null,
+    to: null
+  });
+
+  console.log("date to check", fromDate, toDate);
+
+  // Convert Shamsi date to a yyyy-mm-dd string
+  const formatShamsiDate = (shamsiDate) => {
+    if (!shamsiDate) return "";
+    // Your logic here to convert a single Shamsi date object to yyyy-mm-dd string
+  };
+
+  useEffect(() => {
+    // Convert selected Shamsi dates to Gregorian yyyy-mm-dd whenever they change
+    setFromDate(formatShamsiDate(selectedDayRange.from));
+    setToDate(formatShamsiDate(selectedDayRange.to));
+  }, [selectedDayRange]);
+
+  // Convert Shamsi date to a Gregorian Date object using jalaali-js
+  const shamsiToGregorian = (shamsiDate) => {
+    if (!shamsiDate) return "";
+    const { year, month, day } = shamsiDate;
+    const { gy, gm, gd } = jalaali.toGregorian(year, month, day);
+    return new Date(gy, gm - 1, gd); // js Date months are zero-indexed
+  };
+
+  // Whenever `selectedDayRange` changes, convert Shamsi dates to Gregorian `yyyy-mm-dd`
+  useEffect(() => {
+    if (selectedDayRange.from && selectedDayRange.to) {
+      const fromGregorianDate = shamsiToGregorian(selectedDayRange.from);
+      const toGregorianDate = shamsiToGregorian(selectedDayRange.to);
+      setFromDate(formatDate(fromGregorianDate));
+      setToDate(formatDate(toGregorianDate));
+    }
+  }, [selectedDayRange]);
 
   // exel file dl
   const handleDownloadExel = async (e) => {
@@ -71,25 +132,6 @@ const ExelBottomSheet = ({ showExelSheet, setShowExelSheet, pageID }) => {
     setGoToCal(!goToCal);
   };
 
-  const today = new Date(); // todays date
-
-  // Create date objects for the preset dates
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(today.getDate() - 30);
-
-  const fifteenDaysAgo = new Date();
-  fifteenDaysAgo.setDate(today.getDate() - 15);
-
-  const sevenDaysAgo = new Date();
-  sevenDaysAgo.setDate(today.getDate() - 7);
-
-  const formatDate = (date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-
   // Optionally, use this to programmatically start a file download
   const downloadFile = (fileURL) => {
     const link = document.createElement("a");
@@ -99,6 +141,8 @@ const ExelBottomSheet = ({ showExelSheet, setShowExelSheet, pageID }) => {
     link.click();
     link.parentNode.removeChild(link);
   };
+
+  console.log("showcal", showCal);
   return (
     <BottomSheetWrapper
       open={showExelSheet}
@@ -108,13 +152,15 @@ const ExelBottomSheet = ({ showExelSheet, setShowExelSheet, pageID }) => {
         <div className="mx-5 py-5">
           <h3 className="font-semibold text-lg">دانلود فایل اکسل</h3>
           <p className="py-3 text-sm text-muted">انتخاب بازه زمانی</p>
-          <div className="flex justify-between">
-            <span
-              onClick={() => {
-                setFromDate(formatDate(thirtyDaysAgo));
-                setToDate(formatDate(today));
-              }}
-              className={`text-xs border-[1px] border-black  py-2 px-3 rounded-lg whitespace-nowrap overflow-hidden
+
+          {!showCal && (
+            <div className="flex justify-between">
+              <span
+                onClick={() => {
+                  setFromDate(formatDate(thirtyDaysAgo));
+                  setToDate(formatDate(today));
+                }}
+                className={`text-xs border-[1px] border-black  py-2 px-3 rounded-lg whitespace-nowrap overflow-hidden
               ${
                 fromDate === formatDate(thirtyDaysAgo) &&
                 toDate === formatDate(today)
@@ -122,15 +168,15 @@ const ExelBottomSheet = ({ showExelSheet, setShowExelSheet, pageID }) => {
                   : "border-black text-black"
               } 
               `}
-            >
-              ۳۰ روز گذشته
-            </span>
-            <span
-              onClick={() => {
-                setFromDate(formatDate(fifteenDaysAgo));
-                setToDate(formatDate(today));
-              }}
-              className={`text-xs border-[1px] border-black  py-2 px-3 rounded-lg mx-2 whitespace-nowrap overflow-hidden
+              >
+                ۳۰ روز گذشته
+              </span>
+              <span
+                onClick={() => {
+                  setFromDate(formatDate(fifteenDaysAgo));
+                  setToDate(formatDate(today));
+                }}
+                className={`text-xs border-[1px] border-black  py-2 px-3 rounded-lg mx-2 whitespace-nowrap overflow-hidden
               ${
                 fromDate === formatDate(fifteenDaysAgo) &&
                 toDate === formatDate(today)
@@ -138,34 +184,49 @@ const ExelBottomSheet = ({ showExelSheet, setShowExelSheet, pageID }) => {
                   : "border-black text-black"
               } 
               `}
-            >
-              ۱۵ روز گذشته
-            </span>
-            <span
-              onClick={() => {
-                setFromDate(formatDate(sevenDaysAgo));
-                setToDate(formatDate(today));
-              }}
-              className={`text-xs border-[1px]  border-black  py-2 px-3 rounded-lg whitespace-nowrap overflow-hidden
+              >
+                ۱۵ روز گذشته
+              </span>
+              <span
+                onClick={() => {
+                  setFromDate(formatDate(sevenDaysAgo));
+                  setToDate(formatDate(today));
+                }}
+                className={`text-xs border-[1px]  border-black  py-2 px-3 rounded-lg whitespace-nowrap overflow-hidden
               ${
                 fromDate === formatDate(sevenDaysAgo) &&
                 toDate === formatDate(today)
                   ? "bg-dark text-white"
                   : "border-black text-black"
               }  `}
-            >
-              ۷ روز گذشته
-            </span>
-          </div>
-          {/* <div className="mt-5">
+              >
+                ۷ روز گذشته
+              </span>
+            </div>
+          )}
+
+          {showCal && (
+            <div className="w-full flex">
+              <Calendar
+                value={selectedDayRange}
+                onChange={setSelectedDayRange}
+                calendarClassName="responsive-calendar"
+                locale="fa" // Assuming 'fa' is the locale string for Shamsi calendar
+                // renderInput={renderCustomInput}
+                shouldHighlightWeekends
+              />
+            </div>
+          )}
+
+          <div className="mt-5">
             <span
-              onClick={handleBottomSheetSwitch}
+              onClick={() => setShowCal(!showCal)}
               className="flex justify-center items-center w-full py-2 rounded-lg border-[1px]
            border-black text-sm font-medium"
             >
-              تنظیمات دلخواه
+              {!showCal ? "تنظیمات دلخواه" : "پریست ها"}
             </span>
-          </div> */}
+          </div>
         </div>
 
         <button

@@ -14,10 +14,9 @@ import ProfileImage from "@/components/ProfileImage";
 import HeaderShareBSheet from "@/components/bottomSheet/header/HeaderShareBSheet";
 import BottomSheetShareById from "@/components/bottomSheet/cards/BottomSheetShareById";
 import BottomSheetMore from "@/components/bottomSheet/cards/BottomSheetMore";
+import { useRouter } from "next/router";
 
 const ProfileCard = () => {
-  const [cardExist, setCardExist] = useState(true);
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [cardData, setCardData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const accessToken = useAccessToken();
@@ -33,6 +32,7 @@ const ProfileCard = () => {
 
   const [pageDataDontExist, setPageDAtaDontExist] = useState(false);
 
+  const router = useRouter();
   const cardWrapperRef = useRef(null);
 
   const finalCardsNumber = useMemo(() => {
@@ -79,8 +79,11 @@ const ProfileCard = () => {
       })
       .catch((error) => {
         setIsLoading(false);
+
         if (error.response && error.response.status === 404) {
           setPageDAtaDontExist(true); // Assuming you have this state and its setter declared
+        } else if (error.response && error.response.status === 401) {
+          router.push("/registration/signIn/loginUser");
         } else {
           console.error("Error fetching data:", error);
         }
@@ -170,7 +173,6 @@ const ProfileCard = () => {
     <>
       <Header cardData={cardData} />
       <Layout className="!h-fit  ">
-        {/* <div className="fixed w-fit"> */}
         {!pageDataDontExist ? (
           <>
             <CardWrapper
@@ -302,7 +304,6 @@ const ProfileCard = () => {
         ) : (
           <ProfileCardEmpty />
         )}
-        {/* </div> */}
       </Layout>
       <Footer className=" !bottom-0 !mb-0" />
 

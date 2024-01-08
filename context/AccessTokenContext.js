@@ -31,6 +31,8 @@ export const AccessTokenProvider = ({ children, protectedRoutes }) => {
   const router = useRouter();
 
   useEffect(() => {
+    console.log("token 1", accessToken);
+    // debugger;
     if (!accessToken && isProtectedRoute(router.pathname)) {
       router.push("/registration/signIn/loginUser");
     }
@@ -41,15 +43,16 @@ export const AccessTokenProvider = ({ children, protectedRoutes }) => {
       (response) => response, // Just pass through the response
       (error) => {
         if (error.response && error.response.status === 401) {
-          setAccessToken(null); // Clear invalid token
+          setAccessToken(undefined); // Clear invalid token
           if (isProtectedRoute(router.pathname)) {
             router.push("/registration/signIn/loginUser");
           }
+        } else if (statusCode === 404) {
+          router.push("/404");
         }
         return Promise.reject(error);
       }
     );
-
     return () => {
       axios.interceptors.response.eject(interceptor);
     };

@@ -2,8 +2,8 @@ import Link from "next/link";
 import React, { useState } from "react";
 import BottomSheetWrapper from "./bottomSheet/BottomSheetWrapper";
 
-import "react-modern-calendar-datepicker/lib/DatePicker.css";
-import { Calendar } from "react-modern-calendar-datepicker";
+import "@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css";
+import { Calendar } from "@hassanmojab/react-modern-calendar-datepicker";
 
 const BottomSheetStatsPresets = ({ setFromDate, setToDate, onClose, open }) => {
   const [showCal, setShowCal] = useState(false);

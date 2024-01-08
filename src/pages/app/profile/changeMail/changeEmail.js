@@ -91,6 +91,7 @@ const ChangeEmail = () => {
                 ایمیل جدید
               </label>
               <input
+                required={true}
                 id="data_inp"
                 placeholder="example@gmail.com"
                 name="email"
@@ -106,13 +107,14 @@ const ChangeEmail = () => {
             <div className="flex justify-start items-center py-3">
               <label
                 className="font-medium text-sm border-e-2 text-muted me-2 pe-2 ps-4"
-                htmlFor="data_inp"
+                htmlFor="password"
               >
                 رمز عبور
               </label>
               <input
+                required={true}
                 type="password"
-                id="data_inp"
+                id="password"
                 placeholder="Example123!"
                 name="password"
                 onChange={onChange}
