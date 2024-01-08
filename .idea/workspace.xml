@@ -5,11 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e485ecf0-2a62-4124-95b9-8fcf0d3fef6f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pages/[username].js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/[pageView].js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/app/profile/profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/profile/profile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/context/AccessTokenContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/context/AccessTokenContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/BottomSheetStatsPresets.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/BottomSheetStatsPresets.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/HeaderTwo.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HeaderTwo.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/accessories/NFCTag.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/accessories/NFCTag.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/contacts/bottomSheet/ContactFilters.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/contacts/bottomSheet/ContactFilters.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/contacts/bottomSheet/ExelBottomSheet.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/contacts/bottomSheet/ExelBottomSheet.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/_app.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/_app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/contacts/contacts.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/contacts/contacts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/lead/lead.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/lead/lead.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/stats/personsStats.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/stats/personsStats.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/registration/signIn/loginUser.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/registration/signIn/loginUser.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,11 +61,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/pages/app/cards" />
-      <recent name="$PROJECT_DIR$/src/pages/appNect/cards" />
-      <recent name="$PROJECT_DIR$/src/pages/appNect/profile/info" />
-      <recent name="$PROJECT_DIR$/src/pages/appNect/profile/changePass" />
-      <recent name="$PROJECT_DIR$/src/pages/appNect/profile/changeMail" />
+      <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$/src/pages/mainPage" />
+      <recent name="$PROJECT_DIR$/src/pages/registration/signIn" />
+      <recent name="$PROJECT_DIR$/src/pages/app/cards/items" />
+      <recent name="$PROJECT_DIR$/src/pages/registration/signUp" />
     </key>
   </component>
   <component name="RunManager">
@@ -97,6 +105,8 @@
       <workItem from="1703496340439" duration="2489000" />
       <workItem from="1703589001658" duration="41000" />
       <workItem from="1703589044925" duration="118000" />
+      <workItem from="1704447673256" duration="5294000" />
+      <workItem from="1704704260033" duration="116000" />
     </task>
     <servers />
   </component>

@@ -51,6 +51,7 @@ const ContactFilters = ({
               onClick={() => {
                 setFromDate(formatDate(thirtyDaysAgo));
                 setToDate(formatDate(today));
+                setShowContactFilters(false);
               }}
               className={`text-xs border-[1px] border-black  py-2 px-3 rounded-lg whitespace-nowrap overflow-hidden
               ${
@@ -67,6 +68,7 @@ const ContactFilters = ({
               onClick={() => {
                 setFromDate(formatDate(fifteenDaysAgo));
                 setToDate(formatDate(today));
+                setShowContactFilters(false);
               }}
               className={`text-xs border-[1px] border-black  py-2 px-3 rounded-lg mx-2 whitespace-nowrap overflow-hidden
               ${
@@ -83,6 +85,7 @@ const ContactFilters = ({
               onClick={() => {
                 setFromDate(formatDate(sevenDaysAgo));
                 setToDate(formatDate(today));
+                setShowContactFilters(false);
               }}
               className={`text-xs border-[1px]  border-black  py-2 px-3 rounded-lg whitespace-nowrap overflow-hidden
               ${
@@ -106,12 +109,12 @@ const ContactFilters = ({
           </div> */}
         </div>
 
-        <button
+        {/* <button
           type="submit"
           className="bg-dark w-full text-white rounded-md py-2 "
         >
           اعمال تغییرات
-        </button>
+        </button> */}
       </form>
     </BottomSheetWrapper>
   );

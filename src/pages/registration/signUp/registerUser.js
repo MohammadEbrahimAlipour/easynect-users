@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Devider from "@/components/Devider";
 import Image from "next/image";
-import bgGradient from "../../public/images/backgrounds/bgGradient.jpg";
+import bgGradient from "../../../../public/images/backgrounds/bgGradient.jpg";
 import { useRouter } from "next/router";
 import { generateApiUrl } from "@/components/ApiUr";
 import IconReg from "@/components/icons/IconReg";
@@ -105,7 +105,7 @@ const RegisterUser = () => {
         console.log("Registration successful");
 
         // Redirect to OTP confirm page with email as a query parameter
-        router.push(`/verifyOTP?email=${encodeURIComponent(email)}`);
+        router.push(`/registration/signUp/verifyOTP?email=${encodeURIComponent(email)}`);
       } else {
         // Handle errors (e.g., show an error message)
         console.log("Registration failed");
@@ -220,7 +220,7 @@ const RegisterUser = () => {
 
         {/* register */}
         <h3 className="font-semibold text-lg mt-7 mb-3">ثبت‌نام</h3>
-        <Link href="/loginUser" className="flex justify-start items-center">
+        <Link href="/registration/signIn/loginUser" className="flex justify-start items-center">
           <span className="text-muted me-1">قبلا ثبت‌نام کرده‌اید؟ </span>
           وارد شوید
         </Link>

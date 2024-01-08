@@ -7,7 +7,7 @@ import React, { useState, useRef } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { generateApiUrl } from "@/components/ApiUr";
-import { useAccessToken } from "../../context/AccessTokenContext";
+import { useAccessToken } from "../../../../context/AccessTokenContext";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 
@@ -79,7 +79,7 @@ const VerifyOTP = () => {
       );
 
       if (response.status === 200) {
-        // redirect user to login page
+        // redirect user to signIn page
 
         // Handle the successful response
         console.log("OTP code verification successful");

@@ -61,7 +61,7 @@ const VerifyOTP = () => {
       );
 
       if (response.status === 200) {
-        // redirect user to login page
+        // redirect user to signIn page
         router.push("/app/profile/profile");
 
         // Handle the successful response

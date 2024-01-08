@@ -43,11 +43,17 @@ const NFCTag = ({ result, setResult }) => {
   };
 
   return (
-    <div className="flex items-center justify-start mt-2">
-      <span className="me-2 ">
-        {result !== null ? <TickSuccess /> : <CloseIconSmall />}
-      </span>
-      <p>{nfcError && "NFC کارت خود را اسکن کنید."}</p>
+    <div className="flex flex-col items-start justify-start mt-2">
+      {!nfcError ? (
+        <span className="me-2 flex gap-1 items-center">
+          {result !== null ? <TickSuccess /> : <CloseIconSmall />}
+          {result ? "کارت با موفقیت اسکن شد." : "کارت را اسکن کنید."}
+        </span>
+      ) : (
+        <p className="mt-2 text-[#CB3434] text-sm">
+          {nfcError && "مرورگر یا دستگاه شما از nfc پشتیبانی نمی‌کند."}
+        </p>
+      )}
     </div>
   );
 };

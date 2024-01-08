@@ -183,9 +183,19 @@ const Contacts = () => {
 
   const loadMoreContacts = () => {
     if (pageID && hasMore) {
-      const apiUrl = generateApiUrl(
-        `/api/v1/contacts/page/unified/${pageID}/?skip=${skip}&limit=${limit}`
-      );
+      let apiUrl;
+
+      if (fromDate !== null) {
+        // setSkip(0);
+        // setLimit(6);
+        apiUrl = generateApiUrl(
+          `/api/v1/contacts/page/unified/${pageID}?skip=${skip}&limit=${limit}&from_date=${fromDate}&to_date=${toDate}`
+        );
+      } else {
+        apiUrl = generateApiUrl(
+          `/api/v1/contacts/page/unified/${pageID}?skip=${skip}&limit=${limit}`
+        );
+      }
 
       // Make an Axios GET request to fetch more contacts
       axios
