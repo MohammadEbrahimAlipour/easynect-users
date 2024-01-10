@@ -72,7 +72,6 @@ const PersonsStats = () => {
       }
     }
   }, []);
-
   // get data for top cards
   useEffect(() => {
     // Fetch data from the API
@@ -295,6 +294,8 @@ const PersonsStats = () => {
   console.log("selectedCardId", selectedCardId);
 
   const loadMoreVisitedItems = () => {
+    console.log("loadMoreVisitedItems called");
+
     if (hasMoreVisitedItems) {
       const apiUrl = generateApiUrl(
         `/api/v1/analytics/get_list_contents_taps_based_on_date_range/${selectedCardId}?skip=${skipVisitedItems}&limit=${limitVisitedItems}`
@@ -310,17 +311,15 @@ const PersonsStats = () => {
           .then((response) => {
             const newData = response.data;
 
-            // Check if there are more items
+            // Check if there are more contacts
             if (newData.length > 0) {
-              // Append new data to the existing data
               setVisitedItemsData((prevData) => [...prevData, ...newData]);
-              // Update state to track how many items we've already loaded
               setSkipVisitedItems((prevSkip) => prevSkip + limitVisitedItems);
             } else {
-              // No more items to load, set hasMoreVisitedItems to false
-              setHasMoreVisitedItems(false);
+              setHasMore(false); // No more contacts to load
             }
           })
+
           .catch((error) => {
             console.error("Error fetching more visited items:", error);
           });
