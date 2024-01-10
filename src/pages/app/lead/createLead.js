@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import HeaderTwo from "@/components/HeaderTwo";
 import BottomSheet from "@/components/BottomSheet";
 import LeadBottomSheet from "@/components/bottomSheet/leadForm/LeadBottomSheet";
+import Head from "next/head";
 
 const CreateLead = () => {
   const router = useRouter();
@@ -142,6 +143,10 @@ const CreateLead = () => {
 
   return (
     <>
+      <Head>
+        <title>ایزی‌نکت - ساخت فرم لید</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       <HeaderTwo />
       <Layout>
         <h3 className="font-semibold mb-6">ساخت فرم لید</h3>

@@ -49,8 +49,8 @@ const HomePage = () => {
   return (
     <>
       <Head>
-        <title>Easynect</title>
-        <meta name="description" content="Powered by Easynect" />
+        <title>ایزی‌نکت</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
       </Head>
 
       <LoadingState />

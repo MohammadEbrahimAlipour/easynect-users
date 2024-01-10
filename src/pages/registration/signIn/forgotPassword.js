@@ -14,6 +14,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { generateApiUrl } from "@/components/ApiUr";
 import { useAccessToken } from "../../../../context/AccessTokenContext";
+import Head from "next/head";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -66,6 +67,10 @@ const ForgotPassword = () => {
 
   return (
     <div className="container">
+      <Head>
+        <title>ایزی‌نکت - فراموشسی رمز</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       <div
         className="w-full h-[320px] rounded-[20px] mt-5 bg-gold
        bg-[url('../../public/images/backgrounds/passwordImage.jpg')] bg-cover

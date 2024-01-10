@@ -13,6 +13,7 @@ import Image from "next/image";
 import EmptyItemsAddBox from "@/components/infoPage/empty/EmptyItemsAddBox";
 import CarouselView from "@/components/publicPageView/CarouselView";
 import LeadForm from "@/components/leadForm/LeadForm";
+import axiosInstance from "@/services/axiosInterceptors";
 
 export default function Username() {
   const router = useRouter();
@@ -135,6 +136,27 @@ END:VCARD
     }
   }, [usersData]); // This effect depends on usersData state
 
+  const handleCountingItemClicks = async (itemData) => {
+    try {
+      const analyticsData = {
+        content_id: itemData.id
+      };
+      const apiUrl = generateApiUrl(`/api/v1/analytics/tap/${itemData.id}`);
+      const response = await axiosInstance.post(apiUrl, analyticsData);
+
+      if (response.status === 204) {
+        return true;
+      } else {
+        toast.error("There was an error in processing the action.");
+        return false;
+      }
+    } catch (error) {
+      console.error("Error posting analytics data:", error);
+      toast.error("There was an error in processing the action.");
+      return false;
+    }
+  };
+
   return (
     <>
       {/* main */}
@@ -181,7 +203,10 @@ END:VCARD
               <div className="grid grid-flow-col justify-center items-center w-full">
                 <div className="my-5 overflow-x-hidden overscroll-y-contain ">
                   {/* <SwiperCarousel /> */}
-                  <CarouselView horizontalData={usersData.horizontal_menu} />
+                  <CarouselView
+                    horizontalData={usersData.horizontal_menu}
+                    handleCountingItemClicks={handleCountingItemClicks}
+                  />
                 </div>
               </div>
 
@@ -202,13 +227,19 @@ END:VCARD
                       {/* square section */}
 
                       {object.display_box_type === "square" ? (
-                        <SquareData object={object} />
+                        <SquareData
+                          object={object}
+                          handleCountingItemClicks={handleCountingItemClicks}
+                        />
                       ) : null}
 
                       {/* rectangle */}
 
                       {object.display_box_type === "rectangle" ? (
-                        <RectangleData object={object} />
+                        <RectangleData
+                          object={object}
+                          handleCountingItemClicks={handleCountingItemClicks}
+                        />
                       ) : null}
                     </div>
                   ))}

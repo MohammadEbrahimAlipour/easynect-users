@@ -1,31 +1,75 @@
 import React from "react";
 import Image from "next/image";
 
-const SquareData = ({ object }) => {
+const SquareData = ({ object, handleCountingItemClicks }) => {
   // condition to detect type of each squares data and redirect based on type
-  const handleSquareTypeDetection = (squareIndex) => {
+  // const handleSquareTypeDetection = (squareIndex) => {
+  //   const squareData = object?.data[squareIndex];
+
+  //   // Early return to handle any potential 'null' or 'undefined'
+  //   if (!squareData) return;
+
+  //   const isAnalyticsCounted = handleCountingItemClicks(squareData);
+  //   if (isAnalyticsCounted) {
+  //     handleCountingItemClicks(squareData);
+  //   }
+
+  //   if (squareData.type === "phone" && squareData.content_val) {
+  //     const telLink = `tel:${squareData.content_val}`;
+  //     window.location.href = telLink;
+  //   } else if (squareData.type === "link" && squareData.content_val) {
+  //     const externalLink = squareData.content_val;
+  //     window.open(externalLink, "_blank", "noopener,noreferrer");
+  //   } else if (squareData.type === "file" && squareData.content_val) {
+  //     const fileLink = squareData.content_val;
+  //     const a = document.createElement("a");
+  //     a.href = fileLink;
+  //     a.download = squareData.content_val.split("/").pop(); // Set a custom filename or fallback
+  //     document.body.appendChild(a);
+  //     a.click();
+  //     document.body.removeChild(a);
+  //   } else if (squareData.type === "email" && squareData.content_val) {
+  //     const emailLink = `mailto:${squareData.content_val}`;
+  //     window.location.href = emailLink;
+  //   }
+  // };
+
+  const handleSquareTypeDetection = async (squareIndex) => {
     const squareData = object?.data[squareIndex];
 
     // Early return to handle any potential 'null' or 'undefined'
     if (!squareData) return;
 
-    if (squareData.type === "phone" && squareData.content_val) {
-      const telLink = `tel:${squareData.content_val}`;
-      window.location.href = telLink;
-    } else if (squareData.type === "link" && squareData.content_val) {
-      const externalLink = squareData.content_val;
-      window.open(externalLink, "_blank", "noopener,noreferrer");
-    } else if (squareData.type === "file" && squareData.content_val) {
-      const fileLink = squareData.content_val;
-      const a = document.createElement("a");
-      a.href = fileLink;
-      a.download = squareData.content_val.split("/").pop(); // Set a custom filename or fallback
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    } else if (squareData.type === "email" && squareData.content_val) {
-      const emailLink = `mailto:${squareData.content_val}`;
-      window.location.href = emailLink;
+    try {
+      const isAnalyticsCounted = await handleCountingItemClicks(squareData);
+      if (!isAnalyticsCounted) {
+        // If the analytics call was not successful, show a toast message and exit the function
+        toast.error("There was an error processing your request.");
+        return;
+      }
+
+      // Redirect based on the type of squareData
+      if (squareData.type === "phone" && squareData.content_val) {
+        const telLink = `tel:${squareData.content_val}`;
+        window.location.href = telLink;
+      } else if (squareData.type === "link" && squareData.content_val) {
+        const externalLink = squareData.content_val;
+        window.open(externalLink, "_blank", "noopener,noreferrer");
+      } else if (squareData.type === "file" && squareData.content_val) {
+        const fileLink = squareData.content_val;
+        const a = document.createElement("a");
+        a.href = fileLink;
+        a.download = squareData.content_val.split("/").pop(); // Set a custom filename or fallback
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } else if (squareData.type === "email" && squareData.content_val) {
+        const emailLink = `mailto:${squareData.content_val}`;
+        window.location.href = emailLink;
+      }
+    } catch (error) {
+      console.error("Error during square type detection:", error);
+      // toast.error('There was an error redirecting to the requested resource.');
     }
   };
 
@@ -34,7 +78,8 @@ const SquareData = ({ object }) => {
       <div className="grid grid-cols-12 mb-5 gap-5">
         {/* first square */}
         <div
-          onClick={() => handleSquareTypeDetection(0)} // adjusted for first square
+          // onClick={() => handleSquareTypeDetection(0)} // adjusted for first square
+          onClick={() => (async () => await handleSquareTypeDetection(0))()}
           className="col-span-6 relative"
         >
           {object?.data[0]?.sub_order === 1 ? (
@@ -79,7 +124,8 @@ const SquareData = ({ object }) => {
 
         {/* second square */}
         <div
-          onClick={() => handleSquareTypeDetection(1)} // adjusted for second square
+          // onClick={() => handleSquareTypeDetection(1)} // adjusted for second square
+          onClick={() => (async () => await handleSquareTypeDetection(1))()}
           className="col-span-6 relative"
         >
           {object?.data[0]?.sub_order === 2 ||

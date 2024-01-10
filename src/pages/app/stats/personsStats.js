@@ -4,28 +4,25 @@ import Header from "@/components/Header";
 import { ArrowDownIcon } from "@/components/Icons";
 import Layout from "@/components/Layout";
 import StatsCard from "@/components/StatsCard";
-import StatsHorz from "@/components/StatsHorz";
-import StatsListItems from "@/components/StatsListItems";
-import { StatsVert } from "@/components/StatsVert";
 import React, { useEffect, useState } from "react";
 import { generateApiUrl } from "@/components/ApiUr";
 import { useAccessToken } from "../../../../context/AccessTokenContext";
 import axios from "axios";
-import BottomSheet from "@/components/BottomSheet";
-import BottomSheetStatsDate from "@/components/BottomSheetStatsDate";
 import BottomSheetStatsPresets from "@/components/BottomSheetStatsPresets";
 import LoadingState from "@/components/LoadingState";
-import { Drawer } from "@mui/material";
 import ComingSoon from "@/components/ComingSoon";
-import BottomSheetWrapper from "@/components/bottomSheet/BottomSheetWrapper";
+import { API_ROUTES } from "@/services/api";
+import axiosInstance from "@/services/axiosInterceptors";
+import Image from "next/image";
+import InfiniteScroll from "react-infinite-scroll-component";
+import Head from "next/head";
 
 const PersonsStats = () => {
-  const [isSelected, setIsSelected] = useState("content");
   const accessToken = useAccessToken();
   const [statsData, setStatsData] = useState([]); // State to store data from api for top card section
   const [pageData, setPageData] = useState([]);
   const [selectedCardId, setSelectedCardId] = useState(); // State to store the selected card's id
-
+  const [visitedItemsData, setVisitedItemsData] = useState([]);
   const [selectedButton, setSelectedButton] = useState("");
 
   const [chartView, setChartView] = useState(); // Chart data for view
@@ -33,19 +30,19 @@ const PersonsStats = () => {
   const [chartShare, setChartShare] = useState(); // chart data for share
   const [chartConvert, setChartConvert] = useState(); // chart data for conver
 
-  const [goToCal, setGoToCal] = useState(false); //to navigate inside bottom sheet setting
-
   // handle date values for custom date
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
 
   // below code handles two buttons above chart
   const [showSubMenu, setShowSubMenu] = useState(false);
-  const [comingSoon, setComingSoon] = useState(true);
+  const [comingSoon, setComingSoon] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState("view"); //value to pass to chart
 
-  console.log("statsData");
+  const [skipVisitedItems, setSkipVisitedItems] = useState(0);
+  const [limitVisitedItems, setLimitVisitedItems] = useState(6);
+  const [hasMoreVisitedItems, setHasMoreVisitedItems] = useState(true);
 
   // options
   const handleOptionChange = (event) => {
@@ -79,9 +76,9 @@ const PersonsStats = () => {
   // get data for top cards
   useEffect(() => {
     // Fetch data from the API
-    const apiUrl = generateApiUrl("/api/v1/analytics/pages/");
+    const apiUrl = API_ROUTES.STATS_ANALYTICS_PAGES;
 
-    axios
+    axiosInstance
       .get(apiUrl, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`, // Pass the access token in the headers
@@ -98,8 +95,7 @@ const PersonsStats = () => {
         }
       })
       .catch((error) => {
-        // Handle any errors here
-        console.error("Error fetching data:", error);
+        // error here
       });
   }, [accessToken.accessToken]);
 
@@ -167,7 +163,7 @@ const PersonsStats = () => {
     selectedOption
   ]);
 
-  // Fetch data for chart View
+  // Fetch data for chart range
   useEffect(() => {
     if (selectedCardId) {
       const apiUrl = generateApiUrl(
@@ -296,6 +292,48 @@ const PersonsStats = () => {
     toggleShowOption(); // Close the menu
   };
 
+  console.log("selectedCardId", selectedCardId);
+
+  const loadMoreVisitedItems = () => {
+    if (hasMoreVisitedItems) {
+      const apiUrl = generateApiUrl(
+        `/api/v1/analytics/get_list_contents_taps_based_on_date_range/${selectedCardId}?skip=${skipVisitedItems}&limit=${limitVisitedItems}`
+      );
+      if (selectedCardId) {
+        axios
+          .get(apiUrl, {
+            headers: {
+              Authorization: `Bearer ${accessToken.accessToken}`,
+              "accept-language": "fa"
+            }
+          })
+          .then((response) => {
+            const newData = response.data;
+
+            // Check if there are more items
+            if (newData.length > 0) {
+              // Append new data to the existing data
+              setVisitedItemsData((prevData) => [...prevData, ...newData]);
+              // Update state to track how many items we've already loaded
+              setSkipVisitedItems((prevSkip) => prevSkip + limitVisitedItems);
+            } else {
+              // No more items to load, set hasMoreVisitedItems to false
+              setHasMoreVisitedItems(false);
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching more visited items:", error);
+          });
+      }
+    }
+  };
+
+  useEffect(() => {
+    loadMoreVisitedItems(); // Initial fetch when component mounts
+  }, [selectedCardId]);
+
+  console.log("visitedItemsData", visitedItemsData);
+
   const optionTexts = {
     view: "بازدید‌ها",
     contacts: "مخاطبین",
@@ -305,6 +343,10 @@ const PersonsStats = () => {
 
   return (
     <>
+      <Head>
+        <title>ایزی‌نکت - صفحه آمار</title>
+      </Head>
+
       <Header />
       <>
         {!comingSoon ? (
@@ -327,8 +369,8 @@ const PersonsStats = () => {
               <div className="">
                 <div
                   className="grid grid-flow-col auto-cols-[36%] gap-2 overscroll-contain
-          overflow-x-auto hide-scrollbar
-          snap-x"
+                  overflow-x-auto hide-scrollbar
+                  snap-x"
                 >
                   {statsData.map((item) => (
                     <StatsCard
@@ -434,7 +476,42 @@ const PersonsStats = () => {
               <div>
                 {/* Conditionally render content based on selectedButton */}
 
-                <p>آیتم های بیشتر</p>
+                <p className="font-semibold mb-4">آمار بازدید آیتم ها</p>
+
+                <>
+                  <InfiniteScroll
+                    dataLength={visitedItemsData.length} // Length of the data you currently have
+                    next={loadMoreVisitedItems} // Function that loads the next chunk of data
+                    hasMore={hasMoreVisitedItems} // Boolean indicating if there's more data to load
+                    loader={<LoadingState />} // Component that shows a loading indicator
+                  >
+                    {visitedItemsData.map((item) => (
+                      <div key={item.guid}>
+                        {/* Profile image display */}
+                        <div
+                          className=" rounded-md py-2 px-5 mb-3 bg-white overflow-hidden
+                      flex items-center justify-between"
+                        >
+                          <span className="flex items-center">
+                            <Image
+                              width={36}
+                              height={36}
+                              alt={item.title}
+                              src={item.s3_icon_url}
+                              className=" rounded-full me-5"
+                            />
+
+                            <p className="font-semibold">{item.title}</p>
+                          </span>
+                          <span className="flex items-center">
+                            <p className="me-2 underline">{item.taps}</p>
+                            <p className="text-sm">کلیک</p>
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </InfiniteScroll>
+                </>
               </div>
             </div>
           </Layout>
@@ -444,31 +521,6 @@ const PersonsStats = () => {
       </>
       <Footer />
       <div>
-        {/* <Drawer
-          anchor="bottom"
-          open={showSubMenu}
-          onClose={() => {
-            setShowSubMenu(false);
-            setGoToCal(false);
-          }}
-        >
-          {goToCal ? (
-            <BottomSheetStatsDate
-              setFromDate={setFromDate}
-              setToDate={setToDate}
-            />
-          ) : (
-            <BottomSheetStatsPresets
-              goToCal={goToCal}
-              setGoToCal={setGoToCal}
-              fromDate={fromDate}
-              setFromDate={setFromDate}
-              setToDate={setToDate}
-              toDate={toDate}
-            />
-          )}
-        </Drawer> */}
-
         <BottomSheetStatsPresets
           setFromDate={setFromDate}
           setToDate={setToDate}
