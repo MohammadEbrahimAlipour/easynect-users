@@ -12,7 +12,6 @@ import Head from "next/head";
 
 const VerifyOTP = () => {
   // Initialize state to store the user-entered code
-  const [code, setCode] = useState("");
   const accessToken = useAccessToken();
 
   //   to send email to backend

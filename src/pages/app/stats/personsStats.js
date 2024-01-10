@@ -36,7 +36,7 @@ const PersonsStats = () => {
 
   // below code handles two buttons above chart
   const [showSubMenu, setShowSubMenu] = useState(false);
-  const [comingSoon, setComingSoon] = useState(false);
+  const [comingSoon, setComingSoon] = useState(true);
 
   const [selectedOption, setSelectedOption] = useState("view"); //value to pass to chart
 
