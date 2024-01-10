@@ -49,7 +49,7 @@ push_dev_image:
     - hertzner
   before_script:
     - export VERSION=$(cat version-file.txt)
-    - docker signIn -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker push $IMAGE_NAME:$VERSION
 
@@ -75,7 +75,7 @@ dev_deploy:
   script:
     - scp -o StrictHostKeyChecking=no -i deploy-key.pem ./docker-compose-dev.yml root@$SERVER_HOST:/home/easynect/
     - ssh -o StrictHostKeyChecking=no -i deploy-key.pem root@$SERVER_HOST  "
-      docker signIn -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY &&
+      docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY &&
       cd /home/easynect/ &&
       export DC_IMAGE_NAME=$IMAGE_NAME &&
       export DC_IMAGE_TAG=$VERSION &&
@@ -115,7 +115,7 @@ push_prod_image:
     - hertzner
   before_script:
     - export VERSION=$(cat version-file.txt)
-    - docker signIn -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker push $IMAGE_NAME:$VERSION
 
@@ -141,7 +141,7 @@ prod_deploy:
   script:
     - scp -o StrictHostKeyChecking=no -i deploy-key.pem ./docker-compose.yml root@$SERVER_HOST:/home/frontend/user/
     - ssh -o StrictHostKeyChecking=no -i deploy-key.pem root@$SERVER_HOST  "
-      docker signIn -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY &&
+      docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY &&
       cd /home/frontend/user/ &&
       export DC_IMAGE_NAME=$IMAGE_NAME &&
       export DC_IMAGE_TAG=$VERSION &&
