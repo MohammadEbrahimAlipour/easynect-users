@@ -7,6 +7,7 @@ import { generateApiUrl } from "@/components/ApiUr";
 import axios from "axios";
 import { useAccessToken } from "../../../../../context/AccessTokenContext";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 const ChangeEmail = () => {
   const accessToken = useAccessToken();
@@ -76,7 +77,11 @@ const ChangeEmail = () => {
 
   return (
     <>
-      <HeaderTwo href="/profile" />
+      <Head>
+        <title>ایزی‌نکت - تغییر ایمیل</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
+      <HeaderTwo  />
       <Layout>
         <p className="text-lg ps-3 font-semibold mb-3">تغییر ایمیل </p>
 

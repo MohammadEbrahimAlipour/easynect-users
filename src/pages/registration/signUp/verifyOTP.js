@@ -10,6 +10,7 @@ import { generateApiUrl } from "@/components/ApiUr";
 import { useAccessToken } from "../../../../context/AccessTokenContext";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
+import Head from "next/head";
 
 const VerifyOTP = () => {
   const inputRef = useRef(null);
@@ -107,6 +108,10 @@ const VerifyOTP = () => {
 
   return (
     <>
+      <Head>
+        <title>ایزی‌نکت - رمز یک بار مصرف</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       <Layout className="!mb-0 !pb-0">
         <div
           className="w-full h-[290px] rounded-[20px] bg-gold

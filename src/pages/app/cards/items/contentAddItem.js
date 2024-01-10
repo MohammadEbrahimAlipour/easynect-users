@@ -2,15 +2,16 @@ import Footer from "@/components/Footer";
 import HeaderTwo from "@/components/HeaderTwo";
 import Layout from "@/components/Layout";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useAccessToken } from "../../../../../context/AccessTokenContext";
 import { toast } from "react-toastify";
-import { generateApiUrl } from "@/components/ApiUr";
 import Link from "next/link";
 import Image from "next/image";
 import LoadingState from "@/components/LoadingState";
 import { useRouter } from "next/router";
 import Category from "@/components/contentStore/Category";
+import { API_ROUTES } from "@/services/api";
+import axiosInstance from "@/services/axiosInterceptors";
+import Head from "next/head";
 
 const ContentStoreAddItem = () => {
   const accessToken = useAccessToken();
@@ -20,10 +21,10 @@ const ContentStoreAddItem = () => {
   const { id } = router.query;
 
   useEffect(() => {
-    const apiUrl = generateApiUrl(`/api/v1/contents_store/`);
+    const apiUrl = API_ROUTES.CARDS_CONTENTADDITEM_CONTENT_STORE;
 
     // Make an Axios GET request to fetch user data
-    axios
+    axiosInstance
       .get(apiUrl, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`, // Add your access token here
@@ -58,12 +59,17 @@ const ContentStoreAddItem = () => {
 
   return (
     <>
+      <Head>
+        <title>ایزی‌نکت - ساخت آیتم جدید</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       {contentData && id ? (
         <>
           <HeaderTwo />
           <Layout>
             {/* top filters */}
             <div
+              // ref={drop}
               className="grid grid-flow-col auto-cols-[36%] overscroll-contain overflow-x-auto
          hide-scrollbar gap-2 snap-x"
             >

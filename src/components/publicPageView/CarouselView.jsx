@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
 import CarouselItems from "./CarouselItems";
 
-const CarouselView = ({ horizontalData }) => {
+const CarouselView = ({ horizontalData, handleCountingItemClicks }) => {
   const [itemCounter, setItemCounter] = useState(horizontalData.length);
   const [centeredItemIndex, setCenteredItemIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(horizontalData.length);
@@ -19,29 +19,68 @@ const CarouselView = ({ horizontalData }) => {
   const middleIndex = Math.floor(itemsArray.length / 2);
   const initialSlide = middleIndex >= 0 ? middleIndex : 0;
 
-  const handleItemTypeDetection = (item) => {
+  // const handleItemTypeDetection = (item) => {
+  //   const itemData = item;
+
+  //   // Early return to handle any potential 'null' or 'undefined'
+  //   if (!itemData) return;
+
+  //   const isAnalyticsCounted = handleCountingItemClicks(itemData);
+  //   if (isAnalyticsCounted) {
+  //     handleCountingItemClicks(itemData);
+  //   }
+
+  //   if (itemData.type === "phone" && itemData.content_val) {
+  //     const telLink = `tel:${itemData.content_val}`;
+  //     window.location.href = telLink;
+  //   } else if (itemData.type === "link" && itemData.content_val) {
+  //     const externalLink = itemData.content_val;
+  //     window.open(externalLink, "_blank", "noopener,noreferrer");
+  //   } else if (itemData.type === "file" && itemData.content_val) {
+  //     const fileLink = itemData.content_val;
+  //     const a = document.createElement("a");
+  //     a.href = fileLink;
+  //     a.download = itemData.content_val.split("/").pop(); // Set a custom filename or fallback
+  //     document.body.appendChild(a);
+  //     a.click();
+  //     document.body.removeChild(a);
+  //   } else if (itemData.type === "email" && itemData.content_val) {
+  //     const emailLink = `mailto:${itemData.content_val}`;
+  //     window.location.href = emailLink;
+  //   }
+  // };
+
+  const handleItemTypeDetection = async (item) => {
     const itemData = item;
-    console.log();
-    // Early return to handle any potential 'null' or 'undefined'
+
     if (!itemData) return;
 
-    if (itemData.type === "phone" && itemData.content_val) {
-      const telLink = `tel:${itemData.content_val}`;
-      window.location.href = telLink;
-    } else if (itemData.type === "link" && itemData.content_val) {
-      const externalLink = itemData.content_val;
-      window.open(externalLink, "_blank", "noopener,noreferrer");
-    } else if (itemData.type === "file" && itemData.content_val) {
-      const fileLink = itemData.content_val;
-      const a = document.createElement("a");
-      a.href = fileLink;
-      a.download = itemData.content_val.split("/").pop(); // Set a custom filename or fallback
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    } else if (itemData.type === "email" && itemData.content_val) {
-      const emailLink = `mailto:${itemData.content_val}`;
-      window.location.href = emailLink;
+    try {
+      const isAnalyticsCounted = await handleCountingItemClicks(itemData);
+      if (isAnalyticsCounted) {
+        // Redirection actions should only happen if analytics was successful.
+
+        if (itemData.type === "phone" && itemData.content_val) {
+          const telLink = `tel:${itemData.content_val}`;
+          window.location.href = telLink;
+        } else if (itemData.type === "link" && itemData.content_val) {
+          const externalLink = itemData.content_val;
+          window.open(externalLink, "_blank", "noopener,noreferrer");
+        } else if (itemData.type === "file" && itemData.content_val) {
+          const fileLink = itemData.content_val;
+          const a = document.createElement("a");
+          a.href = fileLink;
+          a.download = itemData.content_val.split("/").pop(); // Set a custom filename or fallback
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        } else if (itemData.type === "email" && itemData.content_val) {
+          const emailLink = `mailto:${itemData.content_val}`;
+          window.location.href = emailLink;
+        }
+      }
+    } catch (error) {
+      console.error("Error during item type detection", error);
     }
   };
 
@@ -60,6 +99,7 @@ const CarouselView = ({ horizontalData }) => {
             {dataToSend.map((item, index) => (
               <SwiperSlide
                 key={index}
+                // onClick={() => handleItemTypeDetection(item)}
                 onClick={() => handleItemTypeDetection(item)}
               >
                 <CarouselItems

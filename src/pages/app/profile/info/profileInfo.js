@@ -8,6 +8,7 @@ import axios from "axios"; // Import Axios for making HTTP requests
 import { useAccessToken } from "../../../../../context/AccessTokenContext";
 import { generateApiUrl } from "@/components/ApiUr";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 const ProfileInfo = () => {
   const accessToken = useAccessToken();
@@ -97,6 +98,10 @@ const ProfileInfo = () => {
 
   return (
     <>
+      <Head>
+        <title>ایزی‌نکت - پروفایل</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       <HeaderTwo />
       <Layout>
         <div>

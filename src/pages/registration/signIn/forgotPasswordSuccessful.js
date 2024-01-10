@@ -3,10 +3,15 @@ import Link from "next/link";
 import React from "react";
 import EasynecVertLogo from "@/components/icons/EasynecVertLogo";
 import {motion} from "framer-motion";
+import Head from "next/head";
 
 const ForgotPasswordSuccessful = () => {
   return (
     <div className="container">
+        <Head>
+            <title>ایزی‌نکت - فراموشسی رمز</title>
+            <meta name="easynect business card" content="Powered by Easynect" />
+        </Head>
         <div
             className="w-full h-[320px] rounded-[20px] mt-5 bg-gold
        bg-[url('../../public/images/backgrounds/passwordImage.jpg')] bg-cover

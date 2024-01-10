@@ -18,6 +18,7 @@ import {
 } from "@/components/Icons";
 import LoadingState from "@/components/LoadingState";
 import HeaderTwo from "@/components/HeaderTwo";
+import Head from "next/head";
 
 const Lead = () => {
   const [leadData, setLeadData] = useState([]);
@@ -166,6 +167,10 @@ const Lead = () => {
   console.log("leadData999", leadFields);
   return (
     <>
+      <Head>
+        <title>ایزی‌نکت - فرم لید</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       <HeaderTwo />
       <Layout>
         <h3 className="font-semibold mb-6">فرم لید</h3>

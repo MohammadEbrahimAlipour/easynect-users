@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import Link from "next/link";
-import axios from "axios";
-import { LinkedIn, PlusSign } from "@/components/Icons";
+import { PlusSign } from "@/components/Icons";
 import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 import HeaderTwo from "@/components/HeaderTwo";
 import { useRouter } from "next/router";
 import { useAccessToken } from "../../../../../context/AccessTokenContext";
-import { generateApiUrl } from "@/components/ApiUr";
 import { toast } from "react-toastify";
-import Image from "next/image";
 import MediaOptions from "@/components/MediaOptions";
+import { API_ROUTES } from "@/services/api";
+import axiosInstance from "@/services/axiosInterceptors";
+import Head from "next/head";
 
 const MediaSelection = () => {
   const router = useRouter();
@@ -20,16 +19,17 @@ const MediaSelection = () => {
   const [mediaData, setMediaData] = useState([]);
 
   useEffect(() => {
-    const apiUrl = generateApiUrl(`/api/v1/contents/page/${id}`);
+    const apiUrl = API_ROUTES.CARDS_MEDIASELECTION_CONTENTS_PAGE(id);
 
     if (id) {
       // Make an Axios GET request to fetch user data
-      axios
+      axiosInstance
         .get(apiUrl, {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`, // Add your access token here
             "Accept-Language": "fa" // Language header
-          }
+          },
+          suppress404Toast: true
         })
         .then((response) => {
           // Handle the data once it's received
@@ -38,20 +38,19 @@ const MediaSelection = () => {
         .catch((error) => {
           console.error("Error fetching user data:", error);
 
-          // Check if the response is 404 and ignore the toast if it is
-          if (error.response && error.response.status === 404) {
-            // Maybe handle the 404 error by updating the state or routing the user elsewhere
-            // DO NOT show the toast
-          } else if (
-            error.response &&
-            error.response.data &&
-            error.response.data.detail
-          ) {
-            const errorMessage = error.response.data.detail;
-            toast.error(errorMessage);
-          } else {
-            // If there is no specific error message, display a generic one
-            toast.error("Error: An error occurred.");
+          if (error.response && error.response.status !== 404) {
+            // Show toast for other non-404 errors
+            if (
+              error.response &&
+              error.response.data &&
+              error.response.data.detail
+            ) {
+              const errorMessage = error.response.data.detail;
+              toast.error(errorMessage);
+            } else if (error.response && error.response.status !== 404) {
+              // If there is no specific error message from the backend, display a generic one
+              toast.error("Error: An error occurred.");
+            }
           }
         });
     }
@@ -59,6 +58,10 @@ const MediaSelection = () => {
 
   return (
     <>
+      <Head>
+        <title>ایزی‌نکت - لیست آیتم ها</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       {/* add id to back route */}
       <HeaderTwo />
       <Layout>

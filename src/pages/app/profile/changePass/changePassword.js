@@ -7,6 +7,7 @@ import axios from "axios";
 import { useAccessToken } from "../../../../../context/AccessTokenContext"; // Import your access token context hook
 import { generateApiUrl } from "@/components/ApiUr";
 import {useRouter} from "next/router";
+import Head from "next/head";
 
 const ChangePassword = () => {
   const { accessToken } = useAccessToken(); // Get the access token from your context
@@ -62,7 +63,11 @@ const router =useRouter()
 
   return (
     <>
-      <HeaderTwo href="/profile" />
+      <Head>
+        <title>ایزی‌نکت - تغییر پسورد</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
+      <HeaderTwo />
       <Layout>
         <p className="text-lg ps-3 font-semibold mb-3">تغییر رمز عبور</p>
 

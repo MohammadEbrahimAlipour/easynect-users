@@ -10,7 +10,10 @@ import Image from "next/image";
 import IconReg from "@/components/icons/IconReg";
 import bgGradient from "../../../../public/images/backgrounds/bgGradient.jpg";
 import { motion } from "framer-motion";
-import { loginUser } from "@/services/api";
+import axiosInstance from "@/services/axiosInterceptors";
+
+import { API_ROUTES } from "@/services/api";
+import Head from "next/head";
 
 const LoginUser = () => {
   const router = useRouter();
@@ -32,9 +35,19 @@ const LoginUser = () => {
     e.preventDefault();
 
     try {
-      const accessToken = await loginUser(formData);
+      const apiUrl = API_ROUTES.LOGIN; // Use the LOGIN API route directly
+      const headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "accept-language": "fa"
+      };
+      const formBody = new URLSearchParams(formData);
 
-      if (accessToken) {
+      const response = await axiosInstance.post(apiUrl, formBody, { headers });
+
+      if (response.status === 200) {
+        const data = response.data;
+        const accessToken = data.access_token;
+
         setAccessToken(accessToken);
 
         if (typeof localStorage !== "undefined") {
@@ -42,15 +55,22 @@ const LoginUser = () => {
         }
 
         router.push("/app/cards/profileCard");
+      } else {
+        console.error("Unexpected status code during login:", response.status);
       }
     } catch (error) {
-      // The error has already been logged in the `loginUser` function
-      // You can add additional error handling here if needed
+      // Log the error for debugging purposes
+      console.error("Error during login:", error);
+      // Handle the error as needed
     }
   };
 
   return (
     <div className="container mb-10">
+      <Head>
+        <title>ایزی‌نکت - لاگین</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       <div>
         <div className="w-full h-[320px] rounded-[20px] mt-5 gradient relative overflow-hidden">
           <span className="absolute z-100 flex items-center justify-center w-full top-10">

@@ -1,32 +1,32 @@
 // services/api.js
 import { generateApiUrl } from "@/components/ApiUr";
-import axiosInstance from "./axiosInterceptors";
 
-// login api (filling token here)
-export const loginUser = async (formData) => {
-  try {
-    const apiUrl = generateApiUrl("/api/v1/login/");
-    const headers = {
-      "Content-Type": "application/x-www-form-urlencoded",
-      "accept-language": "fa"
-    };
-    const formBody = new URLSearchParams(formData);
+export const API_ROUTES = {
+  // registration
+  LOGIN: generateApiUrl(`/api/v1/login/`),
 
-    const response = await axiosInstance.post(apiUrl, formBody, { headers });
+  // cards
+  CARDS_PROFILE_CARD_PAGES: generateApiUrl(`/api/v1/pages`),
+  CARDS_EDIT_PROFILE_INFO_PAGES: (id) => generateApiUrl(`/api/v1/pages/${id}`),
+  CARDS_MEDIASELECTION_CONTENTS_PAGE: (id) =>
+    generateApiUrl(`/api/v1/contents/page/${id}`),
 
-    if (response.status === 200) {
-      const data = response.data;
-      const accessToken = data.access_token;
-      return accessToken;
-    }
+  CARDS_CONTENTADDITEM_CONTENT_STORE: generateApiUrl(`/api/v1/contents_store/`),
 
-    // Log unexpected status codes
-    console.error("Unexpected status code during login:", response.status);
+  CARDS_MEDIASETTINGHORZ_CONTENTS_STORE: (id) =>
+    generateApiUrl(`/api/v1/contents_store/${id}`),
 
-    return null; // or throw an error based on your application logic
-  } catch (error) {
-    // Log the error for debugging purposes
-    console.error("Error during login:", error);
-    throw error; // Rethrow the error for further handling if needed
-  }
+  CARDS_EDITMEDIASETTINGHORZ_CONTENTS: (id) =>
+    generateApiUrl(`/api/v1/contents/${id}`),
+
+  CARDS_CREATECARD_PAGES: generateApiUrl("/api/v1/pages/"),
+
+  // contacts
+  CONTACTS_PAGES: generateApiUrl(`/api/v1/contacts/pages/`),
+
+  // stats
+  STATS_ANALYTICS_PAGES: generateApiUrl("/api/v1/analytics/pages/"),
+
+  //   main page
+  MAIN_PAGE_QRCODE_INFO: generateApiUrl("/api/v1/pages/qrcode_info/")
 };

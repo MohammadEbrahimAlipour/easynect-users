@@ -14,12 +14,17 @@ import bgStartHere from "../../../public/images/startHere.jpg";
 import IconReg from "@/components/icons/IconReg";
 import { motion } from "framer-motion";
 import ComingSoon from "@/components/ComingSoon";
+import Head from "next/head";
 
 const StartHere = () => {
   const progress = 100; // Set the progress percentage
 
   return (
     <div className="container mb-10">
+      <Head>
+        <title>ایزی‌نکت</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       <div>
         <motion.div
           initial={{ height: "40vh" }}

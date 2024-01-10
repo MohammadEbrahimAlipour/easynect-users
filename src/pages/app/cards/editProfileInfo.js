@@ -14,14 +14,16 @@ import { generateApiUrl } from "@/components/ApiUr";
 import LoadingState from "@/components/LoadingState";
 import ToggleSwitch from "@/components/ToggleSwitch";
 import ProfileImage from "@/components/ProfileImage";
+import { API_ROUTES } from "@/services/api";
+import Head from "next/head";
 
 const EditProfileInfo = () => {
   const [pageData, setPageData] = useState(null);
   const accessToken = useAccessToken();
   const router = useRouter();
   const { id } = router.query;
-  const apiUrl = generateApiUrl(`/api/v1/pages/${id}`);
   const [changedFormData, setChangedFormData] = useState({});
+  const apiUrl = API_ROUTES.CARDS_EDIT_PROFILE_INFO_PAGES(id);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -160,6 +162,10 @@ const EditProfileInfo = () => {
 
   return (
     <main>
+      <Head>
+        <title>ایزی‌نکت - ویرایش کارت</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       <Header />
       <Layout className="!px-3 2xs:!px-1 !pt-3 !h-fit !mb-10">
         {pageData ? (

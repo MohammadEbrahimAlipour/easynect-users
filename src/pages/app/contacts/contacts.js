@@ -7,7 +7,6 @@ import {
   SearchIcon
 } from "@/components/Icons";
 import Layout from "@/components/Layout";
-import Link from "next/link";
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -15,12 +14,13 @@ import { useAccessToken } from "../../../../context/AccessTokenContext";
 import { generateApiUrl } from "@/components/ApiUr";
 import LoadingState from "@/components/LoadingState";
 import InfiniteScroll from "react-infinite-scroll-component";
-import BottomSheet from "@/components/BottomSheet";
-import ContactDetails from "@/components/contacts/bottomSheet/ContactDetails";
 import ExelBottomSheet from "@/components/contacts/bottomSheet/ExelBottomSheet";
 import ContactFilters from "@/components/contacts/bottomSheet/ContactFilters";
 import _debounce from "lodash/debounce";
 import _ from "lodash";
+import { API_ROUTES } from "@/services/api";
+import axiosInstance from "@/services/axiosInterceptors";
+import Head from "next/head";
 
 const Contacts = () => {
   const accessToken = useAccessToken();
@@ -36,16 +36,11 @@ const Contacts = () => {
   const [hasMore, setHasMore] = useState(true);
   // Initialize selectedPage with the first page from pageData
   const [selectedPage, setSelectedPage] = useState(pageData[0] || null);
-
   const [showExelSheet, setShowExelSheet] = useState(false);
-
   const [showOption, setShowOption] = useState(false);
-
   const [showContactFilters, setShowContactFilters] = useState(false);
-
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
-
   const [searchQuery, setSearchQuery] = useState("");
 
   const debouncedApiCall = useCallback(
@@ -141,10 +136,10 @@ const Contacts = () => {
   };
 
   useEffect(() => {
-    const apiUrl = generateApiUrl(`/api/v1/contacts/pages/`);
+    const apiUrl = API_ROUTES.CONTACTS_PAGES;
 
     // Make an Axios GET request to fetch user data
-    axios
+    axiosInstance
       .get(apiUrl, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`, // Add your access token here
@@ -162,22 +157,7 @@ const Contacts = () => {
         }
       })
       .catch((error) => {
-        console.error("Error fetching user data:", error);
-        // Check if the error response is 404 (Not Found)
-        if (error.response && error.response.status === 404) {
-          // Handle the case where no cards are found
-          // setPageData([]); // Set an empty array to trigger the "no cards" message
-        } else if (
-          error.response &&
-          error.response.data &&
-          error.response.data.detail
-        ) {
-          const errorMessage = error.response.data.detail;
-          toast.error(errorMessage);
-        } else {
-          // If there is no specific error message, display a generic one
-          toast.error("Error: An error occurred.");
-        }
+        // error here
       });
   }, [accessToken.accessToken, selectedPage]);
 
@@ -248,6 +228,10 @@ const Contacts = () => {
 
   return (
     <>
+      <Head>
+        <title>ایزی‌نکت - مخاطبین</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       {pageData ? (
         <>
           <Header />

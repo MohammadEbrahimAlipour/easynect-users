@@ -24,41 +24,44 @@ import HeaderTwo from "@/components/HeaderTwo";
 import Footer from "@/components/Footer";
 import NoCardExist from "@/components/infoPage/NoCardExist";
 import { useRouter } from "next/router";
+import axiosInstance from "@/services/axiosInterceptors";
+import { API_ROUTES } from "@/services/api";
+import Head from "next/head";
 
 const InfoPage = () => {
-  const handleSaveContact = () => {
-    // create Vcard
+  //   const handleSaveContact = () => {
+  //     // create Vcard
 
-    const vCardString = `
-BEGIN:VCARD
-VERSION:3.0
-N;CHARSET=utf-8:چاپ و تبلیغات نیکبخت
-TEL;TYPE=Number:05138842010
-TEL;TYPE=Number:09150032020
-TEL;TYPE=Number:09150042020
-EMAIL;INTERNET;TYPE=Email:nikbakhtprint@gmail.com
-URL;TYPE=WhatsApp:https://nikbakhtprint.com/
-URL;TYPE=Instagram:https://www.instagram.com/nikbakhtprint/
-URL;TYPE=Telegram:https://t.me/nikbakhtprint
-URL;TYPE=Website:https://maps.app.goo.gl/mJSte6hmxcvH6ToJ7
-END:VCARD
-`;
+  //     const vCardString = `
+  // BEGIN:VCARD
+  // VERSION:3.0
+  // N;CHARSET=utf-8:چاپ و تبلیغات نیکبخت
+  // TEL;TYPE=Number:05138842010
+  // TEL;TYPE=Number:09150032020
+  // TEL;TYPE=Number:09150042020
+  // EMAIL;INTERNET;TYPE=Email:nikbakhtprint@gmail.com
+  // URL;TYPE=WhatsApp:https://nikbakhtprint.com/
+  // URL;TYPE=Instagram:https://www.instagram.com/nikbakhtprint/
+  // URL;TYPE=Telegram:https://t.me/nikbakhtprint
+  // URL;TYPE=Website:https://maps.app.goo.gl/mJSte6hmxcvH6ToJ7
+  // END:VCARD
+  // `;
 
-    // andnoiasidn aindians inains d adnaid
+  //     // andnoiasidn aindians inains d adnaid
 
-    // Download the vCard
-    const blob = new Blob([vCardString], {
-      type: "text/vcard"
-    });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "contact.vcf"; // Set the filename
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-  };
+  //     // Download the vCard
+  //     const blob = new Blob([vCardString], {
+  //       type: "text/vcard"
+  //     });
+  //     const url = window.URL.createObjectURL(blob);
+  //     const a = document.createElement("a");
+  //     a.href = url;
+  //     a.download = "contact.vcf"; // Set the filename
+  //     document.body.appendChild(a);
+  //     a.click();
+  //     document.body.removeChild(a);
+  //     window.URL.revokeObjectURL(url);
+  //   };
 
   const [selectedOption, setSelectedOption] = useState(null);
   const [showOptions, setShoOptions] = useState(false);
@@ -113,8 +116,8 @@ END:VCARD
 
   useEffect(() => {
     // Make an Axios GET request to fetch user data based on user_id
-    const apiUrl = generateApiUrl("/api/v1/pages/qrcode_info/");
-    axios
+    const apiUrl = API_ROUTES.MAIN_PAGE_QRCODE_INFO;
+    axiosInstance
       .get(apiUrl, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
@@ -286,6 +289,10 @@ END:VCARD
 
   return (
     <>
+      <Head>
+        <title>ایزی‌نکت - ویرایش صفحه اصلی</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       {noCard !== null ? (
         <>
           {noCard === false ? (
@@ -362,7 +369,6 @@ END:VCARD
                       <div className="border-[3px]  rounded-lg mx-2 my-4 ">
                         <div className="grid grid-flow-col justify-center items-center w-full">
                           <div className="my-5 overflow-x-hidden overscroll-y-contain ">
-                            {/* <SwiperCarousel /> */}
                             <EmptyItemsAddBox
                               listItems={listItems}
                               pageId={selectedOption.id}
@@ -376,7 +382,7 @@ END:VCARD
                         {/* save btn */}
                         <button
                           disabled
-                          onClick={handleSaveContact}
+                          // onClick={handleSaveContact}
                           className="bg-dark text-white text-sm font-bold w-full h-[44px] rounded-[8px] opacity-10"
                         >
                           ذخیره مخاطب

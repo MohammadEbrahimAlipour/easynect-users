@@ -35,3 +35,17 @@ body {
 .custom-text-shadow-right4 {
   text-shadow: 11px 11px 8px rgba(0, 0, 0, 0.6);
 }
+
+/* Add this style to make the focus on inputs red */
+input:focus {
+  border-color: #cea16a; /* You can adjust the color as needed */
+  /* box-shadow: 0 0 5px red; You can adjust the shadow as needed */
+  outline: 1px solid #cea16a;
+}
+
+/* Additional style for textarea focus */
+textarea:focus {
+  border-color: #cea16a;
+  /* box-shadow: 0 0 5px red; */
+  outline: 1px solid #cea16a;
+}

@@ -15,6 +15,7 @@ import axios from "axios";
 import { useAccessToken } from "../../../../context/AccessTokenContext";
 import { useRouter } from "next/router";
 import { generateApiUrl } from "@/components/ApiUr";
+import Head from "next/head";
 
 const CustomLinkProfile = ({ href, title, className = "" }) => {
   return (
@@ -66,6 +67,10 @@ const Profile = () => {
   };
   return (
     <>
+      <Head>
+        <title>ایزی‌نکت - صفحه پروفایل</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       <Header />
       <Layout className="!px-9">
         {/* menu */}

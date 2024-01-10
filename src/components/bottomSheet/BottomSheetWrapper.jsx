@@ -3,6 +3,7 @@ import { Drawer } from "@mui/material";
 
 const BottomSheetWrapper = ({ onClose, open, children }) => {
   return (
+    // <div className="flex justify-center items-center max-w-[420px] overflow-hidden">
     <Drawer
       anchor="bottom"
       open={open}
@@ -15,11 +16,19 @@ const BottomSheetWrapper = ({ onClose, open, children }) => {
           borderTopRightRadius: "1rem", // rounded-lg for top right
           fontFamily: "ravi",
           maxHeight: "600px"
+          // maxWidth: "420px"
         }
       }}
     >
-      <div className="py-2 px-5">{children}</div>
+      <div
+        className="py-2 px-5
+      
+      "
+      >
+        {children}
+      </div>
     </Drawer>
+    // </div>
   );
 };
 

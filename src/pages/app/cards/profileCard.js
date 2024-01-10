@@ -15,6 +15,9 @@ import HeaderShareBSheet from "@/components/bottomSheet/header/HeaderShareBSheet
 import BottomSheetShareById from "@/components/bottomSheet/cards/BottomSheetShareById";
 import BottomSheetMore from "@/components/bottomSheet/cards/BottomSheetMore";
 import { useRouter } from "next/router";
+import { API_ROUTES } from "@/services/api";
+import axiosInstance from "@/services/axiosInterceptors";
+import Head from "next/head";
 
 const ProfileCard = () => {
   const [cardData, setCardData] = useState([]);
@@ -57,9 +60,9 @@ const ProfileCard = () => {
   // Fetch card data from the API
   useEffect(() => {
     // Replace with your API endpoint
-    const apiUrl = generateApiUrl("/api/v1/pages/");
+    const apiUrl = API_ROUTES.CARDS_PROFILE_CARD_PAGES;
 
-    axios
+    axiosInstance
       .get(apiUrl, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
@@ -171,6 +174,10 @@ const ProfileCard = () => {
 
   return (
     <>
+      <Head>
+        <title>ایزی‌نکت - کارت ها</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       <Header cardData={cardData} />
       <Layout className="!h-fit  ">
         {!pageDataDontExist ? (

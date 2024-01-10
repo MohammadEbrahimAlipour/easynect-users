@@ -89,6 +89,9 @@ const BottomSheetStatsPresets = ({ setFromDate, setToDate, onClose, open }) => {
             <Calendar
               value={selectedDayRange}
               onChange={setSelectedDayRange}
+              calendarClassName="responsive-calendar"
+              locale="fa" // locale string for Shamsi calendar
+              // renderInput={renderCustomInput}
               shouldHighlightWeekends
             />
           </div>
@@ -100,9 +103,22 @@ const BottomSheetStatsPresets = ({ setFromDate, setToDate, onClose, open }) => {
             className="flex justify-center items-center w-full py-2 rounded-lg border-[1px]
            border-black text-sm font-medium"
           >
-            {showCal ? "تنظیمات دلخواه" : "پریست ها"}
+            {!showCal ? "تنظیمات دلخواه" : "پریست ها"}
           </button>
         </div>
+
+        <form
+        // onSubmit={handleSubmit}
+        >
+          {showCal && (
+            <button
+              type="submit"
+              className="bg-dark w-full text-white rounded-md py-2 mt-4 "
+            >
+              اعمال تغییرات
+            </button>
+          )}
+        </form>
       </div>
     </BottomSheetWrapper>
   );
