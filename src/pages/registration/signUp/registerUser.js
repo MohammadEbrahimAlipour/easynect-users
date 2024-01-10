@@ -10,6 +10,7 @@ import IconReg from "@/components/icons/IconReg";
 import EasynecVertLogo from "@/components/icons/EasynecVertLogo";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
+import Head from "next/head";
 
 const RegisterUser = () => {
   const router = useRouter();
@@ -175,6 +176,10 @@ const RegisterUser = () => {
 
   return (
     <>
+      <Head>
+        <title>ایزی‌نکت - ورود</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       <div className="container mb-10">
         <div className="w-full h-[320px] rounded-[20px] mt-5 gradient relative overflow-hidden">
           <span className="absolute z-100 flex items-center justify-center w-full top-10">

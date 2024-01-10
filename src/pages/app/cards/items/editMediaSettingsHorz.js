@@ -13,6 +13,9 @@ import Image from "next/image";
 import LoadingState from "@/components/LoadingState";
 import CreateUnifiedData from "@/components/mediaItems/createItem/CreateUnifiedData";
 import CreateFile from "@/components/mediaItems/createItem/CreateFile";
+import { API_ROUTES } from "@/services/api";
+import axiosInstance from "@/services/axiosInterceptors";
+import Head from "next/head";
 
 const EditMediaSettingsHorz = () => {
   const router = useRouter();
@@ -87,11 +90,11 @@ const EditMediaSettingsHorz = () => {
   }, [displayType]);
 
   useEffect(() => {
-    const apiUrl = generateApiUrl(`/api/v1/contents/${id}`);
+    const apiUrl = API_ROUTES.CARDS_EDITMEDIASETTINGHORZ_CONTENTS(id);
 
     if (id) {
       // Make an Axios GET request to fetch user data
-      axios
+      axiosInstance
         .get(apiUrl, {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`, // Add your access token here
@@ -155,6 +158,7 @@ const EditMediaSettingsHorz = () => {
           // Handle success, for example, redirect to a success page
           console.log("User created successfully!");
           toast.success("updated successfully");
+          router.push(`/app/cards/items/mediaSelection?id=${id}`);
         } else {
           // Handle other status codes or show an error message if needed
           console.error("Unexpected response status:", response.status);
@@ -220,6 +224,10 @@ const EditMediaSettingsHorz = () => {
   };
   return (
     <>
+      <Head>
+        <title>ایزی‌نکت - ویرایش آیتم</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       {mediaData && id ? (
         <>
           <HeaderTwo />
@@ -247,7 +255,7 @@ const EditMediaSettingsHorz = () => {
                 {/* preview */}
                 <div className="mt-10 flex flex-col items-center">
                   <div
-                    className={`border-2 rounded-md py-4 px-3 w-[210px] overflow-hidden 
+                    className={`border-2 rounded-md py-4 px-3 w-[170px] overflow-hidden 
               ${
                 is_square
                   ? "flex flex-col"
@@ -305,13 +313,18 @@ const EditMediaSettingsHorz = () => {
                     />
                   )}
                 </div>
-
-                <div className="mt-10 py-5 border-[1px] rounded-lg px-2 flex justify-between overflow-hidden ">
-                  <h3 className="text-sm">پیش نمایش</h3>
-                  <div className="flex ">
+                {/* 
+                <p>
+                  در کادر پایین حالت‌های مختلف نمایش را مشاهده می‌کنید. با
+                  انتخاب حالت های مختلف می‌بینید عنوان و توضیحات چگونه به نمایش
+                  در می‌آیند. ولی به معنای نمایش نهایی در صفحه شما نیست.
+                </p> */}
+                <div className="mt-10 py-3 border-[1px] rounded-lg px-2 flex flex-col justify-between overflow-hidden ">
+                  <h3 className="text-sm mb-2">حالت های مختلف نمایش</h3>
+                  <div className="flex justify-between overflow-hidden">
                     {/* chosen for rectengle */}
                     <span
-                      className={`relative left-[-83px] top-[2px] opacity-0 transform scale-0 transition-opacity duration-1000
+                      className={`relative left-[-134px] top-[2px] opacity-0 transform scale-0 transition-opacity duration-1000
                 ${is_square ? "opacity-0 scale-0" : "opacity-100 scale-100"} `}
                     >
                       <ChosenTik />
@@ -319,7 +332,7 @@ const EditMediaSettingsHorz = () => {
 
                     {/* chosen for square */}
                     <span
-                      className={`relative left-[-170px] top-[20px] opacity-0 transform scale-0 transition-opacity duration-1000 
+                      className={`relative left-[-223px] top-[20px] opacity-0 transform scale-0 transition-opacity duration-1000 
                 ${is_square ? "opacity-100 scale-100" : "opacity-0 scale-0"}`}
                     >
                       <ChosenTik />

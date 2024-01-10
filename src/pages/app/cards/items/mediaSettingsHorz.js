@@ -18,6 +18,9 @@ import PropTypes from "prop-types";
 import LinearProgress from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import axiosInstance from "@/services/axiosInterceptors";
+import { API_ROUTES } from "@/services/api";
+import Head from "next/head";
 
 const MediaSettingsHorz = () => {
   const router = useRouter();
@@ -93,11 +96,11 @@ const MediaSettingsHorz = () => {
   }, [displayType]);
 
   useEffect(() => {
-    const apiUrl = generateApiUrl(`/api/v1/contents_store/${id}`);
+    const apiUrl = API_ROUTES.CARDS_MEDIASETTINGHORZ_CONTENTS_STORE(id);
 
     if (id) {
       // Make an Axios GET request to fetch user data
-      axios
+      axiosInstance
         .get(apiUrl, {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`, // Add your access token here
@@ -236,6 +239,10 @@ const MediaSettingsHorz = () => {
 
   return (
     <>
+      <Head>
+        <title>ایزی‌نکت - ساخت آیتم جدید</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       {mediaData && placeholder && id && type ? (
         <>
           <HeaderTwo />
@@ -341,13 +348,12 @@ const MediaSettingsHorz = () => {
                   </>
                 </div>
 
-                <div className="mt-10 py-5 border-[1px] rounded-lg px-2 flex justify-between overflow-hidden ">
-                  <h3 className="text-sm">پیش نمایش</h3>
-
-                  <div className="flex ">
+                <div className="mt-10 py-3 border-[1px] rounded-lg px-2 flex flex-col justify-between overflow-hidden ">
+                  <h3 className="text-sm mb-2">حالت های مختلف نمایش</h3>
+                  <div className="flex justify-between overflow-hidden">
                     {/* chosen for rectengle */}
                     <span
-                      className={`relative left-[-83px] top-[2px] opacity-0 transform scale-0 transition-opacity duration-1000
+                      className={`relative left-[-134px] top-[2px] opacity-0 transform scale-0 transition-opacity duration-1000
                     ${
                       is_square ? "opacity-0 scale-0" : "opacity-100 scale-100"
                     } `}
@@ -357,7 +363,7 @@ const MediaSettingsHorz = () => {
 
                     {/* chosen for square */}
                     <span
-                      className={`relative left-[-170px] top-[20px] opacity-0 transform scale-0 transition-opacity duration-1000 
+                      className={`relative  left-[-223px] top-[20px] opacity-0 transform scale-0 transition-opacity duration-1000 
                     ${
                       is_square ? "opacity-100 scale-100" : "opacity-0 scale-0"
                     }`}

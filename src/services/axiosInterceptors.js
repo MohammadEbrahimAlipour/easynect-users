@@ -36,6 +36,16 @@ axiosInstance.interceptors.response.use(
     if (!error.response) {
       toast.error("خطای شبکه"); // Generic message for network errors in Persian
     } else {
+      // If set to true, this specific call will suppress the toast error for 404
+      if (
+        error.config &&
+        error.config.suppress404Toast &&
+        error.response &&
+        error.response.status === 404
+      ) {
+        return Promise.reject(error); // Reject the promise without making a toast
+      }
+
       // Error from backend, use error detail if available
       const errorMessage = error.response.data?.detail || "ارور ناشناخته"; // Persian for "Unknown error"
       toast.error(errorMessage);

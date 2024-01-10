@@ -41,8 +41,6 @@ const ExelBottomSheet = ({ showExelSheet, setShowExelSheet, pageID }) => {
     to: null
   });
 
-  console.log("date to check", fromDate, toDate);
-
   // Convert Shamsi date to a yyyy-mm-dd string
   const formatShamsiDate = (shamsiDate) => {
     if (!shamsiDate) return "";
@@ -128,21 +126,7 @@ const ExelBottomSheet = ({ showExelSheet, setShowExelSheet, pageID }) => {
       setDownloading(false); // Stop showing the 'Downloading...' message in any case
     }
   };
-  const handleBottomSheetSwitch = () => {
-    setGoToCal(!goToCal);
-  };
 
-  // Optionally, use this to programmatically start a file download
-  const downloadFile = (fileURL) => {
-    const link = document.createElement("a");
-    link.href = fileURL;
-    link.setAttribute("download", "filename.xlsx"); // Set the file name
-    document.body.appendChild(link);
-    link.click();
-    link.parentNode.removeChild(link);
-  };
-
-  console.log("showcal", showCal);
   return (
     <BottomSheetWrapper
       open={showExelSheet}

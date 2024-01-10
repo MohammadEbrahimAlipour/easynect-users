@@ -11,6 +11,10 @@ import "react-toastify/dist/ReactToastify.css";
 import "swiper/css";
 import ErrorBoundary from "@/components/Errors/ErrorBoundary";
 
+// Import DndProvider from react-dnd
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+
 const raviFont = raviFontLocal({
   src: "../RaviPro/Ravi Variable/Webfonts/woff2/Ravi-VF.woff2",
   variable: "--font-rav"
@@ -32,7 +36,9 @@ export default function App({ Component, pageProps }) {
         <div className=" 3xl:w-[414px] 2xl:w-[414px] lg:w-[414px]">
           <ErrorBoundary>
             <AccessTokenProvider protectedRoutes={protectedRoutes}>
+              {/* <DndProvider backend={HTML5Backend}> */}
               <Component {...pageProps} />
+              {/* </DndProvider> */}
             </AccessTokenProvider>
           </ErrorBoundary>
         </div>

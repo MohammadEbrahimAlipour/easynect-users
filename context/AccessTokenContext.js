@@ -31,7 +31,6 @@ export const AccessTokenProvider = ({ children, protectedRoutes }) => {
   const router = useRouter();
 
   useEffect(() => {
-    console.log("token 1", accessToken);
     // debugger;
     if (!accessToken && isProtectedRoute(router.pathname)) {
       router.push("/registration/signIn/loginUser");

@@ -8,6 +8,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { generateApiUrl } from "@/components/ApiUr";
 import { useAccessToken } from "../../../../../context/AccessTokenContext";
+import Head from "next/head";
 
 const VerifyOTP = () => {
   // Initialize state to store the user-entered code
@@ -80,6 +81,10 @@ const VerifyOTP = () => {
 
   return (
     <>
+      <Head>
+        <title>ایزی‌نکت - رمز یک بار مصرف</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       <HeaderTwo href="/" className="!pb-0" />
       <Layout className="!mb-0 !pb-0">
         <div

@@ -5,19 +5,54 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e485ecf0-2a62-4124-95b9-8fcf0d3fef6f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/context/AccessTokenContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/context/AccessTokenContext.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/AccessoryConnect.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/AccessoryConnect.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/BottomSheetStatsPresets.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/BottomSheetStatsPresets.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/HeaderTwo.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HeaderTwo.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/accessories/NFCTag.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/accessories/NFCTag.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Footer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Footer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/bottomSheet/BottomSheetWrapper.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/bottomSheet/BottomSheetWrapper.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/bottomSheet/cards/BottomSheetMore.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/bottomSheet/cards/BottomSheetMore.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/contacts/bottomSheet/ContactFilters.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/contacts/bottomSheet/ContactFilters.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/contacts/bottomSheet/ExelBottomSheet.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/contacts/bottomSheet/ExelBottomSheet.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/publicPageView/CarouselView.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/publicPageView/CarouselView.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/publicPageView/RectangleData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/publicPageView/RectangleData.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/publicPageView/SquareData.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/publicPageView/SquareData.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/[username].js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/[username].js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/_app.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/_app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/cards/createCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/createCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/cards/editProfileInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/editProfileInfo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/cards/items/contentAddItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/items/contentAddItem.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/cards/items/editMediaSettingsHorz.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/items/editMediaSettingsHorz.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/cards/items/mediaSelection.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/items/mediaSelection.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/cards/items/mediaSettingsHorz.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/items/mediaSettingsHorz.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/cards/profileCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/profileCard.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/app/contacts/contacts.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/contacts/contacts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/contents/horz/addHorzItem.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/contents/horz/contentHorz.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/contents/horz/createHorzItem.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/contents/horz/editHorzItems.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/lead/createLead.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/lead/createLead.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/app/lead/lead.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/lead/lead.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/profile/changeMail/changeEmail.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/profile/changeMail/changeEmail.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/profile/changeMail/newEmailOtp.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/profile/changeMail/newEmailOtp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/profile/changePass/changePassword.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/profile/changePass/changePassword.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/profile/info/profileInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/profile/info/profileInfo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/profile/profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/profile/profile.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/app/stats/personsStats.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/stats/personsStats.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/mainPage/infoPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/mainPage/infoPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/registration/signIn/forgotPassword.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/registration/signIn/forgotPassword.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/registration/signIn/forgotPasswordSuccessful.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/registration/signIn/forgotPasswordSuccessful.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/registration/signIn/loginUser.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/registration/signIn/loginUser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/registration/signUp/registerUser.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/registration/signUp/registerUser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/registration/signUp/verifyOTP.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/registration/signUp/verifyOTP.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/startHere/infoLanding.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/startHere/infoLanding.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/startHere/startHere.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/startHere/startHere.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/api.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/axiosInterceptors.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/axiosInterceptors.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/styles/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/globals.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,6 +142,7 @@
       <workItem from="1703589044925" duration="118000" />
       <workItem from="1704447673256" duration="5294000" />
       <workItem from="1704704260033" duration="116000" />
+      <workItem from="1704893939169" duration="3342000" />
     </task>
     <servers />
   </component>

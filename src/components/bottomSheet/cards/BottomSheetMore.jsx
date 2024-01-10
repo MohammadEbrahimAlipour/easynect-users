@@ -76,6 +76,7 @@ const BottomSheetMore = ({
               </ul>
             </div>
           </BottomSheetWrapper>
+
           <Fragment>
             {showAccessory && (
               <AccessoryConnect

@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import Image from "next/image";
 import sampleImage from "../../../../public/images/defaultProfile.jpeg";
 import { ChangePhotoIcon } from "@/components/Icons";
-import { generateApiUrl } from "@/components/ApiUr";
-import axios from "axios";
 import { useAccessToken } from "../../../../context/AccessTokenContext";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
@@ -11,8 +9,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import EditMenuOptions from "@/components/EditMenuOptions";
-import Devider from "@/components/Devider";
-import ToggleSwitch from "@/components/ToggleSwitch";
+import { API_ROUTES } from "@/services/api";
+import axiosInstance from "@/services/axiosInterceptors";
+import Head from "next/head";
 
 const CreateCard = () => {
   const { accessToken } = useAccessToken();
@@ -64,7 +63,7 @@ const CreateCard = () => {
     e.preventDefault();
 
     // The API endpoint URL
-    const apiUrl = generateApiUrl("/api/v1/pages/");
+    const apiUrl = API_ROUTES.CARDS_CREATECARD_PAGES;
 
     // Create a FormData object to send the file and other data
     const formDataToSend = new FormData();
@@ -89,7 +88,7 @@ const CreateCard = () => {
     };
 
     // Send a POST request with the form data and headers using Axios
-    axios
+    axiosInstance
       .post(apiUrl, formDataToSend, config)
       .then((response) => {
         if (response.status === 200) {
@@ -103,12 +102,15 @@ const CreateCard = () => {
       })
       .catch((error) => {
         // Handle network errors or other exceptions
-        console.error("An error occurred:", error);
       });
   };
 
   return (
     <main>
+      <Head>
+        <title>ایزی‌نکت - ساخت کارت</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       <Header />
       <Layout className="!px-3 !pt-3 mb-10">
         <div className="flex flex-col">
@@ -204,7 +206,7 @@ const CreateCard = () => {
                   required
                 />
                 <EditMenuOptions
-                  label="نام خوانوادگی"
+                  label="نام خانوادگی"
                   name="owner_last_name"
                   value={formData.owner_last_name}
                   onChange={handleInputChange}

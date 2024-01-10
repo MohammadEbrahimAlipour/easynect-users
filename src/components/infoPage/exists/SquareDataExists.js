@@ -9,7 +9,6 @@ import InfoSocialMediaSquare from "@/components/InfoSocialMediaSquare";
 import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import LoadingState from "@/components/LoadingState";
-import EditHorzItems from "@/pages/app/contents/horz/editHorzItems";
 
 const SquareDataExists = ({
   data,

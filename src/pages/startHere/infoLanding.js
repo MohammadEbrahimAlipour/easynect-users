@@ -5,12 +5,17 @@ import EasynectSquareLogo from "@/components/icons/EasynectSquareLogo";
 import Link from "next/link";
 import { NextStartIcon } from "@/components/Icons";
 import { motion } from "framer-motion";
+import Head from "next/head";
 
 const InfoLanding = () => {
   const progress = 50; // Set the progress percentage
 
   return (
     <div className="container mb-10">
+      <Head>
+        <title>ایزی‌نکت</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       <div>
         <div className="w-full h-[450px] rounded-[20px] mt-5 gradient relative overflow-hidden">
           <span className="absolute z-100 flex items-center justify-center w-full top-[130px]">
