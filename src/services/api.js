@@ -6,7 +6,7 @@ export const API_ROUTES = {
   LOGIN: generateApiUrl(`/api/v1/login/`),
 
   // cards
-  CARDS_PROFILE_CARD_PAGES: generateApiUrl(`/api/v1/pages`),
+  CARDS_PROFILE_CARD_PAGES: generateApiUrl(`/api/v1/pages/`),
   CARDS_EDIT_PROFILE_INFO_PAGES: (id) => generateApiUrl(`/api/v1/pages/${id}`),
   CARDS_MEDIASELECTION_CONTENTS_PAGE: (id) =>
     generateApiUrl(`/api/v1/contents/page/${id}`),
