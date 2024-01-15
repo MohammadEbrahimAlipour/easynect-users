@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
 import CarouselItems from "./CarouselItems";
 
-const CarouselView = ({ horizontalData, handleCountingItemClicks }) => {
+const CarouselView = ({ horizontalData }) => {
   const [itemCounter, setItemCounter] = useState(horizontalData.length);
   const [centeredItemIndex, setCenteredItemIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(horizontalData.length);
@@ -19,47 +19,29 @@ const CarouselView = ({ horizontalData, handleCountingItemClicks }) => {
   const middleIndex = Math.floor(itemsArray.length / 2);
   const initialSlide = middleIndex >= 0 ? middleIndex : 0;
 
-  // Utility function to handle redirection
-  const handleRedirection = (url, isExternal) => {
-    const link = document.createElement("a");
-    link.href = url;
-    if (isExternal) {
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-    } else {
-      link.target = "_self";
-    }
-    // Append to the body, click and then remove to accommodate iOS security restrictions
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+  const handleItemTypeDetection = (item) => {
+    const itemData = item;
+    console.log();
+    // Early return to handle any potential 'null' or 'undefined'
+    if (!itemData) return;
 
-  const handleItemTypeDetection = async (item) => {
-    // First, check if item has required properties
-
-    if (!item || !item.content_val) return;
-
-    try {
-      const isAnalyticsCounted = await handleCountingItemClicks(item);
-      if (!isAnalyticsCounted) {
-        console.error("There was an error processing your request.");
-        return;
-      }
-
-      if (item.type) {
-        if (item.type === "phone") {
-          handleRedirection(`tel:${item.content_val}`);
-        } else if (item.type === "link") {
-          handleRedirection(item.content_val, true);
-        } else if (item.type === "file") {
-          handleRedirection(item.content_val);
-        } else if (item.type === "email") {
-          handleRedirection(`mailto:${item.content_val}`);
-        }
-      }
-    } catch (error) {
-      console.error("Error during item type detection", error);
+    if (itemData.type === "phone" && itemData.content_val) {
+      const telLink = `tel:${itemData.content_val}`;
+      window.location.href = telLink;
+    } else if (itemData.type === "link" && itemData.content_val) {
+      const externalLink = itemData.content_val;
+      window.open(externalLink, "_blank", "noopener,noreferrer");
+    } else if (itemData.type === "file" && itemData.content_val) {
+      const fileLink = itemData.content_val;
+      const a = document.createElement("a");
+      a.href = fileLink;
+      a.download = itemData.content_val.split("/").pop(); // Set a custom filename or fallback
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } else if (itemData.type === "email" && itemData.content_val) {
+      const emailLink = `mailto:${itemData.content_val}`;
+      window.location.href = emailLink;
     }
   };
 
@@ -78,7 +60,6 @@ const CarouselView = ({ horizontalData, handleCountingItemClicks }) => {
             {dataToSend.map((item, index) => (
               <SwiperSlide
                 key={index}
-                // onClick={() => handleItemTypeDetection(item)}
                 onClick={() => handleItemTypeDetection(item)}
               >
                 <CarouselItems
