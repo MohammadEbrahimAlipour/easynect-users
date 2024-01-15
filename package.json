@@ -28,6 +28,7 @@
     "framer-motion": "^10.17.5",
     "html2canvas": "^1.4.1",
     "jalaali-js": "^1.2.6",
+    "jalali-moment": "^3.3.11",
     "jsqr": "^1.4.0",
     "lodash": "^4.17.21",
     "materialize-css": "^1.0.0-rc.2",

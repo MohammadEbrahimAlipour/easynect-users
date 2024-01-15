@@ -46,8 +46,6 @@ export const AccessTokenProvider = ({ children, protectedRoutes }) => {
           if (isProtectedRoute(router.pathname)) {
             router.push("/registration/signIn/loginUser");
           }
-        } else if (statusCode === 404) {
-          router.push("/404");
         }
         return Promise.reject(error);
       }
