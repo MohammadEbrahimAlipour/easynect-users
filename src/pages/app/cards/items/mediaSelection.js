@@ -63,7 +63,7 @@ const MediaSelection = () => {
         <meta name="easynect business card" content="Powered by Easynect" />
       </Head>
       {/* add id to back route */}
-      <HeaderTwo />
+      <HeaderTwo href="/app/cards/profileCard" />
       <Layout>
         <div className="bg-white rounded-lg container py-10">
           <div className="flex justify-between items-center">

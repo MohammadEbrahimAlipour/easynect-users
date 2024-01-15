@@ -5,7 +5,6 @@ import QRCode from "qrcode.react";
 import { useAccessToken } from "../../../../context/AccessTokenContext";
 import { generateApiUrl } from "@/components/ApiUr";
 import { ArrowDownIcon } from "@/components/Icons";
-import LoadingState from "@/components/LoadingState";
 import { saveAs } from "file-saver";
 import { toast } from "react-toastify";
 

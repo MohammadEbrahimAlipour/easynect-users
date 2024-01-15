@@ -16,8 +16,11 @@ import axiosInstance from "@/services/axiosInterceptors";
 import Image from "next/image";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
 const PersonsStats = () => {
+  const router = useRouter();
+  const { selectedIdFromCard } = router.query;
   const accessToken = useAccessToken();
   const [statsData, setStatsData] = useState([]); // State to store data from api for top card section
   const [pageData, setPageData] = useState([]);
@@ -36,7 +39,7 @@ const PersonsStats = () => {
 
   // below code handles two buttons above chart
   const [showSubMenu, setShowSubMenu] = useState(false);
-  const [comingSoon, setComingSoon] = useState(true);
+  const [comingSoon, setComingSoon] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState("view"); //value to pass to chart
 
@@ -72,6 +75,12 @@ const PersonsStats = () => {
       }
     }
   }, []);
+
+  // useEffect(() => {
+  //   if (selectedIdFromCard) {
+  //     setSelectedCardId(selectedIdFromCard);
+  //   }
+  // }, [selectedIdFromCard]);
   // get data for top cards
   useEffect(() => {
     // Fetch data from the API
@@ -89,8 +98,12 @@ const PersonsStats = () => {
         const data = response.data;
         setStatsData(data); // Update the state with the fetched data
         // Set the selectedCardId to the id of the first item in statsData
-        if (data.length > 0) {
-          setSelectedCardId(data[0].id);
+        if (selectedIdFromCard) {
+          setSelectedCardId(selectedIdFromCard);
+        } else {
+          if (data.length > 0) {
+            setSelectedCardId(data[0].id);
+          }
         }
       })
       .catch((error) => {

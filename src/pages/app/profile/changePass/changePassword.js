@@ -6,12 +6,15 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useAccessToken } from "../../../../../context/AccessTokenContext"; // Import your access token context hook
 import { generateApiUrl } from "@/components/ApiUr";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import Head from "next/head";
+import { API_ROUTES } from "@/services/api";
+import axiosInstance from "@/services/axiosInterceptors";
+import { toast } from "react-toastify";
 
 const ChangePassword = () => {
   const { accessToken } = useAccessToken(); // Get the access token from your context
-const router =useRouter()
+  const router = useRouter();
 
   const [formData, setFormData] = useState({
     current_password: "",
@@ -35,7 +38,7 @@ const router =useRouter()
 
     try {
       // Define the API endpoint URL
-      const apiUrl = generateApiUrl("/api/v1/users/change_password/");
+      const apiUrl = API_ROUTES.PROFILE_CHANGE_PASSWORD;
 
       // Define the headers object with the necessary headers
       const headers = {
@@ -45,19 +48,26 @@ const router =useRouter()
       };
 
       // Send a POST request with the form data and headers using Axios
-      const response = await axios.post(apiUrl, formData, { headers });
+      const response = await axiosInstance.post(apiUrl, formData, { headers });
 
       if (response.status === 200) {
+        toast.success(response.data.detail);
         // Handle successful password change, e.g., redirect or show a success message
         console.log("Password changed successfully");
-        router.push("/app/profile/profile")
+        router.push("/app/profile/profile");
       } else {
         // Handle password change error, e.g., display an error message
         console.error("Password change failed");
       }
     } catch (error) {
       // Handle network errors or other exceptions
-      console.error("An error occurred:", error);
+      if (error.response && error.response.data && error.response.data.detail) {
+        const errorMessage = error.response.data.detail[0].msg;
+        toast.error(errorMessage);
+        console.error("Password change failed:", errorMessage);
+      } else {
+        console.error("An error occurred:", error);
+      }
     }
   };
 

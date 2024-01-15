@@ -8,8 +8,6 @@ import {
 } from "@/components/Icons";
 import Layout from "@/components/Layout";
 import React, { useEffect, useState, useCallback } from "react";
-import axios from "axios";
-import { toast } from "react-toastify";
 import { useAccessToken } from "../../../../context/AccessTokenContext";
 import { generateApiUrl } from "@/components/ApiUr";
 import LoadingState from "@/components/LoadingState";
@@ -32,7 +30,7 @@ const Contacts = () => {
   const [selectedOption, setSelectedOption] = useState("default");
   // const [selectedPage, setSelectedPage] = useState(null);
   const [skip, setSkip] = useState(0);
-  const [limit, setLimit] = useState(6);
+  const [limit, setLimit] = useState(4);
   const [hasMore, setHasMore] = useState(true);
   // Initialize selectedPage with the first page from pageData
   const [selectedPage, setSelectedPage] = useState(pageData[0] || null);
@@ -42,6 +40,8 @@ const Contacts = () => {
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [noMoreContacts, setNoMoreContacts] = useState(null);
 
   const debouncedApiCall = useCallback(
     _.debounce((searchQuery) => {
@@ -67,9 +67,7 @@ const Contacts = () => {
     searchQuery
   }) => {
     if (pageID) {
-      const apiUrl = generateApiUrl(
-        `/api/v1/contacts/page/unified/${pageID}?skip=${skip}&limit=${limit}`
-      );
+      const apiUrl = API_ROUTES.CONTACTS_UNIFIED(pageID, skip, limit);
 
       const params = {
         from_date: fromDate,
@@ -77,31 +75,20 @@ const Contacts = () => {
         search: searchQuery
       };
 
-      axios
+      axiosInstance
         .get(apiUrl, {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`,
             "Accept-Language": "fa"
           },
+          suppress404Toast: true,
           params: params
         })
         .then((response) => {
           setContacts(response.data);
         })
         .catch((error) => {
-          console.error("Error fetching contacts data:", error);
-          if (error.response && error.response.status === 404) {
-            setContacts([]);
-          } else if (
-            error.response &&
-            error.response.data &&
-            error.response.data.detail
-          ) {
-            const errorMessage = error.response.data.detail;
-            toast.error(errorMessage);
-          } else {
-            toast.error("Error: An error occurred.");
-          }
+          //  catch here
         });
     }
   };
@@ -178,12 +165,13 @@ const Contacts = () => {
       }
 
       // Make an Axios GET request to fetch more contacts
-      axios
+      axiosInstance
         .get(apiUrl, {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`,
             "Accept-Language": "fa"
-          }
+          },
+          suppress404Toast: true
         })
         .then((response) => {
           // Handle the data once it's received
@@ -198,17 +186,13 @@ const Contacts = () => {
           }
         })
         .catch((error) => {
-          console.error("Error fetching user data:", error);
-          // Check if the error response contains a message
-          if (
-            error.response &&
-            error.response.data &&
-            error.response.data.detail
-          ) {
-            const errorMessage = error.response.data.detail;
-            toast.error(errorMessage);
-          } else {
-            toast.error("Error: An error occurred.");
+          // catch here
+
+          // Handle the error here
+          if (error.response && error.response.status === 404) {
+            // Set setNoMoreContacts to true if the response status is 404
+            setNoMoreContacts(true);
+            // setHasMore(false);
           }
         });
     }
@@ -330,7 +314,7 @@ const Contacts = () => {
                   // dataLength={10}
                   next={loadMoreContacts}
                   hasMore={hasMore}
-                  loader={<LoadingState />}
+                  loader={noMoreContacts ? null : <LoadingState />}
                 >
                   {contacts.map((contact) => (
                     <ContactsCards contact={contact} key={contact.guid} />

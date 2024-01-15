@@ -105,7 +105,7 @@ const EmptyItemsAddBox = ({ horizontalData, pageId, listItems }) => {
 
     if (hasNullIds) {
       // Display an error message and prevent form submission
-      toast.error("پر کردن تمامی فیلد ها الظامیست");
+      toast.error("پر کردن تمامی فیلد ها الزامی است");
       return;
     }
 
