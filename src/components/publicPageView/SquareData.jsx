@@ -33,46 +33,44 @@ const SquareData = ({ object, handleCountingItemClicks }) => {
   //     window.location.href = emailLink;
   //   }
   // };
-  const handleRedirection = (url, isExternal) => {
-    const link = document.createElement("a");
-    link.href = url;
-    if (isExternal) {
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-    }
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const handleSquareTypeDetection = async (squareIndex) => {
+  const handleSquareTypeDetection = (squareIndex) => {
     const squareData = object?.data[squareIndex];
 
     // Early return to handle any potential 'null' or 'undefined'
     if (!squareData) return;
 
-    try {
-      const isAnalyticsCounted = await handleCountingItemClicks(squareData);
-      if (!isAnalyticsCounted) {
-        // If the analytics call was not successful, show a toast message and exit the function
-        console.error("There was an error processing your request.");
+    if (handleCountingItemClicks(squareData)) {
+      // Simulate a user-interaction redirection for iOS Safari
+      const confirmRedirect = () => {
+        handleRedirectionForType(squareData);
+      };
+
+      // This prompt will not be shown if the redirection is successful
+      if (!confirm("Continue to the external link?")) {
         return;
       }
+      // Code reaches here only if the user confirms
+      confirmRedirect();
+    }
+  };
 
-      // Redirect based on the type of squareData
-      if (squareData.type === "phone" && squareData.content_val) {
+  const handleRedirectionForType = (squareData) => {
+    switch (squareData.type) {
+      case "phone":
         handleRedirection(`tel:${squareData.content_val}`);
-      } else if (squareData.type === "link" && squareData.content_val) {
+        break;
+      case "link":
         handleRedirection(squareData.content_val, true);
-      } else if (squareData.type === "file" && squareData.content_val) {
-        // For iOS, this will not work for local files (file://),
-        // the file must be hosted on a server with the correct headers to trigger a download.
+        break;
+      case "file":
+        // For downloading files, this approach will only work if the file is hosted with proper headers.
         handleRedirection(squareData.content_val);
-      } else if (squareData.type === "email" && squareData.content_val) {
+        break;
+      case "email":
         handleRedirection(`mailto:${squareData.content_val}`);
-      }
-    } catch (error) {
-      console.error("Error during square type detection:", error);
+        break;
+      default:
+        console.log("No action for this type");
     }
   };
 
