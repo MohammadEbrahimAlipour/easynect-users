@@ -32,47 +32,10 @@ const RectangleData = ({ object, handleCountingItemClicks }) => {
   //   }
   // };
 
-  const handleRecTypeDetection = async (squareIndex) => {
-    const squareData = object?.data[squareIndex];
-
-    // Early return to handle any potential 'null' or 'undefined'
-    if (!squareData) return;
-
-    try {
-      const isAnalyticsCounted = await handleCountingItemClicks(squareData);
-      if (!isAnalyticsCounted) {
-        // If the analytics call was not successful, show a toast message and exit the function
-        toast.error("There was an error processing your request.");
-        return;
-      }
-
-      // Redirect based on the type of squareData
-      if (squareData.type === "phone" && squareData.content_val) {
-        const telLink = `tel:${squareData.content_val}`;
-        // Use direct navigation for phone links
-        handleRedirection(telLink);
-      } else if (squareData.type === "link" && squareData.content_val) {
-        // Use window.open for links to ensure they open in a new tab
-        const externalLink = squareData.content_val;
-        handleRedirection(externalLink, true);
-      } else if (squareData.type === "file" && squareData.content_val) {
-        // Handle file downloads by using an anchor element
-        handleRedirection(squareData.content_val);
-      } else if (squareData.type === "email" && squareData.content_val) {
-        // Handle mail links with direct navigation
-        const emailLink = `mailto:${squareData.content_val}`;
-        handleRedirection(emailLink);
-      }
-    } catch (error) {
-      console.error("Error during square type detection:", error);
-      toast.error("There was an error redirecting to the requested resource.");
-    }
-  };
-
-  // Utility function to handle redirection
-  const handleRedirection = (url, isExternal = false) => {
+  const handleRedirection = (url, isExternal) => {
     const link = document.createElement("a");
     link.href = url;
+    // External links open in a new tab, others in the same tab
     if (isExternal) {
       link.target = "_blank";
       link.rel = "noopener noreferrer";
@@ -82,6 +45,51 @@ const RectangleData = ({ object, handleCountingItemClicks }) => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handleRecTypeDetection = async (squareIndex) => {
+    const squareData = object?.data[squareIndex];
+
+    // Early return to handle any potential 'null' or 'undefined'
+    if (!squareData) return;
+
+    try {
+      const isAnalyticsCounted = await handleCountingItemClicks(squareData);
+
+      if (!isAnalyticsCounted) {
+        console.error("There was an error processing your request.");
+        return;
+      }
+
+      // Synchronously confirm with the user whether to redirect
+      if (
+        !window.confirm("This action will take you to another page. Continue?")
+      ) {
+        return;
+      }
+
+      // Redirect based on the type of squareData
+      switch (squareData.type) {
+        case "phone":
+          handleRedirection(`tel:${squareData.content_val}`);
+          break;
+        case "link":
+          handleRedirection(squareData.content_val, true);
+          break;
+        case "file":
+          // iOS does not allow file download initiated by JavaScript
+          // Instead, redirect to the file URL which should prompt the user to download the file if the server is configured correctly
+          handleRedirection(squareData.content_val);
+          break;
+        case "email":
+          handleRedirection(`mailto:${squareData.content_val}`);
+          break;
+        default:
+          console.error("Unsupported type for redirection");
+      }
+    } catch (error) {
+      console.error("Error during square type detection:", error);
+    }
   };
 
   return (
