@@ -33,6 +33,17 @@ const SquareData = ({ object, handleCountingItemClicks }) => {
   //     window.location.href = emailLink;
   //   }
   // };
+  const handleRedirection = (url, isExternal) => {
+    const link = document.createElement("a");
+    link.href = url;
+    if (isExternal) {
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+    }
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const handleSquareTypeDetection = async (squareIndex) => {
     const squareData = object?.data[squareIndex];
@@ -44,32 +55,24 @@ const SquareData = ({ object, handleCountingItemClicks }) => {
       const isAnalyticsCounted = await handleCountingItemClicks(squareData);
       if (!isAnalyticsCounted) {
         // If the analytics call was not successful, show a toast message and exit the function
-        toast.error("There was an error processing your request.");
+        console.error("There was an error processing your request.");
         return;
       }
 
       // Redirect based on the type of squareData
       if (squareData.type === "phone" && squareData.content_val) {
-        const telLink = `tel:${squareData.content_val}`;
-        window.location.href = telLink;
+        handleRedirection(`tel:${squareData.content_val}`);
       } else if (squareData.type === "link" && squareData.content_val) {
-        const externalLink = squareData.content_val;
-        window.open(externalLink, "_blank", "noopener,noreferrer");
+        handleRedirection(squareData.content_val, true);
       } else if (squareData.type === "file" && squareData.content_val) {
-        const fileLink = squareData.content_val;
-        const a = document.createElement("a");
-        a.href = fileLink;
-        a.download = squareData.content_val.split("/").pop(); // Set a custom filename or fallback
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        // For iOS, this will not work for local files (file://),
+        // the file must be hosted on a server with the correct headers to trigger a download.
+        handleRedirection(squareData.content_val);
       } else if (squareData.type === "email" && squareData.content_val) {
-        const emailLink = `mailto:${squareData.content_val}`;
-        window.location.href = emailLink;
+        handleRedirection(`mailto:${squareData.content_val}`);
       }
     } catch (error) {
       console.error("Error during square type detection:", error);
-      // toast.error('There was an error redirecting to the requested resource.');
     }
   };
 

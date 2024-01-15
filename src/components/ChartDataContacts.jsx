@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
+import moment from "jalali-moment";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -75,56 +77,68 @@ const data = {
 };
 
 const ChartDataContacts = ({ chartConnection }) => {
-  const [chartLabels, setChartLabels] = useState([]);
-  const [chartDataValues, setChartDataValues] = useState([]);
-  useEffect(() => {
-    // Check if chartView is defined and has the expected structure
-    if (
-      chartConnection &&
-      chartConnection.views &&
-      Array.isArray(chartConnection.views)
-    ) {
-      // Extract data from chartView and transform it into the format Chart.js expects
-      const extractedLabels = chartConnection.views.map((view) => view.date);
-      const extractedDataValues = chartConnection.views.map(
-        (view) => view.views
-      );
-
-      // Update the state variables with the transformed data
-      setChartLabels(extractedLabels);
-      setChartDataValues(extractedDataValues);
-    }
-  }, [chartConnection]);
-  // conditionally Update the chart title to include the total_view value
-
-  if (
-    chartConnection &&
-    chartConnection.views &&
-    Array.isArray(chartConnection.views)
-  ) {
-    options.plugins.title.text = `Total Connection: ${chartConnection.total_view}`;
-  }
-
-  const data = {
-    labels: chartLabels,
+  const [chartData, setChartData] = useState({
+    labels: [],
     datasets: [
       {
-        label: "Dataset 1",
-        data: chartDataValues,
-        borderColor: "#CEA16A",
-        backgroundColor: "#ffff",
-        borderLeftColor: "#ffff"
+        label: "داده‌ای ثبت نشده",
+        data: [],
+        borderColor: "rgba(0, 0, 0, 0.1)",
+        backgroundColor: "rgba(0, 0, 0, 0.05)"
       }
     ]
-  };
+  });
 
+  useEffect(() => {
+    if (chartConnection && Array.isArray(chartConnection.views)) {
+      // const labels = chartConnection.views.map((view) => view.date);
+      const labels = chartConnection.views.map((view) => {
+        // Convert the date string from the server into a moment object in Jalali
+        return moment(view.date, "YYYY-MM-DD")
+          .locale("fa")
+          .format("YYYY/MM/DD");
+      });
+      const dataValues = chartConnection.views.map((view) => view.views);
+
+      // Update the chartData state with labels and data
+      setChartData({
+        labels: labels,
+        datasets: [
+          {
+            label: "Dataset 1",
+            data: dataValues,
+            borderColor: "#CEA16A",
+            backgroundColor: "#ffff",
+            borderLeftColor: "#ffff"
+          }
+        ]
+      });
+
+      // Optionally, update the chart options title dynamically
+      options.plugins.title.text = `Total View: ${chartConnection.total_view}`;
+    } else {
+      // Reset the chart data if chartConnection is null
+      setChartData({
+        labels: [],
+        datasets: [
+          {
+            label: "داده‌ای ثبت نشده",
+
+            data: [],
+            borderColor: "rgba(0, 0, 0, 0.1)",
+            backgroundColor: "rgba(0, 0, 0, 0.05)"
+          }
+        ]
+      });
+
+      // Reset the chart options title
+      options.plugins.title.text = "داده‌ای ثبت نشده";
+    }
+  }, [chartConnection]);
+  console.log("connection", chartConnection);
   return (
     <div className="bg-white pb-4 rounded-lg">
-      {chartConnection ? (
-        <Line options={options} data={data} />
-      ) : (
-        <p>Loading chart data...</p>
-      )}
+      <Line options={options} data={chartData} />
     </div>
   );
 };

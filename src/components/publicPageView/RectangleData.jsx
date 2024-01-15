@@ -49,26 +49,39 @@ const RectangleData = ({ object, handleCountingItemClicks }) => {
       // Redirect based on the type of squareData
       if (squareData.type === "phone" && squareData.content_val) {
         const telLink = `tel:${squareData.content_val}`;
-        window.location.href = telLink;
+        // Use direct navigation for phone links
+        handleRedirection(telLink);
       } else if (squareData.type === "link" && squareData.content_val) {
+        // Use window.open for links to ensure they open in a new tab
         const externalLink = squareData.content_val;
-        window.open(externalLink, "_blank", "noopener,noreferrer");
+        handleRedirection(externalLink, true);
       } else if (squareData.type === "file" && squareData.content_val) {
-        const fileLink = squareData.content_val;
-        const a = document.createElement("a");
-        a.href = fileLink;
-        a.download = squareData.content_val.split("/").pop(); // Set a custom filename or fallback
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        // Handle file downloads by using an anchor element
+        handleRedirection(squareData.content_val);
       } else if (squareData.type === "email" && squareData.content_val) {
+        // Handle mail links with direct navigation
         const emailLink = `mailto:${squareData.content_val}`;
-        window.location.href = emailLink;
+        handleRedirection(emailLink);
       }
     } catch (error) {
       console.error("Error during square type detection:", error);
-      // toast.error('There was an error redirecting to the requested resource.');
+      toast.error("There was an error redirecting to the requested resource.");
     }
+  };
+
+  // Utility function to handle redirection
+  const handleRedirection = (url, isExternal = false) => {
+    const link = document.createElement("a");
+    link.href = url;
+    if (isExternal) {
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+    } else {
+      link.target = "_self";
+    }
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
