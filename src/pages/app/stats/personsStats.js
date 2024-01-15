@@ -46,7 +46,7 @@ const PersonsStats = () => {
   const [skipVisitedItems, setSkipVisitedItems] = useState(0);
   const [limitVisitedItems, setLimitVisitedItems] = useState(6);
   const [hasMoreVisitedItems, setHasMoreVisitedItems] = useState(true);
-
+  console.log("stats", statsData);
   // options
   const handleOptionChange = (event) => {
     const newOption = event.target.value;
@@ -57,30 +57,7 @@ const PersonsStats = () => {
       localStorage.setItem("selectedOption", newOption);
     }
   };
-  useEffect(() => {
-    // Check if localStorage is available (only on the client-side)
-    if (typeof window !== "undefined") {
-      const storedOption = localStorage.getItem("selectedOption");
-      if (storedOption) {
-        setSelectedOption(storedOption);
-      }
-    }
-  }, []);
-  useEffect(() => {
-    // Check if localStorage is available (only on the client-side)
-    if (typeof window !== "undefined") {
-      const storedOption = localStorage.getItem("selectedOption");
-      if (storedOption) {
-        setSelectedOption(storedOption);
-      }
-    }
-  }, []);
 
-  // useEffect(() => {
-  //   if (selectedIdFromCard) {
-  //     setSelectedCardId(selectedIdFromCard);
-  //   }
-  // }, [selectedIdFromCard]);
   // get data for top cards
   useEffect(() => {
     // Fetch data from the API
@@ -109,7 +86,7 @@ const PersonsStats = () => {
       .catch((error) => {
         // error here
       });
-  }, [accessToken.accessToken]);
+  }, [accessToken.accessToken, selectedIdFromCard]);
 
   // fetch bottom data
   const fetchDataFromSecondApi = () => {
@@ -165,6 +142,10 @@ const PersonsStats = () => {
         })
         .catch((error) => {
           console.error("Error fetching chart view data:", error);
+          // Check if the error status is 404 (not found)
+          if (error.response.status === 404) {
+            setChartView(null);
+          }
         });
     }
   }, [
@@ -200,6 +181,10 @@ const PersonsStats = () => {
         })
         .catch((error) => {
           console.error("Error fetching chart view data:", error);
+          // Check if the error status is 404 (not found)
+          if (error.response.status === 404) {
+            setChartConnection(null);
+          }
         });
     }
   }, [
@@ -235,6 +220,10 @@ const PersonsStats = () => {
         })
         .catch((error) => {
           console.error("Error fetching chart view data:", error);
+          // Check if the error status is 404 (not found)
+          if (error.response.status === 404) {
+            setChartShare(null);
+          }
         });
     }
   }, [
@@ -270,6 +259,10 @@ const PersonsStats = () => {
         })
         .catch((error) => {
           console.error("Error fetching chart view data:", error);
+          // Check if the error status is 404 (not found)
+          if (error.response.status === 404) {
+            setChartConvert(null);
+          }
         });
     }
   }, [
@@ -279,14 +272,6 @@ const PersonsStats = () => {
     toDate,
     selectedOption
   ]);
-
-  // Button click handlers
-  const handleButtonClick = (value) => {
-    setSelectedButton(value); // Set the selectedButton state to the value of the button clicked
-
-    // Call the function to fetch data from the second API
-    fetchDataFromSecondApi();
-  };
 
   // Function to handle card selection
   const handleCardSelect = (cardId) => {
@@ -345,14 +330,13 @@ const PersonsStats = () => {
   }, [selectedCardId]);
 
   console.log("visitedItemsData", visitedItemsData);
-
+  console.log("chart view", chartView);
   const optionTexts = {
     view: "بازدید‌ها",
     contacts: "مخاطبین",
     convertRate: "نرخ تبدیل",
     shares: "اشتراک‌ها"
   };
-
   return (
     <>
       <Head>

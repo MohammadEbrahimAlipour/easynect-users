@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
+import moment from "jalali-moment";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -60,52 +62,118 @@ const options = {
 };
 
 const ChartDataViewConvertRate = ({ chartConvert }) => {
-  const [chartLabels, setChartLabels] = useState([]);
-  const [chartDataValues, setChartDataValues] = useState([]);
+  //   const [chartLabels, setChartLabels] = useState([]);
+  //   const [chartDataValues, setChartDataValues] = useState([]);
+
+  //   useEffect(() => {
+  //     // Check if chartConvert is defined and has the expected structure
+  //     if (
+  //       chartConvert &&
+  //       chartConvert.convert_rates_by_date &&
+  //       Array.isArray(chartConvert.convert_rates_by_date)
+  //     ) {
+  //       // Extract data from chartConvert and transform it into the format Chart.js expects
+  //       const extractedLabels = chartConvert.convert_rates_by_date.map(
+  //         (entry) => entry.date
+  //       );
+  //       const extractedDataValues = chartConvert.convert_rates_by_date.map(
+  //         (entry) => entry.convert_rate
+  //       );
+
+  //       // Update the state variables with the transformed data
+  //       setChartLabels(extractedLabels);
+  //       setChartDataValues(extractedDataValues);
+  //     }
+  //   }, [chartConvert]);
+
+  //   // conditionally Update the chart title to include the total_convert_rate value
+  //   if (
+  //     chartConvert &&
+  //     chartConvert.total_convert_rate !== undefined // Make sure it's not undefined
+  //   ) {
+  //     options.plugins.title.text = `Total Convert: ${chartConvert.total_convert_rate}`;
+  //   }
+  //   const data = {
+  //     labels: chartLabels,
+  //     datasets: [
+  //       {
+  //         label: "Dataset 1",
+  //         data: chartDataValues,
+  //         borderColor: "#CEA16A",
+  //         backgroundColor: "#ffff",
+  //         borderLeftColor: "#ffff"
+  //       }
+  //     ]
+  //   };
+  //   return (
+  //     <div className="bg-white pb-4 rounded-lg ">
+  //       <Line options={options} data={data} />
+  //     </div>
+  //   );
+  // };
+
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: "داده‌ای ثبت نشده",
+        data: [],
+        borderColor: "rgba(0, 0, 0, 0.1)",
+        backgroundColor: "rgba(0, 0, 0, 0.05)"
+      }
+    ]
+  });
+  console.log("data", chartData);
 
   useEffect(() => {
-    // Check if chartConvert is defined and has the expected structure
-    if (
-      chartConvert &&
-      chartConvert.convert_rates_by_date &&
-      Array.isArray(chartConvert.convert_rates_by_date)
-    ) {
-      // Extract data from chartConvert and transform it into the format Chart.js expects
-      const extractedLabels = chartConvert.convert_rates_by_date.map(
-        (entry) => entry.date
-      );
-      const extractedDataValues = chartConvert.convert_rates_by_date.map(
+    if (chartConvert && Array.isArray(chartConvert.convert_rates_by_date)) {
+      const labels = chartConvert.convert_rates_by_date.map((entry) => {
+        return moment(entry.date, "YYYY-MM-DD")
+          .locale("fa")
+          .format("YYYY/MM/DD");
+      });
+      const dataValues = chartConvert.convert_rates_by_date.map(
         (entry) => entry.convert_rate
       );
 
-      // Update the state variables with the transformed data
-      setChartLabels(extractedLabels);
-      setChartDataValues(extractedDataValues);
+      // Update the chartData state with labels and data
+      setChartData({
+        labels: labels,
+        datasets: [
+          {
+            label: "Dataset 1",
+            data: dataValues,
+            borderColor: "#CEA16A",
+            backgroundColor: "#ffff",
+            borderLeftColor: "#ffff"
+          }
+        ]
+      });
+
+      // Optionally, update the chart options title dynamically
+      options.plugins.title.text = `Total Convert Rate: ${chartConvert.convert_rate}`;
+    } else {
+      // Reset the chart data if chartConvert is null
+      setChartData({
+        labels: [],
+        datasets: [
+          {
+            label: "داده‌ای ثبت نشده",
+            data: [],
+            borderColor: "rgba(0, 0, 0, 0.1)",
+            backgroundColor: "rgba(0, 0, 0, 0.05)"
+          }
+        ]
+      });
+
+      // Reset the chart options title
+      options.plugins.title.text = "داده‌ای ثبت نشده";
     }
   }, [chartConvert]);
-
-  // conditionally Update the chart title to include the total_convert_rate value
-  if (
-    chartConvert &&
-    chartConvert.total_convert_rate !== undefined // Make sure it's not undefined
-  ) {
-    options.plugins.title.text = `Total Convert: ${chartConvert.total_convert_rate}`;
-  }
-  const data = {
-    labels: chartLabels,
-    datasets: [
-      {
-        label: "Dataset 1",
-        data: chartDataValues,
-        borderColor: "#CEA16A",
-        backgroundColor: "#ffff",
-        borderLeftColor: "#ffff"
-      }
-    ]
-  };
+  console.log("connection", chartConvert);
   return (
     <div className="bg-white pb-4 rounded-lg ">
-      <Line options={options} data={data} />
+      <Line options={options} data={chartData} />
     </div>
   );
 };
