@@ -1,76 +1,31 @@
 import React from "react";
 import Image from "next/image";
 
-const SquareData = ({ object, handleCountingItemClicks }) => {
+const SquareData = ({ object }) => {
   // condition to detect type of each squares data and redirect based on type
-  // const handleSquareTypeDetection = (squareIndex) => {
-  //   const squareData = object?.data[squareIndex];
-
-  //   // Early return to handle any potential 'null' or 'undefined'
-  //   if (!squareData) return;
-
-  //   const isAnalyticsCounted = handleCountingItemClicks(squareData);
-  //   if (isAnalyticsCounted) {
-  //     handleCountingItemClicks(squareData);
-  //   }
-
-  //   if (squareData.type === "phone" && squareData.content_val) {
-  //     const telLink = `tel:${squareData.content_val}`;
-  //     window.location.href = telLink;
-  //   } else if (squareData.type === "link" && squareData.content_val) {
-  //     const externalLink = squareData.content_val;
-  //     window.open(externalLink, "_blank", "noopener,noreferrer");
-  //   } else if (squareData.type === "file" && squareData.content_val) {
-  //     const fileLink = squareData.content_val;
-  //     const a = document.createElement("a");
-  //     a.href = fileLink;
-  //     a.download = squareData.content_val.split("/").pop(); // Set a custom filename or fallback
-  //     document.body.appendChild(a);
-  //     a.click();
-  //     document.body.removeChild(a);
-  //   } else if (squareData.type === "email" && squareData.content_val) {
-  //     const emailLink = `mailto:${squareData.content_val}`;
-  //     window.location.href = emailLink;
-  //   }
-  // };
   const handleSquareTypeDetection = (squareIndex) => {
     const squareData = object?.data[squareIndex];
 
     // Early return to handle any potential 'null' or 'undefined'
     if (!squareData) return;
 
-    if (handleCountingItemClicks(squareData)) {
-      // Simulate a user-interaction redirection for iOS Safari
-      const confirmRedirect = () => {
-        handleRedirectionForType(squareData);
-      };
-
-      // This prompt will not be shown if the redirection is successful
-      if (!confirm("Continue to the external link?")) {
-        return;
-      }
-      // Code reaches here only if the user confirms
-      confirmRedirect();
-    }
-  };
-
-  const handleRedirectionForType = (squareData) => {
-    switch (squareData.type) {
-      case "phone":
-        handleRedirection(`tel:${squareData.content_val}`);
-        break;
-      case "link":
-        handleRedirection(squareData.content_val, true);
-        break;
-      case "file":
-        // For downloading files, this approach will only work if the file is hosted with proper headers.
-        handleRedirection(squareData.content_val);
-        break;
-      case "email":
-        handleRedirection(`mailto:${squareData.content_val}`);
-        break;
-      default:
-        console.log("No action for this type");
+    if (squareData.type === "phone" && squareData.content_val) {
+      const telLink = `tel:${squareData.content_val}`;
+      window.location.href = telLink;
+    } else if (squareData.type === "link" && squareData.content_val) {
+      const externalLink = squareData.content_val;
+      window.open(externalLink, "_blank", "noopener,noreferrer");
+    } else if (squareData.type === "file" && squareData.content_val) {
+      const fileLink = squareData.content_val;
+      const a = document.createElement("a");
+      a.href = fileLink;
+      a.download = squareData.content_val.split("/").pop(); // Set a custom filename or fallback
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } else if (squareData.type === "email" && squareData.content_val) {
+      const emailLink = `mailto:${squareData.content_val}`;
+      window.location.href = emailLink;
     }
   };
 
@@ -79,8 +34,7 @@ const SquareData = ({ object, handleCountingItemClicks }) => {
       <div className="grid grid-cols-12 mb-5 gap-5">
         {/* first square */}
         <div
-          // onClick={() => handleSquareTypeDetection(0)} // adjusted for first square
-          onClick={() => (async () => await handleSquareTypeDetection(0))()}
+          onClick={() => handleSquareTypeDetection(0)} // adjusted for first square
           className="col-span-6 relative"
         >
           {object?.data[0]?.sub_order === 1 ? (
@@ -125,8 +79,7 @@ const SquareData = ({ object, handleCountingItemClicks }) => {
 
         {/* second square */}
         <div
-          // onClick={() => handleSquareTypeDetection(1)} // adjusted for second square
-          onClick={() => (async () => await handleSquareTypeDetection(1))()}
+          onClick={() => handleSquareTypeDetection(1)} // adjusted for second square
           className="col-span-6 relative"
         >
           {object?.data[0]?.sub_order === 2 ||
