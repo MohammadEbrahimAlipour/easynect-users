@@ -102,7 +102,7 @@ const CreateLead = () => {
       .then((response) => {
         // Handle the response as needed (e.g., show a success message)
         console.log("User data updated successfully.");
-        toast.success("updated successfully");
+        toast.success("فیلد های جدید ساخته و اضافه شد");
         router.push(`/app/lead/lead?id=${id}`);
       })
       .catch((error) => {

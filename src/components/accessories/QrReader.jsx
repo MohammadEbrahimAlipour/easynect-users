@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import jsQR from "jsqr";
 import tw from "tailwind-styled-components";
-import { CloseIcon, CloseIconSmall, TickSuccess } from "../Icons";
+import { CloseIconSmall, TickSuccess } from "../Icons";
 
 export default function QrReader({ result, setResult }) {
   const [error, setError] = useState(false);

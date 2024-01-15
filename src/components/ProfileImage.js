@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useAccessToken } from "../../context/AccessTokenContext";
+import React from "react";
 
 import Image from "next/image";
 

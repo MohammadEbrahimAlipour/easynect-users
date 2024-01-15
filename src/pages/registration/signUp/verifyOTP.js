@@ -3,7 +3,7 @@ import HeaderTwo from "@/components/HeaderTwo";
 import { ConfirmEmailIcon, PasswordCircleImageIcon } from "@/components/Icons";
 import Layout from "@/components/Layout";
 import Link from "next/link";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { generateApiUrl } from "@/components/ApiUr";
@@ -11,11 +11,11 @@ import { useAccessToken } from "../../../../context/AccessTokenContext";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import Head from "next/head";
+import EasynecVertLogo from "@/components/icons/EasynecVertLogo";
 
 const VerifyOTP = () => {
   const inputRef = useRef(null);
   // Initialize state to store the user-entered code
-  const [code, setCode] = useState("");
   const [timer, setTimer] = useState(120); // Initial timer value in seconds
 
   //   to send email to backend
@@ -27,19 +27,41 @@ const VerifyOTP = () => {
 
   // Initialize state to store the user-entered code
   const [otp, setOTP] = useState(["", "", "", "", "", ""]);
-  const [finalOtp, setFinalOtp] = useState("");
 
-  const startTimer = () => {
-    if (timer > 0) {
-      setTimer((prevTimer) => prevTimer - 1);
-      setTimeout(startTimer, 1000);
+  const [timeLeft, setTimeLeft] = useState(120);
+
+  useEffect(() => {
+    if (timeLeft === 0) {
+      console.log("TIME LEFT IS 0");
+      toast.error("no time left");
+      setTimeLeft(null);
     }
-  };
 
-  // Start the timer when the component mounts and email has a value
-  if (timer === 120 && email) {
-    startTimer();
-  }
+    // exit early when we reach 0
+    if (!timeLeft) return;
+
+    // save intervalId to clear the interval when the
+    // component re-renders
+    const intervalId = setInterval(() => {
+      setTimeLeft(timeLeft - 1);
+    }, 1000);
+
+    // clear interval on re-render to avoid memory leaks
+    return () => clearInterval(intervalId);
+    // add timeLeft as a dependency to re-rerun the effect
+    // when we update it
+  }, [timeLeft]);
+
+  // redirect
+  useEffect(
+    () => {
+      if (timeLeft === 0) {
+        router.push("/registration/signUp/registerUser");
+      }
+    },
+    [timeLeft, router],
+    3000
+  );
 
   const handleInputChange = (index, value) => {
     // Create a copy of the current OTP array
@@ -118,7 +140,10 @@ const VerifyOTP = () => {
        bg-[url('../../public/images/backgrounds/passwordImage.jpg')] bg-cover
           overflow-hidden "
         >
-          <div className=" w-full h-full flex justify-center items-center relative">
+          <span className="relative z-100 flex items-center justify-center w-full top-[60px]">
+            <EasynecVertLogo />
+          </span>
+          <div className="bottom-[20px] w-full h-full flex justify-center items-center relative">
             <motion.span
               initial={{ y: 0, scale: 3 }}
               animate={{ y: 0, scale: 1 }}
@@ -162,7 +187,9 @@ const VerifyOTP = () => {
                 key={index}
                 id={`otp-input-${index}`}
                 type="tel"
-                value={value}
+                // value={value}
+                // value={otp[index]}
+                defaultValue={otp[index]}
                 maxLength="1"
                 pattern="[0-9]*"
                 inputMode="numeric" // ensures iOS brings up the numeric keypad
@@ -192,7 +219,7 @@ const VerifyOTP = () => {
         </form>
         {/* timer */}
         <p className="text-center mt-3 text-muted">
-          ارسال مجدد (۰۰:{timer < 10 ? `0${timer}` : timer} ثانیه دیگر)
+          ارسال مجدد ({timeLeft < 10 ? `0${timeLeft}` : timeLeft} ثانیه دیگر)
         </p>
       </Layout>
     </>

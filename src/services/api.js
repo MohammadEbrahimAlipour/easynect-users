@@ -24,9 +24,23 @@ export const API_ROUTES = {
   // contacts
   CONTACTS_PAGES: generateApiUrl(`/api/v1/contacts/pages/`),
 
+  CONTACTS_UNIFIED: (pageID, skip, limit) =>
+    generateApiUrl(
+      `/api/v1/contacts/page/unified/${pageID}?skip=${skip}&limit=${limit}`
+    ),
+
   // stats
   STATS_ANALYTICS_PAGES: generateApiUrl("/api/v1/analytics/pages/"),
 
   //   main page
-  MAIN_PAGE_QRCODE_INFO: generateApiUrl("/api/v1/pages/qrcode_info/")
+  MAIN_PAGE_QRCODE_INFO: generateApiUrl("/api/v1/pages/qrcode_info/"),
+
+  // profile
+  PROFILE_CHANGE_PASSWORD: generateApiUrl("/api/v1/users/change_password/"),
+
+  // lead
+  LEAD_LEADS: (id) => generateApiUrl(`/api/v1/leads/${id}`),
+
+  LEAD_CONNECTIONS: (pageId) =>
+    generateApiUrl(`/api/v1/connections/make_connections_by_lead/${pageId}`)
 };

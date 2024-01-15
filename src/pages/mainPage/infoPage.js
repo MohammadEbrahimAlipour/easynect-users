@@ -1,18 +1,11 @@
 import React, { useState, useEffect, Fragment } from "react";
 import axios from "axios";
-import InfoSocialMediaSquare from "@/components/InfoSocialMediaSquare";
-import PortfolioLink from "@/components/PortfolioLink";
 import ProfileImage from "@/components/ProfileImage";
 import ClientPageFooter from "@/components/ClientPageFooter";
-import HorzCarousel from "@/components/infoCarousel/HorzCarousel";
 import Layout from "@/components/Layout";
-import sampleImage from "../../../public/images/NIKBAKHT.png";
 import { useAccessToken } from "../../../context/AccessTokenContext";
-import Link from "next/link";
 import { toast } from "react-toastify";
-
 import { ArrowDownIcon, ArrowRight } from "@/components/Icons";
-import SwiperCarousel from "@/components/SwiperCarousel";
 import SquareDataExists from "@/components/infoPage/exists/SquareDataExists";
 import EmptySquareBox from "@/components/infoPage/empty/EmptySquareBox";
 import EmptyItemsAddBox from "@/components/infoPage/empty/EmptyItemsAddBox";
@@ -20,49 +13,14 @@ import { generateApiUrl } from "@/components/ApiUr";
 import LoadingState from "@/components/LoadingState";
 import EmptyRectangle from "@/components/infoPage/empty/EmptyRectangle";
 import NoData from "@/components/pageView/NoData";
-import HeaderTwo from "@/components/HeaderTwo";
-import Footer from "@/components/Footer";
 import NoCardExist from "@/components/infoPage/NoCardExist";
 import { useRouter } from "next/router";
 import axiosInstance from "@/services/axiosInterceptors";
 import { API_ROUTES } from "@/services/api";
 import Head from "next/head";
+import Link from "next/link";
 
 const InfoPage = () => {
-  //   const handleSaveContact = () => {
-  //     // create Vcard
-
-  //     const vCardString = `
-  // BEGIN:VCARD
-  // VERSION:3.0
-  // N;CHARSET=utf-8:چاپ و تبلیغات نیکبخت
-  // TEL;TYPE=Number:05138842010
-  // TEL;TYPE=Number:09150032020
-  // TEL;TYPE=Number:09150042020
-  // EMAIL;INTERNET;TYPE=Email:nikbakhtprint@gmail.com
-  // URL;TYPE=WhatsApp:https://nikbakhtprint.com/
-  // URL;TYPE=Instagram:https://www.instagram.com/nikbakhtprint/
-  // URL;TYPE=Telegram:https://t.me/nikbakhtprint
-  // URL;TYPE=Website:https://maps.app.goo.gl/mJSte6hmxcvH6ToJ7
-  // END:VCARD
-  // `;
-
-  //     // andnoiasidn aindians inains d adnaid
-
-  //     // Download the vCard
-  //     const blob = new Blob([vCardString], {
-  //       type: "text/vcard"
-  //     });
-  //     const url = window.URL.createObjectURL(blob);
-  //     const a = document.createElement("a");
-  //     a.href = url;
-  //     a.download = "contact.vcf"; // Set the filename
-  //     document.body.appendChild(a);
-  //     a.click();
-  //     document.body.removeChild(a);
-  //     window.URL.revokeObjectURL(url);
-  //   };
-
   const [selectedOption, setSelectedOption] = useState(null);
   const [showOptions, setShoOptions] = useState(false);
   const [pagesData, setPagesData] = useState(null);
@@ -293,112 +251,168 @@ const InfoPage = () => {
         <title>ایزی‌نکت - ویرایش صفحه اصلی</title>
         <meta name="easynect business card" content="Powered by Easynect" />
       </Head>
+
       {noCard !== null ? (
         <>
-          {noCard === false ? (
+          {noCard !== true ? (
             <>
-              {/* back btn */}
-              <div className="text-muted px-4 flex w-full items-center justify-start mt-9 mb-1">
-                <ArrowRight />
-                <span onClick={goBack} className="font-ravi">
-                  برگشت
-                </span>
-              </div>
-              {/* chose */}
-              <div className="flex justify-center relative ">
-                <button
-                  onClick={() => setShoOptions(!showOptions)}
-                  className="bg-dark text-white rounded-2xl w-[40%] px-3 py-[6px] focus:outline-none
-         text-sm flex justify-center items-center"
-                >
-                  <span className="me-1">
-                    {selectedOption ? selectedOption.card_title : "انتخاب کارت"}
-                  </span>
-                  <ArrowDownIcon />
-                </button>
-
-                {/* options */}
-                {showOptions && (
-                  <div className="absolute bg-white shadow-2xl border py-2 px-4 rounded-md top-8">
-                    {pagesData.map((data) => (
-                      <div
-                        key={data.id}
-                        className={`py-1 border-b ${
-                          selectedOption && selectedOption.id === data.id
-                            ? "font-bold"
-                            : ""
-                        }`}
-                        onClick={() => handleOptionClick(data)}
-                      >
-                        {data.card_title}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* main */}
-
-              {selectedOption && pageViewData?.horizontal_menu ? (
+              {noCard === false ? (
                 <>
-                  <div className="flex flex-col justify-center items-center mt-3">
-                    <div
-                      id="photo_here"
-                      className=" box-contentw-[80px] h-[80px] rounded-full
-                      overflow-hidden flex items-center justify-center mt-1"
-                    >
-                      <ProfileImage
-                        src={pageViewData.profile_s3_url}
-                        width={80}
-                        height={80}
-                      />
-                    </div>
-                    <h3 className="mt-3 text-xl font-semibold">
-                      {pageViewData.card_title}
-                    </h3>
-                    <p className="text-muted mt-2 font-medium text-xs">
-                      {getJobTitle()}
-                    </p>
+                  {/* back btn */}
+                  <div className="text-muted px-4 flex w-full items-center justify-start mt-9 mb-1">
+                    <ArrowRight />
+                    <span onClick={goBack} className="font-ravi">
+                      برگشت
+                    </span>
                   </div>
-                  {/* to show no Data component in case of 404 for listOptions */}
-                  {noData !== null && noData ? (
-                    <NoData />
-                  ) : (
-                    <Fragment>
-                      {/* horizontal scroll menu */}
-                      <div className="border-[3px]  rounded-lg mx-2 my-4 ">
-                        <div className="grid grid-flow-col justify-center items-center w-full">
-                          <div className="my-5 overflow-x-hidden overscroll-y-contain ">
-                            <EmptyItemsAddBox
-                              listItems={listItems}
-                              pageId={selectedOption.id}
-                              horizontalData={pageViewData.horizontal_menu}
-                            />
+                  {/* chose */}
+                  <div className="flex justify-center relative ">
+                    <button
+                      onClick={() => setShoOptions(!showOptions)}
+                      className="bg-dark text-white rounded-2xl w-[40%] px-3 py-[6px] focus:outline-none
+         text-sm flex justify-center items-center"
+                    >
+                      <span className="me-1">
+                        {selectedOption
+                          ? selectedOption.card_title
+                          : "انتخاب کارت"}
+                      </span>
+                      <ArrowDownIcon />
+                    </button>
+
+                    {/* options */}
+                    {showOptions && (
+                      <div className="absolute bg-white shadow-2xl border py-2 px-4 rounded-md top-8">
+                        {pagesData.map((data) => (
+                          <div
+                            key={data.id}
+                            className={`py-1 border-b ${
+                              selectedOption && selectedOption.id === data.id
+                                ? "font-bold"
+                                : ""
+                            }`}
+                            onClick={() => handleOptionClick(data)}
+                          >
+                            {data.card_title}
                           </div>
-                        </div>
+                        ))}
                       </div>
+                    )}
+                  </div>
 
-                      <Layout className="!bg-white !px-3 !py-0 !h-fit">
-                        {/* save btn */}
-                        <button
-                          disabled
-                          // onClick={handleSaveContact}
-                          className="bg-dark text-white text-sm font-bold w-full h-[44px] rounded-[8px] opacity-10"
+                  {/* main */}
+
+                  {selectedOption && pageViewData?.horizontal_menu ? (
+                    <>
+                      <div className="flex flex-col justify-center items-center mt-3">
+                        <div
+                          id="photo_here"
+                          className=" box-contentw-[80px] h-[80px] rounded-full
+                      overflow-hidden flex items-center justify-center mt-1"
                         >
-                          ذخیره مخاطب
-                        </button>
+                          <ProfileImage
+                            src={pageViewData.profile_s3_url}
+                            width={80}
+                            height={80}
+                          />
+                        </div>
+                        <h3 className="mt-3 text-xl font-semibold">
+                          {pageViewData.username}
+                        </h3>
+                        <p className="text-muted mt-2 font-medium text-xs">
+                          {getJobTitle()}
+                        </p>
+                      </div>
+                      {/* to show no Data component in case of 404 for listOptions */}
+                      {noData !== null && noData ? (
+                        <NoData />
+                      ) : (
+                        <Fragment>
+                          {/* horizontal scroll menu */}
+                          <div className="border-[3px]  rounded-lg mx-2 my-4 ">
+                            <div className="grid grid-flow-col justify-center items-center w-full">
+                              <div className="my-5 overflow-x-hidden overscroll-y-contain ">
+                                <EmptyItemsAddBox
+                                  listItems={listItems}
+                                  pageId={selectedOption.id}
+                                  horizontalData={pageViewData.horizontal_menu}
+                                />
+                              </div>
+                            </div>
+                          </div>
 
-                        <form
-                          onSubmit={handleSubmit}
-                          className="border-[3px] mt-5 px-2 pb-6 rounded-lg"
-                        >
-                          <div className=" mt-5">
-                            {updatedExtractedData?.map((object) => (
-                              <div key={object?.guid + object?.data?.length}>
-                                {/* square section */}
+                          <Layout className="!bg-white !px-3 !py-0 !h-fit">
+                            {/* save btn */}
+                            <button
+                              disabled
+                              // onClick={handleSaveContact}
+                              className="bg-dark text-white text-sm font-bold w-full h-[44px] rounded-[8px] opacity-10"
+                            >
+                              ذخیره مخاطب
+                            </button>
 
-                                {object.display_box_type === "square" ? (
-                                  <SquareDataExists
+                            <form
+                              onSubmit={handleSubmit}
+                              className="border-[3px] mt-5 px-2 pb-6 rounded-lg"
+                            >
+                              <div className=" mt-5">
+                                {updatedExtractedData?.map((object) => (
+                                  <div
+                                    key={object?.guid + object?.data?.length}
+                                  >
+                                    {/* square section */}
+
+                                    {object.display_box_type === "square" ? (
+                                      <SquareDataExists
+                                        setUpdatedExtractedData={
+                                          setUpdatedExtractedData
+                                        }
+                                        setExtractedData={setExtractedData}
+                                        extractedData={extractedData}
+                                        updatedExtractedData={
+                                          updatedExtractedData
+                                        }
+                                        listItems={listItems}
+                                        data={object}
+                                        syncedExtractedData={
+                                          syncedExtractedData
+                                        }
+                                        removeItem={handleRemoveItem}
+                                        editItem={handleEditItem}
+                                      />
+                                    ) : null}
+
+                                    {/* rectangle */}
+
+                                    {object.display_box_type === "rectangle" ? (
+                                      <EmptyRectangle
+                                        setUpdatedExtractedData={
+                                          setUpdatedExtractedData
+                                        }
+                                        setExtractedData={setExtractedData}
+                                        extractedData={extractedData}
+                                        updatedExtractedData={
+                                          updatedExtractedData
+                                        }
+                                        listItems={listItems}
+                                        data={object}
+                                        syncedExtractedData={
+                                          syncedExtractedData
+                                        }
+                                        setSyncExtractedData={
+                                          setSyncExtractedData
+                                        }
+                                        removeItem={handleRemoveItem}
+                                        editItem={handleEditItem}
+                                      />
+                                    ) : null}
+                                  </div>
+                                ))}
+
+                                {/* wrapper */}
+
+                                <div className="mt-4">
+                                  <EmptySquareBox
                                     setUpdatedExtractedData={
                                       setUpdatedExtractedData
                                     }
@@ -406,82 +420,63 @@ const InfoPage = () => {
                                     extractedData={extractedData}
                                     updatedExtractedData={updatedExtractedData}
                                     listItems={listItems}
-                                    data={object}
-                                    syncedExtractedData={syncedExtractedData}
-                                    removeItem={handleRemoveItem}
-                                    editItem={handleEditItem}
-                                  />
-                                ) : null}
-
-                                {/* rectangle */}
-
-                                {object.display_box_type === "rectangle" ? (
-                                  <EmptyRectangle
-                                    setUpdatedExtractedData={
-                                      setUpdatedExtractedData
-                                    }
-                                    setExtractedData={setExtractedData}
-                                    extractedData={extractedData}
-                                    updatedExtractedData={updatedExtractedData}
-                                    listItems={listItems}
-                                    data={object}
                                     syncedExtractedData={syncedExtractedData}
                                     setSyncExtractedData={setSyncExtractedData}
+                                    setAddedItems={setAddedItems}
                                     removeItem={handleRemoveItem}
-                                    editItem={handleEditItem}
+                                    localItemsSelected={localItemsSelected}
+                                    setLocalItemsSelected={
+                                      setLocalItemsSelected
+                                    }
                                   />
-                                ) : null}
+                                </div>
+                                <button
+                                  type="submit"
+                                  className="font-ravi bg-dark text-white w-full mt-4 rounded-md py-2 font-medium"
+                                >
+                                  اعمال تغییرات
+                                </button>
                               </div>
-                            ))}
+                              {/* end of wrapper */}
+                            </form>
 
-                            {/* wrapper */}
-
-                            <div className="mt-4">
-                              <EmptySquareBox
-                                setUpdatedExtractedData={
-                                  setUpdatedExtractedData
-                                }
-                                setExtractedData={setExtractedData}
-                                extractedData={extractedData}
-                                updatedExtractedData={updatedExtractedData}
-                                listItems={listItems}
-                                syncedExtractedData={syncedExtractedData}
-                                setSyncExtractedData={setSyncExtractedData}
-                                setAddedItems={setAddedItems}
-                                removeItem={handleRemoveItem}
-                                localItemsSelected={localItemsSelected}
-                                setLocalItemsSelected={setLocalItemsSelected}
-                              />
+                            {/* logo */}
+                            <div>
+                              <ClientPageFooter />
                             </div>
-                            <button
-                              type="submit"
-                              className="font-ravi bg-dark text-white w-full mt-4 rounded-md py-2 font-medium"
-                            >
-                              اعمال تغییرات
-                            </button>
-                          </div>
-                          {/* end of wrapper */}
-                        </form>
-
-                        {/* logo */}
-                        <div>
-                          <ClientPageFooter />
-                        </div>
-                      </Layout>
-                    </Fragment>
+                          </Layout>
+                        </Fragment>
+                      )}
+                    </>
+                  ) : (
+                    <LoadingState />
                   )}
                 </>
               ) : (
-                <LoadingState />
+                <NoCardExist />
               )}
             </>
           ) : (
-            <NoCardExist />
+            // <LoadingState />
+            <Layout>
+              <p className="mt-[150px] text-start px-2 bg-muted py-4 rounded-lg opacity-80 ">
+                شما هنوز هیچ صفحه‌ای نساخته ‌اید. برای ساخت اولین صفحه خود
+                <Link
+                  href="/app/cards/createCard"
+                  className="underline font-bold "
+                >
+                  {" "}
+                  اینجا{" "}
+                </Link>
+                کلیک کنید
+              </p>
+            </Layout>
           )}
         </>
       ) : (
         <LoadingState />
       )}
+
       {/* if card exists below will be shown */}
     </>
   );

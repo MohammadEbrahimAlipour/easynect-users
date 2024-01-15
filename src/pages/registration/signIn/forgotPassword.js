@@ -5,9 +5,7 @@ import {
   PasswordCircleImageIcon,
   PasswordImageIcon
 } from "@/components/Icons";
-import Link from "next/link";
 import { motion } from "framer-motion";
-import EasynectSquareLogo from "@/components/icons/EasynectSquareLogo";
 import EasynecVertLogo from "@/components/icons/EasynecVertLogo";
 import { useRouter } from "next/router";
 import axios from "axios";

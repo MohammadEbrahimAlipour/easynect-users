@@ -158,7 +158,8 @@ const EditMediaSettingsHorz = () => {
           // Handle success, for example, redirect to a success page
           console.log("User created successfully!");
           toast.success("updated successfully");
-          router.push(`/app/cards/items/mediaSelection?id=${id}`);
+          // router.push(`/app/cards/items/mediaSelection?id=${id}`);
+          router.back();
         } else {
           // Handle other status codes or show an error message if needed
           console.error("Unexpected response status:", response.status);
