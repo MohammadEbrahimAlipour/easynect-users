@@ -96,7 +96,7 @@ const BottomSheetStatsPresets = ({ setFromDate, setToDate, onClose, open }) => {
             />
           </div>
         )}
-
+        {/* 
         <div className="mt-5">
           <button
             onClick={() => setShowCal(!showCal)}
@@ -105,7 +105,7 @@ const BottomSheetStatsPresets = ({ setFromDate, setToDate, onClose, open }) => {
           >
             {!showCal ? "تنظیمات دلخواه" : "پریست ها"}
           </button>
-        </div>
+        </div> */}
 
         <form
         // onSubmit={handleSubmit}
