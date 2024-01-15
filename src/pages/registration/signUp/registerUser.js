@@ -106,7 +106,9 @@ const RegisterUser = () => {
         console.log("Registration successful");
 
         // Redirect to OTP confirm page with email as a query parameter
-        router.push(`/registration/signUp/verifyOTP?email=${encodeURIComponent(email)}`);
+        router.push(
+          `/registration/signUp/verifyOTP?email=${encodeURIComponent(email)}`
+        );
       } else {
         // Handle errors (e.g., show an error message)
         console.log("Registration failed");
@@ -225,7 +227,10 @@ const RegisterUser = () => {
 
         {/* register */}
         <h3 className="font-semibold text-lg mt-7 mb-3">ثبت‌نام</h3>
-        <Link href="/registration/signIn/loginUser" className="flex justify-start items-center">
+        <Link
+          href="/registration/signIn/loginUser"
+          className="flex justify-start items-center"
+        >
           <span className="text-muted me-1">قبلا ثبت‌نام کرده‌اید؟ </span>
           وارد شوید
         </Link>
@@ -245,7 +250,7 @@ const RegisterUser = () => {
             />
 
             {/* password */}
-            <div className="border-2 px-3 py-4 w-full rounded-lg mb-4 bg-lightMenu">
+            <div className="border-2 px-3 py-4 w-full rounded-lg mb-4 bg-lightMenu outline-none">
               <input
                 required
                 // onChange={onChange}
@@ -258,7 +263,7 @@ const RegisterUser = () => {
               />
             </div>
             {/* password2 */}
-            <div className="border-2 px-3 py-4 w-full rounded-lg bg-lightMenu">
+            <div className="border-2 px-3 py-4 w-full rounded-lg bg-lightMenu !outline-none">
               <input
                 required
                 onChange={onChange}

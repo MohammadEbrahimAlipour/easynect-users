@@ -16,8 +16,11 @@ import axiosInstance from "@/services/axiosInterceptors";
 import Image from "next/image";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
 const PersonsStats = () => {
+  const router = useRouter();
+  const { selectedIdFromCard } = router.query;
   const accessToken = useAccessToken();
   const [statsData, setStatsData] = useState([]); // State to store data from api for top card section
   const [pageData, setPageData] = useState([]);
@@ -73,6 +76,11 @@ const PersonsStats = () => {
     }
   }, []);
 
+  // useEffect(() => {
+  //   if (selectedIdFromCard) {
+  //     setSelectedCardId(selectedIdFromCard);
+  //   }
+  // }, [selectedIdFromCard]);
   // get data for top cards
   useEffect(() => {
     // Fetch data from the API
@@ -90,8 +98,12 @@ const PersonsStats = () => {
         const data = response.data;
         setStatsData(data); // Update the state with the fetched data
         // Set the selectedCardId to the id of the first item in statsData
-        if (data.length > 0) {
-          setSelectedCardId(data[0].id);
+        if (selectedIdFromCard) {
+          setSelectedCardId(selectedIdFromCard);
+        } else {
+          if (data.length > 0) {
+            setSelectedCardId(data[0].id);
+          }
         }
       })
       .catch((error) => {
@@ -295,6 +307,8 @@ const PersonsStats = () => {
   console.log("selectedCardId", selectedCardId);
 
   const loadMoreVisitedItems = () => {
+    console.log("loadMoreVisitedItems called");
+
     if (hasMoreVisitedItems) {
       const apiUrl = generateApiUrl(
         `/api/v1/analytics/get_list_contents_taps_based_on_date_range/${selectedCardId}?skip=${skipVisitedItems}&limit=${limitVisitedItems}`
@@ -310,17 +324,15 @@ const PersonsStats = () => {
           .then((response) => {
             const newData = response.data;
 
-            // Check if there are more items
+            // Check if there are more contacts
             if (newData.length > 0) {
-              // Append new data to the existing data
               setVisitedItemsData((prevData) => [...prevData, ...newData]);
-              // Update state to track how many items we've already loaded
               setSkipVisitedItems((prevSkip) => prevSkip + limitVisitedItems);
             } else {
-              // No more items to load, set hasMoreVisitedItems to false
-              setHasMoreVisitedItems(false);
+              setHasMore(false); // No more contacts to load
             }
           })
+
           .catch((error) => {
             console.error("Error fetching more visited items:", error);
           });

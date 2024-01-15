@@ -19,6 +19,8 @@ import {
 import LoadingState from "@/components/LoadingState";
 import HeaderTwo from "@/components/HeaderTwo";
 import Head from "next/head";
+import { API_ROUTES } from "@/services/api";
+import axiosInstance from "@/services/axiosInterceptors";
 
 const Lead = () => {
   const [leadData, setLeadData] = useState([]);
@@ -36,16 +38,17 @@ const Lead = () => {
   }, [leadData]);
 
   useEffect(() => {
-    const apiUrl = generateApiUrl(`/api/v1/leads/${id}`);
+    const apiUrl = API_ROUTES.LEAD_LEADS(id);
     // Make an Axios GET request to fetch user data
 
     if (id) {
-      axios
+      axiosInstance
         .get(apiUrl, {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`, // Add your access token here
             "Accept-Language": "fa" // Language header
-          }
+          },
+          suppress404Toast: true
         })
         .then((response) => {
           // Handle the data once it's received

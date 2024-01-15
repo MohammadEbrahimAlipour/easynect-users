@@ -67,7 +67,8 @@ const ProfileCard = () => {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
           "accept-language": "fa" // Include the access token in the headers
-        }
+        },
+        suppress404Toast: true
       })
       .then((response) => {
         // setCardData(response.data);
@@ -81,9 +82,12 @@ const ProfileCard = () => {
         }
       })
       .catch((error) => {
+        console.log("entered step 1", error);
+
         setIsLoading(false);
 
         if (error.response && error.response.status === 404) {
+          console.log("entered");
           setPageDAtaDontExist(true); // Assuming you have this state and its setter declared
         } else if (error.response && error.response.status === 401) {
           router.push("/registration/signIn/loginUser");
@@ -100,6 +104,7 @@ const ProfileCard = () => {
         isFallen: false,
         id: apiCard.id,
         card_title: apiCard.card_title,
+        username: apiCard.username,
         job_title: apiCard.job_title,
         page_url: apiCard.page_url,
         profile_s3_url: apiCard.profile_s3_url,
@@ -108,7 +113,7 @@ const ProfileCard = () => {
       }))
     );
   }, [cardData]);
-
+  console.log("card", cardData);
   const handleMouseMove = (e) => {
     if (!isTouching) return;
 
@@ -192,7 +197,14 @@ const ProfileCard = () => {
                 .slice(cards.length - finalCardsNumber, cards.length)
                 .map(
                   (
-                    { isFallen, id, card_title, job_title, profile_s3_url },
+                    {
+                      isFallen,
+                      id,
+                      card_title,
+                      job_title,
+                      profile_s3_url,
+                      username
+                    },
                     index
                   ) => (
                     <Card
@@ -228,12 +240,14 @@ const ProfileCard = () => {
                           {/* profile items right side */}
                           <div className="">
                             {/* profile photo */}
-                            <div className="w-[80px] h-[80px] bg-mutedDark rounded-full opacity-90 mb-4 overflow-hidden">
+                            <div className="w-[80px] h-[80px]  rounded-full opacity-90 mb-4 overflow-hidden">
                               <ProfileImage id={id} src={profile_s3_url} />
                             </div>
                             {/* box under profile */}
                             <div className="mb-2 text-xl font-semibold">
-                              <p className="text-start">{card_title}</p>
+                              <p className="text-right custom_ltr ">
+                                @{username}
+                              </p>
                             </div>
                             {/* smaller line */}
                             <div className="text-xs text-muted mb-3">
@@ -271,8 +285,7 @@ const ProfileCard = () => {
 
                               {/* box right 3 */}
                               <Link
-                                href="/"
-                                passHref
+                                href={`/app/stats/personsStats?selectedIdFromCard=${id}`}
                                 className="w-[22%] h-[32px] border-2 rounded-md flex justify-center items-center"
                               >
                                 <p className="text-xs">آمار</p>
@@ -280,7 +293,6 @@ const ProfileCard = () => {
                             </div>
                             {/* left side more icon */}
                             <button
-                              href="/"
                               className="border-2 w-[32px] h-[32px] rounded-md col-span-2 mt-5
                               flex justify-center items-center font-ravi"
                               onClick={() =>

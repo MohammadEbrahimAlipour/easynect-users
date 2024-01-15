@@ -81,7 +81,7 @@ const ChangeEmail = () => {
         <title>ایزی‌نکت - تغییر ایمیل</title>
         <meta name="easynect business card" content="Powered by Easynect" />
       </Head>
-      <HeaderTwo  />
+      <HeaderTwo />
       <Layout>
         <p className="text-lg ps-3 font-semibold mb-3">تغییر ایمیل </p>
 
@@ -100,6 +100,7 @@ const ChangeEmail = () => {
                 id="data_inp"
                 placeholder="example@gmail.com"
                 name="email"
+                autoComplete="off" // Disable autofill for email input
                 onChange={onChange}
                 value={email}
                 className="bg-lightMenu outline-0 py-1 text-sm font-medium "
@@ -122,6 +123,7 @@ const ChangeEmail = () => {
                 id="password"
                 placeholder="Example123!"
                 name="password"
+                autoComplete="off" // Disable autofill for pass input
                 onChange={onChange}
                 value={password}
                 className="bg-lightMenu outline-0 py-1 text-sm font-medium "
@@ -131,7 +133,7 @@ const ChangeEmail = () => {
 
           {/* button */}
           <button
-            href="/confrimEmailCode"
+            type="submit"
             className="flex items-center justify-center w-full
                       bg-dark text-white py-3 leading-0 rounded-lg mt-7"
           >

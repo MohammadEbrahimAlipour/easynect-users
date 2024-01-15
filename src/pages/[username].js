@@ -10,20 +10,22 @@ import SquareData from "@/components/publicPageView/SquareData";
 import Layout from "@/components/Layout";
 import NoData from "@/components/pageView/NoData";
 import Image from "next/image";
-import EmptyItemsAddBox from "@/components/infoPage/empty/EmptyItemsAddBox";
 import CarouselView from "@/components/publicPageView/CarouselView";
 import LeadForm from "@/components/leadForm/LeadForm";
 import axiosInstance from "@/services/axiosInterceptors";
+import Head from "next/head";
+import { useDrag } from "react-dnd";
 
 export default function Username() {
   const router = useRouter();
   // The key of this object ([pageView]) should match the filename
   const { username } = router.query;
   const [usersData, setUsersData] = useState();
-  const [noData, setNoData] = useState(false);
+  const [noDataContents, setNoDataContents] = useState(null);
   const [vCardList, setVCardList] = useState([]);
   const [hasLeadForm, setHasLeadForm] = useState(false);
-
+  const [noDataHoz, setNoDataHorz] = useState(null);
+  console.log("vcard list", vCardList);
   const getJobTitle = () => {
     if (usersData.job_title !== null && usersData.company === null) {
       return `${usersData.job_title}`;
@@ -37,7 +39,12 @@ export default function Username() {
   };
 
   const handleSaveContact = () => {
-    let vCardData = vCardList
+    // Filter unique ids
+    const uniqueVCardList = vCardList.filter(
+      (item, index, self) => index === self.findIndex((t) => t.id === item.id)
+    );
+
+    let vCardData = uniqueVCardList
       .map((item) => {
         switch (item.type) {
           case "phone":
@@ -86,6 +93,8 @@ END:VCARD
     }, []);
   };
 
+  console.log("usersData", usersData);
+
   useEffect(() => {
     const apiUrl = generateApiUrl(`/api/v1/page_view/${username}`);
 
@@ -100,6 +109,18 @@ END:VCARD
         .then((response) => {
           // Handle the data once it's received
           setUsersData(response.data);
+
+          if (response.data.contents.length === 0) {
+            setNoDataContents(true);
+          } else {
+            setNoDataContents(false);
+          }
+
+          if (response.data?.horizontal_menu[0]?.id === null) {
+            setNoDataHorz(true);
+          } else {
+            setNoDataHorz(false);
+          }
 
           if (response.data?.lead_form?.length > 0) {
             setHasLeadForm(true);
@@ -131,10 +152,15 @@ END:VCARD
   useEffect(() => {
     // Ensure usersData.contents exists and is an array before trying to flatten it
     if (usersData && Array.isArray(usersData.contents)) {
-      const flattenedDataArray = flattenContents(usersData.contents);
-      setVCardList(flattenedDataArray);
+      const flattenedContents = flattenContents(usersData.contents);
+      // Merge flattened contents with horizontal_menu
+      const combinedDataArray = [
+        ...flattenedContents,
+        ...usersData.horizontal_menu
+      ];
+      setVCardList(combinedDataArray);
     }
-  }, [usersData]); // This effect depends on usersData state
+  }, [usersData, setVCardList]);
 
   const handleCountingItemClicks = async (itemData) => {
     try {
@@ -159,6 +185,10 @@ END:VCARD
 
   return (
     <>
+      <Head>
+        <title>{`ایزی‌نکت -  ${username}`}</title>
+        <meta name="easynect business card" content="Powered by Easynect" />
+      </Head>
       {/* main */}
       {/* lead btn */}
       {/* <span className="flex justify-end mt-8 ml-5">
@@ -186,73 +216,87 @@ END:VCARD
                 />
               </div>
             </div>
-            <p className="mt-3 text-xl font-semibold">
-              {usersData?.card_title}
-            </p>
+            <p className="mt-3 text-xl font-semibold">{username}</p>
             <p className="text-muted mt-2 font-medium text-xs">
               {getJobTitle()}
             </p>
           </div>
-          {/* to show no Data component in case of 404 for listOptions */}
-          {noData !== null && noData ? (
-            <NoData />
+
+          {/* horizontal scroll menu */}
+
+          {noDataHoz !== null ? (
+            <>
+              {!noDataHoz && (
+                <div className="grid grid-flow-col justify-center items-center w-full">
+                  <div className="my-5 overflow-x-hidden overscroll-y-contain ">
+                    <CarouselView
+                      horizontalData={usersData.horizontal_menu}
+                      handleCountingItemClicks={handleCountingItemClicks}
+                    />
+                  </div>
+                </div>
+              )}
+            </>
           ) : (
-            <Fragment>
-              {/* horizontal scroll menu */}
-
-              <div className="grid grid-flow-col justify-center items-center w-full">
-                <div className="my-5 overflow-x-hidden overscroll-y-contain ">
-                  {/* <SwiperCarousel /> */}
-                  <CarouselView
-                    horizontalData={usersData.horizontal_menu}
-                    handleCountingItemClicks={handleCountingItemClicks}
-                  />
-                </div>
-              </div>
-
-              {/* end of horz */}
-
-              <Layout className="!bg-white !px-3 !py-0 !h-fit">
-                {/* save btn */}
-                <button
-                  onClick={handleSaveContact}
-                  className="bg-dark text-white text-sm font-bold w-full h-[44px] rounded-[8px] "
-                >
-                  ذخیره مخاطب
-                </button>
-
-                <div className=" mt-5">
-                  {usersData.contents?.map((object) => (
-                    <div key={object?.guid + object?.data?.length}>
-                      {/* square section */}
-
-                      {object.display_box_type === "square" ? (
-                        <SquareData
-                          object={object}
-                          handleCountingItemClicks={handleCountingItemClicks}
-                        />
-                      ) : null}
-
-                      {/* rectangle */}
-
-                      {object.display_box_type === "rectangle" ? (
-                        <RectangleData
-                          object={object}
-                          handleCountingItemClicks={handleCountingItemClicks}
-                        />
-                      ) : null}
-                    </div>
-                  ))}
-                </div>
-                {/* end of wrapper */}
-
-                {/* logo */}
-                <div>
-                  <ClientPageFooter />
-                </div>
-              </Layout>
-            </Fragment>
+            <LoadingState />
           )}
+
+          {/* end of horz */}
+
+          <Layout className="!bg-white !px-3 !py-0 !h-fit">
+            {noDataContents !== null ? (
+              <>
+                {!noDataContents ? (
+                  <>
+                    {/* save btn */}
+                    <button
+                      onClick={handleSaveContact}
+                      className="bg-dark text-white text-sm font-bold w-full h-[44px] rounded-[8px] "
+                    >
+                      ذخیره مخاطب
+                    </button>
+                    <div className=" mt-5">
+                      {usersData.contents?.map((object) => (
+                        <div key={object?.guid + object?.data?.length}>
+                          {/* square section */}
+
+                          {object.display_box_type === "square" ? (
+                            <SquareData
+                              object={object}
+                              handleCountingItemClicks={
+                                handleCountingItemClicks
+                              }
+                            />
+                          ) : null}
+
+                          {/* rectangle */}
+
+                          {object.display_box_type === "rectangle" ? (
+                            <RectangleData
+                              object={object}
+                              handleCountingItemClicks={
+                                handleCountingItemClicks
+                              }
+                            />
+                          ) : null}
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <NoData />
+                )}
+              </>
+            ) : (
+              <LoadingState />
+            )}
+            {/* end of wrapper */}
+
+            {/* logo */}
+            <div>
+              <ClientPageFooter />
+            </div>
+          </Layout>
         </>
       ) : (
         <LoadingState />
