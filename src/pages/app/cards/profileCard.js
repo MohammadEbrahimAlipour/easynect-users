@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { API_ROUTES } from "@/services/api";
 import axiosInstance from "@/services/axiosInterceptors";
 import Head from "next/head";
+import Image from "next/image";
 
 const ProfileCard = () => {
   const [cardData, setCardData] = useState([]);
@@ -237,7 +238,19 @@ const ProfileCard = () => {
                           <div className="">
                             {/* profile photo */}
                             <div className="w-[80px] h-[80px]  rounded-full opacity-90 mb-4 overflow-hidden">
-                              <ProfileImage id={id} src={profile_s3_url} />
+                              {/* <ProfileImage id={id} src={profile_s3_url} />
+                               */}
+
+                              <div className={``}>
+                                <Image
+                                  priority={true}
+                                  className={`rounded-full object-contain`}
+                                  src={`${profile_s3_url}?${new Date().getTime()}`}
+                                  width={80}
+                                  height={80}
+                                  alt="Person Name"
+                                />
+                              </div>
                             </div>
                             {/* box under profile */}
                             <div className="mb-2 text-xl font-semibold">
