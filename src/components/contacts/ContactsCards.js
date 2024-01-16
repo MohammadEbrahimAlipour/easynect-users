@@ -68,8 +68,8 @@ const ContactsCards = ({ contact }) => {
           }
           className="bg-white w-full my-3 flex py-4 px-5 rounded-lg"
         >
-          <div className="relative w-[36px] h-[36px] bg-red-400 rounded-full">
-            <span className="bg-mutedDark w-full h-full box-content rounded-full flex justify-center items-center overflow-hidden me-1">
+          <div className="relative w-[36px] h-[36px]  rounded-full">
+            <span className=" w-full h-full box-content rounded-full flex justify-center items-center overflow-hidden me-1">
               <Image
                 className="rounded-full"
                 alt="icon"
