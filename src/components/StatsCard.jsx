@@ -1,5 +1,6 @@
 import React from "react";
 import ProfileImage from "./ProfileImage";
+import Image from "next/image";
 
 const StatsCard = ({ item, onClick, selectedCardId }) => {
   const isSelected = selectedCardId === item.id;
@@ -14,14 +15,26 @@ const StatsCard = ({ item, onClick, selectedCardId }) => {
       >
         {/* Profile image display */}
         <div className=" w-[36px] h-[36px] rounded-full overflow-hidden">
-          <ProfileImage
+          {/* <ProfileImage
             width={36}
             height={36}
             alt={item.card_title}
             src={item.profile_s3_url}
             className="w-[80px] h-[80px]"
-          />
+          /> */}
+
+          <div>
+            <Image
+              priority={true}
+              className={`rounded-full object-contain`}
+              src={item.profile_s3_url}
+              width={80}
+              height={80}
+              alt={item.card_title}
+            />
+          </div>
         </div>
+
         {/* <div className="w-[36px] h-[36px] overflow-hidden">
           <ProfileImage src={item.profile_s3_url} width={36} height={36} />
         </div> */}

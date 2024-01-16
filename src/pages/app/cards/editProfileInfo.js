@@ -209,7 +209,7 @@ const EditProfileInfo = () => {
                         src={
                           changedFormData.profile
                             ? URL.createObjectURL(changedFormData.profile)
-                            : formData.profile
+                            : `${formData.profile}?${new Date().getTime()}`
                         }
                         className="w-[80px] h-[80px]"
                       />
