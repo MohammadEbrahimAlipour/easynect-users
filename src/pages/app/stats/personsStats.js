@@ -46,17 +46,6 @@ const PersonsStats = () => {
   const [skipVisitedItems, setSkipVisitedItems] = useState(0);
   const [limitVisitedItems, setLimitVisitedItems] = useState(6);
   const [hasMoreVisitedItems, setHasMoreVisitedItems] = useState(true);
-  console.log("stats", statsData);
-  // options
-  const handleOptionChange = (event) => {
-    const newOption = event.target.value;
-    setSelectedOption(newOption);
-
-    // Save the selectedOption in localStorage (only on the client-side)
-    if (typeof window !== "undefined") {
-      localStorage.setItem("selectedOption", newOption);
-    }
-  };
 
   // get data for top cards
   useEffect(() => {
@@ -87,35 +76,6 @@ const PersonsStats = () => {
         // error here
       });
   }, [accessToken.accessToken, selectedIdFromCard]);
-
-  // fetch bottom data
-  const fetchDataFromSecondApi = () => {
-    if (selectedCardId) {
-      const apiUrl = generateApiUrl(
-        `/api/v1/analytics/get_list_contents_taps_based_on_date_range/${selectedCardId}`
-      );
-      // Set the params object with the appropriate type
-      const params = {
-        type_: selectedButton
-        // Add other params if needed
-      };
-      axios
-        .get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${accessToken.accessToken}`,
-            "accept-language": "fa"
-          },
-          params: params // Pass the params in the request
-        })
-        .then((response) => {
-          const data = response.data;
-          setPageData(data); // Update the state with the fetched data
-        })
-        .catch((error) => {
-          console.error("Error fetching page data:", error);
-        });
-    }
-  };
 
   // Fetch data for chart View
   useEffect(() => {
@@ -289,8 +249,6 @@ const PersonsStats = () => {
     toggleShowOption(); // Close the menu
   };
 
-  console.log("selectedCardId", selectedCardId);
-
   const loadMoreVisitedItems = () => {
     console.log("loadMoreVisitedItems called");
 
@@ -329,8 +287,7 @@ const PersonsStats = () => {
     loadMoreVisitedItems(); // Initial fetch when component mounts
   }, [selectedCardId]);
 
-  console.log("visitedItemsData", visitedItemsData);
-  console.log("chart view", chartView);
+  ß;
   const optionTexts = {
     view: "بازدید‌ها",
     contacts: "مخاطبین",

@@ -329,15 +329,6 @@ const Contacts = () => {
         <LoadingState />
       )}
 
-      {/* sub menu
-      <BottomSheet
-        showSubMenu={showSubMenu}
-        handleSubMenuClose={() => {
-          setShowSubMenu(false);
-        }}
-        childeren={<>test</>}
-      /> */}
-
       <ExelBottomSheet
         showExelSheet={showExelSheet}
         setShowExelSheet={setShowExelSheet}
