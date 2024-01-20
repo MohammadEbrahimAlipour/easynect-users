@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment, useRef } from "react";
 import axios from "axios";
 import ProfileImage from "@/components/ProfileImage";
 import ClientPageFooter from "@/components/ClientPageFooter";
@@ -250,7 +250,24 @@ const InfoPage = () => {
 
     setUpdatedExtractedData(newData);
   };
-  console.log("page", pageViewData);
+
+  const bioDivRef = useRef(null);
+
+  // Close bio if clicking outside of it
+  const handleClickOutside = (event) => {
+    if (bioDivRef.current && !bioDivRef.current.contains(event.target)) {
+      setShowBio(false);
+    }
+  };
+
+  useEffect(() => {
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -326,13 +343,21 @@ const InfoPage = () => {
                         <h3 className="mt-3 text-xl font-semibold">
                           {pageViewData.username}
                         </h3>
-                        <div className="text-muted mt-2 font-medium text-xs flex items-center justify-center gap-2 relative ">
+                        <div className="text-muted mt-2 font-medium text-xs flex items-center justify-center relative ">
                           {getJobTitle()}
-                          <span onClick={() => setShowBio(!showBio)}>
+                          <span
+                            className="px-2"
+                            onClick={() => {
+                              setShowBio((prev) => !prev);
+                            }}
+                          >
                             <InfoIconSmall />
                           </span>
                           {showBio && (
-                            <div className="absolute flex flex-col max-h-[100px] z-10 py-1 px-1 rounded-md w-[250px] shadow-md bg-white border-[0.1px] overflow-y-scroll">
+                            <div
+                              ref={bioDivRef}
+                              className="absolute flex flex-col max-h-[100px] z-10 py-1 px-1 rounded-md w-[250px] shadow-md bg-white border-[0.1px] overflow-y-scroll"
+                            >
                               {getJobTitle()}
                               <p className="mt-1 box-content ">
                                 {pageViewData.bio}
