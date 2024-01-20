@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment, useRef } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
@@ -15,6 +15,7 @@ import LeadForm from "@/components/leadForm/LeadForm";
 import axiosInstance from "@/services/axiosInterceptors";
 import Head from "next/head";
 import { useDrag } from "react-dnd";
+import { InfoIconSmall } from "@/components/Icons";
 
 export default function Username() {
   const router = useRouter();
@@ -25,6 +26,8 @@ export default function Username() {
   const [vCardList, setVCardList] = useState([]);
   const [hasLeadForm, setHasLeadForm] = useState(false);
   const [noDataHoz, setNoDataHorz] = useState(null);
+  const [showBio, setShowBio] = useState(false);
+
   const getJobTitle = () => {
     if (usersData.job_title !== null && usersData.company === null) {
       return `${usersData.job_title}`;
@@ -180,6 +183,25 @@ END:VCARD
     }
   };
 
+  const bioDivRef = useRef(null);
+
+  // Close bio if clicking outside of it
+  const handleClickOutside = (event) => {
+    if (bioDivRef.current && !bioDivRef.current.contains(event.target)) {
+      setShowBio(false);
+    }
+  };
+
+  useEffect(() => {
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  console.log("data", usersData);
   return (
     <>
       <Head>
@@ -214,9 +236,26 @@ END:VCARD
               </div>
             </div>
             <p className="mt-3 text-xl font-semibold">{username}</p>
-            <p className="text-muted mt-2 font-medium text-xs">
+            <div className="text-muted mt-2 font-medium text-xs flex items-center justify-center  relative ">
               {getJobTitle()}
-            </p>
+              <span
+                className="px-2"
+                onClick={() => {
+                  setShowBio((prev) => !prev);
+                }}
+              >
+                <InfoIconSmall />
+              </span>
+              {showBio && (
+                <div
+                  ref={bioDivRef}
+                  className="absolute flex flex-col max-h-[100px] z-10 py-1 px-1 rounded-md w-[250px] shadow-md bg-white border-[0.1px] overflow-y-scroll"
+                >
+                  {getJobTitle()}
+                  <p className="mt-1 box-content ">{usersData.bio}</p>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* horizontal scroll menu */}
