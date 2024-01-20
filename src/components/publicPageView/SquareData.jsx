@@ -1,9 +1,14 @@
 import React from "react";
 import Image from "next/image";
 
-const SquareData = ({ object }) => {
+const SquareData = ({ handleCountingItemClicks, object }) => {
   // condition to detect type of each squares data and redirect based on type
   const handleSquareTypeDetection = (squareIndex) => {
+    // Early return if handleCountingItemClicks has not been called
+    if (!handleCountingItemClicks(object?.data[squareIndex])) {
+      return;
+    }
+
     const squareData = object?.data[squareIndex];
 
     // Early return to handle any potential 'null' or 'undefined'

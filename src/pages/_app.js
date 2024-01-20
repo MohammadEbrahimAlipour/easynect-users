@@ -10,6 +10,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "swiper/css";
 import ErrorBoundary from "@/components/Errors/ErrorBoundary";
+import "react-indiana-drag-scroll/dist/style.css";
 
 // Import DndProvider from react-dnd
 import { DndProvider } from "react-dnd";

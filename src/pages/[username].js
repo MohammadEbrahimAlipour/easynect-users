@@ -25,7 +25,6 @@ export default function Username() {
   const [vCardList, setVCardList] = useState([]);
   const [hasLeadForm, setHasLeadForm] = useState(false);
   const [noDataHoz, setNoDataHorz] = useState(null);
-  console.log("vcard list", vCardList);
   const getJobTitle = () => {
     if (usersData.job_title !== null && usersData.company === null) {
       return `${usersData.job_title}`;
@@ -92,8 +91,6 @@ END:VCARD
       return [...acc, ...flattenedData];
     }, []);
   };
-
-  console.log("usersData", usersData);
 
   useEffect(() => {
     const apiUrl = generateApiUrl(`/api/v1/page_view/${username}`);

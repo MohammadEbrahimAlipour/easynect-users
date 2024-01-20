@@ -40,6 +40,7 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
+    "react-indiana-drag-scroll": "^3.0.3-alpha",
     "react-infinite-scroll-component": "^6.1.0",
     "react-loader-spinner": "^5.4.5",
     "react-native-nfc-manager": "^3.14.12",

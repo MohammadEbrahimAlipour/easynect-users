@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
 import CarouselItems from "./CarouselItems";
 
-const CarouselView = ({ horizontalData }) => {
+const CarouselView = ({ handleCountingItemClicks, horizontalData }) => {
   const [itemCounter, setItemCounter] = useState(horizontalData.length);
   const [centeredItemIndex, setCenteredItemIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(horizontalData.length);
@@ -20,6 +20,11 @@ const CarouselView = ({ horizontalData }) => {
   const initialSlide = middleIndex >= 0 ? middleIndex : 0;
 
   const handleItemTypeDetection = (item) => {
+    // Early return if handleCountingItemClicks has not been called
+    if (!handleCountingItemClicks(item)) {
+      return;
+    }
+
     const itemData = item;
     console.log();
     // Early return to handle any potential 'null' or 'undefined'

@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import { ArrowDownIcon } from "@/components/Icons";
 import Layout from "@/components/Layout";
 import StatsCard from "@/components/StatsCard";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { generateApiUrl } from "@/components/ApiUr";
 import { useAccessToken } from "../../../../context/AccessTokenContext";
 import axios from "axios";
@@ -46,6 +46,10 @@ const PersonsStats = () => {
   const [skipVisitedItems, setSkipVisitedItems] = useState(0);
   const [limitVisitedItems, setLimitVisitedItems] = useState(6);
   const [hasMoreVisitedItems, setHasMoreVisitedItems] = useState(true);
+
+  const containerRef = useRef(null);
+  const isDragging = useRef(false); // New ref to track dragging state
+
   console.log("stats", statsData);
   // options
   const handleOptionChange = (event) => {
@@ -337,6 +341,37 @@ const PersonsStats = () => {
     convertRate: "نرخ تبدیل",
     shares: "اشتراک‌ها"
   };
+
+  const handleMouseMove = useCallback((e) => {
+    if (isDragging.current) {
+      const deltaX = e.clientX - containerRef.current.initialX;
+      containerRef.current.scrollLeft -= deltaX;
+      containerRef.current.initialX = e.clientX; // Update initialX on every move
+    }
+  }, []);
+
+  const handleMouseUp = useCallback(() => {
+    isDragging.current = false;
+  }, []);
+
+  useEffect(() => {
+    // Attach the mouse up listener only once
+    window.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      // Remove the event listeners when the component unmounts
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [handleMouseMove, handleMouseUp]); // Empty array ensures the effect runs only on mount and unmount
+
+  const handleMouseDown = (e) => {
+    e.preventDefault();
+    containerRef.current.initialX = e.clientX;
+    isDragging.current = true;
+    // Attach the move event listener directly on mousedown
+    window.addEventListener("mousemove", handleMouseMove);
+  };
   return (
     <>
       <Head>
@@ -364,9 +399,10 @@ const PersonsStats = () => {
             {statsData ? (
               <div className="">
                 <div
-                  className="grid grid-flow-col auto-cols-[36%] gap-2 overscroll-contain
-                  overflow-x-auto hide-scrollbar
-                  snap-x"
+                  ref={containerRef}
+                  className="grid grid-flow-col auto-cols-[36%] overscroll-contain overflow-x-auto 
+                  hide-scrollbar gap-2 snap-x"
+                  onMouseDown={handleMouseDown}
                 >
                   {statsData.map((item) => (
                     <StatsCard
