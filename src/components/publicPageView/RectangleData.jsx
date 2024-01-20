@@ -1,8 +1,13 @@
 import React, { Fragment } from "react";
 import Image from "next/image";
 
-const RectangleData = ({ object }) => {
+const RectangleData = ({ handleCountingItemClicks, object }) => {
   const handleRecTypeDetection = (squareIndex) => {
+    // Early return if handleCountingItemClicks has not been called
+    if (!handleCountingItemClicks(object?.data[squareIndex])) {
+      return;
+    }
+
     const squareData = object?.data[squareIndex];
     // Early return to handle any potential 'null' or 'undefined'
     if (!squareData) return;

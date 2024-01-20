@@ -5,7 +5,12 @@ import ClientPageFooter from "@/components/ClientPageFooter";
 import Layout from "@/components/Layout";
 import { useAccessToken } from "../../../context/AccessTokenContext";
 import { toast } from "react-toastify";
-import { ArrowDownIcon, ArrowRight } from "@/components/Icons";
+import {
+  ArrowDownIcon,
+  ArrowRight,
+  InfoIcon,
+  InfoIconSmall
+} from "@/components/Icons";
 import SquareDataExists from "@/components/infoPage/exists/SquareDataExists";
 import EmptySquareBox from "@/components/infoPage/empty/EmptySquareBox";
 import EmptyItemsAddBox from "@/components/infoPage/empty/EmptyItemsAddBox";
@@ -37,6 +42,7 @@ const InfoPage = () => {
   const [localItemsSelected, setLocalItemsSelected] = useState([]);
   const router = useRouter();
   const [noCard, setNoCard] = useState(null);
+  const [showBio, setShowBio] = useState(false);
 
   const goBack = () => {
     router.back();
@@ -244,6 +250,7 @@ const InfoPage = () => {
 
     setUpdatedExtractedData(newData);
   };
+  console.log("page", pageViewData);
 
   return (
     <>
@@ -270,7 +277,7 @@ const InfoPage = () => {
                     <button
                       onClick={() => setShoOptions(!showOptions)}
                       className="bg-dark text-white rounded-2xl w-[40%] px-3 py-[6px] focus:outline-none
-         text-sm flex justify-center items-center"
+                    text-sm flex justify-center items-center"
                     >
                       <span className="me-1">
                         {selectedOption
@@ -319,9 +326,20 @@ const InfoPage = () => {
                         <h3 className="mt-3 text-xl font-semibold">
                           {pageViewData.username}
                         </h3>
-                        <p className="text-muted mt-2 font-medium text-xs">
+                        <div className="text-muted mt-2 font-medium text-xs flex items-center justify-center gap-2 relative ">
                           {getJobTitle()}
-                        </p>
+                          <span onClick={() => setShowBio(!showBio)}>
+                            <InfoIconSmall />
+                          </span>
+                          {showBio && (
+                            <div className="absolute flex flex-col max-h-[100px] z-10 py-1 px-1 rounded-md w-[250px] shadow-md bg-white border-[0.1px] overflow-y-scroll">
+                              {getJobTitle()}
+                              <p className="mt-1 box-content ">
+                                {pageViewData.bio}
+                              </p>
+                            </div>
+                          )}
+                        </div>
                       </div>
                       {/* to show no Data component in case of 404 for listOptions */}
                       {noData !== null && noData ? (
