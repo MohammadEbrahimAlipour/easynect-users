@@ -1,7 +1,7 @@
 import Footer from "@/components/Footer";
 import HeaderTwo from "@/components/HeaderTwo";
 import Layout from "@/components/Layout";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useAccessToken } from "../../../../../context/AccessTokenContext";
 import { toast } from "react-toastify";
 import Link from "next/link";
@@ -19,6 +19,8 @@ const ContentStoreAddItem = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const router = useRouter();
   const { id } = router.query;
+  const containerRef = useRef(null);
+  const isDragging = useRef(false); // New ref to track dragging state
 
   useEffect(() => {
     const apiUrl = API_ROUTES.CARDS_CONTENTADDITEM_CONTENT_STORE;
@@ -27,8 +29,8 @@ const ContentStoreAddItem = () => {
     axiosInstance
       .get(apiUrl, {
         headers: {
-          Authorization: `Bearer ${accessToken.accessToken}`, // Add your access token here
-          "Accept-Language": "fa" // Language header
+          Authorization: `Bearer ${accessToken.accessToken}`,
+          "Accept-Language": "fa"
         }
       })
       .then((response) => {
@@ -57,6 +59,37 @@ const ContentStoreAddItem = () => {
       });
   }, [accessToken.accessToken]);
 
+  const handleMouseMove = useCallback((e) => {
+    if (isDragging.current) {
+      const deltaX = e.clientX - containerRef.current.initialX;
+      containerRef.current.scrollLeft -= deltaX;
+      containerRef.current.initialX = e.clientX; // Update initialX on every move
+    }
+  }, []);
+
+  const handleMouseUp = useCallback(() => {
+    isDragging.current = false;
+  }, []);
+
+  useEffect(() => {
+    // Attach the mouse up listener only once
+    window.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      // Remove the event listeners when the component unmounts
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [handleMouseMove, handleMouseUp]); // Empty array ensures the effect runs only on mount and unmount
+
+  const handleMouseDown = (e) => {
+    e.preventDefault();
+    containerRef.current.initialX = e.clientX;
+    isDragging.current = true;
+    // Attach the move event listener directly on mousedown
+    window.addEventListener("mousemove", handleMouseMove);
+  };
+
   return (
     <>
       <Head>
@@ -67,11 +100,12 @@ const ContentStoreAddItem = () => {
         <>
           <HeaderTwo />
           <Layout>
-            {/* top filters */}
+            {/* container */}
             <div
-              // ref={drop}
-              className="grid grid-flow-col auto-cols-[36%] overscroll-contain overflow-x-auto
-         hide-scrollbar gap-2 snap-x"
+              ref={containerRef}
+              className="grid grid-flow-col auto-cols-[36%] overscroll-contain overflow-x-auto 
+             hide-scrollbar gap-2 snap-x"
+              onMouseDown={handleMouseDown}
             >
               {contentData.map((cat) => (
                 <Category
@@ -82,8 +116,6 @@ const ContentStoreAddItem = () => {
                 />
               ))}
             </div>
-
-            {/* page data */}
 
             {selectedCategory && (
               <div>
