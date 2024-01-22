@@ -4,7 +4,7 @@ import axiosInstance from "@/services/axiosInterceptors";
 import { useAccessToken } from "../../context/AccessTokenContext";
 import { generateApiUrl } from "@/components/ApiUr";
 
-export default function (defaultUrl = null) {
+function useFetch(defaultUrl = null) {
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState([]);
   const [error, setError] = useState(null);
@@ -27,7 +27,7 @@ export default function (defaultUrl = null) {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
           "Accept-Language": "fa"
-        },
+        }
       });
       setResponse(response);
     } catch (err) {
@@ -40,3 +40,4 @@ export default function (defaultUrl = null) {
 
   return { isLoading, response, error, load };
 }
+export default useFetch;
