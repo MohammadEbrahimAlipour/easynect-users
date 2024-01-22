@@ -11,7 +11,8 @@
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hooks/useFetch.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useFetch.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/app/contacts/component/HeaderFilter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/contacts/component/HeaderFilter.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/app/contacts/contacts2.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/contacts/contacts2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/contacts/contacts.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/contacts/contacts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/app/contacts/contacts2.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -112,7 +113,7 @@
       <workItem from="1704704260033" duration="116000" />
       <workItem from="1704893939169" duration="3342000" />
       <workItem from="1705757007634" duration="2142000" />
-      <workItem from="1705913474376" duration="446000" />
+      <workItem from="1705913474376" duration="1199000" />
     </task>
     <servers />
   </component>
