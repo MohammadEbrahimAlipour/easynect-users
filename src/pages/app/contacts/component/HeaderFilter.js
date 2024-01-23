@@ -25,7 +25,7 @@ export default function HeaderFilter({
   useEffect(() => {
     const data = contractPageFetch.response?.data;
     if (data && Array.isArray(data) && data?.length) {
-      onChangeContractPage(data[0]);
+      onChangeContractPage(data?.[0]);
     }
   }, [contractPageFetch.response?.data]);
 
