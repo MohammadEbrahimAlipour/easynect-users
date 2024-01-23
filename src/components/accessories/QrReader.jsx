@@ -62,7 +62,11 @@ export default function QrReader({ result, setResult }) {
         <span className="me-2 ">
           {result !== null ? <TickSuccess /> : <CloseIconSmall />}
         </span>
-        <p>{error && "qr code کارت خود را اسکن کنید."}</p>
+        <p>
+          {result !== null
+            ? "کارت با موفقییت اسکن شد."
+            : "qr code کارت خود را اسکن کنید."}
+        </p>
       </div>
     </div>
   );
