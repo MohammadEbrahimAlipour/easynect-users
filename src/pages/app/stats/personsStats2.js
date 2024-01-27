@@ -35,9 +35,14 @@ const PersonsStats = () => {
           onChangeShowFilterDateMenu={setShowFilterDateMenu}
           onChangeTypeFilter={setTypeFilter}
           typeFilter={typeFilter}
+          selectedCardId={selectedCardId}
+          fromDate={fromDate}
+          toDate={toDate}
         />
         <StatsList
           selectedCardId={selectedCardId}
+          fromDate={fromDate}
+          toDate={toDate}
         />
       </Layout>
       <Header />

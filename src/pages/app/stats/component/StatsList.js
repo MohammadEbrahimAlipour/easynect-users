@@ -6,6 +6,8 @@ import InfiniteScroll from "react-infinite-scroll-component"
 
 const StatsList = ({
 	selectedCardId,
+	fromDate,
+	toDate,
 }) => {
 	const visitedFetch = useFetch();
 	const [visitedList, setVisitedList] = useState([]);
@@ -15,7 +17,7 @@ const StatsList = ({
 			setVisitedList([]);
 			loadData(true);
 		}
-	}, [selectedCardId]);
+	}, [selectedCardId, fromDate, toDate]);
 
 	useEffect(() => {
 		const data = visitedFetch.response?.data;
@@ -24,11 +26,13 @@ const StatsList = ({
 		}
 	}, [visitedFetch.response?.data]);
 
-	const loadData = () => {
+	const loadData = (freshData = false) => {
 		visitedFetch.load({
 			url: `/api/v1/analytics/get_list_contents_taps_based_on_date_range/${selectedCardId}`,
 			params: {
-				skip: visitedList?.length,
+				from_date: fromDate,
+				to_date: toDate,
+				skip:  freshData ? 0 :visitedList?.length,
 				limit: 10,
 			}
 		})
