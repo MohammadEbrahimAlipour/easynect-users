@@ -11,8 +11,8 @@ const ProfileImage = ({ className, width, height, src, id, ...rest }) => {
         priority={true}
         className={`rounded-full object-contain`}
         src={src}
-        width={80}
-        height={80}
+        width={width}
+        height={height}
         alt="Person Name"
       />
     </div>

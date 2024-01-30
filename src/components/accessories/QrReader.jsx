@@ -3,6 +3,9 @@ import jsQR from "jsqr";
 import tw from "tailwind-styled-components";
 import { CloseIconSmall, TickSuccess } from "../Icons";
 
+// ** import css for tick svg
+import styles from "./qrCss.module.css";
+
 export default function QrReader({ result, setResult }) {
   const [error, setError] = useState(false);
 
@@ -53,10 +56,40 @@ export default function QrReader({ result, setResult }) {
     requestAnimationFrame(tick);
   };
 
+  console.log("result", result);
+
   return (
-    <div>
+    <div className="w-full">
       <Canvas ref={canvasRef}></Canvas>
-      <VideoPreview ref={videoRef} onLoadedData={videoPlayed} />
+      {result === null || result === "" ? (
+        <VideoPreview ref={videoRef} onLoadedData={videoPlayed} />
+      ) : (
+        <div className="flex justify-center items-center mb-5">
+          <svg
+            viewBox="0 0 26 26"
+            xmlns="http://www.w3.org/2000/svg"
+            className={styles.custom_svg}
+          >
+            <g
+              stroke="currentColor"
+              stroke-width="2"
+              fill="none"
+              fill-rule="evenodd"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                className={styles.circle}
+                d="M13 1C6.372583 1 1 6.372583 1 13s5.372583 12 12 12 12-5.372583 12-12S19.627417 1 13 1z"
+              />
+              <path
+                className={styles.tick}
+                d="M6.5 13.5L10 17 l8.808621-8.308621"
+              />
+            </g>
+          </svg>
+        </div>
+      )}
       <div className="flex items-center justify-start mt-2">
         {/* <p>{result}</p> */}
         <span className="me-2 ">

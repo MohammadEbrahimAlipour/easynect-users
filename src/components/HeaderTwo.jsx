@@ -28,7 +28,7 @@ const HeaderTwo = ({ href, className = "" }) => {
         </div>
 
         <div className="absolute left-1/2">
-          <Image width={32} src={logo} alt="EasyNect" />
+          <Image width={32} height={32} src={logo} alt="EasyNect" />
         </div>
       </div>
     </div>
