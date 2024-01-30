@@ -7,7 +7,6 @@ import Link from "next/link";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useAccessToken } from "../../../../context/AccessTokenContext";
 import tw from "tailwind-styled-components";
-import ProfileImage from "@/components/ProfileImage";
 import BottomSheetShareById from "@/components/bottomSheet/cards/BottomSheetShareById";
 import BottomSheetMore from "@/components/bottomSheet/cards/BottomSheetMore";
 import { useRouter } from "next/router";
@@ -79,12 +78,9 @@ const ProfileCard = () => {
         }
       })
       .catch((error) => {
-        console.log("entered step 1", error);
-
         setIsLoading(false);
 
         if (error.response && error.response.status === 404) {
-          console.log("entered");
           setPageDAtaDontExist(true); // Assuming you have this state and its setter declared
         } else if (error.response && error.response.status === 401) {
           router.push("/registration/signIn/loginUser");
@@ -110,7 +106,6 @@ const ProfileCard = () => {
       }))
     );
   }, [cardData]);
-  console.log("card", cardData);
   const handleMouseMove = (e) => {
     if (!isTouching) return;
 
@@ -226,7 +221,7 @@ const ProfileCard = () => {
 
                             <div
                               className="w-[28px] h-[24px] bg-white rounded-md mt-3 flex flex-col
-                                 justify-start "
+                                 justify-start"
                             >
                               <div className="w-full h-[40%] rounded-se-md rounded-ss-md">
                                 <CardsCardIcon />
@@ -237,18 +232,15 @@ const ProfileCard = () => {
                           {/* profile items right side */}
                           <div className="">
                             {/* profile photo */}
-                            <div className="w-[80px] h-[80px]  rounded-full opacity-90 mb-4 overflow-hidden">
-                              {/* <ProfileImage id={id} src={profile_s3_url} />
-                               */}
-
-                              <div className={``}>
+                            <div className="w-[80px] h-[80px] rounded-full opacity-90 mb-4 overflow-hidden">
+                              <div>
                                 <Image
                                   priority={true}
                                   className={`rounded-full object-contain`}
                                   src={`${profile_s3_url}?${new Date().getTime()}`}
                                   width={80}
                                   height={80}
-                                  alt="Person Name"
+                                  alt={username}
                                 />
                               </div>
                             </div>

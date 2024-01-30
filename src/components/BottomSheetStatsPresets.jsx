@@ -57,6 +57,7 @@ const BottomSheetStatsPresets = ({ setFromDate, setToDate, onClose, open }) => {
               onClick={() => {
                 setFromDate(formatDate(thirtyDaysAgo));
                 setToDate(formatDate(today));
+                onClose();
               }}
               className="text-xs border-[1px] bg-black border-black text-white py-2 px-3 rounded-lg "
             >
@@ -66,6 +67,7 @@ const BottomSheetStatsPresets = ({ setFromDate, setToDate, onClose, open }) => {
               onClick={() => {
                 setFromDate(formatDate(fifteenDaysAgo));
                 setToDate(formatDate(today));
+                onClose();
               }}
               className="text-xs border-[1px] bg-black border-black text-white py-2 px-3 rounded-lg "
             >
@@ -75,6 +77,7 @@ const BottomSheetStatsPresets = ({ setFromDate, setToDate, onClose, open }) => {
               onClick={() => {
                 setFromDate(formatDate(sevenDaysAgo));
                 setToDate(formatDate(today));
+                onClose();
               }}
               className="text-xs border-[1px] bg-black border-black text-white py-2 px-3 rounded-lg "
             >

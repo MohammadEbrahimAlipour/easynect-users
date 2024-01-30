@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { HeaderBellLogo, HeaderShareLogo } from "./Icons";
+import { HeaderShareLogo } from "./Icons";
 import logo from "../../public/icons/easynect icons/headerLogoBlack.svg";
 import Image from "next/image";
-import { motion, useAnimation } from "framer-motion";
-import { useGesture } from "react-use-gesture";
+
 import HeaderShareBSheet from "./bottomSheet/header/HeaderShareBSheet";
 
 const Header = ({ className = "" }) => {
@@ -21,7 +20,7 @@ const Header = ({ className = "" }) => {
             <HeaderShareLogo />
           </span>
           <span className="absolute left-[50%] ">
-            <Image width={32} src={logo} alt="EasyNect" />
+            <Image width={32} height={32} src={logo} alt="EasyNect" />
           </span>
           {/* <HeaderBellLogo /> */}
         </div>

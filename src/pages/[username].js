@@ -220,20 +220,20 @@ END:VCARD
           <div className="flex flex-col justify-center items-center mt-[45px]">
             <div
               id="photo_here"
-              className=" box-content rounded-full
-                  overflow-hidden flex items-center justify-center"
+              className=" box-content w-[90px] h-[90px] rounded-full
+              overflow-hidden"
             >
               {/* profile photo */}
-              <div>
-                <Image
-                  priority={true}
-                  className={`rounded-full object-contain`}
-                  src={usersData?.profile_s3_url}
-                  width={80}
-                  height={80}
-                  alt="Person Name"
-                />
-              </div>
+              {/* <div> */}
+              <Image
+                priority={true}
+                className={`rounded-full object-contain`}
+                src={usersData?.profile_s3_url}
+                width={90}
+                height={90}
+                alt="Person Name"
+              />
+              {/* </div> */}
             </div>
             <p className="mt-3 text-xl font-semibold">{username}</p>
             <div className="text-muted mt-2 font-medium text-xs flex items-center justify-center  relative ">

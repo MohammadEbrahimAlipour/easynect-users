@@ -12,10 +12,6 @@ import "swiper/css";
 import ErrorBoundary from "@/components/Errors/ErrorBoundary";
 import "react-indiana-drag-scroll/dist/style.css";
 
-// Import DndProvider from react-dnd
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-
 const raviFont = raviFontLocal({
   src: "../RaviPro/Ravi Variable/Webfonts/woff2/Ravi-VF.woff2",
   variable: "--font-rav"
@@ -29,6 +25,7 @@ export default function App({ Component, pageProps }) {
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico" />
       </Head>
 
       <main
