@@ -4,9 +4,7 @@ import { toast } from "react-toastify";
 
 let suppress404Toast = false;
 
-const axiosInstance = axios.create({
-  // you can add base URL and other default configuration here if needed
-});
+const axiosInstance = axios.create();
 // Add a request interceptor
 axiosInstance.interceptors.request.use(
   function (config) {
@@ -16,7 +14,7 @@ axiosInstance.interceptors.request.use(
     }
 
     // Set default Content-Type if not already provided
-    if (!config.headers["Content-Type"]) {
+    if (!config.headers["Content-Type"] && !config.data instanceof FormData) {
       config.headers["Content-Type"] = "application/json"; // default Content-Type
     }
 
@@ -42,34 +40,35 @@ axiosInstance.interceptors.response.use(
     // Handle network errors or other exceptions not directly related to HTTP response
     if (!error.response) {
       toast.error("خطای شبکه"); // Generic message for network errors in Persian
-    } else {
-      // If set to true, this specific call will suppress the toast error for 404
-      if (
-        error.config &&
-        error.config.headers &&
-        error.config.headers.suppress404Toast &&
-        error.response &&
-        error.response.status === 404
-      ) {
-        return Promise.reject(error); // Reject the promise without making a toast
-      }
-
-      if (!suppress404Toast) {
-        // Error from backend, use error detail if available
-        const errorMessage = error.response.data?.detail || "ارور ناشناخته"; // Persian for "Unknown error"
-        toast.error(errorMessage);
-      }
-
-      // Check if the error status is 401 (Unauthorized)
-      if (error.response.status === 401) {
-        // Redirect the user to the login page
-        // You can replace '/registration/signIn/loginUser' with your actual login page URL
-        window.location.replace("/registration/signIn/loginUser");
-      } else if (error.response.status === 404) {
-        // router.push("/404");
-      }
+      return Promise.reject(error);
     }
-    return Promise.reject(error);
+    // If set to true, this specific call will suppress the toast error for 404
+    if (
+      error?.config?.headers?.suppress404Toast &&
+      error.response.status === 404
+    ) {
+      return Promise.reject(error); // Reject the promise without making a toast
+    }
+
+    if (!suppress404Toast) {
+      // Error from backend, use error detail if available
+      const errorMessage = error.response.data?.detail || "خطای ناشناخته"; // Persian for "Unknown error"
+      toast.error(errorMessage);
+      return Promise.reject(error);
+    }
+
+    // Check if the error status is 401 (Unauthorized)
+    if (error.response.status === 401) {
+      // Redirect the user to the login page
+      // You can replace '/registration/signIn/loginUser' with your actual login page URL
+      window.location.replace("/registration/signIn/loginUser");
+      return Promise.reject(error);
+    }
+
+    if (error.response.status >= 401 && error.response.status <= 499) {
+      toast.error(error?.response?.data?.detail);
+      return Promise.reject(error);
+    }
   }
 );
 
