@@ -13,6 +13,7 @@ import LoadingState from "@/components/LoadingState";
 import ProfileImage from "@/components/ProfileImage";
 import { API_ROUTES } from "@/services/api";
 import Head from "next/head";
+import axiosInstance from "@/services/axiosInterceptors";
 
 const EditProfileInfo = () => {
   const [pageData, setPageData] = useState(null);
@@ -127,7 +128,7 @@ const EditProfileInfo = () => {
     }
 
     // Send a PATCH request with the FormData and headers using Axios
-    axios
+    axiosInstance
       .patch(updateUrl, formDataToSend, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,

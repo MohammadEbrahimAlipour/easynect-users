@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import jsQR from "jsqr";
 import tw from "tailwind-styled-components";
 import { CloseIconSmall, TickSuccess } from "../Icons";
+import { QrScanner } from "@yudiel/react-qr-scanner";
 
 // ** import css for tick svg
 import styles from "./qrCss.module.css";
@@ -9,60 +10,63 @@ import styles from "./qrCss.module.css";
 export default function QrReader({ result, setResult }) {
   const [error, setError] = useState(false);
 
-  const canvasRef = useRef(null);
-  const videoRef = useRef(null);
+  // const canvasRef = useRef(null);
+  // const videoRef = useRef(null);
 
-  useEffect(() => {
-    if (videoRef.current) {
-      navigator.mediaDevices
-        .getUserMedia({ video: { facingMode: "environment" } })
-        .then((stream) => {
-          videoRef.current.srcObject = stream;
-          videoRef.current.setAttribute("playsinline", true);
-          videoRef.current.play();
-        });
-    }
-  }, [videoRef]);
+  // useEffect(() => {
+  //   if (videoRef.current) {
+  //     navigator.mediaDevices
+  //       .getUserMedia({ video: { facingMode: "environment" } })
+  //       .then((stream) => {
+  //         videoRef.current.srcObject = stream;
+  //         videoRef.current.setAttribute("playsinline", true);
+  //         videoRef.current.play();
+  //       });
+  //   }
+  // }, [videoRef]);
 
-  const tick = () => {
-    console.log("tick");
-    if (canvasRef.current) {
-      const video = videoRef.current;
-      const context = canvasRef.current.getContext("2d");
-      const height = video.videoHeight;
-      const width = video.videoWidth;
+  // const tick = () => {
+  //   console.log("tick");
+  //   if (canvasRef.current) {
+  //     const video = videoRef.current;
+  //     const context = canvasRef.current.getContext("2d");
+  //     const height = video.videoHeight;
+  //     const width = video.videoWidth;
 
-      if (video.readyState === video.HAVE_ENOUGH_DATA) {
-        canvasRef.current.height = height;
-        canvasRef.current.width = width;
+  //     if (video.readyState === video.HAVE_ENOUGH_DATA) {
+  //       canvasRef.current.height = height;
+  //       canvasRef.current.width = width;
 
-        context.drawImage(video, 0, 0, width, height);
-        const imageData = context.getImageData(0, 0, width, height);
-        const code = jsQR(imageData.data, imageData.width, imageData.height, {
-          inversionAttempts: "dontInvert"
-        });
+  //       context.drawImage(video, 0, 0, width, height);
+  //       const imageData = context.getImageData(0, 0, width, height);
+  //       const code = jsQR(imageData.data, imageData.width, imageData.height, {
+  //         inversionAttempts: "dontInvert"
+  //       });
 
-        if (code) {
-          setResult(code.data);
-        } else {
-          requestAnimationFrame(tick);
-          setError(true);
-        }
-      }
-    }
-  };
+  //       if (code) {
+  //         setResult(code.data);
+  //       } else {
+  //         requestAnimationFrame(tick);
+  //         setError(true);
+  //       }
+  //     }
+  //   }
+  // };
 
-  const videoPlayed = () => {
-    requestAnimationFrame(tick);
-  };
+  // const videoPlayed = () => {
+  //   requestAnimationFrame(tick);
+  // };
 
   console.log("result", result);
 
   return (
     <div className="w-full">
-      <Canvas ref={canvasRef}></Canvas>
+      {/* <Canvas ref={canvasRef}></Canvas> */}
       {result === null || result === "" ? (
-        <VideoPreview ref={videoRef} onLoadedData={videoPlayed} />
+        <QrScanner
+          onDecode={(res) => setResult(res)}
+          onError={(error) => console.log(error?.message)}
+        />
       ) : (
         <div className="flex justify-center items-center mb-5">
           <svg

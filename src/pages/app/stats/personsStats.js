@@ -1,540 +1,60 @@
-import Chart from "@/components/Chart";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import { ArrowDownIcon } from "@/components/Icons";
-import Layout from "@/components/Layout";
-import StatsCard from "@/components/StatsCard";
-import React, { useEffect, useState, useRef, useCallback } from "react";
-import { generateApiUrl } from "@/components/ApiUr";
-import { useAccessToken } from "../../../../context/AccessTokenContext";
-import axios from "axios";
-import BottomSheetStatsPresets from "@/components/BottomSheetStatsPresets";
-import LoadingState from "@/components/LoadingState";
-import ComingSoon from "@/components/ComingSoon";
-import { API_ROUTES } from "@/services/api";
-import axiosInstance from "@/services/axiosInterceptors";
-import Image from "next/image";
-import InfiniteScroll from "react-infinite-scroll-component";
-import Head from "next/head";
-import { useRouter } from "next/router";
+import { useState } from "react"
+
+import Head from "next/head"
+
+import Footer from "@/components/Footer"
+import Header from "@/components/Header"
+import Layout from "@/components/Layout"
+import BottomSheetStatsPresets from "@/components/BottomSheetStatsPresets"
+
+import StatsTopSideCard from "./component/StatsTopSideCard"
+import StatsList from "./component/StatsList"
+import StatsChartSide from "./component/StatsChartSide"
 
 const PersonsStats = () => {
-  const router = useRouter();
-  const { selectedIdFromCard } = router.query;
-  const accessToken = useAccessToken();
-  const [statsData, setStatsData] = useState([]); // State to store data from api for top card section
-  const [pageData, setPageData] = useState([]);
-  const [selectedCardId, setSelectedCardId] = useState(); // State to store the selected card's id
-  const [visitedItemsData, setVisitedItemsData] = useState([]);
-  const [selectedButton, setSelectedButton] = useState("");
+  const [selectedCardId, setSelectedCardId] = useState();
+  const [fromDate, setFromDate] = useState();
+  const [toDate, setToDate] = useState();
+  const [showFilterDateMenu, setShowFilterDateMenu] = useState(false);
+  const [typeFilter, setTypeFilter] = useState('view');
 
-  const [chartView, setChartView] = useState(); // Chart data for view
-  const [chartConnection, setChartConnection] = useState(); // chart data for connection
-  const [chartShare, setChartShare] = useState(); // chart data for share
-  const [chartConvert, setChartConvert] = useState(); // chart data for conver
-
-  // handle date values for custom date
-  const [fromDate, setFromDate] = useState(null);
-  const [toDate, setToDate] = useState(null);
-
-  // below code handles two buttons above chart
-  const [showSubMenu, setShowSubMenu] = useState(false);
-  const [comingSoon, setComingSoon] = useState(false);
-
-  const [selectedOption, setSelectedOption] = useState("view"); //value to pass to chart
-
-  const [skipVisitedItems, setSkipVisitedItems] = useState(0);
-  const [limitVisitedItems, setLimitVisitedItems] = useState(6);
-  const [hasMoreVisitedItems, setHasMoreVisitedItems] = useState(true);
-
-  const containerRef = useRef(null);
-  const isDragging = useRef(false); // New ref to track dragging state
-
-  console.log("stats", statsData);
-  // options
-  const handleOptionChange = (event) => {
-    const newOption = event.target.value;
-    setSelectedOption(newOption);
-
-    // Save the selectedOption in localStorage (only on the client-side)
-    if (typeof window !== "undefined") {
-      localStorage.setItem("selectedOption", newOption);
-    }
-  };
-
-  // get data for top cards
-  useEffect(() => {
-    // Fetch data from the API
-    const apiUrl = API_ROUTES.STATS_ANALYTICS_PAGES;
-
-    axiosInstance
-      .get(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${accessToken.accessToken}`, // Pass the access token in the headers
-          "accept-language": "fa"
-        }
-      })
-      .then((response) => {
-        // Handle the API response here
-        const data = response.data;
-        setStatsData(data); // Update the state with the fetched data
-        // Set the selectedCardId to the id of the first item in statsData
-        if (selectedIdFromCard) {
-          setSelectedCardId(selectedIdFromCard);
-        } else {
-          if (data.length > 0) {
-            setSelectedCardId(data[0].id);
-          }
-        }
-      })
-      .catch((error) => {
-        // error here
-      });
-  }, [accessToken.accessToken, selectedIdFromCard]);
-
-  // Fetch data for chart View
-  useEffect(() => {
-    if (selectedCardId) {
-      const apiUrl = generateApiUrl(
-        `/api/v1/analytics/get_page_view_based_on_date_range/${selectedCardId}`
-      );
-
-      const params = {
-        from_date: fromDate, // Use fromDate prop from BottomSheetStatsDate
-        to_date: toDate // Use toDate prop from BottomSheetStatsDate
-      };
-      axios
-        .get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${accessToken.accessToken}`,
-            "accept-language": "fa"
-          },
-          params: params
-        })
-        .then((response) => {
-          const data = response.data;
-          setChartView(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching chart view data:", error);
-          // Check if the error status is 404 (not found)
-          if (error.response.status === 404) {
-            setChartView(null);
-          }
-        });
-    }
-  }, [
-    accessToken.accessToken,
-    selectedCardId,
-    fromDate,
-    toDate,
-    selectedOption
-  ]);
-
-  // Fetch data for chart range connection
-  useEffect(() => {
-    if (selectedCardId) {
-      const apiUrl = generateApiUrl(
-        `/api/v1/analytics/get_page_connection_stats_based_on_date_range/${selectedCardId}`
-      );
-
-      const params = {
-        from_date: fromDate, // Use fromDate prop from BottomSheetStatsDate
-        to_date: toDate // Use toDate prop from BottomSheetStatsDate
-      };
-      axios
-        .get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${accessToken.accessToken}`,
-            "accept-language": "fa"
-          },
-          params: params
-        })
-        .then((response) => {
-          const data = response.data;
-          setChartConnection(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching chart view data:", error);
-          // Check if the error status is 404 (not found)
-          if (error.response.status === 404) {
-            setChartConnection(null);
-          }
-        });
-    }
-  }, [
-    accessToken.accessToken,
-    selectedCardId,
-    fromDate,
-    toDate,
-    selectedOption
-  ]);
-
-  // Fetch data for chart share
-  useEffect(() => {
-    if (selectedCardId) {
-      const apiUrl = generateApiUrl(
-        `/api/v1/analytics/get_page_view_based_on_date_range_by_share/${selectedCardId}`
-      );
-
-      const params = {
-        from_date: fromDate, // Use fromDate prop from BottomSheetStatsDate
-        to_date: toDate // Use toDate prop from BottomSheetStatsDate
-      };
-      axios
-        .get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${accessToken.accessToken}`,
-            "accept-language": "fa"
-          },
-          params: params
-        })
-        .then((response) => {
-          const data = response.data;
-          setChartShare(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching chart view data:", error);
-          // Check if the error status is 404 (not found)
-          if (error.response.status === 404) {
-            setChartShare(null);
-          }
-        });
-    }
-  }, [
-    accessToken.accessToken,
-    selectedCardId,
-    fromDate,
-    toDate,
-    selectedOption
-  ]);
-
-  // Fetch data for chart convert
-  useEffect(() => {
-    if (selectedCardId) {
-      const apiUrl = generateApiUrl(
-        `/api/v1/analytics/get_page_convert_rate_based_on_date_range/${selectedCardId}`
-      );
-
-      const params = {
-        from_date: fromDate, // Use fromDate prop from BottomSheetStatsDate
-        to_date: toDate // Use toDate prop from BottomSheetStatsDate
-      };
-      axios
-        .get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${accessToken.accessToken}`,
-            "accept-language": "fa"
-          },
-          params: params
-        })
-        .then((response) => {
-          const data = response.data;
-          setChartConvert(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching chart view data:", error);
-          // Check if the error status is 404 (not found)
-          if (error.response.status === 404) {
-            setChartConvert(null);
-          }
-        });
-    }
-  }, [
-    accessToken.accessToken,
-    selectedCardId,
-    fromDate,
-    toDate,
-    selectedOption
-  ]);
-
-  // Function to handle card selection
-  const handleCardSelect = (cardId) => {
-    setSelectedCardId(cardId);
-  };
-
-  // options
-  const [showOption, setShowOption] = useState(false);
-  const toggleShowOption = () => {
-    setShowOption(!showOption);
-  };
-  // Add a function to handle a click on a menu item and set the selected option
-  const handleMenuItemClick = (newOption) => {
-    setSelectedOption(newOption);
-    toggleShowOption(); // Close the menu
-  };
-
-  console.log("selectedCardId", selectedCardId);
-
-  const loadMoreVisitedItems = () => {
-    console.log("loadMoreVisitedItems called");
-
-    if (hasMoreVisitedItems) {
-      const apiUrl = generateApiUrl(
-        `/api/v1/analytics/get_list_contents_taps_based_on_date_range/${selectedCardId}?skip=${skipVisitedItems}&limit=${limitVisitedItems}`
-      );
-      if (selectedCardId) {
-        axios
-          .get(apiUrl, {
-            headers: {
-              Authorization: `Bearer ${accessToken.accessToken}`,
-              "accept-language": "fa"
-            }
-          })
-          .then((response) => {
-            const newData = response.data;
-
-            // Check if there are more contacts
-            if (newData.length > 0) {
-              setVisitedItemsData((prevData) => [...prevData, ...newData]);
-              setSkipVisitedItems((prevSkip) => prevSkip + limitVisitedItems);
-            } else {
-              setHasMore(false); // No more contacts to load
-            }
-          })
-
-          .catch((error) => {
-            console.error("Error fetching more visited items:", error);
-          });
-      }
-    }
-  };
-
-  useEffect(() => {
-    loadMoreVisitedItems(); // Initial fetch when component mounts
-  }, [selectedCardId]);
-
-  console.log("visitedItemsData", visitedItemsData);
-  console.log("chart view", chartView);
-  const optionTexts = {
-    view: "بازدید‌ها",
-    contacts: "مخاطبین",
-    convertRate: "نرخ تبدیل",
-    shares: "اشتراک‌ها"
-  };
-
-  const handleMouseMove = useCallback((e) => {
-    if (isDragging.current) {
-      const deltaX = e.clientX - containerRef.current.initialX;
-      containerRef.current.scrollLeft -= deltaX;
-      containerRef.current.initialX = e.clientX; // Update initialX on every move
-    }
-  }, []);
-
-  const handleMouseUp = useCallback(() => {
-    isDragging.current = false;
-  }, []);
-
-  useEffect(() => {
-    // Attach the mouse up listener only once
-    window.addEventListener("mouseup", handleMouseUp);
-
-    return () => {
-      // Remove the event listeners when the component unmounts
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [handleMouseMove, handleMouseUp]); // Empty array ensures the effect runs only on mount and unmount
-
-  const handleMouseDown = (e) => {
-    e.preventDefault();
-    containerRef.current.initialX = e.clientX;
-    isDragging.current = true;
-    // Attach the move event listener directly on mousedown
-    window.addEventListener("mousemove", handleMouseMove);
-  };
   return (
     <>
       <Head>
         <title>ایزی‌نکت - صفحه آمار</title>
       </Head>
-
-      <Header />
-      <>
-        {!comingSoon ? (
-          <Layout className="!pt-1 !h-fit min-h-screen !px-5">
-            {selectedCardId ? (
-              <>
-                <p className="text-xl font-medium text-right mb-4">
-                  آمار به تفکیک کارت‌
-                </p>
-              </>
-            ) : (
-              <p className="text-xl font-medium text-right mb-4">
-                کارت را انتخواب کنید
-              </p>
-            )}
-
-            {/* card section */}
-
-            {statsData ? (
-              <div className="">
-                <div
-                  ref={containerRef}
-                  className="grid grid-flow-col auto-cols-[36%] overscroll-contain overflow-x-auto 
-                  hide-scrollbar gap-2 snap-x"
-                  onMouseDown={handleMouseDown}
-                >
-                  {statsData.map((item) => (
-                    <StatsCard
-                      key={item.id}
-                      item={item}
-                      selectedCardId={selectedCardId}
-                      onClick={() => handleCardSelect(item.id)} // Call handleCardSelect when a card is clicked
-                    />
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <LoadingState />
-            )}
-
-            {/* stats */}
-            <div className="my-5 w-full">
-              <div className="flex justify-between items-center mb-5">
-                <button
-                  onClick={() => setShowSubMenu(!showSubMenu)}
-                  className="bg-dark text-white rounded-2xl px-3 py-[6px] focus:outline-none
-         text-sm flex justify-center items-center"
-                  // onClick={toggleDateMenu}
-                >
-                  <span className="me-1">انتخاب زمان</span>
-                  <ArrowDownIcon />
-                </button>
-                <div className="flex flex-wrap">
-                  {/* <label htmlFor="options">Choose a car:</label> */}
-
-                  {/* drop down chart options */}
-                  <div className="relative inline-block text-left">
-                    <div>
-                      <button
-                        onClick={toggleShowOption}
-                        type="button"
-                        className="inline-flex w-full justify-center items-center gap-x-1 rounded-2xl bg-dark text-white px-3 py-[6px] text-sm font-medium shadow-sm  "
-                        id="menu-button"
-                        aria-expanded="true"
-                        aria-haspopup="true"
-                      >
-                        {optionTexts[selectedOption]}
-                        {/* Display the selected option text */}
-                        <ArrowDownIcon />
-                      </button>
-                    </div>
-
-                    {showOption ? (
-                      <div
-                        className="absolute left-0 z-10 mt-2 w-28 origin-top-right rounded-md bg-white shadow-lg "
-                        role="menu"
-                        aria-orientation="vertical"
-                        aria-labelledby="menu-button"
-                        tabindex="-1"
-                      >
-                        <div className="" role="none">
-                          {Object.keys(optionTexts).map((value) => (
-                            <button
-                              key={value}
-                              onClick={() => handleMenuItemClick(value)} // Handle click and set option
-                              value={value}
-                              className="text-gray-700 block px-4 py-2 text-xs w-full border-b-[1px]"
-                              role="menuitem"
-                              tabindex="-1"
-                              id={`menu-item-${value}`}
-                            >
-                              {optionTexts[value]}{" "}
-                              {/* Display the option text */}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-
-              {/* chart */}
-
-              <Chart
-                chartView={chartView}
-                selectedOption={selectedOption}
-                chartConnection={chartConnection}
-                chartShare={chartShare}
-                chartConvert={chartConvert}
-              />
-
-              {/* text */}
-            </div>
-
-            {/* list */}
-            <div>
-              <div className="flex justify-between items-center mt-9 mb-6">
-                <p className="text-lg font-medium ">
-                  {selectedButton === "content" &&
-                    // Render content for the "content" button
-
-                    "content"}
-
-                  {selectedButton === "hm_item" && "hm_item"}
-                </p>
-              </div>
-              <div>
-                {/* Conditionally render content based on selectedButton */}
-
-                <p className="font-semibold mb-4">آمار بازدید آیتم ها</p>
-
-                <>
-                  <InfiniteScroll
-                    dataLength={visitedItemsData.length} // Length of the data you currently have
-                    next={loadMoreVisitedItems} // Function that loads the next chunk of data
-                    hasMore={hasMoreVisitedItems} // Boolean indicating if there's more data to load
-                    loader={<LoadingState />} // Component that shows a loading indicator
-                  >
-                    {visitedItemsData.map((item) => (
-                      <div key={item.guid}>
-                        {/* Profile image display */}
-                        <div
-                          className=" rounded-md py-2 px-5 mb-3 bg-white overflow-hidden
-                      flex items-center justify-between"
-                        >
-                          <span className="flex items-center">
-                            <Image
-                              width={36}
-                              height={36}
-                              alt={item.title}
-                              src={item.s3_icon_url}
-                              className=" rounded-full me-5"
-                            />
-
-                            <p className="font-semibold">{item.title}</p>
-                          </span>
-                          <span className="flex items-center">
-                            <p className="me-2 underline">{item.taps}</p>
-                            <p className="text-sm">کلیک</p>
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </InfiniteScroll>
-                </>
-              </div>
-            </div>
-          </Layout>
-        ) : (
-          <ComingSoon />
-        )}
-      </>
-      <Footer />
-      <div>
-        <BottomSheetStatsPresets
-          setFromDate={setFromDate}
-          setToDate={setToDate}
-          open={showSubMenu}
-          onClose={() => {
-            setShowSubMenu(false);
-          }}
+      <Layout className="!pt-1 !h-fit min-h-screen !px-5">
+        <p className="text-xl font-medium text-right mb-4">
+          {selectedCardId ? "آمار به تفکیک کارت" : "کارت را انتخواب کنید"}
+        </p>
+        <StatsTopSideCard
+          onSelectedId={setSelectedCardId}
+          selectedCardId={selectedCardId}
         />
-      </div>
+        <StatsChartSide
+          onChangeShowFilterDateMenu={setShowFilterDateMenu}
+          onChangeTypeFilter={setTypeFilter}
+          typeFilter={typeFilter}
+          selectedCardId={selectedCardId}
+          fromDate={fromDate}
+          toDate={toDate}
+        />
+        <StatsList
+          selectedCardId={selectedCardId}
+          fromDate={fromDate}
+          toDate={toDate}
+        />
+      </Layout>
+      <Header />
+      <Footer />
+      <BottomSheetStatsPresets
+        setFromDate={setFromDate}
+        setToDate={setToDate}
+        open={showFilterDateMenu}
+        onClose={() => setShowFilterDateMenu(false)}
+      />
     </>
-  );
-};
+  )
+}
 
-export default PersonsStats;
+export default PersonsStats

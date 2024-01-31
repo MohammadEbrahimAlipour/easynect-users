@@ -201,7 +201,6 @@ END:VCARD
     };
   }, []);
 
-  console.log("data", usersData);
   return (
     <>
       <Head>
@@ -235,7 +234,9 @@ END:VCARD
               />
               {/* </div> */}
             </div>
-            <p className="mt-3 text-xl font-semibold">{username}</p>
+            <p className="mt-3 text-xl font-semibold capitalize">
+              {usersData.owner_first_name + " " + usersData.owner_last_name}
+            </p>
             <div className="text-muted mt-2 font-medium text-xs flex items-center justify-center  relative ">
               {getJobTitle()}
               <span
