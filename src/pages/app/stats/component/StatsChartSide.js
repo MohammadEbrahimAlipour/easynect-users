@@ -156,8 +156,8 @@ const StatsChartSide = ({
         selectedOption={typeFilter}
         chartView={viewData}
         chartConnection={connectionData}
-        chartShare={convertData}
-        chartConvert={shareData}
+        chartShare={shareData}
+        chartConvert={convertData}
       />
     </div>
   );
