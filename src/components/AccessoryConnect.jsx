@@ -85,10 +85,9 @@ const AccessoryConnect = ({
   // Function to submit the form
   const handleCameraSubmit = (event) => {
     event.preventDefault();
+    const url = new URL(result);
 
-    const toRemove = "https://api.easynect.com/";
-
-    const username = result.replace(toRemove, "");
+    const username = url.pathname?.substring(1);
 
     console.log(username);
 
@@ -207,14 +206,16 @@ const AccessoryConnect = ({
                 <QrReader result={result} setResult={setResult} />
               )}
             </div>
-            {/* button
-            <button
-              type="submit"
-              className="flex items-center justify-center w-full
-                  bg-dark text-white py-3 leading-0 rounded-lg mt-7"
-            >
-              اتصال
-            </button> */}
+            {/* button */}
+            {result && (
+              <button
+                type="submit"
+                className="flex items-center justify-center w-full
+      bg-dark text-white py-3 leading-0 rounded-lg mt-7"
+              >
+                اتصال
+              </button>
+            )}
           </form>
         )}
 
