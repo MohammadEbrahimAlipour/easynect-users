@@ -10,7 +10,13 @@ function useFetch(defaultUrl = null) {
   const [error, setError] = useState(null);
   const accessToken = useAccessToken();
 
-  const load = async ({ url = null, method, data = null, params = null }) => {
+  const load = async ({
+    url = null,
+    method,
+    data = null,
+    params = null,
+    suppress404Toast = false
+  }) => {
     if (!url && !defaultUrl) {
       return;
     }
@@ -26,7 +32,8 @@ function useFetch(defaultUrl = null) {
         params,
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
-          "Accept-Language": "fa"
+          "Accept-Language": "fa",
+          suppress404Toast: suppress404Toast
         }
       });
       setResponse(response);
