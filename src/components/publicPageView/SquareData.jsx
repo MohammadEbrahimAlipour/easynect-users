@@ -15,7 +15,7 @@ const SquareData = ({ handleCountingItemClicks, object }) => {
     if (!squareData) return;
 
     if (squareData.type === "phone" && squareData.content_val) {
-      const telLink = `tel:${squareData.content_val}`;
+      const telLink = `tel:${"+98" + squareData.content_val.substring(1)}`;
       window.location.href = telLink;
     } else if (squareData.type === "link" && squareData.content_val) {
       const externalLink = squareData.content_val;

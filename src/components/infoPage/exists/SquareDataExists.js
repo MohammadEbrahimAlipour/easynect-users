@@ -178,7 +178,7 @@ const SquareDataExists = ({
                           className="bg-white invert"
                         />
                       </div>
-                      <p className="font-medium text-xs text-dark ">
+                      <p className="font-medium text-xs text-dark truncate">
                         {firstSquare[0]?.title}
                       </p>
                       <p className="font-medium text-xs text-muted mt-2 mb-5 line-clamp-2">
@@ -296,7 +296,7 @@ const SquareDataExists = ({
                         className="bg-white invert"
                       />
                     </div>
-                    <p className="font-medium text-xs text-dark ">
+                    <p className="font-medium text-xs text-dark truncate">
                       {secondSquare[0]?.title}
                     </p>
                     <p className="font-medium text-xs text-muted mt-2 mb-5 line-clamp-2">

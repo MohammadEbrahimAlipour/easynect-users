@@ -51,6 +51,11 @@ const HomePage = () => {
       <Head>
         <title>ایزی‌نکت</title>
         <meta name="easynect business card" content="Powered by Easynect" />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/public/favicon.ico"
+        />
       </Head>
 
       <LoadingState />

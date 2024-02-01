@@ -18,6 +18,8 @@ import Head from "next/head";
 const LoginUser = () => {
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
+
   // To fill access token
   const { setAccessToken } = useAccessToken();
 
@@ -33,7 +35,7 @@ const LoginUser = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
       const apiUrl = API_ROUTES.LOGIN; // Use the LOGIN API route directly
       const headers = {
@@ -48,6 +50,8 @@ const LoginUser = () => {
         const data = response.data;
         const accessToken = data.access_token;
 
+        setLoading(false);
+
         setAccessToken(accessToken);
 
         if (typeof localStorage !== "undefined") {
@@ -56,9 +60,13 @@ const LoginUser = () => {
 
         router.push("/app/cards/profileCard");
       } else {
+        setLoading(false);
+
         console.error("Unexpected status code during login:", response.status);
       }
     } catch (error) {
+      setLoading(false);
+
       // Log the error for debugging purposes
       console.error("Error during login:", error);
       // Handle the error as needed
@@ -166,6 +174,7 @@ const LoginUser = () => {
           {/* register btn */}
           <div>
             <button
+              disabled={loading}
               type="submit"
               className="w-full mt-7 bg-dark text-white font-semibold
              text-lg py-3 rounded-lg"
