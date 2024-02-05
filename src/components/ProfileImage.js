@@ -9,7 +9,7 @@ const ProfileImage = ({ className, width, height, src, id, ...rest }) => {
     <div className={`${className}`}>
       <Image
         priority={true}
-        className={`rounded-full object-contain`}
+        className="rounded-full object-cover w-full h-full"
         src={src}
         width={width}
         height={height}

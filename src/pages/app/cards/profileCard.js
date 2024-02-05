@@ -233,16 +233,14 @@ const ProfileCard = () => {
                           <div className="">
                             {/* profile photo */}
                             <div className="w-[80px] h-[80px] rounded-full opacity-90 mb-4 overflow-hidden">
-                              <div>
-                                <Image
-                                  priority={true}
-                                  className={`rounded-full object-contain`}
-                                  src={`${profile_s3_url}?${new Date().getTime()}`}
-                                  width={80}
-                                  height={80}
-                                  alt={username}
-                                />
-                              </div>
+                              <Image
+                                priority={true}
+                                className="rounded-full object-cover w-full h-full"
+                                src={`${profile_s3_url}?${new Date().getTime()}`}
+                                width={80}
+                                height={80}
+                                alt={username}
+                              />
                             </div>
                             {/* box under profile */}
                             <div className="mb-2 text-xl font-semibold">

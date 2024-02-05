@@ -217,7 +217,7 @@ const VerifyOTP = () => {
 
           {/* button */}
           <button
-            disabled={true}
+            disabled={loading}
             type="submit"
             className="flex items-center justify-center w-full
                     bg-dark text-white py-3 leading-0 rounded-lg mt-7"
