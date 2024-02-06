@@ -201,7 +201,7 @@ const VerifyOTP = () => {
                 pattern="[0-9]*"
                 inputMode="numeric" // ensures iOS brings up the numeric keypad
                 onKeyDown={(e) => {
-                  if (!/[0-9]/.test(e.key)) {
+                  if (!/[0-9]/.test(e.key) && e.key !== "Backspace") {
                     e.preventDefault();
                   }
                 }}

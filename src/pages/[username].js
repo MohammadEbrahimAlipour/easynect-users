@@ -226,7 +226,7 @@ END:VCARD
               {/* <div> */}
               <Image
                 priority={true}
-                className={`rounded-full object-contain`}
+                className="rounded-full object-cover w-full h-full"
                 src={usersData?.profile_s3_url}
                 width={90}
                 height={90}

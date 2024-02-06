@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e485ecf0-2a62-4124-95b9-8fcf0d3fef6f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/components/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Header.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/HeaderTwo.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HeaderTwo.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/app/cards/profileCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/app/cards/profileCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,6 +108,7 @@
       <workItem from="1705757007634" duration="2142000" />
       <workItem from="1705913474376" duration="1199000" />
       <workItem from="1706020370143" duration="56000" />
+      <workItem from="1706692999976" duration="634000" />
     </task>
     <servers />
   </component>

@@ -14,6 +14,7 @@ import { API_ROUTES } from "@/services/api";
 import axiosInstance from "@/services/axiosInterceptors";
 import Head from "next/head";
 import Image from "next/image";
+import { generateApiUrl } from "@/components/ApiUr";
 
 const ProfileCard = () => {
   const [cardData, setCardData] = useState([]);
@@ -53,6 +54,11 @@ const ProfileCard = () => {
     });
     setShowSheetMore(true);
   };
+
+  const handleUsernameRedirect = (username) => {
+    router.push(`/${username}`);
+  };
+
   // Fetch card data from the API
   useEffect(() => {
     // Replace with your API endpoint
@@ -62,9 +68,9 @@ const ProfileCard = () => {
       .get(apiUrl, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
-          "accept-language": "fa" // Include the access token in the headers
-        },
-        suppress404Toast: true
+          "accept-language": "fa", // Include the access token in the headers
+          suppress404Toast: true
+        }
       })
       .then((response) => {
         // setCardData(response.data);
@@ -232,7 +238,10 @@ const ProfileCard = () => {
                           {/* profile items right side */}
                           <div className="">
                             {/* profile photo */}
-                            <div className="w-[80px] h-[80px] rounded-full opacity-90 mb-4 overflow-hidden">
+                            <div
+                              onClick={() => handleUsernameRedirect(username)}
+                              className="w-[80px] h-[80px] rounded-full opacity-90 mb-4 overflow-hidden"
+                            >
                               <Image
                                 priority={true}
                                 className="rounded-full object-cover w-full h-full"
@@ -243,7 +252,10 @@ const ProfileCard = () => {
                               />
                             </div>
                             {/* box under profile */}
-                            <div className="mb-2 text-xl font-semibold">
+                            <div
+                              onClick={() => handleUsernameRedirect(username)}
+                              className="mb-2 text-xl font-semibold cursor-pointer"
+                            >
                               <p className="text-right custom_ltr ">
                                 @{username}
                               </p>

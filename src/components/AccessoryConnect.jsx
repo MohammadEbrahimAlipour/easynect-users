@@ -130,6 +130,7 @@ const AccessoryConnect = ({
         });
     }
   };
+
   return (
     <BottomSheetWrapper
       open={showAccessory}

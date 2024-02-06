@@ -59,6 +59,19 @@ export default function QrReader({ result, setResult }) {
 
   console.log("result", result);
 
+  useEffect(() => {
+    // ComponentDidMount logic here ...
+
+    return () => {
+      // ComponentWillUnmount logic
+      // This is where you should include the camera clean-up code
+      if (typeof QrScanner.releaseCamera === "function") {
+        // Release the camera resource, if such method is provided
+        QrScanner.releaseCamera();
+      }
+    };
+  }, []);
+
   return (
     <div className="w-full">
       {/* <Canvas ref={canvasRef}></Canvas> */}
