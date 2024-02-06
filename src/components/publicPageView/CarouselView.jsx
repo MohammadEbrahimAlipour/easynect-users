@@ -31,7 +31,7 @@ const CarouselView = ({ handleCountingItemClicks, horizontalData }) => {
     if (!itemData) return;
 
     if (itemData.type === "phone" && itemData.content_val) {
-      const telLink = `tel:${itemData.content_val}`;
+      const telLink = `tel:${squareData.content_val}`;
       window.location.href = telLink;
     } else if (itemData.type === "link" && itemData.content_val) {
       const externalLink = itemData.content_val;

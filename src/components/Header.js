@@ -19,10 +19,9 @@ const Header = ({ className = "" }) => {
           <span onClick={handleToggleSheet}>
             <HeaderShareLogo />
           </span>
-          <span className="absolute left-[50%] ">
+          <span className="absolute left-[50%] w-[32px] h-[32px] ">
             <Image width={32} height={32} src={logo} alt="EasyNect" />
           </span>
-          {/* <HeaderBellLogo /> */}
         </div>
       </div>
 

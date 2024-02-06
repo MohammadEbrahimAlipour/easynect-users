@@ -3,7 +3,7 @@ version: '3'
 services:
   nextjs-container:
     image: ${DC_IMAGE_NAME}:${DC_IMAGE_TAG}
-    container_name: nextjs-container
+    container_name: easynect
     restart: always
     ports:
-      - '3000:3000'
+      - '1500:1500'

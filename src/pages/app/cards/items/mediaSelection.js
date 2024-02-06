@@ -27,9 +27,9 @@ const MediaSelection = () => {
         .get(apiUrl, {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`, // Add your access token here
-            "Accept-Language": "fa" // Language header
-          },
-          suppress404Toast: true
+            "Accept-Language": "fa", // Language header
+            suppress404Toast: true
+          }
         })
         .then((response) => {
           // Handle the data once it's received

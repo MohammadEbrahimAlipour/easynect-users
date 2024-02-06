@@ -30,6 +30,8 @@ const VerifyOTP = () => {
 
   const [timeLeft, setTimeLeft] = useState(120);
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (timeLeft === 0) {
       console.log("TIME LEFT IS 0");
@@ -82,6 +84,8 @@ const VerifyOTP = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setLoading(true);
+
     // Join otp array into a single string
     const concatenatedOtp = otp.join("");
     try {
@@ -102,6 +106,7 @@ const VerifyOTP = () => {
       );
 
       if (response.status === 200) {
+        setLoading(false);
         // redirect user to signIn page
 
         // Handle the successful response
@@ -111,10 +116,12 @@ const VerifyOTP = () => {
         router.push("/app/cards/profileCard");
         // Redirect to the confirmation page or perform other actions
       } else {
+        setLoading(false);
         // Handle other status codes, e.g., display an error message
         console.error("OTP code verification failed");
       }
     } catch (error) {
+      setLoading(false);
       // Handle errors, e.g., display an error message
       console.error("Error:", error);
       // Check if the error response contains a message
@@ -194,7 +201,7 @@ const VerifyOTP = () => {
                 pattern="[0-9]*"
                 inputMode="numeric" // ensures iOS brings up the numeric keypad
                 onKeyDown={(e) => {
-                  if (!/[0-9]/.test(e.key)) {
+                  if (!/[0-9]/.test(e.key) && e.key !== "Backspace") {
                     e.preventDefault();
                   }
                 }}
@@ -210,6 +217,7 @@ const VerifyOTP = () => {
 
           {/* button */}
           <button
+            disabled={loading}
             type="submit"
             className="flex items-center justify-center w-full
                     bg-dark text-white py-3 leading-0 rounded-lg mt-7"
