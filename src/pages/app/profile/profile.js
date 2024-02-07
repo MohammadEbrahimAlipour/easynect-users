@@ -48,7 +48,7 @@ const Profile = () => {
         setAccessToken(null);
         localStorage.removeItem("accessToken");
 
-        router.push("/loginUser");
+        router.push("/registration/signIn/loginUser");
         console.log("Logout successful");
       } else {
         // Handle logout error, e.g., display an error message
