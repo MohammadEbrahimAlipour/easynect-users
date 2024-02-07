@@ -26,7 +26,7 @@ const StatsCard = ({ item, onClick, selectedCardId }) => {
           <div>
             <Image
               priority={true}
-              className={`rounded-full object-contain`}
+              className="rounded-full object-cover w-full h-full"
               src={item.profile_s3_url}
               width={80}
               height={80}

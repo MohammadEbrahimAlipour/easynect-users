@@ -7,10 +7,16 @@ import InfiniteScroll from "react-infinite-scroll-component";
 const StatsList = ({ selectedCardId, fromDate, toDate }) => {
   const visitedFetch = useFetch();
   const [visitedList, setVisitedList] = useState([]);
+  const [skip, setSkip] = useState(0);
+  const [limit, setLimit] = useState(10);
+
+  // Add a state to keep track of the previous skip
+  const [prevSkip, setPrevSkip] = useState(0);
 
   useEffect(() => {
     if (selectedCardId) {
       setVisitedList([]);
+      setPrevSkip(0);
       loadData(true);
     }
   }, [selectedCardId, fromDate, toDate]);
@@ -23,13 +29,17 @@ const StatsList = ({ selectedCardId, fromDate, toDate }) => {
   }, [visitedFetch.response?.data]);
 
   const loadData = (freshData = false) => {
+    setPrevSkip((prev) => prev + limit);
+
+    const nextSkip = freshData ? 0 : prevSkip;
+
     visitedFetch.load({
       url: `/api/v1/analytics/get_list_contents_taps_based_on_date_range/${selectedCardId}`,
       params: {
         from_date: fromDate,
         to_date: toDate,
-        skip: freshData ? 0 : visitedList?.length,
-        limit: 10
+        limit,
+        skip: nextSkip
       },
       suppress404Toast: true
     });
@@ -42,7 +52,7 @@ const StatsList = ({ selectedCardId, fromDate, toDate }) => {
         next={loadData}
         hasMore
         // hasMore={hasMoreVisitedItems} // Boolean indicating if there's more data to load
-        loader={<LoadingState />} // Component that shows a loading indicator
+        // loader={<LoadingState />} // Component that shows a loading indicator
       >
         {visitedList.map((item) => (
           <div key={item.guid}>
