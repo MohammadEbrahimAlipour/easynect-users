@@ -57,8 +57,6 @@ export default function QrReader({ result, setResult }) {
   //   requestAnimationFrame(tick);
   // };
 
-  console.log("result", result);
-
   useEffect(() => {
     // ComponentDidMount logic here ...
 
