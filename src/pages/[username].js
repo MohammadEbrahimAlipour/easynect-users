@@ -14,7 +14,6 @@ import CarouselView from "@/components/publicPageView/CarouselView";
 import LeadForm from "@/components/leadForm/LeadForm";
 import axiosInstance from "@/services/axiosInterceptors";
 import Head from "next/head";
-import { useDrag } from "react-dnd";
 import { InfoIconSmall } from "@/components/Icons";
 
 export default function Username() {
@@ -89,7 +88,7 @@ END:VCARD
       const flattenedData = contentItem.data.map((item) => ({
         type: item.type,
         title: item.title,
-        content_val: item.content_val
+        content_val: item.content_val,
       }));
       return [...acc, ...flattenedData];
     }, []);
@@ -103,8 +102,8 @@ END:VCARD
       axios
         .get(apiUrl, {
           headers: {
-            "Accept-Language": "fa" // Language header
-          }
+            "Accept-Language": "fa", // Language header
+          },
         })
         .then((response) => {
           // Handle the data once it's received
@@ -156,7 +155,7 @@ END:VCARD
       // Merge flattened contents with horizontal_menu
       const combinedDataArray = [
         ...flattenedContents,
-        ...usersData.horizontal_menu
+        ...usersData.horizontal_menu,
       ];
       setVCardList(combinedDataArray);
     }
@@ -165,7 +164,7 @@ END:VCARD
   const handleCountingItemClicks = async (itemData) => {
     try {
       const analyticsData = {
-        content_id: itemData.id
+        content_id: itemData.id,
       };
       const apiUrl = generateApiUrl(`/api/v1/analytics/tap/${itemData.id}`);
       const response = await axiosInstance.post(apiUrl, analyticsData);
@@ -292,32 +291,73 @@ END:VCARD
                     >
                       ذخیره مخاطب
                     </button>
-                    <div className=" mt-5">
-                      {usersData.contents?.map((object) => (
-                        <div key={object?.guid + object?.data?.length}>
-                          {/* square section */}
+                    <div className="mt-4">
+                      <h1 className="text-xl text-gray-500 mb-4">
+                        در حال تست کپی کردن
+                      </h1>
+                      <RectangleData
+                        object={{
+                          guid: "5d85b2b3-5da5-41e1-826d-02cdbb241d22",
+                          display_box_type: "square",
+                          main_order: 1,
+                          data: [
+                            {
+                              id: "1a94fbb0-fed7-421a-83ad-d551096d15f1",
+                              sub_order: 1,
+                              main_order: 1,
+                              guid: "2f248677-dbb7-4fdb-bd71-cc8792836615",
+                              title: "شماره‌ی شبا",
+                              description: "شماره‌ی شبای کارت رسالت",
+                              content_val: "IR580540102680020817909002",
+                              s3_icon_url:
+                                "https://easynect-static-contents.s3.ir-thr-at1.arvanstorage.ir/users/contents_store/icons/5a3c1dbe-0f6c-43f3-919b-a81aa7ff0be2.png",
+                              type: "text",
+                            },
+                            {
+                              id: "1bea9b32-596f-4c28-8148-663c871e432f",
+                              sub_order: 2,
+                              main_order: 1,
+                              guid: "453d038b-d088-48cf-a5f1-7c974ad4511a",
+                              title: "اینستاگرام",
+                              description: "توضیحات بلاب بلاب بلا",
+                              content_val: "https://instagram.com/sample url",
+                              s3_icon_url:
+                                "https://easynect-static-contents.s3.ir-thr-at1.arvanstorage.ir/users/contents_store/icons/48b718f7-bbec-45b2-89a2-ac49d5ee5e85.png",
+                              type: "link",
+                            },
+                          ],
+                        }}
+                        handleCountingItemClicks={() => {}}
+                      />
+                    </div>
+                    <div className="mt-5">
+                      {usersData.contents?.map((object) => {
+                        return (
+                          <div key={object?.guid + object?.data?.length}>
+                            {/* square section */}
 
-                          {object.display_box_type === "square" ? (
-                            <SquareData
-                              object={object}
-                              handleCountingItemClicks={
-                                handleCountingItemClicks
-                              }
-                            />
-                          ) : null}
+                            {object.display_box_type === "square" ? (
+                              <SquareData
+                                object={object}
+                                handleCountingItemClicks={
+                                  handleCountingItemClicks
+                                }
+                              />
+                            ) : null}
 
-                          {/* rectangle */}
+                            {/* rectangle */}
 
-                          {object.display_box_type === "rectangle" ? (
-                            <RectangleData
-                              object={object}
-                              handleCountingItemClicks={
-                                handleCountingItemClicks
-                              }
-                            />
-                          ) : null}
-                        </div>
-                      ))}
+                            {object.display_box_type === "rectangle" ? (
+                              <RectangleData
+                                object={object}
+                                handleCountingItemClicks={
+                                  handleCountingItemClicks
+                                }
+                              />
+                            ) : null}
+                          </div>
+                        );
+                      })}
                     </div>
                   </>
                 ) : (
