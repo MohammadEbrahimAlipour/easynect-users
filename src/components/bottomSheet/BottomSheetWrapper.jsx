@@ -15,15 +15,14 @@ const BottomSheetWrapper = ({ onClose, open, children }) => {
           borderTopLeftRadius: "1rem", // rounded-lg for top left
           borderTopRightRadius: "1rem", // rounded-lg for top right
           fontFamily: "ravi",
-          maxHeight: "600px"
+          maxHeight: "600px",
           // maxWidth: "420px"
-        }
+        },
       }}
     >
       <div
-        className="py-2 px-5
-      
-      "
+        className="py-2 px-5"
+        // TODO: improve padding x axis, it doesn't looks good
       >
         {children}
       </div>
