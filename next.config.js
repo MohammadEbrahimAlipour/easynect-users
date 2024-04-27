@@ -5,10 +5,15 @@ const nextConfig = {
   images: {
     domains: [
       process.env.NEXT_PUBLIC_S3_PAGES_URL,
-      process.env.NEXT_PUBLIC_S3_CONTENTS_URL
-    ]
+      process.env.NEXT_PUBLIC_S3_CONTENTS_URL,
+    ],
   },
-  output: "standalone"
+  output: "standalone",
+  webpack: (config) => {
+    config.resolve.alias.canvas = false;
+
+    return config;
+  },
 };
 
 module.exports = nextConfig;
