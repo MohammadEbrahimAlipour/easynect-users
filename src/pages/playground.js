@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useState } from "react";
 import { pdfjs, Document, Page } from "react-pdf";
+import tw from "tailwind-styled-components";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-pdf/dist/esm/Page/TextLayer.css";
 import { useResizeObserver } from "@wojtekmaj/react-hooks";
@@ -8,13 +9,14 @@ import { useResizeObserver } from "@wojtekmaj/react-hooks";
 // components
 import SquareData from "@/components/publicPageView/SquareData";
 import BottomSheetWrapper from "@/components/bottomSheet/BottomSheetWrapper";
-import tw from "tailwind-styled-components";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 const resizeObserverOptions = {};
 
 const maxWidth = 800;
+
+const fakeBol = true;
 
 export default function Playground() {
   const [pageNumber, setPageNumber] = useState(1);
@@ -88,24 +90,28 @@ export default function Playground() {
         open={isPreviewSheetOpen}
         onClose={handleBottomSheetClose}
       >
-        <div className="flex flex-col h-[500px]">
+        <div className="flex flex-col h-[62vh]">
           <PreviewContainer ref={setContainerRef}>
-            <Document
-              file={"./sample.pdf"}
-              onLoadSuccess={onDocumentLoadSuccess}
-            >
-              {Array.from(new Array(numPages), (el, index) => (
-                <Page
-                  key={`page_${index + 1}`}
-                  pageNumber={index + 1}
-                  width={
-                    containerWidth
-                      ? Math.min(containerWidth, maxWidth)
-                      : maxWidth
-                  }
-                />
-              ))}
-            </Document>
+            {fakeBol ? (
+              <Document
+                file={"./sample.pdf"}
+                onLoadSuccess={onDocumentLoadSuccess}
+              >
+                {Array.from(new Array(numPages), (el, index) => (
+                  <Page
+                    key={`page_${index + 1}`}
+                    pageNumber={index + 1}
+                    width={
+                      containerWidth
+                        ? Math.min(containerWidth, maxWidth)
+                        : maxWidth
+                    }
+                  />
+                ))}
+              </Document>
+            ) : (
+              <Image src="https://dummyimage.com/326x436/000/fff" />
+            )}
           </PreviewContainer>
           <DownloadButton>دانلود قایل</DownloadButton>
         </div>
@@ -119,6 +125,8 @@ const DownloadButton = tw.button`
   py-3
   text-white
   mt-2
+  rounded-md
+  shadow-xl
 `;
 
 const PreviewContainer = tw.div`
@@ -126,9 +134,16 @@ const PreviewContainer = tw.div`
   justify-center
   border-2
   border-gray-300
-  rounded-md
+  rounded-xl
   overflow-x-hidden
-  overflow-y-auto
+  overflow-y-scroll
   flex-1
   mt-2
+`;
+
+const Image = tw.img`
+  w-full
+  h-full
+  object-contain	
+  bg-gray-200
 `;
