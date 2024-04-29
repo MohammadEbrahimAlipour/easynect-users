@@ -1,7 +1,7 @@
 import React from "react";
 import { Drawer } from "@mui/material";
 
-const BottomSheetWrapper = ({ onClose, open, children }) => {
+const BottomSheetWrapper = ({ onClose, open, children, maxHeight, height }) => {
   return (
     // <div className="flex justify-center items-center max-w-[420px] overflow-hidden">
     <Drawer
@@ -15,9 +15,9 @@ const BottomSheetWrapper = ({ onClose, open, children }) => {
           borderTopLeftRadius: "1rem", // rounded-lg for top left
           borderTopRightRadius: "1rem", // rounded-lg for top right
           fontFamily: "ravi",
-          maxHeight: "600px"
-          // maxWidth: "420px"
-        }
+          maxHeight: maxHeight || "600px",
+          height: height || "unset",
+        },
       }}
     >
       <div
