@@ -8,7 +8,11 @@ import { useResizeObserver } from "@wojtekmaj/react-hooks";
 
 // components
 import BottomSheetWrapper from "@/components/bottomSheet/BottomSheetWrapper";
-import { getFileExtension } from "@/utils/file";
+
+// utils
+import { downloadFile, getFileExtension } from "@/utils/file";
+
+// constants
 import { FILE_EXTENSIONS } from "@/constants/file";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
@@ -16,8 +20,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 const resizeObserverOptions = {};
 
 const maxWidth = 800;
-
-const fakeBol = true;
 
 export default function FilePreviewBottomSheet({ url, isOpen, onClose }) {
   const [numPages, setNumPages] = useState(0);
@@ -70,7 +72,9 @@ export default function FilePreviewBottomSheet({ url, isOpen, onClose }) {
           )}
         </PreviewContainer>
         <Buttons>
-          <DownloadButton>دانلود قایل</DownloadButton>
+          <DownloadButton onClick={() => downloadFile(url)}>
+            دانلود قایل
+          </DownloadButton>
           <CancelButton onClick={onClose}>بستن</CancelButton>
         </Buttons>
       </div>
