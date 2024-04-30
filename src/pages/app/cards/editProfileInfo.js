@@ -39,6 +39,7 @@ const EditProfileInfo = () => {
     is_public: false,
     bio: "",
     profile: "",
+    direct_link: null,
   });
   const [isDirect, setIsDirect] = useState(formData.is_direct);
 
@@ -71,6 +72,7 @@ const EditProfileInfo = () => {
             is_public: response.data.is_public || false,
             bio: response.data.bio || "", // Set bio from the fetched data
             profile: response.data.profile_s3_url || "",
+            direct_link: response.data.direct_link,
           });
         })
         .catch((error) => {
@@ -377,7 +379,8 @@ const EditProfileInfo = () => {
                       defaultValue={formData.bio}
                       onChange={handleInputChange}
                     />
-                    <EditProfileInfoRedirectForm />
+
+                    <EditProfileInfoRedirectForm data={formData.direct_link} />
                   </div>
                 </form>
                 {/* <div className="my-8">

@@ -4,12 +4,13 @@ import tw from "tailwind-styled-components";
 // files
 import BaseTickSuccessIcon from "@/assets/icons/tick-success.svg";
 
-export default function EditProfileInfoRedirectFormItem({
+export default function EditProfileInfoRedirectFormLink({
   data,
   onSelect,
   active,
 }) {
-  const { title, description, icon } = data;
+  const { title, description, s3_icon_url: icon } = data;
+
   return (
     <Wrapper $active={active} onClick={() => onSelect(data)}>
       <Image alt="icon" width={40} height={40} src={icon} />
