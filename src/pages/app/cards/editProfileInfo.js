@@ -380,7 +380,10 @@ const EditProfileInfo = () => {
                       onChange={handleInputChange}
                     />
 
-                    <EditProfileInfoRedirectForm data={formData.direct_link} />
+                    <EditProfileInfoRedirectForm
+                      data={formData.direct_link}
+                      pageID={id}
+                    />
                   </div>
                 </form>
                 {/* <div className="my-8">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import tw from "tailwind-styled-components";
 
 // components
@@ -9,12 +9,46 @@ import EditProfileInfoRedirectFormLink from "@/components/EditProfileInfoRedirec
 // files
 import BaseArrowDownIcon from "@/assets/icons/arrow-down.svg";
 
+// services
+import axiosInstance from "@/services/axiosInterceptors";
+import { useAccessToken } from "../../context/AccessTokenContext";
+import { generateApiUrl } from "./ApiUr";
+
 const fakeNoLink = false;
 
-export default function EditProfileInfoRedirectForm({ data }) {
+export default function EditProfileInfoRedirectForm({ data, pageID }) {
+  // TODO: add loading
   const [isChecked, setIsChecked] = useState(false);
   const [isLinksSheetOpen, setIsLinkSheetOpen] = useState(false);
   const [selectedLink, setSelectedLink] = useState(null);
+
+  const accessToken = useAccessToken();
+
+  useEffect(() => {
+    setSelectedLink(getSelectedLink());
+    setIsChecked(data.is_direct);
+  }, []);
+
+  useEffect(() => {
+    if (isLinksSheetOpen === false && selectedLink !== null) {
+      toggleRequest();
+    }
+  }, [isChecked, isLinksSheetOpen, selectedLink]);
+
+  const getSelectedLink = () => {
+    const { current_link, links } = data;
+
+    if (current_link === null) {
+      return null;
+    }
+
+    return links.find((link) => {
+      const { id } = link;
+      if (current_link === id) {
+        return link;
+      }
+    });
+  };
 
   const handleToggleSwitch = () => {
     setIsChecked((prevState) => {
@@ -42,8 +76,56 @@ export default function EditProfileInfoRedirectForm({ data }) {
     setIsLinkSheetOpen(false);
   };
 
+  const toggleRequest = () => {
+    const updateUrl = generateApiUrl(
+      `/api/v1/pages/change_page_is_direct_state/${pageID}`
+    );
+
+    axiosInstance
+      .patch(updateUrl, null, {
+        headers: {
+          Authorization: `Bearer ${accessToken.accessToken}`,
+          "accept-language": "fa",
+        },
+      })
+      .then((response) => {
+        if (response.status !== 204) {
+          console.error("Error: Unable to set direct link");
+        }
+      })
+      .catch((error) => {
+        console.error("An error occurred:", error);
+      });
+  };
+
+  const selectRequest = (item) => {
+    const updateUrl = generateApiUrl(`/api/v1/pages/set_redirect/${pageID}`);
+
+    const body = {
+      content_id: item.id,
+    };
+
+    axiosInstance
+      .patch(updateUrl, body, {
+        headers: {
+          Authorization: `Bearer ${accessToken.accessToken}`,
+          "accept-language": "fa",
+        },
+      })
+      .then((response) => {
+        if (response.status !== 204) {
+          console.error("Error: Unable to set direct link");
+        }
+      })
+      .catch((error) => {
+        console.error("An error occurred:", error);
+      });
+  };
+
   const handleSelectLink = (item) => {
     setSelectedLink(item);
+
+    selectRequest(item);
 
     setTimeout(() => {
       setIsLinkSheetOpen(false);
