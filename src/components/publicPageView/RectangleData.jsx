@@ -40,7 +40,7 @@ const RectangleData = ({ handleCountingItemClicks, object }) => {
       className="grid grid-cols-12 mb-5 items-center text-xs py-3 border-2 rounded-2xl whitespace-nowrap overflow-hidden relative"
     >
       <>
-        {object?.data[0].type === "text" && (
+        {object?.data[0].type === "string" && (
           <CopyButton
             title={object?.data[0]?.title}
             content={object?.data[0].content_val}

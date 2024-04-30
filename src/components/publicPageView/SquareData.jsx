@@ -49,7 +49,7 @@ const SquareData = ({ handleCountingItemClicks, object }) => {
             // exists
             <>
               <div className="px-4 py-3 border-2 rounded-2xl overflow-hidden relative">
-                {object?.data[0].type === "text" && (
+                {object?.data[0].type === "string" && (
                   <CopyButton
                     title={object?.data[0]?.title}
                     content={object?.data[0].content_val}
@@ -101,7 +101,7 @@ const SquareData = ({ handleCountingItemClicks, object }) => {
             // exists
             <>
               <div className="px-4 py-3 border-2 rounded-2xl overflow-hidden  ">
-                {object?.data[1].type === "text" && (
+                {object?.data[1].type === "string" && (
                   <CopyButton
                     title={object?.data[1]?.title}
                     content={object?.data[1].content_val}
