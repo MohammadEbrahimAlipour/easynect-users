@@ -1,6 +1,9 @@
 import React from "react";
 import Image from "next/image";
 
+// components
+import CopyButton from "@/components/publicPageView/CopyButton";
+
 const SquareData = ({ handleCountingItemClicks, object }) => {
   // condition to detect type of each squares data and redirect based on type
   const handleSquareTypeDetection = (squareIndex) => {
@@ -45,7 +48,13 @@ const SquareData = ({ handleCountingItemClicks, object }) => {
           {object?.data[0]?.sub_order === 1 ? (
             // exists
             <>
-              <div className="px-4 py-3 border-2 rounded-2xl overflow-hidden  ">
+              <div className="px-4 py-3 border-2 rounded-2xl overflow-hidden relative">
+                {object?.data[0].type === "string" && (
+                  <CopyButton
+                    title={object?.data[0]?.title}
+                    content={object?.data[0].content_val}
+                  />
+                )}
                 <div
                   className="bg-dark w-[45px] h-[45px] rounded-full mb-3
                   flex justify-center items-center overflow-hidden"
@@ -92,6 +101,12 @@ const SquareData = ({ handleCountingItemClicks, object }) => {
             // exists
             <>
               <div className="px-4 py-3 border-2 rounded-2xl overflow-hidden  ">
+                {object?.data[1].type === "string" && (
+                  <CopyButton
+                    title={object?.data[1]?.title}
+                    content={object?.data[1].content_val}
+                  />
+                )}
                 <div
                   className="bg-dark w-[45px] h-[45px] rounded-full mb-3
                   flex justify-center items-center overflow-hidden"

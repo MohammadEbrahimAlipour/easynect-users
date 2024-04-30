@@ -14,7 +14,6 @@ import CarouselView from "@/components/publicPageView/CarouselView";
 import LeadForm from "@/components/leadForm/LeadForm";
 import axiosInstance from "@/services/axiosInterceptors";
 import Head from "next/head";
-import { useDrag } from "react-dnd";
 import { InfoIconSmall } from "@/components/Icons";
 
 export default function Username() {
@@ -89,7 +88,7 @@ END:VCARD
       const flattenedData = contentItem.data.map((item) => ({
         type: item.type,
         title: item.title,
-        content_val: item.content_val
+        content_val: item.content_val,
       }));
       return [...acc, ...flattenedData];
     }, []);
@@ -103,8 +102,8 @@ END:VCARD
       axios
         .get(apiUrl, {
           headers: {
-            "Accept-Language": "fa" // Language header
-          }
+            "Accept-Language": "fa", // Language header
+          },
         })
         .then((response) => {
           // Handle the data once it's received
@@ -156,7 +155,7 @@ END:VCARD
       // Merge flattened contents with horizontal_menu
       const combinedDataArray = [
         ...flattenedContents,
-        ...usersData.horizontal_menu
+        ...usersData.horizontal_menu,
       ];
       setVCardList(combinedDataArray);
     }
@@ -165,7 +164,7 @@ END:VCARD
   const handleCountingItemClicks = async (itemData) => {
     try {
       const analyticsData = {
-        content_id: itemData.id
+        content_id: itemData.id,
       };
       const apiUrl = generateApiUrl(`/api/v1/analytics/tap/${itemData.id}`);
       const response = await axiosInstance.post(apiUrl, analyticsData);
@@ -292,32 +291,34 @@ END:VCARD
                     >
                       ذخیره مخاطب
                     </button>
-                    <div className=" mt-5">
-                      {usersData.contents?.map((object) => (
-                        <div key={object?.guid + object?.data?.length}>
-                          {/* square section */}
+                    <div className="mt-5">
+                      {usersData.contents?.map((object) => {
+                        return (
+                          <div key={object?.guid + object?.data?.length}>
+                            {/* square section */}
 
-                          {object.display_box_type === "square" ? (
-                            <SquareData
-                              object={object}
-                              handleCountingItemClicks={
-                                handleCountingItemClicks
-                              }
-                            />
-                          ) : null}
+                            {object.display_box_type === "square" ? (
+                              <SquareData
+                                object={object}
+                                handleCountingItemClicks={
+                                  handleCountingItemClicks
+                                }
+                              />
+                            ) : null}
 
-                          {/* rectangle */}
+                            {/* rectangle */}
 
-                          {object.display_box_type === "rectangle" ? (
-                            <RectangleData
-                              object={object}
-                              handleCountingItemClicks={
-                                handleCountingItemClicks
-                              }
-                            />
-                          ) : null}
-                        </div>
-                      ))}
+                            {object.display_box_type === "rectangle" ? (
+                              <RectangleData
+                                object={object}
+                                handleCountingItemClicks={
+                                  handleCountingItemClicks
+                                }
+                              />
+                            ) : null}
+                          </div>
+                        );
+                      })}
                     </div>
                   </>
                 ) : (
