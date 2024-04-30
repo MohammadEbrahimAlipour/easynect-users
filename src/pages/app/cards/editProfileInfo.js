@@ -1,20 +1,23 @@
-import Layout from "@/components/Layout";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { ChangePhotoIcon, PenEditIcon, PlusSign } from "@/components/Icons";
-import EditMenuOptions from "@/components/EditMenuOptions";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 import axios from "axios";
 import { useAccessToken } from "../../../../context/AccessTokenContext";
 import { useRouter } from "next/router";
-import { generateApiUrl } from "@/components/ApiUr";
-import LoadingState from "@/components/LoadingState";
-import ProfileImage from "@/components/ProfileImage";
 import { API_ROUTES } from "@/services/api";
 import Head from "next/head";
 import axiosInstance from "@/services/axiosInterceptors";
 import LoaderOverlay from "@/loading/LoaderOverlay";
+
+// components
+import Layout from "@/components/Layout";
+import { generateApiUrl } from "@/components/ApiUr";
+import LoadingState from "@/components/LoadingState";
+import ProfileImage from "@/components/ProfileImage";
+import { ChangePhotoIcon, PenEditIcon } from "@/components/Icons";
+import EditMenuOptions from "@/components/EditMenuOptions";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import EditProfileInfoRedirectForm from "@/components/EditProfileInfoRedirectForm";
 
 const EditProfileInfo = () => {
   const [pageData, setPageData] = useState(null);
@@ -35,7 +38,8 @@ const EditProfileInfo = () => {
     is_direct: false,
     is_public: false,
     bio: "",
-    profile: ""
+    profile: "",
+    direct_link: null,
   });
   const [isDirect, setIsDirect] = useState(formData.is_direct);
 
@@ -47,8 +51,8 @@ const EditProfileInfo = () => {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken.accessToken}`,
-            "accept-language": "fa"
-          }
+            "accept-language": "fa",
+          },
         })
         .then((response) => {
           setPageData(response.data);
@@ -67,7 +71,8 @@ const EditProfileInfo = () => {
             is_direct: response.data.is_direct || false,
             is_public: response.data.is_public || false,
             bio: response.data.bio || "", // Set bio from the fetched data
-            profile: response.data.profile_s3_url || ""
+            profile: response.data.profile_s3_url || "",
+            direct_link: response.data.direct_link,
           });
         })
         .catch((error) => {
@@ -83,7 +88,7 @@ const EditProfileInfo = () => {
     // Update the changedFormData object with the changed field
     setChangedFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -93,7 +98,7 @@ const EditProfileInfo = () => {
     if (selectedFile) {
       setChangedFormData((prevFormData) => ({
         ...prevFormData,
-        profile: selectedFile
+        profile: selectedFile,
       }));
     }
   };
@@ -105,7 +110,7 @@ const EditProfileInfo = () => {
       // ensure it can be submitted with the form later as changed data
       setChangedFormData((prevFormData) => ({
         ...prevFormData,
-        is_direct: newIsDirect
+        is_direct: newIsDirect,
       }));
 
       return newIsDirect;
@@ -205,8 +210,8 @@ const EditProfileInfo = () => {
       .patch(updateUrl, formDataToSend, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
-          "accept-language": "fa"
-        }
+          "accept-language": "fa",
+        },
       })
       .then((response) => {
         if (response.status === 200) {
@@ -373,6 +378,11 @@ const EditProfileInfo = () => {
                       name="bio"
                       defaultValue={formData.bio}
                       onChange={handleInputChange}
+                    />
+
+                    <EditProfileInfoRedirectForm
+                      data={formData.direct_link}
+                      pageID={id}
                     />
                   </div>
                 </form>
