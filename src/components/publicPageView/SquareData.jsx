@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 
 // components
+import FilePreviewBottomSheet from "@/components/FilePreviewBottomSheet";
+
+// utils
+import { checkIsPDForImage, downloadFile } from "@/utils/file";
 import CopyButton from "@/components/publicPageView/CopyButton";
 
 const SquareData = ({ handleCountingItemClicks, object }) => {
+  const [isPreviewSheetOpen, setIsPreviewSheetOpen] = useState(false);
+  const [currentFileURL, setCurrentFileURL] = useState(null);
+
   // condition to detect type of each squares data and redirect based on type
   const handleSquareTypeDetection = (squareIndex) => {
     // Early return if handleCountingItemClicks has not been called
@@ -24,17 +31,23 @@ const SquareData = ({ handleCountingItemClicks, object }) => {
       const externalLink = squareData.content_val;
       window.open(externalLink, "_blank", "noopener,noreferrer");
     } else if (squareData.type === "file" && squareData.content_val) {
-      const fileLink = squareData.content_val;
-      const a = document.createElement("a");
-      a.href = fileLink;
-      a.download = squareData.content_val.split("/").pop(); // Set a custom filename or fallback
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      const isPDForImage = checkIsPDForImage(squareData.content_val);
+
+      if (isPDForImage) {
+        setCurrentFileURL(squareData.content_val);
+        setIsPreviewSheetOpen(true);
+        return;
+      }
+
+      downloadFile(squareData.content_val);
     } else if (squareData.type === "email" && squareData.content_val) {
       const emailLink = `mailto:${squareData.content_val}`;
       window.location.href = emailLink;
     }
+  };
+
+  const handleBottomSheetClose = () => {
+    setIsPreviewSheetOpen(false);
   };
 
   return (
@@ -147,6 +160,11 @@ const SquareData = ({ handleCountingItemClicks, object }) => {
           null}
         </div>
       </div>
+      <FilePreviewBottomSheet
+        url={currentFileURL}
+        isOpen={isPreviewSheetOpen}
+        onClose={handleBottomSheetClose}
+      />
     </>
   );
 };
