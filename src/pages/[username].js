@@ -5,8 +5,6 @@ import { useRouter } from "next/router";
 import { generateApiUrl } from "@/components/ApiUr";
 import ClientPageFooter from "@/components/ClientPageFooter";
 import LoadingState from "@/components/LoadingState";
-import RectangleData from "@/components/publicPageView/RectangleData";
-import SquareData from "@/components/publicPageView/SquareData";
 import Layout from "@/components/Layout";
 import NoData from "@/components/pageView/NoData";
 import Image from "next/image";
@@ -14,6 +12,9 @@ import CarouselView from "@/components/publicPageView/CarouselView";
 import LeadForm from "@/components/leadForm/LeadForm";
 import axiosInstance from "@/services/axiosInterceptors";
 import Head from "next/head";
+
+// components
+import Widget from "@/components/Widget";
 import { InfoIconSmall } from "@/components/Icons";
 
 export default function Username() {
@@ -200,19 +201,14 @@ END:VCARD
     };
   }, []);
 
+  console.log("usersData.contents", usersData?.contents);
+
   return (
     <>
       <Head>
         <title>{`ایزی‌نکت -  ${username}`}</title>
         <meta name="easynect business card" content="Powered by Easynect" />
       </Head>
-      {/* main */}
-      {/* lead btn */}
-      {/* <span className="flex justify-end mt-8 ml-5">
-        <span className=" bg-dark text-white px-2 py-1 rounded-md text-xs">
-          فرم لید
-        </span>
-      </span> */}
       {usersData?.horizontal_menu ? (
         <>
           <div className="flex flex-col justify-center items-center mt-[45px]">
@@ -221,8 +217,6 @@ END:VCARD
               className=" box-content w-[90px] h-[90px] rounded-full
               overflow-hidden"
             >
-              {/* profile photo */}
-              {/* <div> */}
               <Image
                 priority={true}
                 className="rounded-full object-cover w-full h-full"
@@ -231,7 +225,6 @@ END:VCARD
                 height={90}
                 alt="Person Name"
               />
-              {/* </div> */}
             </div>
             <p className="mt-3 text-xl font-semibold capitalize">
               {usersData.owner_first_name + " " + usersData.owner_last_name}
@@ -257,9 +250,6 @@ END:VCARD
               )}
             </div>
           </div>
-
-          {/* horizontal scroll menu */}
-
           {noDataHoz !== null ? (
             <>
               {!noDataHoz && (
@@ -276,15 +266,11 @@ END:VCARD
           ) : (
             <LoadingState />
           )}
-
-          {/* end of horz */}
-
           <Layout className="!bg-white !px-3 !py-0 !h-fit">
             {noDataContents !== null ? (
               <>
                 {!noDataContents ? (
                   <>
-                    {/* save btn */}
                     <button
                       onClick={handleSaveContact}
                       className="bg-dark text-white text-sm font-bold w-full h-[44px] rounded-[8px] "
@@ -292,33 +278,13 @@ END:VCARD
                       ذخیره مخاطب
                     </button>
                     <div className="mt-5">
-                      {usersData.contents?.map((object) => {
-                        return (
-                          <div key={object?.guid + object?.data?.length}>
-                            {/* square section */}
-
-                            {object.display_box_type === "square" ? (
-                              <SquareData
-                                object={object}
-                                handleCountingItemClicks={
-                                  handleCountingItemClicks
-                                }
-                              />
-                            ) : null}
-
-                            {/* rectangle */}
-
-                            {object.display_box_type === "rectangle" ? (
-                              <RectangleData
-                                object={object}
-                                handleCountingItemClicks={
-                                  handleCountingItemClicks
-                                }
-                              />
-                            ) : null}
-                          </div>
-                        );
-                      })}
+                      {usersData.contents?.map((object) => (
+                        <Widget
+                          key={object?.guid + object?.data?.length}
+                          data={object}
+                          handleCountingItemClicks={handleCountingItemClicks}
+                        />
+                      ))}
                     </div>
                   </>
                 ) : (
@@ -328,9 +294,6 @@ END:VCARD
             ) : (
               <LoadingState />
             )}
-            {/* end of wrapper */}
-
-            {/* logo */}
             <div>
               <ClientPageFooter />
             </div>
@@ -340,7 +303,6 @@ END:VCARD
         <LoadingState />
       )}
 
-      {/* lead form */}
       <>
         {hasLeadForm && (
           <LeadForm
