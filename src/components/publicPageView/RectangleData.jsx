@@ -6,6 +6,7 @@ import { checkIsPDForImage, downloadFile } from "@/utils/file";
 
 // components
 import FilePreviewBottomSheet from "@/components/FilePreviewBottomSheet";
+import CopyButton from "./CopyButton";
 
 const RectangleData = ({ handleCountingItemClicks, object }) => {
   const [isPreviewSheetOpen, setIsPreviewSheetOpen] = useState(false);
@@ -51,9 +52,15 @@ const RectangleData = ({ handleCountingItemClicks, object }) => {
     <>
       <div
         onClick={() => handleRecTypeDetection(0)}
-        className="grid grid-cols-12 mb-5 items-center text-xs py-3 border-2 rounded-2xl whitespace-nowrap overflow-hidden"
+        className="grid grid-cols-12 mb-5 items-center text-xs py-3 border-2 rounded-2xl whitespace-nowrap overflow-hidden relative"
       >
         <>
+          {object?.data[0].type === "string" && (
+            <CopyButton
+              title={object?.data[0]?.title}
+              content={object?.data[0].content_val}
+            />
+          )}
           <div className="col-span-2  rounded-md flex justify-center items-center overflow-hidden">
             <Image
               src={object?.data[0]?.s3_icon_url}
@@ -68,7 +75,6 @@ const RectangleData = ({ handleCountingItemClicks, object }) => {
           </p>
         </>
       </div>
-
       <FilePreviewBottomSheet
         url={currentFileURL}
         isOpen={isPreviewSheetOpen}

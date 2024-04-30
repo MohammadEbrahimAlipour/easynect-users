@@ -21,9 +21,8 @@ const BottomSheetWrapper = ({ onClose, open, children, maxHeight, height }) => {
       }}
     >
       <div
-        className="py-2 px-5
-      
-      "
+        className="py-2 px-5"
+        // TODO: improve padding x axis, it doesn't looks good
       >
         {children}
       </div>
