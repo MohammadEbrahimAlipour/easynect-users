@@ -17,6 +17,43 @@ import Head from "next/head";
 import Widget from "@/components/Widget";
 import { InfoIconSmall } from "@/components/Icons";
 
+export async function getServerSideProps(context) {
+  try {
+    const { params } = context;
+    const { username } = params;
+
+    const apiUrl = generateApiUrl(`/api/v1/page_view/${username}`);
+
+    const response = await axios.get(apiUrl, {
+      headers: {
+        "Accept-Language": "fa", // Language header
+      },
+    });
+
+    console.log("response.data", response.data);
+
+    // return {
+    //   redirect: {
+    //     destination: "https://google.com",
+    //     permanent: false, // Set to true if this is a permanent redirect
+    //   },
+    // };
+
+    return {
+      props: {},
+    };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+
+    return {
+      redirect: {
+        destination: "/error",
+        permanent: false,
+      },
+    };
+  }
+}
+
 export default function Username() {
   const router = useRouter();
   // The key of this object ([pageView]) should match the filename
