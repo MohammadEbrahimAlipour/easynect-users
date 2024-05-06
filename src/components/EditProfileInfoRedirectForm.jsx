@@ -17,24 +17,6 @@ import { generateApiUrl } from "./ApiUr";
 const fakeNoLink = false;
 
 export default function EditProfileInfoRedirectForm({ data, pageID }) {
-  // TODO: add loading
-  const [isChecked, setIsChecked] = useState(false);
-  const [isLinksSheetOpen, setIsLinkSheetOpen] = useState(false);
-  const [selectedLink, setSelectedLink] = useState(null);
-
-  const accessToken = useAccessToken();
-
-  useEffect(() => {
-    setSelectedLink(getSelectedLink());
-    setIsChecked(data.is_direct);
-  }, []);
-
-  useEffect(() => {
-    if (selectedLink !== null) {
-      updateRequest(selectedLink.id, isChecked);
-    }
-  }, [isChecked, selectedLink]);
-
   const getSelectedLink = () => {
     const { current_link, links } = data;
 
@@ -49,6 +31,19 @@ export default function EditProfileInfoRedirectForm({ data, pageID }) {
       }
     });
   };
+
+  // TODO: add loading
+  const [isChecked, setIsChecked] = useState(data.is_direct);
+  const [isLinksSheetOpen, setIsLinkSheetOpen] = useState(false);
+  const [selectedLink, setSelectedLink] = useState(getSelectedLink());
+
+  const accessToken = useAccessToken();
+
+  useEffect(() => {
+    if (selectedLink !== null) {
+      updateRequest(selectedLink.id, isChecked);
+    }
+  }, [isChecked, selectedLink]);
 
   const handleToggleSwitch = () => {
     setIsChecked((prevState) => {
