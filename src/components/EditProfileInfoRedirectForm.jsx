@@ -17,24 +17,6 @@ import { generateApiUrl } from "./ApiUr";
 const fakeNoLink = false;
 
 export default function EditProfileInfoRedirectForm({ data, pageID }) {
-  // TODO: add loading
-  const [isChecked, setIsChecked] = useState(false);
-  const [isLinksSheetOpen, setIsLinkSheetOpen] = useState(false);
-  const [selectedLink, setSelectedLink] = useState(null);
-
-  const accessToken = useAccessToken();
-
-  useEffect(() => {
-    setSelectedLink(getSelectedLink());
-    setIsChecked(data.is_direct);
-  }, []);
-
-  useEffect(() => {
-    if (isLinksSheetOpen === false && selectedLink !== null) {
-      toggleRequest();
-    }
-  }, [isChecked, isLinksSheetOpen, selectedLink]);
-
   const getSelectedLink = () => {
     const { current_link, links } = data;
 
@@ -49,6 +31,19 @@ export default function EditProfileInfoRedirectForm({ data, pageID }) {
       }
     });
   };
+
+  // TODO: add loading
+  const [isChecked, setIsChecked] = useState(data.is_direct);
+  const [isLinksSheetOpen, setIsLinkSheetOpen] = useState(false);
+  const [selectedLink, setSelectedLink] = useState(getSelectedLink());
+
+  const accessToken = useAccessToken();
+
+  useEffect(() => {
+    if (selectedLink !== null) {
+      updateRequest(selectedLink.id, isChecked);
+    }
+  }, [isChecked, selectedLink]);
 
   const handleToggleSwitch = () => {
     setIsChecked((prevState) => {
@@ -76,37 +71,16 @@ export default function EditProfileInfoRedirectForm({ data, pageID }) {
     setIsLinkSheetOpen(false);
   };
 
-  const toggleRequest = () => {
-    const updateUrl = generateApiUrl(
-      `/api/v1/pages/change_page_is_direct_state/${pageID}`
-    );
-
-    axiosInstance
-      .patch(updateUrl, null, {
-        headers: {
-          Authorization: `Bearer ${accessToken.accessToken}`,
-          "accept-language": "fa",
-        },
-      })
-      .then((response) => {
-        if (response.status !== 204) {
-          console.error("Error: Unable to set direct link");
-        }
-      })
-      .catch((error) => {
-        console.error("An error occurred:", error);
-      });
-  };
-
-  const selectRequest = (item) => {
-    const updateUrl = generateApiUrl(`/api/v1/pages/set_redirect/${pageID}`);
+  const updateRequest = (ID, isDirect) => {
+    const url = generateApiUrl(`/api/v1/pages/${pageID}`);
 
     const body = {
-      content_id: item.id,
+      is_direct: isDirect,
+      updated_direct_id: ID,
     };
 
     axiosInstance
-      .patch(updateUrl, body, {
+      .patch(url, body, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
           "accept-language": "fa",
@@ -124,8 +98,6 @@ export default function EditProfileInfoRedirectForm({ data, pageID }) {
 
   const handleSelectLink = (item) => {
     setSelectedLink(item);
-
-    selectRequest(item);
 
     setTimeout(() => {
       setIsLinkSheetOpen(false);

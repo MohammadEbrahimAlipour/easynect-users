@@ -1,3 +1,4 @@
+// TODO: needs to be refactored
 import React, { useState, useEffect, Fragment, useRef } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -17,11 +18,57 @@ import Head from "next/head";
 import Widget from "@/components/Widget";
 import { InfoIconSmall } from "@/components/Icons";
 
-export default function Username() {
-  const router = useRouter();
-  // The key of this object ([pageView]) should match the filename
-  const { username } = router.query;
-  const [usersData, setUsersData] = useState();
+export async function getServerSideProps(context) {
+  try {
+    const { params } = context;
+    const { username } = params;
+
+    const apiUrl = generateApiUrl(`/api/v1/page_view/${username}`);
+
+    const response = await axios.get(apiUrl, {
+      headers: {
+        "Accept-Language": "fa", // Language header
+      },
+    });
+
+    const { data } = response;
+    const { is_direct, redirect_link } = data.is_direct;
+
+    if (is_direct) {
+      return {
+        redirect: {
+          destination: redirect_link,
+          permanent: false,
+        },
+      };
+    }
+
+    return {
+      props: { usersData: data, username },
+    };
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      return {
+        redirect: {
+          destination: "/404",
+          permanent: false,
+        },
+      };
+    }
+
+    if (error.response && error.response.data && error.response.data.detail) {
+      return {
+        props: { errorMessage: error.response.data.detail },
+      };
+    }
+
+    return {
+      props: { errorMessage: "Error: An error occurred." },
+    };
+  }
+}
+
+export default function Username({ username, usersData, errorMessage }) {
   const [noDataContents, setNoDataContents] = useState(null);
   const [vCardList, setVCardList] = useState([]);
   const [hasLeadForm, setHasLeadForm] = useState(false);
@@ -96,58 +143,22 @@ END:VCARD
   };
 
   useEffect(() => {
-    const apiUrl = generateApiUrl(`/api/v1/page_view/${username}`);
-
-    if (username) {
-      // Make an Axios GET request to fetch user data
-      axios
-        .get(apiUrl, {
-          headers: {
-            "Accept-Language": "fa", // Language header
-          },
-        })
-        .then((response) => {
-          // Handle the data once it's received
-          setUsersData(response.data);
-
-          if (response.data.contents.length === 0) {
-            setNoDataContents(true);
-          } else {
-            setNoDataContents(false);
-          }
-
-          if (response.data?.horizontal_menu[0]?.id === null) {
-            setNoDataHorz(true);
-          } else {
-            setNoDataHorz(false);
-          }
-
-          if (response.data?.lead_form?.length > 0) {
-            setHasLeadForm(true);
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-          // Check if the error response is a 404 Not Found
-          if (error.response && error.response.status === 404) {
-            // Redirect to the custom 404 page using Next.js router
-            router.push("/404"); // Adjust the path as needed
-          } else {
-            // Handle other errors
-            if (
-              error.response &&
-              error.response.data &&
-              error.response.data.detail
-            ) {
-              const errorMessage = error.response.data.detail;
-              toast.error(errorMessage);
-            } else {
-              toast.error("Error: An error occurred.");
-            }
-          }
-        });
+    if (usersData.contents.length === 0) {
+      setNoDataContents(true);
+    } else {
+      setNoDataContents(false);
     }
-  }, [username, router]);
+
+    if (usersData?.horizontal_menu[0]?.id === null) {
+      setNoDataHorz(true);
+    } else {
+      setNoDataHorz(false);
+    }
+
+    if (usersData?.lead_form?.length > 0) {
+      setHasLeadForm(true);
+    }
+  }, [username]);
 
   useEffect(() => {
     // Ensure usersData.contents exists and is an array before trying to flatten it
@@ -201,7 +212,10 @@ END:VCARD
     };
   }, []);
 
-  console.log("usersData.contents", usersData?.contents);
+  if (errorMessage) {
+    toast.error(errorMessage);
+    return null;
+  }
 
   return (
     <>
