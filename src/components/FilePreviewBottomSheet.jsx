@@ -8,6 +8,7 @@ import { useResizeObserver } from "@wojtekmaj/react-hooks";
 
 // components
 import BottomSheetWrapper from "@/components/bottomSheet/BottomSheetWrapper";
+import ZoomController from "@/components/ZoomController";
 
 // utils
 import { downloadFile, getFileExtension } from "@/utils/file";
@@ -25,6 +26,7 @@ export default function FilePreviewBottomSheet({ url, isOpen, onClose }) {
   const [numPages, setNumPages] = useState(0);
   const [containerRef, setContainerRef] = useState(null);
   const [containerWidth, setContainerWidth] = useState();
+  const [scale, setScale] = useState(1);
 
   const onResize = useCallback((entries) => {
     const [entry] = entries;
@@ -45,9 +47,18 @@ export default function FilePreviewBottomSheet({ url, isOpen, onClose }) {
     [url]
   );
 
+  const handleScaleChange = (scale) => {
+    setScale(scale);
+  };
+
   return (
-    <BottomSheetWrapper open={isOpen} onClose={onClose} maxHeight={"unset"}>
-      <div className="flex flex-col h-[87vh]">
+    <BottomSheetWrapper
+      open={isOpen}
+      onClose={onClose}
+      fullScreen
+      className={"px-0"}
+    >
+      <Wrapper>
         <PreviewContainer ref={setContainerRef}>
           {isPDF ? (
             <Document
@@ -57,6 +68,7 @@ export default function FilePreviewBottomSheet({ url, isOpen, onClose }) {
             >
               {Array.from(new Array(numPages), (el, index) => (
                 <Page
+                  scale={scale}
                   key={`page_${index + 1}`}
                   pageNumber={index + 1}
                   width={
@@ -71,16 +83,26 @@ export default function FilePreviewBottomSheet({ url, isOpen, onClose }) {
             <Image alt="" src={url} />
           )}
         </PreviewContainer>
+        <ZoomController scale={scale} onChange={handleScaleChange} />
         <Buttons>
           <DownloadButton onClick={() => downloadFile(url)}>
-            دانلود قایل
+            دانلود فایل
           </DownloadButton>
           <CancelButton onClick={onClose}>بستن</CancelButton>
         </Buttons>
-      </div>
+      </Wrapper>
     </BottomSheetWrapper>
   );
 }
+
+const Wrapper = tw.div`
+  flex
+  flex-col
+  h-full
+  bg-gray-300/75
+  px-3
+  py-2
+`;
 
 const Buttons = tw.div`
   flex
@@ -95,6 +117,7 @@ const BaseButton = tw.button`
   shadow-xl
   border-2
   border-black
+  font-['__raviFont_c3f3ce']
 `;
 
 const CancelButton = tw(BaseButton)`
@@ -107,16 +130,12 @@ const DownloadButton = tw(BaseButton)`
 `;
 
 const PreviewContainer = tw.div`
-  flex
-  justify-center
-  border-4
-  border-gray-300
   rounded-xl
-  overflow-x-hidden
-  overflow-y-auto
+  overflow-auto
   flex-1
-  mt-3
+  mt-1
   mb-2
+  bg-white
 `;
 
 const Image = tw.img`

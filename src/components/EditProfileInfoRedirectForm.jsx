@@ -84,6 +84,7 @@ export default function EditProfileInfoRedirectForm({ data, pageID }) {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
           "accept-language": "fa",
+          "Content-Type": "multipart/form-data",
         },
       })
       .then((response) => {
