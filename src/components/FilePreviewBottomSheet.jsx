@@ -83,7 +83,7 @@ export default function FilePreviewBottomSheet({ url, isOpen, onClose }) {
             <Image alt="" src={url} />
           )}
         </PreviewContainer>
-        <ZoomController scale={scale} onChange={handleScaleChange} />
+        {isPDF && <ZoomController scale={scale} onChange={handleScaleChange} />}
         <Buttons>
           <DownloadButton onClick={() => downloadFile(url)}>
             دانلود فایل

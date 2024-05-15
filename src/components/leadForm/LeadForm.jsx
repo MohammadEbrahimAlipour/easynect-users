@@ -16,7 +16,7 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
   const [username, setUsername] = useState("");
 
   const [formData, setFormData] = useState({
-    name: "" // Add other fields if necessary
+    name: "", // Add other fields if necessary
   });
 
   const handleChange = (e, item) => {
@@ -30,7 +30,7 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
 
     setFormData((prev) => ({
       ...prev,
-      [name]: fieldValue
+      [name]: fieldValue,
     }));
   };
 
@@ -46,14 +46,14 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
         return {
           title: field.title,
           value: value,
-          field_type: field.type
+          field_type: field.type,
         };
       });
 
     // Construct the payload to be sent
     const formDataToSend = {
       name: formData.name,
-      fields: fieldsToSend
+      fields: fieldsToSend,
     };
 
     if (pageId) {
@@ -67,8 +67,8 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
             Authorization: `Bearer ${accessToken.accessToken}`,
             // You don't need to set the Content-Type when using FormData
             // Axios will set the correct multipart/form-data boundary
-            "Accept-Language": "fa"
-          }
+            "Accept-Language": "fa",
+          },
         };
 
         // Send PATCH request using Axios, add the formDataToSend
@@ -100,7 +100,7 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
     console.log("btn clicked");
     // Construct the payload to be sent
     const formDataToSend = {
-      username: username
+      username: username,
       // fields: fieldsToSend
     };
     console.log("firstasdadsasdasdasd", username);
@@ -113,8 +113,8 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
             Authorization: `Bearer ${accessToken.accessToken}`,
             // You don't need to set the Content-Type when using FormData
             // Axios will set the correct multipart/form-data boundary
-            "Accept-Language": "fa"
-          }
+            "Accept-Language": "fa",
+          },
         };
 
         // Send PATCH request using Axios, add the formDataToSend
@@ -144,7 +144,11 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
   return (
     <div>
       {leadFormData ? (
-        <BottomSheetWrapper open={open} onClose={onClose}>
+        <BottomSheetWrapper
+          className={"p-2 px-4"}
+          open={open}
+          onClose={onClose}
+        >
           <h3 className="mt-4 font-bold">
             {!hasAcount ? (
               <span>لطفا اطلاعات خود را وارد کنید</span>

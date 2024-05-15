@@ -123,6 +123,7 @@ export default function EditProfileInfoRedirectForm({ data, pageID }) {
       <BottomSheetWrapper
         open={isLinksSheetOpen}
         onClose={handleBottomSheetClose}
+        className={"p-2"}
       >
         {links.length === 0 ? (
           <NotLinkMessage>
