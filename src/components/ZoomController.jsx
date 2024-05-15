@@ -7,7 +7,7 @@ import ZoomOutIcon from "@/assets/icons/zoom-out.svg";
 export default function ZoomController({ onChange, scale }) {
   const handleZoomIn = () => {
     if (scale > 4) return;
-    console.log("scale", scale);
+
     onChange(scale + 1);
   };
 
