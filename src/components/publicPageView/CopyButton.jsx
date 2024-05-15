@@ -8,6 +8,17 @@ import BaseCopyIcon from "@/assets/icons/copy.svg";
 export default function CopyButton({ content, title }) {
   const [isCopied, setIsCopied] = useState(false);
 
+  const fallbackCopyToClipboard = (content) => {
+    const textarea = document.createElement("textarea");
+    textarea.value = content;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+
+    toast.success(`${title} کپی شد`); // The link is copied successfully
+  };
+
   const handleClick = async () => {
     if (isCopied) return;
 
@@ -16,6 +27,7 @@ export default function CopyButton({ content, title }) {
       toast.success(`${title} کپی شد`); // The link is copied successfully
     } catch (err) {
       console.error("خطایی رخ داده است:", err); // An error occurred
+      fallbackCopyToClipboard(content);
     }
 
     setIsCopied(true);
