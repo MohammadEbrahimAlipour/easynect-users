@@ -5,13 +5,15 @@ import { Skeleton } from "@mui/material";
 // components
 import BottomSheetWrapper from "@/components/bottomSheet/BottomSheetWrapper";
 import RowBottomSheetFormatTab from "./RowBottomSheetFormatTab";
-import RowBottomSheetTwinsContentTab from "./RowBottomSheetTwinsContentTab";
 
 // constants
-import { ROW_FORMAT } from "@/constants/layouting";
+import RowBottomSheetContentPickerTab from "./RowBottomSheetContentPickerTab";
+import { WIDGET_TYPE } from "@/constants";
 
 export default function RowsBottomSheet({ onClose, open }) {
-  const [selectedRowFormat, setSelectedRowFormat] = useState(ROW_FORMAT.twins);
+  const [selectedRowFormat, setSelectedRowFormat] = useState(
+    WIDGET_TYPE.rectangle
+  );
   const [currentTab, setCurrentTab] = useState(0);
   const [widgetsContent, setWidgetsContent] = useState([{}, {}]);
 
@@ -42,14 +44,15 @@ export default function RowsBottomSheet({ onClose, open }) {
         title: "محتوا",
         description: `بر روی باکس مورد نظر کلیک کنید و محتوای خود را انتخاب کنید`,
         body: () => (
-          <RowBottomSheetTwinsContentTab
+          <RowBottomSheetContentPickerTab
             content={widgetsContent}
             onWidgetContentChange={handleWidgetContent}
+            widgetType={selectedRowFormat}
           />
         ),
       },
     ],
-    [selectedRowFormat]
+    [selectedRowFormat, widgetsContent]
   );
 
   const content = useMemo(() => {
@@ -66,7 +69,7 @@ export default function RowsBottomSheet({ onClose, open }) {
 
   return (
     <BottomSheetWrapper
-      className={"flex flex-col pb-16"}
+      className={"flex flex-col pb-20"}
       fullWidth
       onClose={onClose}
       open={open}
@@ -113,7 +116,7 @@ export const Row = tw.div`
   justify-center
 `;
 
-export const MockWidget = tw.div`
+export const MockBox = tw.div`
   rounded-xl
   shadow-xl
   w-28
@@ -121,6 +124,7 @@ export const MockWidget = tw.div`
   border-2
   border-gray-100
   p-4
+  bg-white
 
   ${({ $selectable }) =>
     $selectable &&
@@ -142,12 +146,21 @@ export const MockWidget = tw.div`
     border-2
     border-gray-400
   `}
+
+  ${({ $widgetType }) =>
+    $widgetType === WIDGET_TYPE.rectangle &&
+    `
+    flex
+    h-20
+    w-72
+    items-center
+  `}
 `;
 
-export const MockWidgetImage = tw(Skeleton)`
+export const MockBoxImage = tw(Skeleton)`
   w-12
   h-12
-  mb-4 
+  mb-2
 `;
 
 export const Radio = tw.div`

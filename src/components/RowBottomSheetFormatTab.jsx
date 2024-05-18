@@ -1,6 +1,7 @@
+import { WIDGET_TYPE } from "@/constants";
 import {
-  MockWidget,
-  MockWidgetImage,
+  MockBox,
+  MockBoxImage,
   Option,
   Radio,
   RadioInput,
@@ -8,7 +9,6 @@ import {
   Row,
 } from "./RowBottomSheet";
 import { Skeleton } from "@mui/material";
-import { ROW_FORMAT } from "@/constants/layouting";
 
 export default function RowBottomSheetFormatTab({
   selectedFormat,
@@ -18,22 +18,22 @@ export default function RowBottomSheetFormatTab({
     <>
       <Option htmlFor="twins-format">
         <Row>
-          <MockWidget>
-            <MockWidgetImage variant="circular" animation={false} />
+          <MockBox>
+            <MockBoxImage variant="circular" animation={false} />
             <Skeleton variant="text" animation={false} />
-          </MockWidget>
-          <MockWidget>
-            <MockWidgetImage variant="circular" animation={false} />
+          </MockBox>
+          <MockBox>
+            <MockBoxImage variant="circular" animation={false} />
             <Skeleton variant="text" animation={false} />
-          </MockWidget>
+          </MockBox>
         </Row>
         <Radio>
           <RadioInput
             name="format"
-            value={ROW_FORMAT.twins}
+            value={WIDGET_TYPE.square}
             id="twins-format"
             type="radio"
-            checked={selectedFormat === ROW_FORMAT.twins}
+            checked={selectedFormat === WIDGET_TYPE.square}
             onChange={onSelectFormat}
           />
           <RadioLabel htmlFor="twins-format">قالب دوتایی</RadioLabel>
@@ -41,9 +41,9 @@ export default function RowBottomSheetFormatTab({
       </Option>
       <Option htmlFor="single-format">
         <Row>
-          <MockWidget className="flex h-20 w-72">
-            <MockWidgetImage
-              className="w-8 h-8"
+          <MockBox $widgetType={WIDGET_TYPE.rectangle}>
+            <MockBoxImage
+              className="w-8 h-8 mb-0"
               variant="circular"
               animation={false}
             />
@@ -51,12 +51,12 @@ export default function RowBottomSheetFormatTab({
               <Skeleton animation={false} />
               <Skeleton variant="text" animation={false} />
             </div>
-          </MockWidget>
+          </MockBox>
         </Row>
         <Radio>
           <RadioInput
-            value={ROW_FORMAT.single}
-            checked={selectedFormat === ROW_FORMAT.single}
+            value={WIDGET_TYPE.rectangle}
+            checked={selectedFormat === WIDGET_TYPE.rectangle}
             onChange={onSelectFormat}
             name="format"
             id="single-format"

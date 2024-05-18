@@ -5,11 +5,11 @@ import tw from "tailwind-styled-components";
 import Box from "@/components/Box";
 
 // constants
-import { BOX_TYPES } from "@/constants";
+import { WIDGET_TYPE } from "@/constants";
 
 export default function Widget({ data, handleCountingItemClicks }) {
   const boxContainers = useMemo(
-    () => Array(data.display_box_type === BOX_TYPES.square ? 2 : 1).fill(),
+    () => Array(data.display_box_type === WIDGET_TYPE.square ? 2 : 1).fill(),
     [data]
   );
 

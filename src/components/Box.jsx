@@ -10,7 +10,7 @@ import FilePreviewBottomSheet from "@/components/FilePreviewBottomSheet";
 import { checkIsPDForImage, downloadFile } from "@/utils/file";
 
 // constants
-import { BOX_TYPES } from "@/constants";
+import { WIDGET_TYPE } from "@/constants";
 
 export default function Box({
   data,
@@ -57,7 +57,7 @@ export default function Box({
   };
 
   const imageSize = useMemo(
-    () => (containerDisplayType === BOX_TYPES.square ? 32 : 22),
+    () => (containerDisplayType === WIDGET_TYPE.square ? 32 : 22),
     [containerDisplayType]
   );
 
@@ -81,7 +81,7 @@ export default function Box({
           />
         </ImageWrapper>
         <Title $type={containerDisplayType}>{title}</Title>
-        {containerDisplayType === BOX_TYPES.square && (
+        {containerDisplayType === WIDGET_TYPE.square && (
           <Description>{description}</Description>
         )}
       </Wrapper>
@@ -106,7 +106,7 @@ const Wrapper = tw.div`
   order-[var(--order)]
 
   ${({ $type }) =>
-    $type === BOX_TYPES.rectangle &&
+    $type === WIDGET_TYPE.rectangle &&
     `
     pb-3
     flex
@@ -129,7 +129,7 @@ const ImageWrapper = tw.div`
 
 
   ${({ $type }) =>
-    $type === BOX_TYPES.rectangle &&
+    $type === WIDGET_TYPE.rectangle &&
     `
     mb-0
     w-[32px]
@@ -149,7 +149,7 @@ const Title = tw.div`
   text-dark
 
   ${({ $type }) =>
-    $type === BOX_TYPES.rectangle &&
+    $type === WIDGET_TYPE.rectangle &&
     `
     ms-4
     overflow-hidden
