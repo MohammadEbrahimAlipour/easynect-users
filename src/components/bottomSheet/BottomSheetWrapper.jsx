@@ -10,6 +10,7 @@ export default function BottomSheetWrapper({
   height,
   className,
   fullScreen,
+  fullWidth,
 }) {
   const getStyles = () => {
     let style = {
@@ -30,6 +31,14 @@ export default function BottomSheetWrapper({
         mx: "unset",
         borderTopLeftRadius: "unset",
         borderTopRightRadius: "unset",
+      };
+    }
+
+    if (fullWidth) {
+      style = {
+        ...style,
+        width: "100%",
+        mx: "0",
       };
     }
 
