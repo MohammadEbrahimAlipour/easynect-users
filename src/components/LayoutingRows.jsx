@@ -1,4 +1,7 @@
 import tw from "tailwind-styled-components";
+import BaseImage from "next/image";
+
+import { MockBox as BaseBox } from "./RowBottomSheet";
 
 // files
 import ArrowDownIcon from "@/assets/icons/arrow-down.svg";
@@ -6,16 +9,24 @@ import ArrowUpIcon from "@/assets/icons/arrow-up.svg";
 import PencilIcon from "@/assets/icons/pencil.svg";
 import TrashIcon from "@/assets/icons/trash.svg";
 import PlusIcon from "@/assets/icons/plus.svg";
+import { WIDGET_TYPE } from "@/constants";
 
-export default function LayoutingRows({ rows, onMoveUp, onMoveDown }) {
+export default function LayoutingRows({
+  rows,
+  onMoveUp,
+  onMoveDown,
+  onAddOnPosition,
+}) {
   return (
     <Rows>
       {rows.map((row, idx) => {
-        const { id, content } = row;
-        const { title } = content;
+        const { id, content: boxes } = row;
 
         const isFirstRow = idx === 0;
         const isLastRow = idx === rows.length - 1;
+
+        const widgetType =
+          boxes.length === 2 ? WIDGET_TYPE.square : WIDGET_TYPE.rectangle;
 
         return (
           <Row key={row.id}>
@@ -27,7 +38,34 @@ export default function LayoutingRows({ rows, onMoveUp, onMoveDown }) {
                 <ArrowDownIcon className="w-4" />
               </Button>
             </Controllers>
-            <ContentWrapper>{title}</ContentWrapper>
+            <ContentWrapper>
+              {boxes.map((box) => {
+                const { s3_icon_url, title, description, id } = box;
+
+                return (
+                  <Box
+                    key={id}
+                    $widgetType={widgetType}
+                    onClick={() => handleSelectWidget(boxDirection)}
+                  >
+                    <ImageWrapper $widgetType={widgetType}>
+                      <Image
+                        src={s3_icon_url}
+                        alt={title || ""}
+                        width={25}
+                        height={25}
+                      />
+                    </ImageWrapper>
+                    <Title $widgetType={widgetType}>{title}</Title>
+                    {widgetType === WIDGET_TYPE.square && (
+                      <Description>
+                        {description ? description : "بدون توضیح"}
+                      </Description>
+                    )}
+                  </Box>
+                );
+              })}
+            </ContentWrapper>
             <Controllers>
               <Button>
                 <PencilIcon className="w-4" />
@@ -35,7 +73,7 @@ export default function LayoutingRows({ rows, onMoveUp, onMoveDown }) {
               <Button>
                 <TrashIcon className="w-4" />
               </Button>
-              <Button>
+              <Button onClick={() => onAddOnPosition(idx)}>
                 <PlusIcon className="w-4" />
               </Button>
             </Controllers>
@@ -91,12 +129,58 @@ const Button = tw.button`
 
 const ContentWrapper = tw.div`
   flex-1
-  h-20
-  bg-white
-  rounded-lg
-  shadow-lg
+  flex
+  justify-center
+  gap-6
+`;
+
+const Title = tw.div`
+  font-medium
+  text-xs
+  text-dark
+  truncate
+
+  ${({ $widgetType }) =>
+    $widgetType === WIDGET_TYPE.rectangle &&
+    `
+  mr-2 
+  `}
+`;
+
+const Description = tw.div`
+  font-medium
+  text-xs
+  text-muted
+  truncate
+`;
+
+const ImageWrapper = tw.div`
+  bg-dark
+  w-[35px]
+  h-[35px]
+  rounded-full
+  mb-3
   flex
   justify-center
   items-center
-  text-gray-300
+  overflow-hidden
+
+  ${({ $widgetType }) =>
+    $widgetType === WIDGET_TYPE.rectangle &&
+    `
+  mb-0 
+  `}
+`;
+
+const Image = tw(BaseImage)`
+  bg-white
+  invert
+`;
+
+const Box = tw(BaseBox)`
+  ${({ $widgetType }) =>
+    $widgetType === WIDGET_TYPE.rectangle &&
+    `
+    w-64
+  `}
 `;

@@ -107,6 +107,9 @@ export default function RowBottomSheetContentPickerTab({
 
   const handleChooseContent = (item) => {
     const newContent = deepCopy(content);
+
+    item.id = `${item.id}${selectedBox}`;
+
     newContent[selectedBox] = item;
 
     onWidgetContentChange(newContent);
@@ -120,6 +123,45 @@ export default function RowBottomSheetContentPickerTab({
     }
   };
 
+  const displayMock = () => {
+    return (
+      <>
+        {widgetType === WIDGET_TYPE.square ? (
+          <>
+            <MockBoxImage variant="circular" animation={false} />
+            <Skeleton variant="text" animation={false} />
+          </>
+        ) : (
+          <>
+            <MockBoxImage variant="circular" animation={false} />
+            <div className="flex-1 mr-4">
+              <Skeleton animation={false} />
+              <Skeleton variant="text" animation={false} />
+            </div>
+          </>
+        )}
+      </>
+    );
+  };
+
+  const displayBoxContent = (boxContent, hasData) => {
+    const { s3_icon_url, title, description } = boxContent;
+
+    return hasData ? (
+      <>
+        <ImageWrapper $widgetType={widgetType}>
+          <Image src={s3_icon_url} alt={title || ""} width={25} height={25} />
+        </ImageWrapper>
+        <Title $widgetType={widgetType}>{title}</Title>
+        {widgetType === WIDGET_TYPE.square && (
+          <Description>{description ? description : "بدون توضیح"}</Description>
+        )}
+      </>
+    ) : (
+      displayMock()
+    );
+  };
+
   return (
     <Wrapper>
       <BoxesWrapper>
@@ -129,7 +171,7 @@ export default function RowBottomSheetContentPickerTab({
 
           if (content?.[boxDirection]?.title) hasData = true;
 
-          const { s3_icon_url, title, description } = content[boxDirection];
+          const boxContent = content[boxDirection];
 
           return (
             <Box
@@ -139,41 +181,7 @@ export default function RowBottomSheetContentPickerTab({
               $widgetType={widgetType}
               onClick={() => handleSelectWidget(boxDirection)}
             >
-              {hasData ? (
-                <>
-                  <ImageWrapper $widgetType={widgetType}>
-                    <Image
-                      src={s3_icon_url}
-                      alt={title || ""}
-                      width={25}
-                      height={25}
-                    />
-                  </ImageWrapper>
-                  <Title $widgetType={widgetType}>{title}</Title>
-                  {widgetType === WIDGET_TYPE.square && (
-                    <Description>
-                      {description ? description : "بدون توضیح"}
-                    </Description>
-                  )}
-                </>
-              ) : (
-                <>
-                  {widgetType === WIDGET_TYPE.square ? (
-                    <>
-                      <MockBoxImage variant="circular" animation={false} />
-                      <Skeleton variant="text" animation={false} />
-                    </>
-                  ) : (
-                    <>
-                      <MockBoxImage variant="circular" animation={false} />
-                      <div className="flex-1 mr-4">
-                        <Skeleton animation={false} />
-                        <Skeleton variant="text" animation={false} />
-                      </div>
-                    </>
-                  )}
-                </>
-              )}
+              {displayBoxContent(boxContent, hasData)}
             </Box>
           );
         })}

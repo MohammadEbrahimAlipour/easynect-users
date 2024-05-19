@@ -8,6 +8,7 @@ import PlusIcon from "@/assets/icons/plus.svg";
 // components
 import LayoutingRows from "@/components/LayoutingRows";
 import RowsBottomSheet from "@/components/RowBottomSheet";
+import { POSITIONS } from "@/constants";
 
 const rowsData = [
   // { id: 1, content: { title: "Green" } },
@@ -17,9 +18,12 @@ const rowsData = [
   // { id: 5, content: { title: "Red" } },
 ];
 
+let id = 0;
 export default function Playground() {
   const [rows, setRows] = useState(rowsData);
   const [isRowsBottomSheetOpen, setIsRowsBottomSheetOpen] = useState(false);
+  const [addingPosition, setAddingPosition] = useState(null);
+  const [addInPositionMode, setAddInPositionMode] = useState(false);
 
   const handleMoveDown = (rowID, rowIDX) => {
     if (rowIDX >= rows.length - 1) return;
@@ -49,10 +53,55 @@ export default function Playground() {
 
   const handleCloseRowsBottomSheet = () => {
     setIsRowsBottomSheetOpen(false);
+    setTimeout(() => {
+      setAddInPositionMode(false);
+    }, 300);
   };
 
-  const handleAddRow = () => {
+  const handleOpenAddRow = () => {
     setIsRowsBottomSheetOpen(true);
+  };
+
+  const handleAddRow = (row, rowPosition = null) => {
+    setRows((preRows) => {
+      const newRows = [...preRows];
+
+      id++;
+
+      const newRow = {
+        id,
+        content: row,
+      };
+
+      if (rowPosition === null) {
+        newRows.push(newRow);
+
+        return newRows;
+      }
+
+      if (addingPosition < 0 || addingPosition >= preRows.length) {
+        console.error("Index out of bounds");
+        return preRows;
+      }
+
+      const positionIndex = rowPosition === POSITIONS.above ? 0 : 1;
+      console.log("positionIndex", positionIndex);
+
+      newRows.splice(addingPosition + positionIndex, 0, newRow);
+
+      setAddInPositionMode(false);
+      setAddingPosition(null);
+
+      return newRows;
+    });
+
+    setIsRowsBottomSheetOpen(false);
+  };
+
+  const handleAddOnPosition = (position) => {
+    setIsRowsBottomSheetOpen(true);
+    setAddInPositionMode(true);
+    setAddingPosition(position);
   };
 
   return (
@@ -62,9 +111,10 @@ export default function Playground() {
         rows={rows}
         onMoveDown={handleMoveDown}
         onMoveUp={handleMoveUp}
+        onAddOnPosition={handleAddOnPosition}
       />
       <AddRowButton
-        onClick={handleAddRow}
+        onClick={handleOpenAddRow}
         className={rows.length ? "mt-4" : "mt-16"}
       >
         <PlusIcon className="w-6 ml-2" />
@@ -73,6 +123,8 @@ export default function Playground() {
       <RowsBottomSheet
         onClose={handleCloseRowsBottomSheet}
         open={isRowsBottomSheetOpen}
+        onAdd={handleAddRow}
+        addInPositionMode={addInPositionMode}
       />
     </Wrapper>
   );
