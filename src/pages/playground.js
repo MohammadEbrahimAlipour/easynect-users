@@ -9,6 +9,7 @@ import PlusIcon from "@/assets/icons/plus.svg";
 import LayoutingRows from "@/components/LayoutingRows";
 import RowsBottomSheet from "@/components/RowBottomSheet";
 import { POSITIONS } from "@/constants";
+import RowBottomSheetDelete from "@/components/RowBottomSheetDelete";
 
 const rowsData = [
   // { id: 1, content: { title: "Green" } },
@@ -24,6 +25,9 @@ export default function Playground() {
   const [isRowsBottomSheetOpen, setIsRowsBottomSheetOpen] = useState(false);
   const [addingPosition, setAddingPosition] = useState(null);
   const [addInPositionMode, setAddInPositionMode] = useState(false);
+  const [isRowsBottomSheetDeleteOpen, setIsRowsBottomSheetDeleteOpen] =
+    useState(false);
+  const [deletingRowIndex, setDeletingRowIndex] = useState(null);
 
   const handleMoveDown = (rowID, rowIDX) => {
     if (rowIDX >= rows.length - 1) return;
@@ -58,6 +62,10 @@ export default function Playground() {
     }, 300);
   };
 
+  const handleCloseRowBottomSheetDelete = () => {
+    setIsRowsBottomSheetDeleteOpen(false);
+  };
+
   const handleOpenAddRow = () => {
     setIsRowsBottomSheetOpen(true);
   };
@@ -85,7 +93,6 @@ export default function Playground() {
       }
 
       const positionIndex = rowPosition === POSITIONS.above ? 0 : 1;
-      console.log("positionIndex", positionIndex);
 
       newRows.splice(addingPosition + positionIndex, 0, newRow);
 
@@ -104,6 +111,21 @@ export default function Playground() {
     setAddingPosition(position);
   };
 
+  const handleDelete = () => {
+    setRows((preRows) => {
+      const newRows = [...preRows];
+
+      return newRows.filter((_, idx) => idx !== deletingRowIndex);
+    });
+
+    setIsRowsBottomSheetDeleteOpen(false);
+  };
+
+  const handleSelectDeletingRow = (index) => {
+    setDeletingRowIndex(index);
+    setIsRowsBottomSheetDeleteOpen(true);
+  };
+
   return (
     <Wrapper>
       <Title>Layouts</Title>
@@ -112,6 +134,7 @@ export default function Playground() {
         onMoveDown={handleMoveDown}
         onMoveUp={handleMoveUp}
         onAddOnPosition={handleAddOnPosition}
+        onDelete={handleSelectDeletingRow}
       />
       <AddRowButton
         onClick={handleOpenAddRow}
@@ -125,6 +148,11 @@ export default function Playground() {
         open={isRowsBottomSheetOpen}
         onAdd={handleAddRow}
         addInPositionMode={addInPositionMode}
+      />
+      <RowBottomSheetDelete
+        onClose={handleCloseRowBottomSheetDelete}
+        open={isRowsBottomSheetDeleteOpen}
+        onDelete={handleDelete}
       />
     </Wrapper>
   );

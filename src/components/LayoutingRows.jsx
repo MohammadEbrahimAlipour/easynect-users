@@ -16,6 +16,7 @@ export default function LayoutingRows({
   onMoveUp,
   onMoveDown,
   onAddOnPosition,
+  onDelete,
 }) {
   return (
     <Rows>
@@ -43,11 +44,7 @@ export default function LayoutingRows({
                 const { s3_icon_url, title, description, id } = box;
 
                 return (
-                  <Box
-                    key={id}
-                    $widgetType={widgetType}
-                    onClick={() => handleSelectWidget(boxDirection)}
-                  >
+                  <Box key={id} $widgetType={widgetType}>
                     <ImageWrapper $widgetType={widgetType}>
                       <Image
                         src={s3_icon_url}
@@ -70,7 +67,7 @@ export default function LayoutingRows({
               <Button>
                 <PencilIcon className="w-4" />
               </Button>
-              <Button>
+              <Button onClick={() => onDelete(idx)}>
                 <TrashIcon className="w-4" />
               </Button>
               <Button onClick={() => onAddOnPosition(idx)}>
