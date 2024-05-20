@@ -23,6 +23,7 @@ export default function RowsBottomSheet({
   open,
   onAdd,
   addInPositionMode,
+  editingRow,
 }) {
   const [selectedRowFormat, setSelectedRowFormat] = useState(null);
   const [currentTab, setCurrentTab] = useState(0);
@@ -37,6 +38,21 @@ export default function RowsBottomSheet({
       setSelectedPosition(null);
     }
   }, [open]);
+
+  useEffect(() => {
+    if (editingRow !== null) {
+      const rowLength = editingRow.length;
+      setSelectedRowFormat(
+        rowLength === 2 ? WIDGET_TYPE.square : WIDGET_TYPE.rectangle
+      );
+
+      setWidgetsContent(() => {
+        if (rowLength === 1) return [editingRow?.[0], {}];
+
+        return editingRow;
+      });
+    }
+  }, [editingRow]);
 
   const handleSelectRowFormat = ({ target: { value } }) => {
     setSelectedRowFormat(value);

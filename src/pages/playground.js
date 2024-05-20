@@ -28,6 +28,7 @@ export default function Playground() {
   const [isRowsBottomSheetDeleteOpen, setIsRowsBottomSheetDeleteOpen] =
     useState(false);
   const [deletingRowIndex, setDeletingRowIndex] = useState(null);
+  const [editingRow, setEditingRow] = useState(null);
 
   const handleMoveDown = (rowID, rowIDX) => {
     if (rowIDX >= rows.length - 1) return;
@@ -70,7 +71,7 @@ export default function Playground() {
     setIsRowsBottomSheetOpen(true);
   };
 
-  const handleAddRow = (row, rowPosition = null) => {
+  const handleAddUpdateRow = (rowContent, rowPosition = null) => {
     setRows((preRows) => {
       const newRows = [...preRows];
 
@@ -78,8 +79,21 @@ export default function Playground() {
 
       const newRow = {
         id,
-        content: row,
+        content: rowContent,
       };
+
+      if (editingRow !== null) {
+        setEditingRow(null);
+
+        return preRows.map((row) => {
+          const { id } = row;
+          if (id === editingRow.id) {
+            return newRow;
+          }
+
+          return row;
+        });
+      }
 
       if (rowPosition === null) {
         newRows.push(newRow);
@@ -126,6 +140,15 @@ export default function Playground() {
     setIsRowsBottomSheetDeleteOpen(true);
   };
 
+  const handleEditRow = (index) => {
+    const row = rows.filter((_, idx) => {
+      return idx === index;
+    });
+
+    setEditingRow(row?.[0]);
+    setIsRowsBottomSheetOpen(true);
+  };
+
   return (
     <Wrapper>
       <Title>Layouts</Title>
@@ -135,6 +158,7 @@ export default function Playground() {
         onMoveUp={handleMoveUp}
         onAddOnPosition={handleAddOnPosition}
         onDelete={handleSelectDeletingRow}
+        onEdit={handleEditRow}
       />
       <AddRowButton
         onClick={handleOpenAddRow}
@@ -146,8 +170,9 @@ export default function Playground() {
       <RowsBottomSheet
         onClose={handleCloseRowsBottomSheet}
         open={isRowsBottomSheetOpen}
-        onAdd={handleAddRow}
+        onAdd={handleAddUpdateRow}
         addInPositionMode={addInPositionMode}
+        editingRow={editingRow && editingRow.content}
       />
       <RowBottomSheetDelete
         onClose={handleCloseRowBottomSheetDelete}

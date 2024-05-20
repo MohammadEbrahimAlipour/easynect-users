@@ -17,10 +17,13 @@ export default function LayoutingRows({
   onMoveDown,
   onAddOnPosition,
   onDelete,
+  onEdit,
 }) {
   return (
     <Rows>
       {rows.map((row, idx) => {
+        if (!row) return;
+
         const { id, content: boxes } = row;
 
         const isFirstRow = idx === 0;
@@ -64,7 +67,7 @@ export default function LayoutingRows({
               })}
             </ContentWrapper>
             <Controllers>
-              <Button>
+              <Button onClick={() => onEdit(idx)}>
                 <PencilIcon className="w-4" />
               </Button>
               <Button onClick={() => onDelete(idx)}>

@@ -145,16 +145,21 @@ export default function RowBottomSheetContentPickerTab({
   };
 
   const displayBoxContent = (boxContent, hasData) => {
-    const { s3_icon_url, title, description } = boxContent;
-
     return hasData ? (
       <>
         <ImageWrapper $widgetType={widgetType}>
-          <Image src={s3_icon_url} alt={title || ""} width={25} height={25} />
+          <Image
+            src={boxContent?.s3_icon_url}
+            alt={boxContent?.title || ""}
+            width={25}
+            height={25}
+          />
         </ImageWrapper>
-        <Title $widgetType={widgetType}>{title}</Title>
+        <Title $widgetType={widgetType}>{boxContent?.title}</Title>
         {widgetType === WIDGET_TYPE.square && (
-          <Description>{description ? description : "بدون توضیح"}</Description>
+          <Description>
+            {boxContent?.description ? boxContent?.description : "بدون توضیح"}
+          </Description>
         )}
       </>
     ) : (
