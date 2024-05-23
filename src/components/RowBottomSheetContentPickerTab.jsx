@@ -108,7 +108,8 @@ export default function RowBottomSheetContentPickerTab({
   const handleChooseContent = (item) => {
     const newContent = deepCopy(content);
 
-    item.id = `${item.id}${selectedBox}`;
+    item.content_id = item.id;
+    item.key = `${item.id}${selectedBox}`;
 
     newContent[selectedBox] = item;
 
