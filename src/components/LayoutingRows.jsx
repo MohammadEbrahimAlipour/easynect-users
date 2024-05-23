@@ -44,10 +44,10 @@ export default function LayoutingRows({
             </Controllers>
             <ContentWrapper>
               {boxes.map((box) => {
-                const { s3_icon_url, title, description, id } = box;
+                const { s3_icon_url, title, description, key } = box;
 
                 return (
-                  <Box key={id} $widgetType={widgetType}>
+                  <Box key={key} $widgetType={widgetType}>
                     <ImageWrapper $widgetType={widgetType}>
                       <Image
                         src={s3_icon_url}
