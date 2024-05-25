@@ -57,8 +57,6 @@ export default function Playground() {
   };
 
   const convertPageContentToRows = (contentsData) => {
-    let id = 0;
-
     const convertedContents = contentsData
       .sort((a, b) => a.main_order - b.main_order)
       .map(({ data }) => {
@@ -94,7 +92,6 @@ export default function Playground() {
         },
       })
       .then(({ data }) => {
-        console.log("contents items ==== ", data);
         setContents(data);
       })
       .catch((error) => {
