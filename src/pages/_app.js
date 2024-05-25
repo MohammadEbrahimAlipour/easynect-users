@@ -14,7 +14,7 @@ import "react-indiana-drag-scroll/dist/style.css";
 
 const raviFont = raviFontLocal({
   src: "../RaviPro/Ravi Variable/Webfonts/woff2/Ravi-VF.woff2",
-  variable: "--font-rav"
+  variable: "--font-rav",
 });
 
 const protectedRoutes = [/\/app\/.*/];
@@ -33,17 +33,15 @@ export default function App({ Component, pageProps }) {
       </Head>
 
       <main
-        className={`${raviFont.variable} font-ravi w-full flex justify-center`}
+        className={`${raviFont.variable} font-ravi mx-auto w-screen container:w-[414px]`}
       >
-        <div className=" 3xl:w-[414px] 2xl:w-[414px] lg:w-[414px]">
-          <ErrorBoundary>
-            <AccessTokenProvider protectedRoutes={protectedRoutes}>
-              {/* <DndProvider backend={HTML5Backend}> */}
-              <Component {...pageProps} />
-              {/* </DndProvider> */}
-            </AccessTokenProvider>
-          </ErrorBoundary>
-        </div>
+        <ErrorBoundary>
+          <AccessTokenProvider protectedRoutes={protectedRoutes}>
+            {/* <DndProvider backend={HTML5Backend}> */}
+            <Component {...pageProps} />
+            {/* </DndProvider> */}
+          </AccessTokenProvider>
+        </ErrorBoundary>
       </main>
 
       <ToastContainer
