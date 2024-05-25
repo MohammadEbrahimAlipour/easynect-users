@@ -45,9 +45,8 @@ export default function Playground() {
           "Accept-Language": "fa",
         },
       })
-      .then((response) => {
-        console.log("response.data", response.data);
-        // setExtractedData(response.data);
+      .then(({ data: { contents: contentsData } }) => {
+        convertPageContentToRows(contentsData);
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
@@ -55,6 +54,33 @@ export default function Playground() {
           setNoCard(true); // Set to true if a 404 error occurs
         }
       });
+  };
+
+  const convertPageContentToRows = (contentsData) => {
+    let id = 0;
+
+    const convertedContents = contentsData
+      .sort((a, b) => a.main_order - b.main_order)
+      .map(({ data }) => {
+        id++;
+
+        return {
+          id,
+          content: data
+            .sort((a, b) => a.sub_order - b.sub_order)
+            .map(({ id: dataID, s3_icon_url, title }, index) => {
+              return {
+                id: dataID,
+                content_id: dataID,
+                key: `${dataID}${index}`,
+                s3_icon_url,
+                title,
+              };
+            }),
+        };
+      });
+
+    setRows(convertedContents);
   };
 
   const getContent = () => {
@@ -68,6 +94,7 @@ export default function Playground() {
         },
       })
       .then(({ data }) => {
+        console.log("contents items ==== ", data);
         setContents(data);
       })
       .catch((error) => {
