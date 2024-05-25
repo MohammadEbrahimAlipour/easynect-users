@@ -13,7 +13,7 @@ import { POSITIONS, WIDGET_TYPE } from "@/constants";
 import RowBottomSheetDelete from "@/components/RowBottomSheetDelete";
 import { generateApiUrl } from "@/components/ApiUr";
 import axios from "axios";
-import { useAccessToken } from "../../context/AccessTokenContext";
+import { useAccessToken } from "../../../context/AccessTokenContext";
 
 const FAKE_PAGE_ID = "652170d9-e010-49eb-ae34-5d2d37c2481f";
 
