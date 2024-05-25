@@ -24,6 +24,7 @@ export default function RowsBottomSheet({
   onAdd,
   addInPositionMode,
   editingRow,
+  contents,
 }) {
   const [selectedRowFormat, setSelectedRowFormat] = useState(null);
   const [currentTab, setCurrentTab] = useState(0);
@@ -92,6 +93,7 @@ export default function RowsBottomSheet({
               content={widgetsContent}
               onWidgetContentChange={handleWidgetContent}
               widgetType={selectedRowFormat}
+              contents={contents}
             />
           ),
         },

@@ -27,9 +27,15 @@ export default function Playground() {
     useState(false);
   const [deletingRowIndex, setDeletingRowIndex] = useState(null);
   const [editingRow, setEditingRow] = useState(null);
+  const [contents, setContents] = useState([]);
   const accessToken = useAccessToken();
 
   useEffect(() => {
+    getPageData();
+    getContent();
+  }, []);
+
+  const getPageData = () => {
     const apiUrl = generateApiUrl(`/api/v1/page_view/preview/${FAKE_PAGE_ID}`);
 
     axios
@@ -49,7 +55,25 @@ export default function Playground() {
           setNoCard(true); // Set to true if a 404 error occurs
         }
       });
-  }, []);
+  };
+
+  const getContent = () => {
+    const apiUrl = generateApiUrl(`/api/v1/contents/page/${FAKE_PAGE_ID}`);
+
+    axios
+      .get(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${accessToken.accessToken}`,
+          "Accept-Language": "fa",
+        },
+      })
+      .then(({ data }) => {
+        setContents(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
+  };
 
   const handleMoveDown = (rowID, rowIDX) => {
     if (rowIDX >= rows.length - 1) return;
@@ -220,13 +244,11 @@ export default function Playground() {
         },
       })
       .then((response) => {
-        // Handle the response as needed (e.g., show a success message)
         console.log("User data updated successfully.");
         toast.success("updated successfully");
       })
       .catch((error) => {
         console.error("Error updating user data:", error);
-        // Check if the error response contains a message
         if (
           error.response &&
           error.response.data &&
@@ -235,7 +257,6 @@ export default function Playground() {
           const errorMessage = error.response.data.detail;
           toast.error(errorMessage);
         } else {
-          // If there is no specific error message, display a generic one
           toast.error("Error: An error occurred.");
         }
       });
@@ -275,6 +296,7 @@ export default function Playground() {
         onAdd={handleAddUpdateRow}
         addInPositionMode={addInPositionMode}
         editingRow={editingRow && editingRow.content}
+        contents={contents}
       />
       <RowBottomSheetDelete
         onClose={handleCloseRowBottomSheetDelete}
