@@ -57,11 +57,6 @@ export default function LayoutingRows({
                       />
                     </ImageWrapper>
                     <Title $widgetType={widgetType}>{title}</Title>
-                    {widgetType === WIDGET_TYPE.square && (
-                      <Description>
-                        {description ? description : "بدون توضیح"}
-                      </Description>
-                    )}
                   </Box>
                 );
               })}
@@ -147,17 +142,10 @@ const Title = tw.div`
   `}
 `;
 
-const Description = tw.div`
-  font-medium
-  text-xs
-  text-muted
-  truncate
-`;
-
 const ImageWrapper = tw.div`
   bg-dark
-  w-[35px]
-  h-[35px]
+  w-[45px]
+  h-[45px]
   rounded-full
   mb-3
   flex

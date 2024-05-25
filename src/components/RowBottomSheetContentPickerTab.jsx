@@ -83,11 +83,6 @@ export default function RowBottomSheetContentPickerTab({
           />
         </ImageWrapper>
         <Title $widgetType={widgetType}>{boxContent?.title}</Title>
-        {widgetType === WIDGET_TYPE.square && (
-          <Description>
-            {boxContent?.description ? boxContent?.description : "بدون توضیح"}
-          </Description>
-        )}
       </>
     ) : (
       displayMock()
@@ -199,8 +194,8 @@ const ContentImage = tw(BaseImage)`
 
 const ImageWrapper = tw.div`
   bg-dark
-  w-[35px]
-  h-[35px]
+  w-[45px]
+  h-[45px]
   rounded-full
   mb-3
   flex
@@ -231,11 +226,4 @@ const Title = tw.div`
     `
   mr-2 
   `}
-`;
-
-const Description = tw.div`
-  font-medium
-  text-xs
-  text-muted
-  truncate
 `;
