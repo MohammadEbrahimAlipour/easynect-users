@@ -18,6 +18,7 @@ import tw from "tailwind-styled-components";
 // components
 import Widget from "@/components/Widget";
 import { InfoIconSmall } from "@/components/Icons";
+import FilePreviewBottomSheet from "@/components/FilePreviewBottomSheet";
 
 export async function getServerSideProps(context) {
   try {
@@ -33,9 +34,15 @@ export async function getServerSideProps(context) {
     });
 
     const { data } = response;
-    const { is_direct, redirect_link } = data.is_direct;
+    const { is_direct, redirect_link, type } = data.is_direct;
 
     if (is_direct) {
+      if (type === "file") {
+        return {
+          props: { showFile: true, fileURL: redirect_link },
+        };
+      }
+
       return {
         redirect: {
           destination: redirect_link,
@@ -69,7 +76,13 @@ export async function getServerSideProps(context) {
   }
 }
 
-export default function Username({ username, usersData, errorMessage }) {
+export default function Username({
+  username,
+  usersData,
+  errorMessage,
+  showFile = false,
+  fileURL = null,
+}) {
   const [noDataContents, setNoDataContents] = useState(null);
   const [vCardList, setVCardList] = useState([]);
   const [hasLeadForm, setHasLeadForm] = useState(false);
@@ -144,20 +157,22 @@ END:VCARD
   };
 
   useEffect(() => {
-    if (usersData.contents.length === 0) {
-      setNoDataContents(true);
-    } else {
-      setNoDataContents(false);
-    }
+    if (username) {
+      if (usersData.contents.length === 0) {
+        setNoDataContents(true);
+      } else {
+        setNoDataContents(false);
+      }
 
-    if (usersData?.horizontal_menu[0]?.id === null) {
-      setNoDataHorz(true);
-    } else {
-      setNoDataHorz(false);
-    }
+      if (usersData?.horizontal_menu[0]?.id === null) {
+        setNoDataHorz(true);
+      } else {
+        setNoDataHorz(false);
+      }
 
-    if (usersData?.lead_form?.length > 0) {
-      setHasLeadForm(true);
+      if (usersData?.lead_form?.length > 0) {
+        setHasLeadForm(true);
+      }
     }
   }, [username]);
 
@@ -216,6 +231,12 @@ END:VCARD
   if (errorMessage) {
     toast.error(errorMessage);
     return null;
+  }
+
+  if (showFile) {
+    return (
+      <FilePreviewBottomSheet url={fileURL} isOpen={true} onClose={null} />
+    );
   }
 
   return (
