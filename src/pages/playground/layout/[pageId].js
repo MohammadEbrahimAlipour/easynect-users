@@ -13,12 +13,14 @@ import { POSITIONS, WIDGET_TYPE } from "@/constants";
 import RowBottomSheetDelete from "@/components/RowBottomSheetDelete";
 import { generateApiUrl } from "@/components/ApiUr";
 import axios from "axios";
-import { useAccessToken } from "../../../context/AccessTokenContext";
-
-const FAKE_PAGE_ID = "652170d9-e010-49eb-ae34-5d2d37c2481f";
+import { useAccessToken } from "../../../../context/AccessTokenContext";
+import { useRouter } from "next/router";
 
 let id = 0;
 export default function Playground() {
+  const router = useRouter();
+  const { pageId } = router.query;
+
   const [rows, setRows] = useState([]);
   const [isRowsBottomSheetOpen, setIsRowsBottomSheetOpen] = useState(false);
   const [addingPosition, setAddingPosition] = useState(null);
@@ -31,12 +33,14 @@ export default function Playground() {
   const accessToken = useAccessToken();
 
   useEffect(() => {
-    getPageData();
-    getContent();
-  }, []);
+    if (pageId) {
+      getPageData();
+      getContent();
+    }
+  }, [pageId]);
 
   const getPageData = () => {
-    const apiUrl = generateApiUrl(`/api/v1/page_view/preview/${FAKE_PAGE_ID}`);
+    const apiUrl = generateApiUrl(`/api/v1/page_view/preview/${pageId}`);
 
     axios
       .get(apiUrl, {
@@ -51,7 +55,7 @@ export default function Playground() {
       .catch((error) => {
         console.error("Error fetching user data:", error);
         if (error.response && error.response.status === 404) {
-          setNoCard(true); // Set to true if a 404 error occurs
+          toast.error("no card is available");
         }
       });
   };
@@ -82,7 +86,7 @@ export default function Playground() {
   };
 
   const getContent = () => {
-    const apiUrl = generateApiUrl(`/api/v1/contents/page/${FAKE_PAGE_ID}`);
+    const apiUrl = generateApiUrl(`/api/v1/contents/page/${pageId}`);
 
     axios
       .get(apiUrl, {
@@ -257,9 +261,7 @@ export default function Playground() {
   const handleSubmit = () => {
     const body = convertRowsToBody();
 
-    const apiUrl = generateApiUrl(
-      `/api/v1/page_view/contents/order/${FAKE_PAGE_ID}`
-    );
+    const apiUrl = generateApiUrl(`/api/v1/page_view/contents/order/${pageId}`);
     axios
       .patch(apiUrl, body, {
         headers: {
@@ -334,6 +336,7 @@ export default function Playground() {
 const Wrapper = tw.div`
   bg-light
   min-h-screen
+  pb-12
 `;
 
 const Title = tw.button`
