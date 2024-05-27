@@ -1,4 +1,5 @@
 import { UploadFile } from "@/components/Icons";
+import UploadInput from "@/components/UploadInput";
 import React, { useState, useRef } from "react";
 
 const CreateFile = ({
@@ -10,25 +11,8 @@ const CreateFile = ({
   handleInputChange,
   setLivePreviewTitle,
   setLivePreviewDesc,
-  setFile
+  setFile,
 }) => {
-  const [fileName, setFileName] = useState("برای انتخاب فایل کلیک کنید.");
-  const fileInputRefCreate = useRef();
-
-  const handleFileInputClick = () => {
-    // Trigger the hidden file input click event
-    fileInputRefCreate.current.click();
-  };
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setFileName(file.name);
-      setFile(file); // Pass the file object to the parent component via a new prop
-    } else {
-      setFileName("");
-      setFile(null); // Clear the file if none is selected
-    }
-  };
   return (
     <div className="mt-10 flex flex-col w-full">
       <label htmlFor="title" className="mb-2">
@@ -62,25 +46,11 @@ const CreateFile = ({
       />
 
       <label className="my-2">آپلود فایل:</label>
-
-      <div className="w-full border-2 rounded-lg flex flex-row-reverse justify-between py-1 items-center px-1 overflow-hidden">
-        <div className="file-uploader bg-black py-1 w-[15%] rounded-lg flex justify-center items-center overflow-hidden">
-          <input
-            type="file"
-            ref={fileInputRefCreate}
-            onChange={handleFileChange}
-            className="hidden"
-          />
-          <span
-            onClick={handleFileInputClick}
-            //   className="border-2 rounded-md text-sm py-1 px-1"
-          >
-            <UploadFile />
-            {/* {fileName ? fileName : <UploadFile />} */}
-          </span>
-        </div>
-        <p className="text-muted text-sm">{fileName}</p>
-      </div>
+      <UploadInput
+        onChoose={(file) => {
+          setFile(file);
+        }}
+      />
     </div>
   );
 };
