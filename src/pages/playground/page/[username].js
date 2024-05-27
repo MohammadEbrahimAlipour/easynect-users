@@ -1,15 +1,11 @@
 // TODO: needs to be refactored
-import React, { useState, useEffect, Fragment, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useRouter } from "next/router";
 import { generateApiUrl } from "@/components/ApiUr";
 import ClientPageFooter from "@/components/ClientPageFooter";
 import LoadingState from "@/components/LoadingState";
-import Layout from "@/components/Layout";
 import NoData from "@/components/pageView/NoData";
-import Image from "next/image";
-import CarouselView from "@/components/publicPageView/CarouselView";
 import LeadForm from "@/components/leadForm/LeadForm";
 import axiosInstance from "@/services/axiosInterceptors";
 import Head from "next/head";
@@ -17,8 +13,9 @@ import tw from "tailwind-styled-components";
 
 // components
 import Widget from "@/components/Widget";
-import { InfoIconSmall } from "@/components/Icons";
 import FilePreviewBottomSheet from "@/components/FilePreviewBottomSheet";
+import BottomSheetWrapper from "@/components/bottomSheet/BottomSheetWrapper";
+import BaseInfoIcon from "@/assets/icons/info.svg";
 
 export async function getServerSideProps(context) {
   try {
@@ -84,65 +81,8 @@ export default function Username({
   fileURL = null,
 }) {
   const [noDataContents, setNoDataContents] = useState(null);
-  const [vCardList, setVCardList] = useState([]);
   const [hasLeadForm, setHasLeadForm] = useState(false);
-  const [noDataHoz, setNoDataHorz] = useState(null);
-  const [showBio, setShowBio] = useState(false);
-
-  const getJobTitle = () => {
-    if (usersData.job_title !== null && usersData.company === null) {
-      return `${usersData.job_title}`;
-    } else if (usersData.company !== null && usersData.job_title === null) {
-      return `${usersData.company}`;
-    } else if (usersData.job_title !== null && usersData.company !== null) {
-      return `${usersData.job_title} در ${usersData.company}`;
-    } else {
-      return " ";
-    }
-  };
-
-  const handleSaveContact = () => {
-    // Filter unique ids
-    const uniqueVCardList = vCardList.filter(
-      (item, index, self) => index === self.findIndex((t) => t.id === item.id)
-    );
-
-    let vCardData = uniqueVCardList
-      .map((item) => {
-        switch (item.type) {
-          case "phone":
-            return `TEL;TYPE=${item.title}:${item.content_val}`;
-          case "email":
-            return `EMAIL;TYPE=${item.title}:${item.content_val}`;
-          case "link":
-            // No need to encode URLs, they are already in the correct format
-            return `URL;TYPE=${item.title}:${item.content_val}`;
-          // Add more cases for other contact information as needed
-          default:
-            return "";
-        }
-      })
-      .join("\n");
-    // Add static parts of the vCard around the dynamic data
-    const vCardString = `
-BEGIN:VCARD
-VERSION:3.0
-N;CHARSET=utf-8:${usersData.owner_last_name};${usersData.owner_first_name};;;
-${vCardData}
-END:VCARD
-`;
-
-    // Download the vCard
-    const blob = new Blob([vCardString], { type: "text/vcard" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "contact.vcf"; // Set the filename
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-  };
+  const [isBioBottomSheetOpen, setIsBioBottomSheetOpen] = useState(false);
 
   const flattenContents = (contents) => {
     // Flatten the contents array and extract the necessary fields
@@ -164,12 +104,6 @@ END:VCARD
         setNoDataContents(false);
       }
 
-      if (usersData?.horizontal_menu[0]?.id === null) {
-        setNoDataHorz(true);
-      } else {
-        setNoDataHorz(false);
-      }
-
       if (usersData?.lead_form?.length > 0) {
         setHasLeadForm(true);
       }
@@ -185,9 +119,8 @@ END:VCARD
         ...flattenedContents,
         ...usersData.horizontal_menu,
       ];
-      setVCardList(combinedDataArray);
     }
-  }, [usersData, setVCardList]);
+  }, [usersData]);
 
   const handleCountingItemClicks = async (itemData) => {
     try {
@@ -247,24 +180,20 @@ END:VCARD
       </Head>
 
       <Cover>
-        <CoverImage
-          src={
-            "https://images.unsplash.com/photo-1715985884284-3885ea1731b8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          }
-        />
+        <CoverImage src={usersData?.banner_s3_url} />
       </Cover>
       <Header>
         <ProfilePictureWrapper>
-          <ProfilePicture
-            src={
-              "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            }
-          />
+          <ProfilePicture src={usersData?.profile_s3_url} />
         </ProfilePictureWrapper>
         <HeaderContent>
-          <Texts>
-            <FullName>سوزانا جوانسون</FullName>
-            <Bio>برنامه نویس در شرکت راستا پردازان شرق</Bio>
+          <Texts onClick={() => setIsBioBottomSheetOpen(true)}>
+            <FullName>
+              {usersData?.owner_first_name} {usersData?.owner_last_name}
+            </FullName>
+            <JobTitle>
+              {usersData?.job_title} در {usersData?.company} <InfoIcon />
+            </JobTitle>
           </Texts>
           <Actions>
             <Button>ذخیره‌ی مخاطب</Button>
@@ -314,6 +243,14 @@ END:VCARD
           />
         )}
       </>
+
+      <BottomSheetWrapper
+        open={isBioBottomSheetOpen}
+        onClose={() => setIsBioBottomSheetOpen(false)}
+      >
+        <BioTitle>بیوگرافی</BioTitle>
+        <Bio>{usersData?.bio}</Bio>
+      </BottomSheetWrapper>
     </>
   );
 }
@@ -372,9 +309,23 @@ const FullName = tw.h4`
   text-gray-900
 `;
 
-const Bio = tw.p`
+const JobTitle = tw.div`
   text-xs
   text-gray-400
+`;
+
+const BioTitle = tw.div`
+  text-lg
+  text-center
+  text-gray-700
+  mt-8
+`;
+
+const Bio = tw.p`
+  text-gray-400
+  mb-24
+  px-8
+  mt-4
 `;
 
 const Actions = tw.div`
@@ -397,4 +348,11 @@ const Button = tw.button`
 const ButtonOutlined = tw(Button)`
   bg-transparent
   text-black
+`;
+
+const InfoIcon = tw(BaseInfoIcon)`
+  w-4
+  inline
+  text-gray-900
+  cursor-pointer
 `;

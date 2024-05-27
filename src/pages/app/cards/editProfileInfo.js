@@ -18,6 +18,7 @@ import EditMenuOptions from "@/components/EditMenuOptions";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import EditProfileInfoRedirectForm from "@/components/EditProfileInfoRedirectForm";
+import UploadInput from "@/components/UploadInput";
 
 const EditProfileInfo = () => {
   const [pageData, setPageData] = useState(null);
@@ -102,6 +103,14 @@ const EditProfileInfo = () => {
       }));
     }
   };
+
+  const handleBannerImageChange = (file) => {
+    setChangedFormData((prevFormData) => ({
+      ...prevFormData,
+      banner: file,
+    }));
+  };
+
   const handleToggleDirect = () => {
     setIsDirect((prevIsDirect) => {
       const newIsDirect = !prevIsDirect;
@@ -378,6 +387,12 @@ const EditProfileInfo = () => {
                       name="bio"
                       defaultValue={formData.bio}
                       onChange={handleInputChange}
+                    />
+
+                    <UploadInput
+                      labelText={"فایل بنر"}
+                      className="mb-4"
+                      onChoose={handleBannerImageChange}
                     />
 
                     <EditProfileInfoRedirectForm
