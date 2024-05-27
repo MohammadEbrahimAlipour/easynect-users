@@ -9,6 +9,7 @@ import { useResizeObserver } from "@wojtekmaj/react-hooks";
 // components
 import BottomSheetWrapper from "@/components/bottomSheet/BottomSheetWrapper";
 import ZoomController from "@/components/ZoomController";
+import UnsupportedFileError from "@/components/UnsupportedFileError";
 
 // utils
 import { downloadFile, getFileExtension } from "@/utils/file";
@@ -51,6 +52,37 @@ export default function FilePreviewBottomSheet({ url, isOpen, onClose }) {
     setScale(scale);
   };
 
+  const displayFile = () => {
+    const fileExtension = getFileExtension(url);
+
+    if (fileExtension === FILE_EXTENSIONS.pdf) {
+      return (
+        <Document
+          externalLinkTarget="_blank"
+          file={url}
+          onLoadSuccess={onDocumentLoadSuccess}
+        >
+          {Array.from(new Array(numPages), (el, index) => (
+            <Page
+              scale={scale}
+              key={`page_${index + 1}`}
+              pageNumber={index + 1}
+              width={
+                containerWidth ? Math.min(containerWidth, maxWidth) : maxWidth
+              }
+            />
+          ))}
+        </Document>
+      );
+    }
+
+    if (Object.keys(FILE_EXTENSIONS.images).includes(fileExtension)) {
+      return <Image alt="" src={url} />;
+    }
+
+    return <UnsupportedFileError extension={fileExtension} />;
+  };
+
   return (
     <BottomSheetWrapper
       open={isOpen}
@@ -60,35 +92,16 @@ export default function FilePreviewBottomSheet({ url, isOpen, onClose }) {
     >
       <Wrapper>
         <PreviewContainer ref={setContainerRef}>
-          {isPDF ? (
-            <Document
-              externalLinkTarget="_blank"
-              file={url}
-              onLoadSuccess={onDocumentLoadSuccess}
-            >
-              {Array.from(new Array(numPages), (el, index) => (
-                <Page
-                  scale={scale}
-                  key={`page_${index + 1}`}
-                  pageNumber={index + 1}
-                  width={
-                    containerWidth
-                      ? Math.min(containerWidth, maxWidth)
-                      : maxWidth
-                  }
-                />
-              ))}
-            </Document>
-          ) : (
-            <Image alt="" src={url} />
-          )}
+          {displayFile()}
         </PreviewContainer>
         {isPDF && <ZoomController scale={scale} onChange={handleScaleChange} />}
         <Buttons>
           <DownloadButton onClick={() => downloadFile(url)}>
             دانلود فایل
           </DownloadButton>
-          <CancelButton onClick={onClose}>بستن</CancelButton>
+          {onClose !== null && (
+            <CancelButton onClick={onClose}>بستن</CancelButton>
+          )}
         </Buttons>
       </Wrapper>
     </BottomSheetWrapper>
