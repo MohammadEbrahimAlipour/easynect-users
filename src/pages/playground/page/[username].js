@@ -213,15 +213,15 @@ export default function Username({
             </JobTitle>
           </Texts>
           <Actions>
-            <Button>ذخیره‌ی مخاطب</Button>
-            <ButtonOutlined>پوستن به لید</ButtonOutlined>
+            <Button>{t("save_contact")}</Button>
+            <ButtonOutlined>{t("join_lead")}</ButtonOutlined>
           </Actions>
         </HeaderContent>
       </Header>
       {usersData?.horizontal_menu ? (
         <>
           {noDataContents !== null ? (
-            <div className="px-4 -mt-4">
+            <div className="flex-1 px-4 -mt-4">
               {!noDataContents ? (
                 <>
                   <div className="mt-5">
@@ -265,7 +265,7 @@ export default function Username({
         open={isBioBottomSheetOpen}
         onClose={() => setIsBioBottomSheetOpen(false)}
       >
-        <BioTitle>بیوگرافی</BioTitle>
+        <BioTitle>{t("bio_title")}</BioTitle>
         <Bio>{usersData?.bio}</Bio>
       </BottomSheetWrapper>
     </>

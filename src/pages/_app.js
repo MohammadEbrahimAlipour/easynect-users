@@ -34,7 +34,7 @@ function App({ Component, pageProps }) {
       </Head>
 
       <main
-        className={`${raviFont.variable} font-ravi mx-auto w-screen container:w-[414px]`}
+        className={`${raviFont.variable} font-ravi mx-auto flex flex-col min-h-screen w-screen container:w-[414px]`}
       >
         <ErrorBoundary>
           <AccessTokenProvider protectedRoutes={protectedRoutes}>
