@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "swiper/css";
 import ErrorBoundary from "@/components/Errors/ErrorBoundary";
 import "react-indiana-drag-scroll/dist/style.css";
+import { appWithTranslation } from "next-i18next";
 
 const raviFont = raviFontLocal({
   src: "../RaviPro/Ravi Variable/Webfonts/woff2/Ravi-VF.woff2",
@@ -19,7 +20,7 @@ const raviFont = raviFontLocal({
 
 const protectedRoutes = [/\/app\/.*/];
 
-export default function App({ Component, pageProps }) {
+function App({ Component, pageProps }) {
   return (
     <>
       <Head>
@@ -59,3 +60,5 @@ export default function App({ Component, pageProps }) {
     </>
   );
 }
+
+export default appWithTranslation(App);

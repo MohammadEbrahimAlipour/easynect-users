@@ -16,6 +16,9 @@ import Widget from "@/components/Widget";
 import FilePreviewBottomSheet from "@/components/FilePreviewBottomSheet";
 import BottomSheetWrapper from "@/components/bottomSheet/BottomSheetWrapper";
 import BaseInfoIcon from "@/assets/icons/info.svg";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
+import { LANGUAGES } from "@/constants/language";
 
 export async function getServerSideProps(context) {
   try {
@@ -33,10 +36,18 @@ export async function getServerSideProps(context) {
     const { data } = response;
     const { is_direct, redirect_link, type } = data.is_direct;
 
+    const translations = await serverSideTranslations(
+      data.language || LANGUAGES.fa.name
+    );
+
     if (is_direct) {
       if (type === "file") {
         return {
-          props: { showFile: true, fileURL: redirect_link },
+          props: {
+            ...translations,
+            showFile: true,
+            fileURL: redirect_link,
+          },
         };
       }
 
@@ -49,7 +60,11 @@ export async function getServerSideProps(context) {
     }
 
     return {
-      props: { usersData: data, username },
+      props: {
+        ...translations,
+        usersData: data,
+        username,
+      },
     };
   } catch (error) {
     if (error.response && error.response.status === 404) {
@@ -83,6 +98,8 @@ export default function Username({
   const [noDataContents, setNoDataContents] = useState(null);
   const [hasLeadForm, setHasLeadForm] = useState(false);
   const [isBioBottomSheetOpen, setIsBioBottomSheetOpen] = useState(false);
+
+  const { t } = useTranslation();
 
   const flattenContents = (contents) => {
     // Flatten the contents array and extract the necessary fields
@@ -192,7 +209,7 @@ export default function Username({
               {usersData?.owner_first_name} {usersData?.owner_last_name}
             </FullName>
             <JobTitle>
-              {usersData?.job_title} در {usersData?.company} <InfoIcon />
+              {usersData?.job_title} {t("in")} {usersData?.company} <InfoIcon />
             </JobTitle>
           </Texts>
           <Actions>
