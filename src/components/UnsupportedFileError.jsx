@@ -1,17 +1,19 @@
 import FileIcon from "@/assets/icons/file.svg";
+import { useTranslation } from "react-i18next";
 import tw from "tailwind-styled-components";
 
 export default function UnsupportedFileError({ extension }) {
+  const { t } = useTranslation();
+
   return (
     <Wrapper>
       <Icon />
       <Error>
         <Title>
-          قالب فایل
+          {t("unsupported_file.title")}
           <Extension>{extension}</Extension>
         </Title>
-        متاسفانه امکان پیش‌ نمایش این فایل ممکن نیست، جهت مشاهده می‌توانید فایل
-        را دانلود کنید.
+        {t("unsupported_file.message")}
       </Error>
     </Wrapper>
   );

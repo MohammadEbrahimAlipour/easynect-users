@@ -14,8 +14,6 @@ import axiosInstance from "@/services/axiosInterceptors";
 import { useAccessToken } from "../../context/AccessTokenContext";
 import { generateApiUrl } from "./ApiUr";
 
-const fakeNoLink = false;
-
 export default function EditProfileInfoRedirectForm({ data, pageID }) {
   const getSelectedLink = () => {
     const { current_link, links } = data;

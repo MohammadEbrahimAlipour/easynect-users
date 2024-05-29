@@ -16,6 +16,7 @@ import { downloadFile, getFileExtension } from "@/utils/file";
 
 // constants
 import { FILE_EXTENSIONS } from "@/constants/file";
+import { useTranslation } from "react-i18next";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
@@ -28,6 +29,8 @@ export default function FilePreviewBottomSheet({ url, isOpen, onClose }) {
   const [containerRef, setContainerRef] = useState(null);
   const [containerWidth, setContainerWidth] = useState();
   const [scale, setScale] = useState(1);
+
+  const { t } = useTranslation();
 
   const onResize = useCallback((entries) => {
     const [entry] = entries;
@@ -97,10 +100,10 @@ export default function FilePreviewBottomSheet({ url, isOpen, onClose }) {
         {isPDF && <ZoomController scale={scale} onChange={handleScaleChange} />}
         <Buttons>
           <DownloadButton onClick={() => downloadFile(url)}>
-            دانلود فایل
+            {t("download_file")}
           </DownloadButton>
           {onClose !== null && (
-            <CancelButton onClick={onClose}>بستن</CancelButton>
+            <CancelButton onClick={onClose}>{t("close")}</CancelButton>
           )}
         </Buttons>
       </Wrapper>

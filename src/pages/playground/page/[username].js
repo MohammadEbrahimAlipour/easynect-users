@@ -16,6 +16,9 @@ import Widget from "@/components/Widget";
 import FilePreviewBottomSheet from "@/components/FilePreviewBottomSheet";
 import BottomSheetWrapper from "@/components/bottomSheet/BottomSheetWrapper";
 import BaseInfoIcon from "@/assets/icons/info.svg";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
+import { LANGUAGES } from "@/constants/language";
 
 export async function getServerSideProps(context) {
   try {
@@ -33,10 +36,18 @@ export async function getServerSideProps(context) {
     const { data } = response;
     const { is_direct, redirect_link, type } = data.is_direct;
 
+    const translations = await serverSideTranslations(
+      data.language || LANGUAGES.fa.name
+    );
+
     if (is_direct) {
       if (type === "file") {
         return {
-          props: { showFile: true, fileURL: redirect_link },
+          props: {
+            ...translations,
+            showFile: true,
+            fileURL: redirect_link,
+          },
         };
       }
 
@@ -49,7 +60,11 @@ export async function getServerSideProps(context) {
     }
 
     return {
-      props: { usersData: data, username },
+      props: {
+        ...translations,
+        usersData: data,
+        username,
+      },
     };
   } catch (error) {
     if (error.response && error.response.status === 404) {
@@ -84,6 +99,8 @@ export default function Username({
   const [hasLeadForm, setHasLeadForm] = useState(false);
   const [isBioBottomSheetOpen, setIsBioBottomSheetOpen] = useState(false);
 
+  const { t } = useTranslation();
+
   const flattenContents = (contents) => {
     // Flatten the contents array and extract the necessary fields
     return contents.reduce((acc, contentItem) => {
@@ -102,10 +119,6 @@ export default function Username({
         setNoDataContents(true);
       } else {
         setNoDataContents(false);
-      }
-
-      if (usersData?.lead_form?.length > 0) {
-        setHasLeadForm(true);
       }
     }
   }, [username]);
@@ -192,19 +205,25 @@ export default function Username({
               {usersData?.owner_first_name} {usersData?.owner_last_name}
             </FullName>
             <JobTitle>
-              {usersData?.job_title} در {usersData?.company} <InfoIcon />
+              {usersData?.job_title} {t("in")} {usersData?.company} <InfoIcon />
             </JobTitle>
           </Texts>
           <Actions>
-            <Button>ذخیره‌ی مخاطب</Button>
-            <ButtonOutlined>پوستن به لید</ButtonOutlined>
+            <Button>{t("save_contact")}</Button>
+            <ButtonOutlined
+              onClick={() => {
+                setHasLeadForm(true);
+              }}
+            >
+              {t("join_lead")}
+            </ButtonOutlined>
           </Actions>
         </HeaderContent>
       </Header>
       {usersData?.horizontal_menu ? (
         <>
           {noDataContents !== null ? (
-            <div className="px-4 -mt-4">
+            <div className="flex-1 px-4 -mt-4">
               {!noDataContents ? (
                 <>
                   <div className="mt-5">
@@ -232,23 +251,19 @@ export default function Username({
         <LoadingState />
       )}
 
-      <>
-        {hasLeadForm && (
-          <LeadForm
-            open={hasLeadForm}
-            onClose={() => setHasLeadForm(false)}
-            leadFormData={usersData.lead_form}
-            pageId={usersData.page_id}
-            setHasLeadForm={setHasLeadForm}
-          />
-        )}
-      </>
+      <LeadForm
+        open={hasLeadForm}
+        onClose={() => setHasLeadForm(false)}
+        leadFormData={usersData.lead_form}
+        pageId={usersData.page_id}
+        setHasLeadForm={setHasLeadForm}
+      />
 
       <BottomSheetWrapper
         open={isBioBottomSheetOpen}
         onClose={() => setIsBioBottomSheetOpen(false)}
       >
-        <BioTitle>بیوگرافی</BioTitle>
+        <BioTitle>{t("bio_title")}</BioTitle>
         <Bio>{usersData?.bio}</Bio>
       </BottomSheetWrapper>
     </>

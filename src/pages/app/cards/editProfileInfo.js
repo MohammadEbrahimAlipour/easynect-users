@@ -19,6 +19,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import EditProfileInfoRedirectForm from "@/components/EditProfileInfoRedirectForm";
 import UploadInput from "@/components/UploadInput";
+import EditProfileInfoLanguage from "@/components/EditProfileInfoLanguage";
 
 const EditProfileInfo = () => {
   const [pageData, setPageData] = useState(null);
@@ -41,6 +42,7 @@ const EditProfileInfo = () => {
     bio: "",
     profile: "",
     direct_link: null,
+    final_page_language: null,
   });
   const [isDirect, setIsDirect] = useState(formData.is_direct);
 
@@ -74,6 +76,7 @@ const EditProfileInfo = () => {
             bio: response.data.bio || "", // Set bio from the fetched data
             profile: response.data.profile_s3_url || "",
             direct_link: response.data.direct_link,
+            final_page_language: response.data.final_page_lan,
           });
         })
         .catch((error) => {
@@ -90,6 +93,13 @@ const EditProfileInfo = () => {
     setChangedFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
+    }));
+  };
+
+  const handleLanguageChange = (language) => {
+    setChangedFormData((prevFormData) => ({
+      ...prevFormData,
+      final_page_language: language,
     }));
   };
 
@@ -398,6 +408,11 @@ const EditProfileInfo = () => {
                     <EditProfileInfoRedirectForm
                       data={formData.direct_link}
                       pageID={id}
+                    />
+
+                    <EditProfileInfoLanguage
+                      currentLanguage={formData.final_page_language}
+                      onSelect={handleLanguageChange}
                     />
                   </div>
                 </form>
