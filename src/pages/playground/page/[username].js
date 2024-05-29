@@ -120,10 +120,6 @@ export default function Username({
       } else {
         setNoDataContents(false);
       }
-
-      if (usersData?.lead_form?.length > 0) {
-        setHasLeadForm(true);
-      }
     }
   }, [username]);
 
@@ -214,7 +210,13 @@ export default function Username({
           </Texts>
           <Actions>
             <Button>{t("save_contact")}</Button>
-            <ButtonOutlined>{t("join_lead")}</ButtonOutlined>
+            <ButtonOutlined
+              onClick={() => {
+                setHasLeadForm(true);
+              }}
+            >
+              {t("join_lead")}
+            </ButtonOutlined>
           </Actions>
         </HeaderContent>
       </Header>
@@ -249,17 +251,13 @@ export default function Username({
         <LoadingState />
       )}
 
-      <>
-        {hasLeadForm && (
-          <LeadForm
-            open={hasLeadForm}
-            onClose={() => setHasLeadForm(false)}
-            leadFormData={usersData.lead_form}
-            pageId={usersData.page_id}
-            setHasLeadForm={setHasLeadForm}
-          />
-        )}
-      </>
+      <LeadForm
+        open={hasLeadForm}
+        onClose={() => setHasLeadForm(false)}
+        leadFormData={usersData.lead_form}
+        pageId={usersData.page_id}
+        setHasLeadForm={setHasLeadForm}
+      />
 
       <BottomSheetWrapper
         open={isBioBottomSheetOpen}

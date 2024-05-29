@@ -8,5 +8,19 @@
   "unsupported_file": {
     "title": "تنسيق الملفات",
     "message": "للأسف، لا يمكن معاينة هذا الملف، يمكنك تنزيل الملف لمشاهدته."
+  },
+  "lead_form": {
+    "toast": {
+      "success": "تم إرسال نموذج العميل بنجاح"
+    },
+    "please_enter_your_data": "الرجاء إدخال بياناتك",
+    "please_enter_your_username": "الرجاء إدخال اسم المستخدم الخاص بك",
+    "if_you_have_account_click_here": "إذا كان لديك حساب EasyNote، انقر هنا",
+    "back_to_lead_form": "العودة إلى نموذج العميل",
+    "username": "اسم المستخدم",
+    "username_placeholder": "أدخل اسم مستخدم الصفحة الخاص بك.",
+    "save": "حفظ",
+    "first_name": "الاسم الأول",
+    "first_name_placeholder": "أدخل الاسم الأول الخاص بك."
   }
 }
