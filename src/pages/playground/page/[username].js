@@ -166,6 +166,8 @@ export default function Username({
   };
 
   useEffect(() => {
+    handleSaveContact();
+
     // Bind the event listener
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -173,6 +175,60 @@ export default function Username({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const handleSaveContact = () => {
+    let contents = {};
+
+    usersData.contents.forEach(({ data }) => {
+      data.forEach((item) => {
+        const { id, title, content_val, type } = item;
+
+        if (!contents[id]) {
+          contents[id] = {
+            title,
+            content_val,
+            type,
+          };
+        }
+      });
+    });
+
+    let vCardData = Object.keys(contents)
+      .map((key) => {
+        const item = contents[key];
+
+        switch (item.type) {
+          case "phone":
+            return `TEL;TYPE=${item.title}:${item.content_val}`;
+          case "email":
+            return `EMAIL;TYPE=${item.title}:${item.content_val}`;
+          case "link":
+            return `URL;TYPE=${item.title}:${item.content_val}`;
+          case "file":
+            return `URL;TYPE=${item.title}:${item.content_val}`;
+          default:
+            return "";
+        }
+      })
+      .join("\n");
+
+    const vCardString = `
+          BEGIN:VCARD
+          VERSION:3.0
+          N;CHARSET=utf-8:${usersData.owner_last_name};${usersData.owner_first_name};;;
+          ${vCardData}
+          END:VCARD`;
+
+    const blob = new Blob([vCardString], { type: "text/vcard" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "contact.vcf";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
 
   if (errorMessage) {
     toast.error(errorMessage);
@@ -205,11 +261,12 @@ export default function Username({
               {usersData?.owner_first_name} {usersData?.owner_last_name}
             </FullName>
             <JobTitle>
-              {usersData?.job_title} {t("in")} {usersData?.company} <InfoIcon />
+              {usersData?.job_title} {t("in")} {usersData?.company}
+              <InfoIcon className="mr-1" />
             </JobTitle>
           </Texts>
           <Actions>
-            <Button>{t("save_contact")}</Button>
+            <Button onClick={handleSaveContact}>{t("save_contact")}</Button>
             <ButtonOutlined
               onClick={() => {
                 setHasLeadForm(true);
@@ -312,6 +369,7 @@ const ProfilePictureWrapper = tw.div`
   border-4
   border-white
   overflow-hidden
+  flex-none
 `;
 
 const ProfilePicture = tw.img`
