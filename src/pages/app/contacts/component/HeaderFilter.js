@@ -85,7 +85,7 @@ export default function HeaderFilter({
               {contractPageList.map((page) => (
                 <MenuItem
                   key={page.id}
-                  selected={page.id === contractPage.id}
+                  selected={page.id === contractPage?.id}
                   onClick={() => {
                     onChangeContractPage(page);
                     setShowOptions(false);
