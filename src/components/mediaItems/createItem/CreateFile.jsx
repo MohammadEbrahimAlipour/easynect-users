@@ -4,9 +4,7 @@ import React, { useState, useRef } from "react";
 
 const CreateFile = ({
   mediaData,
-  showTooltip,
-  handleTouchStart,
-  handleTouchEnd,
+  uploadPercentage,
   is_square,
   handleInputChange,
   setLivePreviewTitle,
@@ -47,6 +45,7 @@ const CreateFile = ({
 
       <label className="my-2">آپلود فایل:</label>
       <UploadInput
+        uploadPercentage={uploadPercentage}
         onChoose={(file) => {
           setFile(file);
         }}

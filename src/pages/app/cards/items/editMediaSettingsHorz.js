@@ -22,10 +22,11 @@ const EditMediaSettingsHorz = () => {
   const { id } = router.query;
   const accessToken = useAccessToken();
   const [mediaData, setMediaData] = useState(null);
-  const [placeholder, setPlaceholder] = useState("");
   const [livePreviewDesc, setLivePreviewDesc] = useState("");
   const [livePreviewTitle, setLivePreviewTitle] = useState("");
   const [file, setFile] = useState(null);
+  const [uploadPercentage, setUploadPercentage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [baseUrl, setBaseUrl] = useState("");
   const [displayType, setDisplayType] = useState("");
@@ -39,7 +40,7 @@ const EditMediaSettingsHorz = () => {
   const [formData, setFormData] = useState({
     title: "",
     content_val: "",
-    description: ""
+    description: "",
   });
 
   const handleInputChange = (e) => {
@@ -56,7 +57,7 @@ const EditMediaSettingsHorz = () => {
 
     setFormData({
       ...formData,
-      [name]: updatedValue
+      [name]: updatedValue,
     });
   };
 
@@ -82,7 +83,7 @@ const EditMediaSettingsHorz = () => {
   useEffect(() => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      display_type: displayType
+      display_type: displayType,
     }));
 
     // Update is_square based on the initial value of displayType
@@ -98,13 +99,12 @@ const EditMediaSettingsHorz = () => {
         .get(apiUrl, {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`, // Add your access token here
-            "Accept-Language": "fa" // Language header
-          }
+            "Accept-Language": "fa", // Language header
+          },
         })
         .then((response) => {
           // Handle the data once it's received
           setMediaData(response.data);
-          setPlaceholder(response.data.placeholder);
           setType(response.data.content_store.type);
           setBaseUrl(response.data.content_store.base_url);
         })
@@ -130,8 +130,11 @@ const EditMediaSettingsHorz = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (isLoading) return;
+
     if (mediaData.id && mediaData.content_store.type) {
       try {
+        setIsLoading(true);
         // Create form data object
         const formDataToSend = new FormData();
         for (const key in formData) {
@@ -150,8 +153,16 @@ const EditMediaSettingsHorz = () => {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`,
             "Content-Type": "application/x-www-form-urlencoded",
-            "Accept-Language": "fa"
-          }
+            "Accept-Language": "fa",
+          },
+          onUploadProgress: (progressEvent) => {
+            if (file === null) return;
+
+            const { loaded, total } = progressEvent;
+            const percentCompleted = Math.round((loaded * 100) / total);
+
+            setUploadPercentage(percentCompleted);
+          },
         });
 
         if (response.status === 200) {
@@ -179,6 +190,8 @@ const EditMediaSettingsHorz = () => {
           // If there is no specific error message, display a generic one
           toast.error("Error: An error occurred.");
         }
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -189,7 +202,7 @@ const EditMediaSettingsHorz = () => {
     // Set the request headers, including the Authorization header with the token
     const headers = {
       Authorization: `Bearer ${accessToken.accessToken}`, // Assuming accessToken is the token value
-      "Accept-Language": "fa"
+      "Accept-Language": "fa",
     };
 
     // Make an Axios DELETE request to delete the user
@@ -221,6 +234,8 @@ const EditMediaSettingsHorz = () => {
   };
 
   const goBack = () => {
+    if (isLoading) return;
+
     router.back();
   };
   return (
@@ -248,7 +263,7 @@ const EditMediaSettingsHorz = () => {
                       type="submit"
                       className="bg-dark text-white px-4 py-1 rounded-lg border-[1px] border-black font-ravi"
                     >
-                      ذخیره
+                      {isLoading ? "در حال ارسال..." : "ذخیره"}
                     </button>
                   </div>
                 </div>
@@ -311,6 +326,7 @@ const EditMediaSettingsHorz = () => {
                       setLivePreviewTitle={setLivePreviewTitle}
                       setLivePreviewDesc={setLivePreviewDesc}
                       setFile={setFile}
+                      uploadPercentage={uploadPercentage}
                     />
                   )}
                 </div>
