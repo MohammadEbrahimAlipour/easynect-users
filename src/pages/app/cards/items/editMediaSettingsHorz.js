@@ -191,6 +191,7 @@ const EditMediaSettingsHorz = () => {
           toast.error("Error: An error occurred.");
         }
       } finally {
+        setUploadPercentage(null);
         setIsLoading(false);
       }
     }

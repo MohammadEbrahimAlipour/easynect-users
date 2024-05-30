@@ -211,6 +211,7 @@ const MediaSettingsHorz = () => {
           toast.error("An unexpected error occurred.");
         }
       } finally {
+        setUploadProgress(null);
         setIsLoading(false);
       }
     }
