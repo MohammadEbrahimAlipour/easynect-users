@@ -37,11 +37,12 @@ const MediaSettingsHorz = () => {
   const { type } = router.query;
   const [showTooltip, setShowTooltip] = useState(false);
   const [file, setFile] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadProgress, setUploadProgress] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     title: "",
-    content_val: ""
+    content_val: "",
   });
 
   const onUploadProgress = (progressEvent) => {
@@ -65,7 +66,7 @@ const MediaSettingsHorz = () => {
 
     setFormData({
       ...formData,
-      [name]: updatedValue
+      [name]: updatedValue,
     });
   };
 
@@ -91,7 +92,7 @@ const MediaSettingsHorz = () => {
   useEffect(() => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      display_type: displayType
+      display_type: displayType,
     }));
   }, [displayType]);
 
@@ -104,8 +105,8 @@ const MediaSettingsHorz = () => {
         .get(apiUrl, {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`, // Add your access token here
-            "Accept-Language": "fa" // Language header
-          }
+            "Accept-Language": "fa", // Language header
+          },
         })
         .then((response) => {
           // Handle the data once it's received
@@ -136,8 +137,11 @@ const MediaSettingsHorz = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (isLoading) return;
+
     if (id && pageId && mediaData.id && mediaData.type) {
       try {
+        setIsLoading(true);
         // Create form data object
         const formDataToSend = new FormData();
         for (const key in formData) {
@@ -157,14 +161,14 @@ const MediaSettingsHorz = () => {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`,
             "Content-Type": "application/x-www-form-urlencoded",
-            "Accept-Language": "fa"
+            "Accept-Language": "fa",
           },
           onUploadProgress: (progressEvent) => {
             const percentCompleted = Math.round(
               (progressEvent.loaded * 100) / progressEvent.total
             );
             setUploadProgress(percentCompleted);
-          }
+          },
         });
 
         if (response.status === 201) {
@@ -206,6 +210,9 @@ const MediaSettingsHorz = () => {
           // The error is not related to axios
           toast.error("An unexpected error occurred.");
         }
+      } finally {
+        setUploadProgress(null);
+        setIsLoading(false);
       }
     }
   };
@@ -230,10 +237,12 @@ const MediaSettingsHorz = () => {
      * The value of the progress indicator for the determinate and buffer variants.
      * Value between 0 and 100.
      */
-    value: PropTypes.number.isRequired
+    value: PropTypes.number.isRequired,
   };
 
   const goBack = () => {
+    if (isLoading) return;
+
     router.back();
   };
 
@@ -262,7 +271,7 @@ const MediaSettingsHorz = () => {
                       type="submit"
                       className="bg-dark text-white px-4 py-1 rounded-lg border-[1px] border-black"
                     >
-                      ذخیره
+                      {isLoading ? "در حال ارسال..." : "ذخیره"}
                     </button>
                   </div>
                 </div>
@@ -319,31 +328,18 @@ const MediaSettingsHorz = () => {
                       />
                     ) : (
                       //  file input data
-                      <>
-                        <File
-                          mediaData={mediaData}
-                          showTooltip={showTooltip}
-                          is_square={is_square}
-                          handleTouchStart={handleTouchStart}
-                          handleTouchEnd={handleTouchEnd}
-                          handleInputChange={handleInputChange}
-                          setLivePreviewTitle={setLivePreviewTitle}
-                          setLivePreviewDesc={setLivePreviewDesc}
-                          setFile={setFile}
-                        />
-
-                        <Box sx={{ width: "100%" }}>
-                          <LinearProgressWithLabel
-                            sx={{
-                              backgroundColor: "#e3e3e3",
-                              "& .MuiLinearProgress-bar": {
-                                backgroundColor: "#141516" // Put your custom color value here
-                              }
-                            }}
-                            value={uploadProgress}
-                          />
-                        </Box>
-                      </>
+                      <File
+                        mediaData={mediaData}
+                        showTooltip={showTooltip}
+                        is_square={is_square}
+                        handleTouchStart={handleTouchStart}
+                        handleTouchEnd={handleTouchEnd}
+                        handleInputChange={handleInputChange}
+                        setLivePreviewTitle={setLivePreviewTitle}
+                        setLivePreviewDesc={setLivePreviewDesc}
+                        setFile={setFile}
+                        uploadProgress={uploadProgress}
+                      />
                     )}
                   </>
                 </div>

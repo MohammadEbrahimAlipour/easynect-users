@@ -45,6 +45,8 @@ const EditProfileInfo = () => {
     final_page_language: null,
   });
   const [isDirect, setIsDirect] = useState(formData.is_direct);
+  const [isLoading, setIsLoading] = useState(false);
+  const [uploadPercentage, setUploadPercentage] = useState(null);
 
   // Fetch data from the server when the component mounts
   useEffect(() => {
@@ -177,6 +179,9 @@ const EditProfileInfo = () => {
   // Handle form submission
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+
+    if (isLoading) return;
+
     setIsSubmitting(true);
 
     // The API endpoint URL
@@ -224,12 +229,21 @@ const EditProfileInfo = () => {
       }
     }
 
+    setIsLoading(true);
     // Send a PATCH request with the FormData and headers using Axios
     axiosInstance
       .patch(updateUrl, formDataToSend, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
           "accept-language": "fa",
+        },
+        onUploadProgress: (progressEvent) => {
+          if (changedFormData["banner"] === null) return;
+
+          const { loaded, total } = progressEvent;
+          const percentCompleted = Math.round((loaded * 100) / total);
+
+          setUploadPercentage(percentCompleted);
         },
       })
       .then((response) => {
@@ -250,10 +264,16 @@ const EditProfileInfo = () => {
         setIsSubmitting(false);
         // Handle network errors or other exceptions
         console.error("An error occurred:", error);
+      })
+      .finally(() => {
+        setUploadPercentage(null);
+        setIsLoading(false);
       });
   };
 
   const goBack = () => {
+    if (isLoading) return;
+
     router.back();
   };
 
@@ -289,11 +309,7 @@ const EditProfileInfo = () => {
                           className="bg-dark h-[31px] overflow-hidden text-white px-4 py-1 rounded-lg border-[1px]
                            border-black flex items-center justify-center"
                         >
-                          {isSubmitting ? (
-                            <LoaderOverlay />
-                          ) : (
-                            <span>ذخیره</span>
-                          )}
+                          {isLoading ? "در حال ارسال..." : "ذخیره"}
                         </button>
                       </div>
                     </div>
@@ -403,6 +419,7 @@ const EditProfileInfo = () => {
                       labelText={"فایل بنر"}
                       className="mb-4"
                       onChoose={handleBannerImageChange}
+                      uploadPercentage={uploadPercentage}
                     />
 
                     <EditProfileInfoRedirectForm
