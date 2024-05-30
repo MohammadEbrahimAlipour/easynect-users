@@ -192,7 +192,7 @@ const ProfileCard = () => {
         <meta name="easynect business card" content="Powered by Easynect" />
       </Head>
       <Header cardData={cardData} />
-      <Layout className="!h-fit overflow-x-hidden">
+      <Layout className="overflow-x-hidden min-h-fit">
         {!pageDataDontExist ? (
           <div>
             <CardWrapper
@@ -336,7 +336,7 @@ const ProfileCard = () => {
             <Link
               href="/app/cards/createCard"
               className="flex items-center justify-center w-full
-                  border-[1px] py-3 leading-0 rounded-lg mt-1 "
+                  border-[1px] py-3 leading-0 rounded-lg mt-10 "
             >
               <span className="me-1">
                 <PlusSign className=" w-[18px] leading-0 " />
@@ -348,7 +348,7 @@ const ProfileCard = () => {
           <ProfileCardEmpty />
         )}
       </Layout>
-      <Footer className=" !bottom-0 !mb-0" />
+      <Footer />
 
       {/* bottom sheet */}
       <BottomSheetShareById

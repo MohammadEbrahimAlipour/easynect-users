@@ -14,7 +14,7 @@ const Header = ({ className = "" }) => {
 
   return (
     <>
-      <div className={`${className} bg-light pt-12 pb-6 container`}>
+      <div className={`${className} bg-light pt-12 pb-6 px-4`}>
         <div className="flex justify-start relative">
           <span onClick={handleToggleSheet}>
             <HeaderShareLogo />
