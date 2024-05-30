@@ -43,14 +43,14 @@ const ProfileCard = () => {
   const handleClickedCardId = (id, card_title) => {
     setClickedCardId({
       id: id,
-      card_title: card_title
+      card_title: card_title,
     });
     setShowSheet(true);
   };
   const handleSeeMoreOptions = (id, card_title) => {
     setMoreSheetDetails({
       id: id,
-      card_title: card_title
+      card_title: card_title,
     });
     setShowSheetMore(true);
   };
@@ -69,8 +69,8 @@ const ProfileCard = () => {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
           "accept-language": "fa", // Include the access token in the headers
-          suppress404Toast: true
-        }
+          suppress404Toast: true,
+        },
       })
       .then((response) => {
         // setCardData(response.data);
@@ -108,14 +108,21 @@ const ProfileCard = () => {
         page_url: apiCard.page_url,
         profile_s3_url: apiCard.profile_s3_url,
         user_first_name: apiCard.user_first_name,
-        user_last_name: apiCard.user_last_name
+        user_last_name: apiCard.user_last_name,
       }))
     );
   }, [cardData]);
+
   const handleMouseMove = (e) => {
     if (!isTouching) return;
 
-    const { clientX } = e.touches[0];
+    let clientX;
+    if (e.type === "touchmove") {
+      clientX = e.touches[0].clientX;
+    } else if (e.type === "mousemove") {
+      clientX = e.clientX;
+    }
+
     const { width } = cardWrapperRef.current.getBoundingClientRect();
     const mouseXTopOfWrapper = clientX - onTouchXPosition;
 
@@ -134,11 +141,9 @@ const ProfileCard = () => {
       setTimeout(() => {
         setCards((previousCards) => {
           const newCards = [...previousCards];
-
           const lastCard = newCards.pop();
           lastCard.isFallen = false;
           newCards.unshift(lastCard);
-
           return newCards;
         });
       }, 300);
@@ -151,7 +156,12 @@ const ProfileCard = () => {
   };
 
   const handleOnTouch = (e) => {
-    const { clientX } = e.touches[0];
+    let clientX;
+    if (e.type === "touchstart") {
+      clientX = e.touches[0].clientX;
+    } else {
+      clientX = e.clientX;
+    }
     setIsTouching(true);
     setOnTouchXPosition(clientX);
     setCardXPosition(0);
@@ -182,13 +192,16 @@ const ProfileCard = () => {
         <meta name="easynect business card" content="Powered by Easynect" />
       </Head>
       <Header cardData={cardData} />
-      <Layout className="!h-fit  ">
+      <Layout className="!h-fit overflow-x-hidden">
         {!pageDataDontExist ? (
-          <>
+          <div>
             <CardWrapper
               onTouchStart={handleOnTouch}
               onTouchEnd={handleOnTouchEnd}
               onTouchMove={handleMouseMove}
+              onMouseDown={handleOnTouch}
+              onMouseUp={handleOnTouchEnd}
+              onMouseMove={handleMouseMove}
               ref={cardWrapperRef}
             >
               {cards
@@ -201,7 +214,7 @@ const ProfileCard = () => {
                       card_title,
                       job_title,
                       profile_s3_url,
-                      username
+                      username,
                     },
                     index
                   ) => (
@@ -212,7 +225,7 @@ const ProfileCard = () => {
                         2 === index && {
                           "--tw-translate-x": `${getLastCardXPosition(
                             isFallen
-                          )}`
+                          )}`,
                         }
                       }
                     >
@@ -244,7 +257,7 @@ const ProfileCard = () => {
                             >
                               <Image
                                 priority={true}
-                                className="rounded-full object-cover w-full h-full"
+                                className="rounded-full object-cover w-full h-full pointer-events-none"
                                 src={`${profile_s3_url}?${new Date().getTime()}`}
                                 width={80}
                                 height={80}
@@ -330,7 +343,7 @@ const ProfileCard = () => {
               </span>
               کارت جدید
             </Link>
-          </>
+          </div>
         ) : (
           <ProfileCardEmpty />
         )}
