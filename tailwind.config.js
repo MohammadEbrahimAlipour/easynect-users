@@ -17,7 +17,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        ravi: ["var(--font-rav)", ...fontFamily.sans],
+        ravi: ["Ravi"],
       },
 
       container: {

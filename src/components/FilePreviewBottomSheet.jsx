@@ -133,7 +133,6 @@ const BaseButton = tw.button`
   shadow-xl
   border-2
   border-black
-  font-['__raviFont_c3f3ce']
 `;
 
 const CancelButton = tw(BaseButton)`
