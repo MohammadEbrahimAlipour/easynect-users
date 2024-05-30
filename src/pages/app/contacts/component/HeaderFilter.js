@@ -1,9 +1,10 @@
 import {
   ContactsFilterIcon,
   ContactsImportIcon,
-  SearchIcon
+  SearchIcon,
 } from "@/components/Icons";
 import useFetch from "@/hooks/useFetch";
+import { Menu, MenuItem } from "@mui/material";
 import { debounce } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -12,11 +13,12 @@ export default function HeaderFilter({
   contractPage,
   onSearchQuery,
   onShowExelSheet,
-  onShowContactFilters
+  onShowContactFilters,
 }) {
   const contractPageFetch = useFetch();
   const [showOptions, setShowOptions] = useState(false);
   const [inputSearch, setInputSearch] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
 
   useEffect(() => {
     contractPageFetch.load({ url: "/api/v1/contacts/pages/" });
@@ -45,41 +47,54 @@ export default function HeaderFilter({
     [onSearchQuery]
   );
 
+  const handleShowPagesDropdown = ({ currentTarget }) => {
+    setAnchorEl(currentTarget);
+
+    setShowOptions(true);
+  };
+
   return (
     <div className="grid grid-cols-12 items-center justify-center">
       <div className=" col-span-8">
         <div className="grid grid-cols-12">
           <div className="col-span-4 flex justify-center items-center relative">
             <button
-              onClick={() => setShowOptions(true)}
-              className="inline-flex w-full justify-start items-center gap-x-1 
+              onClick={handleShowPagesDropdown}
+              className="w-full  
                         text-sm  font-medium shadow-sm
                         font-ravi truncate
-                        border rounded-lg p-1 h-full border-black me-1 bg-dark text-white"
+                        border rounded-lg px-3 h-full border-black me-1 bg-dark text-white text-center"
             >
               {contractPage ? contractPage.card_title : "انتخاب"}
             </button>
-
-            {showOptions && (
-              <div className="absolute -right-[0px] -bottom-[110px] z-10 mt-2 w-[100px] h-[100px] origin-top-right rounded-md bg-white shadow-lg">
-                <div className="" role="none">
-                  {contractPageList.map((page) => (
-                    <button
-                      key={page.id}
-                      onClick={() => {
-                        onChangeContractPage(page);
-                        setShowOptions(false);
-                      }}
-                      className="block px-4 py-2 text-xs w-full border-b-[1px]
-                              text-dark "
-                      role="menuitem"
-                    >
-                      {page.card_title}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+            <Menu
+              anchorEl={anchorEl}
+              open={showOptions}
+              onClose={() => {
+                setShowOptions(false);
+              }}
+              MenuListProps={{
+                "aria-labelledby": "long-button",
+              }}
+              PaperProps={{
+                style: {
+                  maxHeight: 48 * 4.5,
+                },
+              }}
+            >
+              {contractPageList.map((page) => (
+                <MenuItem
+                  key={page.id}
+                  selected={page.id === contractPage.id}
+                  onClick={() => {
+                    onChangeContractPage(page);
+                    setShowOptions(false);
+                  }}
+                >
+                  {page.card_title}
+                </MenuItem>
+              ))}
+            </Menu>
           </div>
           <div
             className="flex justify-start items-center border-[1px] border-dark rounded-lg
