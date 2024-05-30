@@ -13,11 +13,6 @@ import ErrorBoundary from "@/components/Errors/ErrorBoundary";
 import "react-indiana-drag-scroll/dist/style.css";
 import { appWithTranslation } from "next-i18next";
 
-const raviFont = raviFontLocal({
-  src: "../RaviPro/Ravi Variable/Webfonts/woff2/Ravi-VF.woff2",
-  variable: "--font-rav",
-});
-
 const protectedRoutes = [/\/app\/.*/];
 
 function App({ Component, pageProps }) {
@@ -34,7 +29,7 @@ function App({ Component, pageProps }) {
       </Head>
 
       <main
-        className={`${raviFont.variable} font-ravi mx-auto flex flex-col min-h-screen w-screen container:w-[414px]`}
+        className={`mx-auto flex flex-col min-h-screen w-screen container:w-[414px]`}
       >
         <ErrorBoundary>
           <AccessTokenProvider protectedRoutes={protectedRoutes}>
