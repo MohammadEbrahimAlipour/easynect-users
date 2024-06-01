@@ -81,6 +81,13 @@ export default function HeaderFilter({
                   maxHeight: 48 * 4.5,
                 },
               }}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                horizontal: "right",
+              }}
             >
               {contractPageList.map((page) => (
                 <MenuItem
