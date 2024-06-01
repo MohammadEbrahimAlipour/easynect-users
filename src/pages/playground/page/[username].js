@@ -166,7 +166,9 @@ export default function Username({
   };
 
   useEffect(() => {
-    handleSaveContact();
+    if (!showFile) {
+      handleSaveContact();
+    }
 
     // Bind the event listener
     document.addEventListener("mousedown", handleClickOutside);
