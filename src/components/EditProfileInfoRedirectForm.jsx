@@ -86,7 +86,7 @@ export default function EditProfileInfoRedirectForm({ data, pageID }) {
         },
       })
       .then((response) => {
-        if (response.status !== 204) {
+        if (response.status !== 200) {
           console.error("Error: Unable to set direct link");
         }
       })
