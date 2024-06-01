@@ -312,6 +312,7 @@ export default function Username({
         open={hasLeadForm}
         onClose={() => setHasLeadForm(false)}
         leadFormData={usersData.lead_form}
+        language={usersData.language}
         pageId={usersData.page_id}
         setHasLeadForm={setHasLeadForm}
       />
