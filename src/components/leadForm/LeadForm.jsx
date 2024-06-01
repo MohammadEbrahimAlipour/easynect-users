@@ -10,7 +10,14 @@ import { API_ROUTES } from "@/services/api";
 import axiosInstance from "@/services/axiosInterceptors";
 import { useTranslation } from "react-i18next";
 
-const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
+const LeadForm = ({
+  open,
+  onClose,
+  leadFormData,
+  pageId,
+  setHasLeadForm,
+  language,
+}) => {
   const accessToken = useAccessToken();
 
   const [hasAcount, setHasAcount] = useState(false);
@@ -139,6 +146,21 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
     }
   };
 
+  const getItemContentByI18n = (item) => {
+    const { title, placeholder, i18n } = item;
+
+    if (!language || !i18n || !i18n[language]) {
+      return { title, placeholder };
+    }
+
+    const { title: i18nTitle, placeholder: i18nPlaceholder } = i18n[language];
+
+    return {
+      title: i18nTitle || title,
+      placeholder: i18nPlaceholder || placeholder,
+    };
+  };
+
   return (
     <div>
       {leadFormData ? (
@@ -235,35 +257,42 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
 
                 {leadFormData
                   .filter((item) => item.is_active)
-                  .map((item) => (
-                    <div
-                      key={item.id}
-                      className="bg-lightMenu rounded-lg mb-4 border-2 box-border overflow-hidden"
-                    >
-                      <div className="flex justify-start items-center py-3">
-                        <label
-                          className="font-medium text-sm border-e-2 text-muted me-2 pe-2 ps-4"
-                          htmlFor={`input_${item.id}`}
-                        >
-                          {item.title}
-                        </label>
-                        <input
-                          id={`input_${item.id}`}
-                          name={item.title}
-                          onChange={(e) => handleChange(e, item)}
-                          placeholder={item.placeholder}
-                          className="bg-lightMenu outline-0 py-1 text-sm font-medium"
-                          value={
-                            item.type === "link" &&
-                            item.base_url &&
-                            formData[item.title]
-                              ? formData[item.title].replace(item.base_url, "")
-                              : formData[item.title] || ""
-                          }
-                        />
+                  .map((item) => {
+                    const { title, placeholder } = getItemContentByI18n(item);
+
+                    return (
+                      <div
+                        key={item.id}
+                        className="bg-lightMenu rounded-lg mb-4 border-2 box-border overflow-hidden"
+                      >
+                        <div className="flex justify-start items-center py-3">
+                          <label
+                            className="font-medium text-sm border-e-2 text-muted me-2 pe-2 ps-4"
+                            htmlFor={`input_${item.id}`}
+                          >
+                            {title}
+                          </label>
+                          <input
+                            id={`input_${item.id}`}
+                            name={item.title}
+                            onChange={(e) => handleChange(e, item)}
+                            placeholder={placeholder}
+                            className="bg-lightMenu outline-0 py-1 text-sm font-medium"
+                            value={
+                              item.type === "link" &&
+                              item.base_url &&
+                              formData[item.title]
+                                ? formData[item.title].replace(
+                                    item.base_url,
+                                    ""
+                                  )
+                                : formData[item.title] || ""
+                            }
+                          />
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
 
                 {/* button */}
                 <button

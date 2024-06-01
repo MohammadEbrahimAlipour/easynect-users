@@ -7,6 +7,7 @@ import { generateApiUrl } from "@/components/ApiUr";
 import { ArrowDownIcon } from "@/components/Icons";
 import { saveAs } from "file-saver";
 import { toast } from "react-toastify";
+import { Menu, MenuItem } from "@mui/material";
 
 const HeaderShareBSheet = ({ showSheet, setShowSheet, clickedCardId }) => {
   const accessToken = useAccessToken();
@@ -14,6 +15,7 @@ const HeaderShareBSheet = ({ showSheet, setShowSheet, clickedCardId }) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [pagesData, setPagesData] = useState(null);
   const qrRef = useRef();
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const [isQrCodeReady, setIsQrCodeReady] = useState(false); // to check if QR code is ready
 
@@ -25,8 +27,8 @@ const HeaderShareBSheet = ({ showSheet, setShowSheet, clickedCardId }) => {
       .get(apiUrl, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
-          "Accept-Language": "fa"
-        }
+          "Accept-Language": "fa",
+        },
       })
       .then((response) => {
         setIsQrCodeReady(true);
@@ -111,7 +113,10 @@ const HeaderShareBSheet = ({ showSheet, setShowSheet, clickedCardId }) => {
             {/* chose */}
             <div className="flex justify-center relative">
               <button
-                onClick={() => setShoOptions(!showOptions)}
+                onClick={({ currentTarget }) => {
+                  setAnchorEl(currentTarget);
+                  setShoOptions(!showOptions);
+                }}
                 className="bg-dark text-white rounded-2xl w-[40%] px-3 py-[6px] focus:outline-none
          text-sm flex justify-center items-center"
               >
@@ -121,24 +126,38 @@ const HeaderShareBSheet = ({ showSheet, setShowSheet, clickedCardId }) => {
                 <ArrowDownIcon />
               </button>
 
-              {/* options */}
-              {showOptions && (
-                <div className="absolute bg-white shadow-2xl border py-2 px-4 rounded-md top-8">
-                  {pagesData.map((data) => (
-                    <div
-                      key={data.id}
-                      className={`py-1 border-b ${
-                        selectedOption && selectedOption.id === data.id
-                          ? "font-bold"
-                          : ""
-                      }`}
-                      onClick={() => handleOptionClick(data)}
-                    >
-                      {data.card_title}
-                    </div>
-                  ))}
-                </div>
-              )}
+              <Menu
+                anchorEl={anchorEl}
+                open={showOptions}
+                onClose={() => {
+                  setShoOptions(false);
+                }}
+                MenuListProps={{
+                  "aria-labelledby": "long-button",
+                }}
+                PaperProps={{
+                  style: {
+                    maxHeight: 48 * 4.5,
+                  },
+                }}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "center",
+                }}
+                transformOrigin={{
+                  horizontal: "center",
+                }}
+              >
+                {pagesData.map((data) => (
+                  <MenuItem
+                    key={data.id}
+                    selected={selectedOption && selectedOption.id === data.id}
+                    onClick={() => handleOptionClick(data)}
+                  >
+                    {data.card_title}
+                  </MenuItem>
+                ))}
+              </Menu>
             </div>
 
             {/* qr code */}

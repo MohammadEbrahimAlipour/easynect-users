@@ -57,7 +57,7 @@ export default function Box({
   };
 
   const imageSize = useMemo(
-    () => (containerDisplayType === WIDGET_TYPE.square ? 32 : 22),
+    () => (containerDisplayType === WIDGET_TYPE.square ? 40 : 30),
     [containerDisplayType]
   );
 
@@ -117,7 +117,6 @@ const Wrapper = tw.div`
 `;
 
 const ImageWrapper = tw.div`
-  bg-dark
   w-[45px]
   h-[45px]
   rounded-full
@@ -125,8 +124,6 @@ const ImageWrapper = tw.div`
   flex
   justify-center
   items-center
-  overflow-hidden
-
 
   ${({ $type }) =>
     $type === WIDGET_TYPE.rectangle &&
@@ -139,8 +136,6 @@ const ImageWrapper = tw.div`
 `;
 
 const Image = tw(BaseImage)`
-  bg-white
-  invert
 `;
 
 const Title = tw.div`

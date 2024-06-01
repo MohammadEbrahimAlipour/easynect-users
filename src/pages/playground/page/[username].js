@@ -312,6 +312,7 @@ export default function Username({
         open={hasLeadForm}
         onClose={() => setHasLeadForm(false)}
         leadFormData={usersData.lead_form}
+        language={usersData.language}
         pageId={usersData.page_id}
         setHasLeadForm={setHasLeadForm}
       />
@@ -330,7 +331,6 @@ export default function Username({
 const Wrapper = tw.div``;
 
 const Cover = tw.div`
-  bg-red-500
   w-screen
   h-[33.3333333vw]
 
