@@ -8,16 +8,26 @@ import { generateApiUrl } from "../ApiUr";
 import { ArrowRight } from "../Icons";
 import { API_ROUTES } from "@/services/api";
 import axiosInstance from "@/services/axiosInterceptors";
+import { useTranslation } from "react-i18next";
 
-const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
+const LeadForm = ({
+  open,
+  onClose,
+  leadFormData,
+  pageId,
+  setHasLeadForm,
+  language,
+}) => {
   const accessToken = useAccessToken();
 
   const [hasAcount, setHasAcount] = useState(false);
   const [username, setUsername] = useState("");
 
   const [formData, setFormData] = useState({
-    name: "" // Add other fields if necessary
+    name: "", // Add other fields if necessary
   });
+
+  const { t } = useTranslation();
 
   const handleChange = (e, item) => {
     const { name, value } = e.target;
@@ -30,7 +40,7 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
 
     setFormData((prev) => ({
       ...prev,
-      [name]: fieldValue
+      [name]: fieldValue,
     }));
   };
 
@@ -46,14 +56,14 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
         return {
           title: field.title,
           value: value,
-          field_type: field.type
+          field_type: field.type,
         };
       });
 
     // Construct the payload to be sent
     const formDataToSend = {
       name: formData.name,
-      fields: fieldsToSend
+      fields: fieldsToSend,
     };
 
     if (pageId) {
@@ -67,15 +77,15 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
             Authorization: `Bearer ${accessToken.accessToken}`,
             // You don't need to set the Content-Type when using FormData
             // Axios will set the correct multipart/form-data boundary
-            "Accept-Language": "fa"
-          }
+            "Accept-Language": "fa",
+          },
         };
 
         // Send PATCH request using Axios, add the formDataToSend
         const response = await axios.post(apiUrl, formDataToSend);
 
         if (response.status === 204) {
-          toast.success("فرم لید ارسال شد");
+          toast.success(t("lead_form.toast.success"));
           setHasLeadForm(false);
         } else {
           console.error("Unexpected response status:", response.status);
@@ -97,13 +107,11 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
 
   const handleSubmitWithUsername = async (e) => {
     e.preventDefault();
-    console.log("btn clicked");
-    // Construct the payload to be sent
+
     const formDataToSend = {
-      username: username
-      // fields: fieldsToSend
+      username: username,
     };
-    console.log("firstasdadsasdasdasd", username);
+
     if (pageId) {
       try {
         const apiUrl = API_ROUTES.LEAD_CONNECTIONS(pageId);
@@ -111,17 +119,14 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
         const config = {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`,
-            // You don't need to set the Content-Type when using FormData
-            // Axios will set the correct multipart/form-data boundary
-            "Accept-Language": "fa"
-          }
+            "Accept-Language": "fa",
+          },
         };
 
-        // Send PATCH request using Axios, add the formDataToSend
         const response = await axiosInstance.post(apiUrl, formDataToSend);
 
         if (response.status === 204) {
-          toast.success("فرم لید ارسال شد");
+          toast.success(t("lead_form.toast.success"));
           setHasLeadForm(false);
         } else {
           console.error("Unexpected response status:", response.status);
@@ -141,28 +146,40 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
     }
   };
 
+  const getItemContentByI18n = (item) => {
+    const { title, placeholder, i18n } = item;
+
+    if (!language || !i18n || !i18n[language]) {
+      return { title, placeholder };
+    }
+
+    const { title: i18nTitle, placeholder: i18nPlaceholder } = i18n[language];
+
+    return {
+      title: i18nTitle || title,
+      placeholder: i18nPlaceholder || placeholder,
+    };
+  };
+
   return (
     <div>
       {leadFormData ? (
-        <BottomSheetWrapper open={open} onClose={onClose}>
+        <BottomSheetWrapper
+          className={"p-2 px-4"}
+          open={open}
+          onClose={onClose}
+        >
           <h3 className="mt-4 font-bold">
             {!hasAcount ? (
-              <span>لطفا اطلاعات خود را وارد کنید</span>
+              <span>{t("lead_form.please_enter_your_data")}</span>
             ) : (
-              <span>لطفا نام کاربری خود را وارد کنید</span>
+              <span>{t("lead_form.please_enter_your_username")}</span>
             )}
           </h3>
           <p className=" mt-5">
             {!hasAcount ? (
-              <span>
-                اگر اکانت ایزی‌نکت دارید
-                <span
-                  onClick={() => setHasAcount(true)}
-                  className="mx-1 font-bold underline"
-                >
-                  اینجا
-                </span>
-                کلیک کنید
+              <span onClick={() => setHasAcount(true)}>
+                {t("lead_form.if_you_have_account_click_here")}
               </span>
             ) : (
               <span
@@ -172,7 +189,7 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
                 <span>
                   <ArrowRight />
                 </span>
-                بازگشت به فرم لید
+                {t("lead_form.back_to_lead_form")}
               </span>
             )}
           </p>
@@ -187,7 +204,7 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
                         className="font-medium text-sm border-e-2 text-muted me-2 pe-2 ps-4"
                         htmlFor="username"
                       >
-                        نام کاربری
+                        {t("lead_form.username")}
                       </label>
                       <input
                         required={true}
@@ -195,7 +212,7 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
                         name="username"
                         // value={formData.name}
                         onChange={(e) => setUsername(e.target.value)}
-                        placeholder={"نام کاربری صفحه خود را وارد کنید."}
+                        placeholder={t("lead_form.username_placeholder")}
                         className="bg-lightMenu outline-0 py-1 text-sm font-medium "
                       />
                     </div>
@@ -206,7 +223,7 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
                     className="flex items-center justify-center w-full
                         bg-dark text-white py-3 leading-0 rounded-lg mt-5 mb-5"
                   >
-                    ذخیره
+                    {t("lead_form.save")}
                   </button>
                 </form>
               </>
@@ -224,7 +241,7 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
                       className="font-medium text-sm border-e-2 text-muted me-2 pe-2 ps-4"
                       htmlFor="data_inp"
                     >
-                      نام
+                      {t("lead_form.first_name")}
                     </label>
                     <input
                       required={true}
@@ -232,7 +249,7 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
                       name="name"
                       // value={formData.name}
                       onChange={handleChange}
-                      placeholder={"نام خود را وارد کنید."}
+                      placeholder={t("lead_form.first_name_placeholder")}
                       className="bg-lightMenu outline-0 py-1 text-sm font-medium "
                     />
                   </div>
@@ -240,35 +257,42 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
 
                 {leadFormData
                   .filter((item) => item.is_active)
-                  .map((item) => (
-                    <div
-                      key={item.id}
-                      className="bg-lightMenu rounded-lg mb-4 border-2 box-border overflow-hidden"
-                    >
-                      <div className="flex justify-start items-center py-3">
-                        <label
-                          className="font-medium text-sm border-e-2 text-muted me-2 pe-2 ps-4"
-                          htmlFor={`input_${item.id}`}
-                        >
-                          {item.title}
-                        </label>
-                        <input
-                          id={`input_${item.id}`}
-                          name={item.title}
-                          onChange={(e) => handleChange(e, item)}
-                          placeholder={item.placeholder}
-                          className="bg-lightMenu outline-0 py-1 text-sm font-medium"
-                          value={
-                            item.type === "link" &&
-                            item.base_url &&
-                            formData[item.title]
-                              ? formData[item.title].replace(item.base_url, "")
-                              : formData[item.title] || ""
-                          }
-                        />
+                  .map((item) => {
+                    const { title, placeholder } = getItemContentByI18n(item);
+
+                    return (
+                      <div
+                        key={item.id}
+                        className="bg-lightMenu rounded-lg mb-4 border-2 box-border overflow-hidden"
+                      >
+                        <div className="flex justify-start items-center py-3">
+                          <label
+                            className="font-medium text-sm border-e-2 text-muted me-2 pe-2 ps-4"
+                            htmlFor={`input_${item.id}`}
+                          >
+                            {title}
+                          </label>
+                          <input
+                            id={`input_${item.id}`}
+                            name={item.title}
+                            onChange={(e) => handleChange(e, item)}
+                            placeholder={placeholder}
+                            className="bg-lightMenu outline-0 py-1 text-sm font-medium"
+                            value={
+                              item.type === "link" &&
+                              item.base_url &&
+                              formData[item.title]
+                                ? formData[item.title].replace(
+                                    item.base_url,
+                                    ""
+                                  )
+                                : formData[item.title] || ""
+                            }
+                          />
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
 
                 {/* button */}
                 <button
@@ -276,7 +300,7 @@ const LeadForm = ({ open, onClose, leadFormData, pageId, setHasLeadForm }) => {
                   className="flex items-center justify-center w-full
                       bg-dark text-white py-3 leading-0 rounded-lg mt-7"
                 >
-                  ذخیره
+                  {t("lead_form.save")}
                 </button>
               </form>
             )}

@@ -11,15 +11,11 @@ import "react-toastify/dist/ReactToastify.css";
 import "swiper/css";
 import ErrorBoundary from "@/components/Errors/ErrorBoundary";
 import "react-indiana-drag-scroll/dist/style.css";
-
-const raviFont = raviFontLocal({
-  src: "../RaviPro/Ravi Variable/Webfonts/woff2/Ravi-VF.woff2",
-  variable: "--font-rav"
-});
+import { appWithTranslation } from "next-i18next";
 
 const protectedRoutes = [/\/app\/.*/];
 
-export default function App({ Component, pageProps }) {
+function App({ Component, pageProps }) {
   return (
     <>
       <Head>
@@ -27,23 +23,21 @@ export default function App({ Component, pageProps }) {
         <link rel="icon" href="/favicon.ico" />
         <link
           rel="apple-touch-icon"
-          sizes="180x180"
-          href="/public/favicon.ico"
+          sizes="180x180 152x152 167x167 76x76"
+          href="/apple-touch-icon.png"
         />
       </Head>
 
       <main
-        className={`${raviFont.variable} font-ravi w-full flex justify-center`}
+        className={`mx-auto flex flex-col min-h-screen w-screen container:w-[414px]`}
       >
-        <div className=" 3xl:w-[414px] 2xl:w-[414px] lg:w-[414px]">
-          <ErrorBoundary>
-            <AccessTokenProvider protectedRoutes={protectedRoutes}>
-              {/* <DndProvider backend={HTML5Backend}> */}
-              <Component {...pageProps} />
-              {/* </DndProvider> */}
-            </AccessTokenProvider>
-          </ErrorBoundary>
-        </div>
+        <ErrorBoundary>
+          <AccessTokenProvider protectedRoutes={protectedRoutes}>
+            {/* <DndProvider backend={HTML5Backend}> */}
+            <Component {...pageProps} />
+            {/* </DndProvider> */}
+          </AccessTokenProvider>
+        </ErrorBoundary>
       </main>
 
       <ToastContainer
@@ -61,3 +55,5 @@ export default function App({ Component, pageProps }) {
     </>
   );
 }
+
+export default appWithTranslation(App);

@@ -12,8 +12,12 @@ import Category from "@/components/contentStore/Category";
 import { API_ROUTES } from "@/services/api";
 import axiosInstance from "@/services/axiosInterceptors";
 import Head from "next/head";
+import { Button } from "react-bootstrap";
+import { Fab } from "@mui/material";
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+import tw from "tailwind-styled-components";
 
-const ContentStoreAddItem = () => {
+export default function ContentStoreAddItem() {
   const accessToken = useAccessToken();
   const [contentData, setContentData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -21,6 +25,8 @@ const ContentStoreAddItem = () => {
   const { id } = router.query;
   const containerRef = useRef(null);
   const isDragging = useRef(false); // New ref to track dragging state
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
 
   useEffect(() => {
     const apiUrl = API_ROUTES.CARDS_CONTENTADDITEM_CONTENT_STORE;
@@ -30,8 +36,8 @@ const ContentStoreAddItem = () => {
       .get(apiUrl, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
-          "Accept-Language": "fa"
-        }
+          "Accept-Language": "fa",
+        },
       })
       .then((response) => {
         // Handle the data once it's received
@@ -58,6 +64,28 @@ const ContentStoreAddItem = () => {
         }
       });
   }, [accessToken.accessToken]);
+
+  const handleScroll = () => {
+    if (containerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
+      setAtStart(scrollLeft === 0);
+      setAtEnd(Math.abs(scrollLeft) + clientWidth >= scrollWidth);
+    }
+  };
+
+  useEffect(() => {
+    const currentListRef = containerRef.current;
+    if (currentListRef) {
+      currentListRef.addEventListener("scroll", handleScroll);
+      // Initial check
+      handleScroll();
+    }
+    return () => {
+      if (currentListRef) {
+        currentListRef.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []);
 
   const handleMouseMove = useCallback((e) => {
     if (isDragging.current) {
@@ -90,6 +118,14 @@ const ContentStoreAddItem = () => {
     window.addEventListener("mousemove", handleMouseMove);
   };
 
+  const scroll = (scrollOffset) => {
+    containerRef.current.scrollBy({
+      top: 0,
+      left: scrollOffset,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <>
       <Head>
@@ -101,22 +137,53 @@ const ContentStoreAddItem = () => {
           <HeaderTwo />
           <Layout>
             {/* container */}
-            <div
-              ref={containerRef}
-              className="grid grid-flow-col auto-cols-[36%] overscroll-contain overflow-x-auto 
-             hide-scrollbar gap-2 snap-x"
-              onMouseDown={handleMouseDown}
-            >
-              {contentData.map((cat) => (
-                <Category
-                  key={cat.id}
-                  cat={cat}
-                  setSelectedCategory={setSelectedCategory}
-                  selectedCategory={selectedCategory}
-                />
-              ))}
-            </div>
-
+            <HorizontalWrapper>
+              {!atStart && (
+                <Fab
+                  sx={{
+                    backgroundColor: "#fff",
+                    position: "absolute",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    right: -10,
+                  }}
+                  size="small"
+                  onClick={() => scroll(200)}
+                >
+                  <ChevronRight />
+                </Fab>
+              )}
+              <div
+                ref={containerRef}
+                className="grid grid-flow-col auto-cols-[36%] overscroll-contain overflow-x-auto 
+             hide-scrollbar gap-2 snap-x "
+                onMouseDown={handleMouseDown}
+              >
+                {contentData.map((cat) => (
+                  <Category
+                    key={cat.id}
+                    cat={cat}
+                    setSelectedCategory={setSelectedCategory}
+                    selectedCategory={selectedCategory}
+                  />
+                ))}
+              </div>
+              {!atEnd && (
+                <Fab
+                  sx={{
+                    backgroundColor: "#fff",
+                    position: "absolute",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    left: -10,
+                  }}
+                  size="small"
+                  onClick={() => scroll(-200)}
+                >
+                  <ChevronLeft />
+                </Fab>
+              )}
+            </HorizontalWrapper>
             {selectedCategory && (
               <div>
                 <h3 className="my-8 font-semibold text-lg">
@@ -152,6 +219,8 @@ const ContentStoreAddItem = () => {
       )}
     </>
   );
-};
+}
 
-export default ContentStoreAddItem;
+const HorizontalWrapper = tw.div`
+  relative
+`;

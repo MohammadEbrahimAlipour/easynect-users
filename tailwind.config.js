@@ -5,7 +5,7 @@ const { fontFamily } = require("tailwindcss/defaultTheme");
 module.exports = {
   content: [
     // Or if using `src` directory:
-    "./src/**/*.{js,ts,jsx,tsx,mdx}"
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
 
   // to support dark mode
@@ -17,7 +17,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        ravi: ["var(--font-rav)", ...fontFamily.sans]
+        ravi: ["Ravi"],
       },
 
       container: {
@@ -26,8 +26,8 @@ module.exports = {
           sm: "2rem",
           lg: "4rem",
           xl: "5rem",
-          "2xl": "6rem"
-        }
+          "2xl": "6rem",
+        },
       },
 
       textShadow: {
@@ -35,7 +35,7 @@ module.exports = {
         default: "1px 1px 2px rgba(0, 0, 0, 0.1)",
         // Customizable shadow styles
         md: "2px 2px 3px rgba(0, 0, 0, 0.1)",
-        lg: "3px 3px 5px rgba(0, 0, 0, 0.2)"
+        lg: "3px 3px 5px rgba(0, 0, 0, 0.2)",
         // ... More styles as needed
       },
 
@@ -56,19 +56,19 @@ module.exports = {
         darkGray: "#c5c8da",
 
         // empty square page view
-        squareGray: "#d0d2e2"
+        squareGray: "#d0d2e2",
       },
       animation: {
-        "spin-slow": "spin 8s linear infinite"
+        "spin-slow": "spin 8s linear infinite",
       },
       backgroundImage: {
         circularLight:
-          "repeating-radial-gradient(rgba(0,0,0,0.4) 2px, #f5f5f5 5px, #f5f5f5 100px)"
+          "repeating-radial-gradient(rgba(0,0,0,0.4) 2px, #f5f5f5 5px, #f5f5f5 100px)",
       },
       boxShadow: {
         customMenuShadow: "-1px -69px 278px 18px rgba(0, 0, 0, 0.19)", // Add your custom shadow here
-        customInset: "inset 0px 0px 32px -15px rgba(0,0,0,0.75)"
-      }
+        customInset: "inset 0px 0px 32px -15px rgba(0,0,0,0.75)",
+      },
     },
     screens: {
       "3xl": { max: "1795px" },
@@ -92,13 +92,15 @@ module.exports = {
       xs: { max: "479px" },
       // => @media (max-width: 479px) { ... }
 
-      "2xs": { max: "350px" }
+      "2xs": { max: "350px" },
       // => @media (max-width: 479px) { ... }
-    }
+
+      container: "414px",
+    },
   },
   plugins: [],
   corePlugins: {
     // Disable the pre-built scrollbar styles
-    scrollbar: false
-  }
+    scrollbar: false,
+  },
 };

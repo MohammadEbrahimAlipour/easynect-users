@@ -1,35 +1,60 @@
-import React from "react";
 import { Drawer } from "@mui/material";
+import React, { useEffect, useRef } from "react";
+import tw from "tailwind-styled-components";
 
-const BottomSheetWrapper = ({ onClose, open, children }) => {
+export default function BottomSheetWrapper({
+  onClose,
+  open,
+  children,
+  maxHeight,
+  height,
+  className,
+  fullScreen,
+  fullWidth,
+}) {
+  const getStyles = () => {
+    let style = {
+      width: "calc(100% - 1.5rem)",
+      mx: "0.75rem",
+      borderTopLeftRadius: "1rem",
+      borderTopRightRadius: "1rem",
+      height: height || "unset",
+      maxHeight: maxHeight || "600px",
+    };
+
+    if (fullScreen) {
+      style = {
+        ...style,
+        width: "100%",
+        height: "100%",
+        maxHeight: "unset",
+        mx: "unset",
+        borderTopLeftRadius: "unset",
+        borderTopRightRadius: "unset",
+      };
+    }
+
+    if (fullWidth) {
+      style = {
+        ...style,
+        width: "100%",
+        mx: "0",
+      };
+    }
+
+    return {
+      "& .MuiDrawer-paper": style,
+    };
+  };
+
   return (
-    // <div className="flex justify-center items-center max-w-[420px] overflow-hidden">
-    <Drawer
-      anchor="bottom"
-      open={open}
-      onClose={onClose}
-      sx={{
-        "& .MuiDrawer-paper": {
-          width: "calc(100% - 1.5rem)",
-          mx: "0.75rem", // This applies margin-left and margin-right
-          borderTopLeftRadius: "1rem", // rounded-lg for top left
-          borderTopRightRadius: "1rem", // rounded-lg for top right
-          fontFamily: "ravi",
-          maxHeight: "600px"
-          // maxWidth: "420px"
-        }
-      }}
-    >
-      <div
-        className="py-2 px-5
-      
-      "
-      >
-        {children}
-      </div>
+    <Drawer anchor="bottom" open={open} onClose={onClose} sx={getStyles()}>
+      <Wrapper className={className}>{children}</Wrapper>
     </Drawer>
-    // </div>
   );
-};
+}
 
-export default BottomSheetWrapper;
+const Wrapper = tw.div`
+  h-full
+  w-full
+`;
