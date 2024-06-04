@@ -1,0 +1,26 @@
+{
+  "in": "in",
+  "save_contact": "Save contact",
+  "join_lead": "Join lead",
+  "bio_title": "Biography",
+  "close": "Close",
+  "download_file": "Download file",
+  "unsupported_file": {
+    "title": "File format",
+    "message": "Unfortunately, it is not possible to preview this file, you can download the file to view it."
+  },
+  "lead_form": {
+    "toast": {
+      "success": "Lead form submitted successfully"
+    },
+    "please_enter_your_data": "Please enter your data",
+    "please_enter_your_username": "Please enter your username",
+    "if_you_have_account_click_here": "If you have an EasyNect account, click here",
+    "back_to_lead_form": "Back to lead form",
+    "username": "Username",
+    "username_placeholder": "Enter your page username.",
+    "save": "Save",
+    "first_name": "First Name",
+    "first_name_placeholder": "Enter your first name."
+  }
+}

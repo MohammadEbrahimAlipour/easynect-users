@@ -1,87 +1,111 @@
-import React, { useState, useEffect, Fragment, useRef } from "react";
+// TODO: needs to be refactored
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
 import { toast } from "react-toastify";
-import { useRouter } from "next/router";
+import Head from "next/head";
+import tw from "tailwind-styled-components";
+
+// components
+import Widget from "@/components/Widget";
+import LeadForm from "@/components/leadForm/LeadForm";
+import FilePreviewBottomSheet from "@/components/FilePreviewBottomSheet";
+import BottomSheetWrapper from "@/components/bottomSheet/BottomSheetWrapper";
 import { generateApiUrl } from "@/components/ApiUr";
 import ClientPageFooter from "@/components/ClientPageFooter";
 import LoadingState from "@/components/LoadingState";
-import RectangleData from "@/components/publicPageView/RectangleData";
-import SquareData from "@/components/publicPageView/SquareData";
-import Layout from "@/components/Layout";
 import NoData from "@/components/pageView/NoData";
-import Image from "next/image";
-import CarouselView from "@/components/publicPageView/CarouselView";
-import LeadForm from "@/components/leadForm/LeadForm";
+
+// assets
+import BaseInfoIcon from "@/assets/icons/info.svg";
+
+// constants
+import { LANGUAGES } from "@/constants/language";
+
+// services
 import axiosInstance from "@/services/axiosInterceptors";
-import Head from "next/head";
-import { useDrag } from "react-dnd";
-import { InfoIconSmall } from "@/components/Icons";
 
-export default function Username() {
-  const router = useRouter();
-  // The key of this object ([pageView]) should match the filename
-  const { username } = router.query;
-  const [usersData, setUsersData] = useState();
-  const [noDataContents, setNoDataContents] = useState(null);
-  const [vCardList, setVCardList] = useState([]);
-  const [hasLeadForm, setHasLeadForm] = useState(false);
-  const [noDataHoz, setNoDataHorz] = useState(null);
-  const [showBio, setShowBio] = useState(false);
+export async function getServerSideProps(context) {
+  try {
+    const { params } = context;
+    const { username } = params;
 
-  const getJobTitle = () => {
-    if (usersData.job_title !== null && usersData.company === null) {
-      return `${usersData.job_title}`;
-    } else if (usersData.company !== null && usersData.job_title === null) {
-      return `${usersData.company}`;
-    } else if (usersData.job_title !== null && usersData.company !== null) {
-      return `${usersData.job_title} در ${usersData.company}`;
-    } else {
-      return " ";
-    }
-  };
+    const apiUrl = generateApiUrl(`/api/v1/page_view/${username}`);
 
-  const handleSaveContact = () => {
-    // Filter unique ids
-    const uniqueVCardList = vCardList.filter(
-      (item, index, self) => index === self.findIndex((t) => t.id === item.id)
+    const response = await axios.get(apiUrl, {
+      headers: {
+        "Accept-Language": "fa", // Language header
+      },
+    });
+
+    const { data } = response;
+    const { is_direct, redirect_link, type } = data.is_direct;
+
+    const translations = await serverSideTranslations(
+      data.language || LANGUAGES.fa.name
     );
 
-    let vCardData = uniqueVCardList
-      .map((item) => {
-        switch (item.type) {
-          case "phone":
-            return `TEL;TYPE=${item.title}:${item.content_val}`;
-          case "email":
-            return `EMAIL;TYPE=${item.title}:${item.content_val}`;
-          case "link":
-            // No need to encode URLs, they are already in the correct format
-            return `URL;TYPE=${item.title}:${item.content_val}`;
-          // Add more cases for other contact information as needed
-          default:
-            return "";
-        }
-      })
-      .join("\n");
-    // Add static parts of the vCard around the dynamic data
-    const vCardString = `
-BEGIN:VCARD
-VERSION:3.0
-N;CHARSET=utf-8:${usersData.owner_last_name};${usersData.owner_first_name};;;
-${vCardData}
-END:VCARD
-`;
+    if (is_direct) {
+      if (type === "file") {
+        return {
+          props: {
+            ...translations,
+            showFile: true,
+            fileURL: redirect_link,
+          },
+        };
+      }
 
-    // Download the vCard
-    const blob = new Blob([vCardString], { type: "text/vcard" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "contact.vcf"; // Set the filename
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-  };
+      return {
+        redirect: {
+          destination: redirect_link,
+          permanent: false,
+        },
+      };
+    }
+
+    return {
+      props: {
+        ...translations,
+        usersData: data,
+        username,
+      },
+    };
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      return {
+        redirect: {
+          destination: "/404",
+          permanent: false,
+        },
+      };
+    }
+
+    if (error.response && error.response.data && error.response.data.detail) {
+      return {
+        props: { errorMessage: error.response.data.detail },
+      };
+    }
+
+    return {
+      props: { errorMessage: "Error: An error occurred." },
+    };
+  }
+}
+
+export default function Username({
+  username,
+  usersData,
+  errorMessage,
+  showFile = false,
+  fileURL = null,
+}) {
+  const [noDataContents, setNoDataContents] = useState(null);
+  const [hasLeadForm, setHasLeadForm] = useState(false);
+  const [isBioBottomSheetOpen, setIsBioBottomSheetOpen] = useState(false);
+
+  const { t } = useTranslation();
 
   const flattenContents = (contents) => {
     // Flatten the contents array and extract the necessary fields
@@ -89,65 +113,21 @@ END:VCARD
       const flattenedData = contentItem.data.map((item) => ({
         type: item.type,
         title: item.title,
-        content_val: item.content_val
+        content_val: item.content_val,
       }));
       return [...acc, ...flattenedData];
     }, []);
   };
 
   useEffect(() => {
-    const apiUrl = generateApiUrl(`/api/v1/page_view/${username}`);
-
     if (username) {
-      // Make an Axios GET request to fetch user data
-      axios
-        .get(apiUrl, {
-          headers: {
-            "Accept-Language": "fa" // Language header
-          }
-        })
-        .then((response) => {
-          // Handle the data once it's received
-          setUsersData(response.data);
-
-          if (response.data.contents.length === 0) {
-            setNoDataContents(true);
-          } else {
-            setNoDataContents(false);
-          }
-
-          if (response.data?.horizontal_menu[0]?.id === null) {
-            setNoDataHorz(true);
-          } else {
-            setNoDataHorz(false);
-          }
-
-          if (response.data?.lead_form?.length > 0) {
-            setHasLeadForm(true);
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-          // Check if the error response is a 404 Not Found
-          if (error.response && error.response.status === 404) {
-            // Redirect to the custom 404 page using Next.js router
-            router.push("/404"); // Adjust the path as needed
-          } else {
-            // Handle other errors
-            if (
-              error.response &&
-              error.response.data &&
-              error.response.data.detail
-            ) {
-              const errorMessage = error.response.data.detail;
-              toast.error(errorMessage);
-            } else {
-              toast.error("Error: An error occurred.");
-            }
-          }
-        });
+      if (usersData.contents.length === 0) {
+        setNoDataContents(true);
+      } else {
+        setNoDataContents(false);
+      }
     }
-  }, [username, router]);
+  }, [username]);
 
   useEffect(() => {
     // Ensure usersData.contents exists and is an array before trying to flatten it
@@ -156,16 +136,15 @@ END:VCARD
       // Merge flattened contents with horizontal_menu
       const combinedDataArray = [
         ...flattenedContents,
-        ...usersData.horizontal_menu
+        ...usersData.horizontal_menu,
       ];
-      setVCardList(combinedDataArray);
     }
-  }, [usersData, setVCardList]);
+  }, [usersData]);
 
   const handleCountingItemClicks = async (itemData) => {
     try {
       const analyticsData = {
-        content_id: itemData.id
+        content_id: itemData.id,
       };
       const apiUrl = generateApiUrl(`/api/v1/analytics/tap/${itemData.id}`);
       const response = await axiosInstance.post(apiUrl, analyticsData);
@@ -193,6 +172,10 @@ END:VCARD
   };
 
   useEffect(() => {
+    if (!showFile) {
+      handleSaveContact();
+    }
+
     // Bind the event listener
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -201,156 +184,256 @@ END:VCARD
     };
   }, []);
 
+  const handleSaveContact = () => {
+    let contents = {};
+
+    usersData.contents.forEach(({ data }) => {
+      data.forEach((item) => {
+        const { id, title, content_val, type } = item;
+
+        if (!contents[id]) {
+          contents[id] = {
+            title,
+            content_val,
+            type,
+          };
+        }
+      });
+    });
+
+    let vCardData = Object.keys(contents)
+      .map((key) => {
+        const item = contents[key];
+
+        switch (item.type) {
+          case "phone":
+            return `TEL;TYPE=${item.title}:${item.content_val}`;
+          case "email":
+            return `EMAIL;TYPE=${item.title}:${item.content_val}`;
+          case "link":
+            return `URL;TYPE=${item.title}:${item.content_val}`;
+          case "file":
+            return `URL;TYPE=${item.title}:${item.content_val}`;
+          default:
+            return "";
+        }
+      })
+      .join("\n");
+
+    const vCardString = `
+          BEGIN:VCARD
+          VERSION:3.0
+          N;CHARSET=utf-8:${usersData.owner_last_name};${usersData.owner_first_name};;;
+          ${vCardData}
+          END:VCARD`;
+
+    const blob = new Blob([vCardString], { type: "text/vcard" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "contact.vcf";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
+
+  if (errorMessage) {
+    toast.error(errorMessage);
+    return null;
+  }
+
+  if (showFile) {
+    return (
+      <FilePreviewBottomSheet url={fileURL} isOpen={true} onClose={null} />
+    );
+  }
+
   return (
     <>
       <Head>
         <title>{`ایزی‌نکت -  ${username}`}</title>
         <meta name="easynect business card" content="Powered by Easynect" />
       </Head>
-      {/* main */}
-      {/* lead btn */}
-      {/* <span className="flex justify-end mt-8 ml-5">
-        <span className=" bg-dark text-white px-2 py-1 rounded-md text-xs">
-          فرم لید
-        </span>
-      </span> */}
+
+      <Cover>
+        <CoverImage src={usersData?.banner_s3_url} />
+      </Cover>
+      <Header>
+        <ProfilePictureWrapper>
+          <ProfilePicture src={usersData?.profile_s3_url} />
+        </ProfilePictureWrapper>
+        <HeaderContent>
+          <Texts onClick={() => setIsBioBottomSheetOpen(true)}>
+            <FullName>
+              {usersData?.owner_first_name} {usersData?.owner_last_name}
+            </FullName>
+            <JobTitle>
+              {usersData?.job_title} {t("in")} {usersData?.company}
+              <InfoIcon className="mr-1" />
+            </JobTitle>
+          </Texts>
+          <Actions>
+            <Button onClick={handleSaveContact}>{t("save_contact")}</Button>
+            <ButtonOutlined
+              onClick={() => {
+                setHasLeadForm(true);
+              }}
+            >
+              {t("join_lead")}
+            </ButtonOutlined>
+          </Actions>
+        </HeaderContent>
+      </Header>
       {usersData?.horizontal_menu ? (
         <>
-          <div className="flex flex-col justify-center items-center mt-[45px]">
-            <div
-              id="photo_here"
-              className=" box-content w-[90px] h-[90px] rounded-full
-              overflow-hidden"
-            >
-              {/* profile photo */}
-              {/* <div> */}
-              <Image
-                priority={true}
-                className="rounded-full object-cover w-full h-full"
-                src={usersData?.profile_s3_url}
-                width={90}
-                height={90}
-                alt="Person Name"
-              />
-              {/* </div> */}
-            </div>
-            <p className="mt-3 text-xl font-semibold capitalize">
-              {usersData.owner_first_name + " " + usersData.owner_last_name}
-            </p>
-            <div className="text-muted mt-2 font-medium text-xs flex items-center justify-center  relative ">
-              {getJobTitle()}
-              <span
-                className="px-2"
-                onClick={() => {
-                  setShowBio((prev) => !prev);
-                }}
-              >
-                <InfoIconSmall />
-              </span>
-              {showBio && (
-                <div
-                  ref={bioDivRef}
-                  className="absolute flex flex-col max-h-[100px] z-10 py-1 px-1 rounded-md w-[250px] shadow-md bg-white border-[0.1px] overflow-y-scroll"
-                >
-                  {getJobTitle()}
-                  <p className="mt-1 box-content ">{usersData.bio}</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* horizontal scroll menu */}
-
-          {noDataHoz !== null ? (
-            <>
-              {!noDataHoz && (
-                <div className="grid grid-flow-col justify-center items-center w-full">
-                  <div className="my-5 overflow-x-hidden overscroll-y-contain ">
-                    <CarouselView
-                      horizontalData={usersData.horizontal_menu}
-                      handleCountingItemClicks={handleCountingItemClicks}
-                    />
+          {noDataContents !== null ? (
+            <div className="flex-1 px-4 -mt-4">
+              {!noDataContents ? (
+                <>
+                  <div className="mt-5">
+                    {usersData.contents?.map((object) => (
+                      <Widget
+                        key={object?.guid + object?.data?.length}
+                        data={object}
+                        handleCountingItemClicks={handleCountingItemClicks}
+                      />
+                    ))}
                   </div>
-                </div>
+                </>
+              ) : (
+                <NoData />
               )}
-            </>
+            </div>
           ) : (
             <LoadingState />
           )}
-
-          {/* end of horz */}
-
-          <Layout className="!bg-white !px-3 !py-0 !h-fit">
-            {noDataContents !== null ? (
-              <>
-                {!noDataContents ? (
-                  <>
-                    {/* save btn */}
-                    <button
-                      onClick={handleSaveContact}
-                      className="bg-dark text-white text-sm font-bold w-full h-[44px] rounded-[8px] "
-                    >
-                      ذخیره مخاطب
-                    </button>
-                    <div className=" mt-5">
-                      {usersData.contents?.map((object) => (
-                        <div key={object?.guid + object?.data?.length}>
-                          {/* square section */}
-
-                          {object.display_box_type === "square" ? (
-                            <SquareData
-                              object={object}
-                              handleCountingItemClicks={
-                                handleCountingItemClicks
-                              }
-                            />
-                          ) : null}
-
-                          {/* rectangle */}
-
-                          {object.display_box_type === "rectangle" ? (
-                            <RectangleData
-                              object={object}
-                              handleCountingItemClicks={
-                                handleCountingItemClicks
-                              }
-                            />
-                          ) : null}
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <NoData />
-                )}
-              </>
-            ) : (
-              <LoadingState />
-            )}
-            {/* end of wrapper */}
-
-            {/* logo */}
-            <div>
-              <ClientPageFooter />
-            </div>
-          </Layout>
+          <div>
+            <ClientPageFooter />
+          </div>
         </>
       ) : (
         <LoadingState />
       )}
 
-      {/* lead form */}
-      <>
-        {hasLeadForm && (
-          <LeadForm
-            open={hasLeadForm}
-            onClose={() => setHasLeadForm(false)}
-            leadFormData={usersData.lead_form}
-            pageId={usersData.page_id}
-            setHasLeadForm={setHasLeadForm}
-          />
-        )}
-      </>
+      <LeadForm
+        open={hasLeadForm}
+        onClose={() => setHasLeadForm(false)}
+        leadFormData={usersData.lead_form}
+        language={usersData.language}
+        pageId={usersData.page_id}
+        setHasLeadForm={setHasLeadForm}
+      />
+
+      <BottomSheetWrapper
+        open={isBioBottomSheetOpen}
+        onClose={() => setIsBioBottomSheetOpen(false)}
+      >
+        <BioTitle>{t("bio_title")}</BioTitle>
+        <Bio>{usersData?.bio}</Bio>
+      </BottomSheetWrapper>
     </>
   );
 }
+
+const Wrapper = tw.div``;
+
+const Cover = tw.div`
+  w-screen
+  h-[33.3333333vw]
+
+  container:w-[414px]
+  container:h-[138px]
+`;
+
+const CoverImage = tw.img`
+  w-full
+  h-full
+  object-cover
+`;
+
+const Header = tw.div`
+  -translate-y-4
+  pe-6
+  ps-3
+  flex
+  items-center
+`;
+
+const HeaderContent = tw.div`
+  flex-1
+  ps-2
+  pt-6
+`;
+
+const Texts = tw.div`
+  ps-2
+`;
+
+const ProfilePictureWrapper = tw.div`
+  w-32
+  h-32
+  rounded-full
+  border-4
+  border-white
+  overflow-hidden
+  flex-none
+`;
+
+const ProfilePicture = tw.img`
+  w-full
+  h-full
+  object-cover
+`;
+
+const FullName = tw.h4`
+  text-gray-900
+`;
+
+const JobTitle = tw.div`
+  text-xs
+  text-gray-400
+`;
+
+const BioTitle = tw.div`
+  text-lg
+  text-center
+  text-gray-700
+  mt-8
+`;
+
+const Bio = tw.p`
+  text-gray-400
+  mb-24
+  px-8
+  mt-4
+`;
+
+const Actions = tw.div`
+  flex
+  gap-2
+  mt-4
+`;
+const Button = tw.button`
+  py-2
+  px-3
+  flex-1
+  rounded-md
+  bg-black
+  text-white
+  text-xs
+  border-2
+  border-black
+`;
+
+const ButtonOutlined = tw(Button)`
+  bg-transparent
+  text-black
+`;
+
+const InfoIcon = tw(BaseInfoIcon)`
+  w-4
+  inline
+  text-gray-900
+  cursor-pointer
+`;

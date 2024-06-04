@@ -1,20 +1,26 @@
-import Layout from "@/components/Layout";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { ChangePhotoIcon, PenEditIcon, PlusSign } from "@/components/Icons";
-import EditMenuOptions from "@/components/EditMenuOptions";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 import axios from "axios";
 import { useAccessToken } from "../../../../context/AccessTokenContext";
 import { useRouter } from "next/router";
-import { generateApiUrl } from "@/components/ApiUr";
-import LoadingState from "@/components/LoadingState";
-import ProfileImage from "@/components/ProfileImage";
 import { API_ROUTES } from "@/services/api";
 import Head from "next/head";
 import axiosInstance from "@/services/axiosInterceptors";
-import LoaderOverlay from "@/loading/LoaderOverlay";
+
+// components
+import Layout from "@/components/Layout";
+import { generateApiUrl } from "@/components/ApiUr";
+import LoadingState from "@/components/LoadingState";
+import ProfileImage from "@/components/ProfileImage";
+import { ChangePhotoIcon, PenEditIcon } from "@/components/Icons";
+import EditMenuOptions from "@/components/EditMenuOptions";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import EditProfileInfoRedirectForm from "@/components/EditProfileInfoRedirectForm";
+import UploadInput from "@/components/UploadInput";
+import EditProfileInfoLanguage from "@/components/EditProfileInfoLanguage";
+import CropImageBottomSheet from "@/components/CropImageBottomSheet";
+import { imageUrlToBlob, readFile } from "@/utils/file";
 
 const EditProfileInfo = () => {
   const [pageData, setPageData] = useState(null);
@@ -24,6 +30,14 @@ const EditProfileInfo = () => {
   const [changedFormData, setChangedFormData] = useState({});
   const apiUrl = API_ROUTES.CARDS_EDIT_PROFILE_INFO_PAGES(id);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imageToCrop, setImageToCrop] = useState(null);
+  const [isCropBottomSheetOpen, setIsCropBottomSheetOpen] = useState(false);
+  const [cropOptions, setCropOptions] = useState({
+    cropShape: "rect",
+    showGrid: true,
+    aspect: 4 / 3,
+    name: null,
+  });
 
   const [formData, setFormData] = useState({
     username: "",
@@ -35,9 +49,13 @@ const EditProfileInfo = () => {
     is_direct: false,
     is_public: false,
     bio: "",
-    profile: ""
+    profile: "",
+    direct_link: null,
+    final_page_language: null,
   });
   const [isDirect, setIsDirect] = useState(formData.is_direct);
+  const [isLoading, setIsLoading] = useState(false);
+  const [uploadPercentage, setUploadPercentage] = useState(null);
 
   // Fetch data from the server when the component mounts
   useEffect(() => {
@@ -47,8 +65,8 @@ const EditProfileInfo = () => {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken.accessToken}`,
-            "accept-language": "fa"
-          }
+            "accept-language": "fa",
+          },
         })
         .then((response) => {
           setPageData(response.data);
@@ -67,7 +85,9 @@ const EditProfileInfo = () => {
             is_direct: response.data.is_direct || false,
             is_public: response.data.is_public || false,
             bio: response.data.bio || "", // Set bio from the fetched data
-            profile: response.data.profile_s3_url || ""
+            profile: response.data.profile_s3_url || "",
+            direct_link: response.data.direct_link,
+            final_page_language: response.data.final_page_lan,
           });
         })
         .catch((error) => {
@@ -83,76 +103,34 @@ const EditProfileInfo = () => {
     // Update the changedFormData object with the changed field
     setChangedFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value
+      [name]: value,
+    }));
+  };
+
+  const handleLanguageChange = (language) => {
+    setChangedFormData((prevFormData) => ({
+      ...prevFormData,
+      final_page_language: language,
     }));
   };
 
   // Handle image file change
-  const handleImageChange = (e) => {
-    const selectedFile = e.target.files[0];
+  const handleImageChange = async (selectedFile, options) => {
     if (selectedFile) {
-      setChangedFormData((prevFormData) => ({
-        ...prevFormData,
-        profile: selectedFile
-      }));
+      let imageDataUrl = await readFile(selectedFile);
+
+      setImageToCrop(imageDataUrl);
+      setIsCropBottomSheetOpen(true);
+      setCropOptions(options);
     }
-  };
-  const handleToggleDirect = () => {
-    setIsDirect((prevIsDirect) => {
-      const newIsDirect = !prevIsDirect;
-
-      // Update the formData object with the changed field value and
-      // ensure it can be submitted with the form later as changed data
-      setChangedFormData((prevFormData) => ({
-        ...prevFormData,
-        is_direct: newIsDirect
-      }));
-
-      return newIsDirect;
-    });
-  };
-
-  // Function to resize and convert an image to a blob
-  const resizeImage = async (file, maxWidth, maxHeight, quality) => {
-    return new Promise((resolve, reject) => {
-      let img = new Image();
-      img.src = URL.createObjectURL(file);
-
-      img.onload = () => {
-        let canvas = document.createElement("canvas");
-        let width = img.width;
-        let height = img.height;
-
-        if (width > height) {
-          if (width > maxWidth) {
-            height *= maxWidth / width;
-            width = maxWidth;
-          }
-        } else {
-          if (height > maxHeight) {
-            width *= maxHeight / height;
-            height = maxHeight;
-          }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-
-        let ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, width, height);
-
-        canvas.toBlob((blob) => resolve(blob), "image/jpeg", quality);
-      };
-
-      img.onerror = (error) => {
-        reject(error);
-      };
-    });
   };
 
   // Handle form submission
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+
+    if (isLoading) return;
+
     setIsSubmitting(true);
 
     // The API endpoint URL
@@ -168,45 +146,22 @@ const EditProfileInfo = () => {
       }
     }
 
-    // Check if the profile image has changed
-    if (changedFormData.profile) {
-      // Check the size of the file
-      if (changedFormData.profile.size > 2 * 1024 * 1024) {
-        // If the file size is greater than 2MB, resize it
-        const maxWidth = 800; // Max width for the image
-        const maxHeight = 600; // Max height for the image
-        const quality = 0.7; // The quality of the resulting JPEG image
-
-        const resizedBlob = await resizeImage(
-          changedFormData.profile,
-          maxWidth,
-          maxHeight,
-          quality
-        );
-
-        // Check the size of the resized file
-        if (resizedBlob.size > 2 * 1024 * 1024) {
-          // Handle the case where the resized image is still too large
-          console.error("Error: Resized image exceeds 2MB");
-          setIsSubmitting(false);
-          return;
-        }
-
-        // Append the resized image only if it has been changed
-        formDataToSend.append("profile", resizedBlob, "resized-image.jpg");
-      } else {
-        // If the file size is within the limit, append it directly
-        formDataToSend.append("profile", changedFormData.profile);
-      }
-    }
-
+    setIsLoading(true);
     // Send a PATCH request with the FormData and headers using Axios
     axiosInstance
       .patch(updateUrl, formDataToSend, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
-          "accept-language": "fa"
-        }
+          "accept-language": "fa",
+        },
+        onUploadProgress: (progressEvent) => {
+          if (changedFormData["banner"] === null) return;
+
+          const { loaded, total } = progressEvent;
+          const percentCompleted = Math.round((loaded * 100) / total);
+
+          setUploadPercentage(percentCompleted);
+        },
       })
       .then((response) => {
         if (response.status === 200) {
@@ -226,11 +181,33 @@ const EditProfileInfo = () => {
         setIsSubmitting(false);
         // Handle network errors or other exceptions
         console.error("An error occurred:", error);
+      })
+      .finally(() => {
+        setUploadPercentage(null);
+        setIsLoading(false);
       });
   };
 
   const goBack = () => {
+    if (isLoading) return;
+
     router.back();
+  };
+
+  const handleCloseCropBottomSheet = () => {
+    setIsCropBottomSheetOpen(false);
+    setImageToCrop(null);
+  };
+
+  const handleCropFinished = async (croppedImage) => {
+    const image = await imageUrlToBlob(croppedImage);
+
+    setIsCropBottomSheetOpen(false);
+    setImageToCrop(null);
+    setChangedFormData((prevData) => ({
+      ...prevData,
+      [cropOptions.name]: image,
+    }));
   };
 
   return (
@@ -265,11 +242,7 @@ const EditProfileInfo = () => {
                           className="bg-dark h-[31px] overflow-hidden text-white px-4 py-1 rounded-lg border-[1px]
                            border-black flex items-center justify-center"
                         >
-                          {isSubmitting ? (
-                            <LoaderOverlay />
-                          ) : (
-                            <span>ذخیره</span>
-                          )}
+                          {isLoading ? "در حال ارسال..." : "ذخیره"}
                         </button>
                       </div>
                     </div>
@@ -311,7 +284,14 @@ const EditProfileInfo = () => {
                           id="fileInput"
                           accept=".jpg, .jpeg, .png, .webp"
                           style={{ display: "none" }}
-                          onChange={handleImageChange}
+                          onChange={(e) =>
+                            handleImageChange(e.target.files[0], {
+                              cropShape: "round",
+                              aspect: 1,
+                              showGrid: false,
+                              name: "profile",
+                            })
+                          }
                         />
                       </label>
                     </div>
@@ -374,6 +354,30 @@ const EditProfileInfo = () => {
                       defaultValue={formData.bio}
                       onChange={handleInputChange}
                     />
+
+                    <UploadInput
+                      labelText={"فایل بنر"}
+                      className="mb-4"
+                      onChoose={(file) =>
+                        handleImageChange(file, {
+                          cropShape: "rect",
+                          aspect: 3 / 1,
+                          showGrid: true,
+                          name: "banner",
+                        })
+                      }
+                      uploadPercentage={uploadPercentage}
+                    />
+
+                    <EditProfileInfoRedirectForm
+                      data={formData.direct_link}
+                      pageID={id}
+                    />
+
+                    <EditProfileInfoLanguage
+                      currentLanguage={formData.final_page_language}
+                      onSelect={handleLanguageChange}
+                    />
                   </div>
                 </form>
                 {/* <div className="my-8">
@@ -402,6 +406,16 @@ const EditProfileInfo = () => {
                     </span>
                     ویرایش آیتم ها
                   </Link>
+                  <Link
+                    href={`/layout/${id}`}
+                    className="border-[1px] border-black px-4 py-3 rounded-lg mb-2 flex justify-center
+              items-center"
+                  >
+                    <span className="me-1">
+                      <PenEditIcon />
+                    </span>
+                    صفحه بندی
+                  </Link>
                 </div>
               </div>
             </div>
@@ -410,6 +424,16 @@ const EditProfileInfo = () => {
           )}
         </Layout>
         <Footer />
+
+        <CropImageBottomSheet
+          image={imageToCrop}
+          open={isCropBottomSheetOpen}
+          onClose={handleCloseCropBottomSheet}
+          onCrop={handleCropFinished}
+          cropShape={cropOptions.cropShape}
+          showGrid={cropOptions.showGrid}
+          aspect={cropOptions.aspect}
+        />
       </main>
     </>
   );

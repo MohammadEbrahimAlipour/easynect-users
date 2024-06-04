@@ -12,22 +12,23 @@ import {
   FooterProfileIcon,
   FooterProfileIconSelected,
   FooterStatsIcon,
-  FooterStatsIconSelected
+  FooterStatsIconSelected,
 } from "./Icons";
+import tw from "tailwind-styled-components";
 
 // Define your icons mapping
 const iconMapping = {
   profile: <FooterProfileIcon />,
   stats: <FooterStatsIcon />,
   contacts: <FooterContactsIcon />,
-  cards: <FooterCardsIcon />
+  cards: <FooterCardsIcon />,
 };
 
 const iconMappingSelected = {
   cards: <FooterCardsIconSelected />,
   stats: <FooterStatsIconSelected />,
   contacts: <FooterContactsIconSelected />,
-  profile: <FooterProfileIconSelected />
+  profile: <FooterProfileIconSelected />,
 };
 
 const CustomLink = ({ href, title, iconName, className = "" }) => {
@@ -53,60 +54,41 @@ const CustomLink = ({ href, title, iconName, className = "" }) => {
 
 const Footer = ({ className = "" }) => {
   return (
-    <div
-      className={`text-center my-5 container sticky bottom-0 bg-white pt-2 ${className}`}
-    >
-      <div className="grid grid-cols-12 gap-1">
-        {/* right side */}
-        <div className="3xl:col-span-4 2xl:col-span-4 md:col-span-4">
-          <ul className="flex justify-center items-center">
-            <li className="grid 3xl:grid-cols-12 2xl:grid-cols-12 md:grid-cols-12">
-              <CustomLink
-                href="/app/profile/profile"
-                iconName="profile"
-                title="پروفایل"
-              />
-            </li>
-            <li>
-              <CustomLink
-                href="/app/stats/personsStats"
-                iconName="stats"
-                title="آمار"
-              />
-            </li>
-          </ul>
-        </div>
-
-        {/* logo */}
-        <Link
-          href="/mainPage/infoPage"
-          className="relative bottom-8 3xl:col-span-4 2xl:col-span-4 md:col-span-4 me-1"
-        >
-          <div className="w-[75px] h-[75px] bg-dark rounded-full flex justify-center items-center m-auto">
-            <FooterIcon />
-          </div>
-        </Link>
-        {/* left side */}
-        <div className="3xl:col-span-4 2xl:col-span-4 md:col-span-4">
-          <ul className="flex justify-center items-center">
-            <li className="grid 3xl:grid-cols-12 2xl:grid-cols-12 md:grid-cols-12">
-              <CustomLink
-                href="/app/contacts/contacts"
-                iconName="contacts"
-                title="مخاطبین"
-              />
-            </li>
-            <li>
-              <CustomLink
-                href="/app/cards/profileCard"
-                iconName="cards"
-                title="کارت‌ها"
-              />
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    <FooterWrapper className={className}>
+      <CustomLink
+        href="/app/profile/profile"
+        iconName="profile"
+        title="پروفایل"
+      />
+      <CustomLink
+        href="/app/stats/personsStats"
+        iconName="stats"
+        title="آمار"
+      />
+      <CustomLink
+        href="/app/contacts/contacts"
+        iconName="contacts"
+        title="مخاطبین"
+      />
+      <CustomLink
+        href="/app/cards/profileCard"
+        iconName="cards"
+        title="کارت‌ها"
+      />
+    </FooterWrapper>
   );
 };
 export default Footer;
+
+const FooterWrapper = tw.div`
+  flex
+  justify-center
+  items-center
+  w-full
+  fixed
+  bottom-0
+  bg-white
+  gap-8
+  left-0
+  py-2
+`;

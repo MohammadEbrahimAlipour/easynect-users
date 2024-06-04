@@ -1,0 +1,26 @@
+{
+  "in": "در",
+  "save_contact": "ذخیره‌ی مخاطب",
+  "join_lead": "پیوستن به لید",
+  "bio_title": "بیوگرافی",
+  "close": "بستن",
+  "download_file": "دانلود فایل",
+  "unsupported_file": {
+    "title": "قالب فایل",
+    "message": "متاسفانه امکان پیش‌ نمایش این فایل ممکن نیست، جهت مشاهده می‌توانید فایل را دانلود کنید."
+  },
+  "lead_form": {
+    "toast": {
+      "success": "فرم لید ارسال شد"
+    },
+    "please_enter_your_data": "لطفا اطلاعات خود را وارد کنید",
+    "please_enter_your_username": "لطفا نام کاربری خود را وارد کنید",
+    "if_you_have_account_click_here": "اگر اکانت ایزی‌نکت دارید اینجا کلیک کنید",
+    "back_to_lead_form": "بازگشت به فرم لید",
+    "username": "نام کاربری",
+    "username_placeholder": "نام کاربری صفحه خود را وارد کنید.",
+    "save": "ذخیره",
+    "first_name": "نام",
+    "first_name_placeholder": "نام خود را وارد کنید."
+  }
+}
