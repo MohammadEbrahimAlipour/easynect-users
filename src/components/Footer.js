@@ -65,13 +65,6 @@ const Footer = ({ className = "" }) => {
         iconName="stats"
         title="آمار"
       />
-
-      <Link className="-translate-y-4" href="/mainPage/infoPage">
-        <div className="w-[75px] h-[75px] bg-dark rounded-full flex justify-center items-center m-auto">
-          <FooterIcon />
-        </div>
-      </Link>
-
       <CustomLink
         href="/app/contacts/contacts"
         iconName="contacts"
@@ -95,6 +88,7 @@ const FooterWrapper = tw.div`
   fixed
   bottom-0
   bg-white
-  gap-5
+  gap-8
   left-0
+  py-2
 `;
