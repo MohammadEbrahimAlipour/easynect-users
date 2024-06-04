@@ -406,6 +406,16 @@ const EditProfileInfo = () => {
                     </span>
                     ویرایش آیتم ها
                   </Link>
+                  <Link
+                    href={`/layout/${id}`}
+                    className="border-[1px] border-black px-4 py-3 rounded-lg mb-2 flex justify-center
+              items-center"
+                  >
+                    <span className="me-1">
+                      <PenEditIcon />
+                    </span>
+                    صفحه بندی
+                  </Link>
                 </div>
               </div>
             </div>

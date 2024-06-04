@@ -1,7 +1,8 @@
-import { deepCopy } from "@/utils";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import tw from "tailwind-styled-components";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 // files
 import PlusIcon from "@/assets/icons/plus.svg";
@@ -9,12 +10,18 @@ import PlusIcon from "@/assets/icons/plus.svg";
 // components
 import LayoutingRows from "@/components/LayoutingRows";
 import RowsBottomSheet from "@/components/RowBottomSheet";
-import { POSITIONS, WIDGET_TYPE } from "@/constants";
 import RowBottomSheetDelete from "@/components/RowBottomSheetDelete";
 import { generateApiUrl } from "@/components/ApiUr";
-import axios from "axios";
-import { useAccessToken } from "../../../../context/AccessTokenContext";
-import { useRouter } from "next/router";
+import LoadingState from "@/components/LoadingState";
+
+// constants
+import { POSITIONS, WIDGET_TYPE } from "@/constants";
+
+// utils
+import { deepCopy } from "@/utils";
+
+// context
+import { useAccessToken } from "../../../context/AccessTokenContext";
 
 let id = 0;
 export default function Playground() {
@@ -30,6 +37,7 @@ export default function Playground() {
   const [deletingRowIndex, setDeletingRowIndex] = useState(null);
   const [editingRow, setEditingRow] = useState(null);
   const [contents, setContents] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const accessToken = useAccessToken();
 
   useEffect(() => {
@@ -41,7 +49,7 @@ export default function Playground() {
 
   const getPageData = () => {
     const apiUrl = generateApiUrl(`/api/v1/page_view/preview/${pageId}`);
-
+    setIsLoading(true);
     axios
       .get(apiUrl, {
         headers: {
@@ -57,6 +65,9 @@ export default function Playground() {
         if (error.response && error.response.status === 404) {
           toast.error("no card is available");
         }
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -87,7 +98,7 @@ export default function Playground() {
 
   const getContent = () => {
     const apiUrl = generateApiUrl(`/api/v1/contents/page/${pageId}`);
-
+    setIsLoading(true);
     axios
       .get(apiUrl, {
         headers: {
@@ -100,6 +111,9 @@ export default function Playground() {
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -288,9 +302,13 @@ export default function Playground() {
       });
   };
 
+  if (isLoading) {
+    return <LoadingState />;
+  }
+
   return (
     <Wrapper>
-      <Title>Layouts</Title>
+      <Title>صفحه بندی</Title>
       <LayoutingRows
         rows={rows}
         onMoveDown={handleMoveDown}
@@ -339,7 +357,7 @@ const Wrapper = tw.div`
   pb-12
 `;
 
-const Title = tw.button`
+const Title = tw.h3`
   my-5
   text-xl
   text-center
