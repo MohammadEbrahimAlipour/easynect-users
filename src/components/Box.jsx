@@ -18,7 +18,7 @@ export default function Box({
   containerDisplayType,
 }) {
   const { sub_order, type, title, content_val, s3_icon_url, description } =
-    data;
+    data || {};
 
   const [isPreviewSheetOpen, setIsPreviewSheetOpen] = useState(false);
   const [currentFileURL, setCurrentFileURL] = useState(null);
@@ -60,6 +60,8 @@ export default function Box({
     () => (containerDisplayType === WIDGET_TYPE.square ? 40 : 30),
     [containerDisplayType]
   );
+
+  if (!data) return null;
 
   return (
     <>
