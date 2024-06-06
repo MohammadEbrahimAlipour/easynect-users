@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { HeaderShareLogo } from "./Icons";
-import logo from "../../public/icons/easynect icons/headerLogoBlack.svg";
+import Logo from "../../public/icons/easynect icons/headerLogoBlack.svg";
 import Image from "next/image";
 
 import HeaderShareBSheet from "./bottomSheet/header/HeaderShareBSheet";
@@ -20,7 +20,7 @@ const Header = ({ className = "" }) => {
             <HeaderShareLogo />
           </span>
           <span className="absolute left-[50%] w-[32px] h-[32px] ">
-            <Image width={32} height={32} src={logo} alt="EasyNect" />
+            <Logo />
           </span>
         </div>
       </div>

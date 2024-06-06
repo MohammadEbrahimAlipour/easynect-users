@@ -1,6 +1,7 @@
 // TODO: needs to be refactored
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import Image from "next/image";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
 import { toast } from "react-toastify";
@@ -248,11 +249,11 @@ export default function Username({
       </Head>
 
       <Cover>
-        <CoverImage src={usersData?.banner_s3_url} />
+        <CoverImage fill src={usersData?.banner_s3_url} />
       </Cover>
       <Header>
         <ProfilePictureWrapper>
-          <ProfilePicture src={usersData?.profile_s3_url} />
+          <ProfilePicture fill src={usersData?.profile_s3_url} />
         </ProfilePictureWrapper>
         <HeaderContent>
           <Texts onClick={() => setIsBioBottomSheetOpen(true)}>
@@ -330,6 +331,8 @@ export default function Username({
 const Wrapper = tw.div``;
 
 const Cover = tw.div`
+  relative
+  overflow-hidden
   w-screen
   h-[33.3333333vw]
 
@@ -337,7 +340,7 @@ const Cover = tw.div`
   container:h-[138px]
 `;
 
-const CoverImage = tw.img`
+const CoverImage = tw(Image)`
   w-full
   h-full
   object-cover
@@ -367,11 +370,13 @@ const ProfilePictureWrapper = tw.div`
   rounded-full
   border-4
   border-white
-  overflow-hidden
+  bg-white
   flex-none
+  relative
+  overflow-hidden
 `;
 
-const ProfilePicture = tw.img`
+const ProfilePicture = tw(Image)`
   w-full
   h-full
   object-cover

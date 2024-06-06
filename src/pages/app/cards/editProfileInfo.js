@@ -148,6 +148,12 @@ const EditProfileInfo = () => {
 
     setIsLoading(true);
     // Send a PATCH request with the FormData and headers using Axios
+
+    if (Object.keys(changedFormData).length === 0) {
+      router.push("/app/cards/profileCard");
+      return;
+    }
+
     axiosInstance
       .patch(updateUrl, formDataToSend, {
         headers: {
