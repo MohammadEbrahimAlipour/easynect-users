@@ -216,12 +216,7 @@ export default function Username({
       })
       .join("\n");
 
-    const vCardString = `
-BEGIN:VCARD
-VERSION:3.0
-N;CHARSET=utf-8:${usersData.owner_last_name};${usersData.owner_first_name};;;
-${vCardData}
-END:VCARD`;
+    const vCardString = `BEGIN:VCARD\nVERSION:3.0\nN;CHARSET=utf-8:${usersData.owner_last_name};${usersData.owner_first_name};;;\n${vCardData}\nEND:VCARD`;
 
     const blob = new Blob([vCardString], { type: "text/vcard" });
     const url = window.URL.createObjectURL(blob);
