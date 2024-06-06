@@ -173,6 +173,10 @@ export default function Username({
   };
 
   useEffect(() => {
+    if (!showFile) {
+      handleSaveContact();
+    }
+
     // Bind the event listener
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
