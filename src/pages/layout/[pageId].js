@@ -22,6 +22,7 @@ import { deepCopy } from "@/utils";
 
 // context
 import { useAccessToken } from "../../../context/AccessTokenContext";
+import HeaderTwo from "@/components/HeaderTwo";
 
 let id = 0;
 export default function Playground() {
@@ -308,6 +309,7 @@ export default function Playground() {
 
   return (
     <Wrapper>
+      <HeaderTwo />
       <Title>صفحه بندی</Title>
       <LayoutingRows
         rows={rows}
