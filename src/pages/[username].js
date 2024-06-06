@@ -172,10 +172,6 @@ export default function Username({
   };
 
   useEffect(() => {
-    if (!showFile) {
-      handleSaveContact();
-    }
-
     // Bind the event listener
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -221,11 +217,11 @@ export default function Username({
       .join("\n");
 
     const vCardString = `
-          BEGIN:VCARD
-          VERSION:3.0
-          N;CHARSET=utf-8:${usersData.owner_last_name};${usersData.owner_first_name};;;
-          ${vCardData}
-          END:VCARD`;
+BEGIN:VCARD
+VERSION:3.0
+N;CHARSET=utf-8:${usersData.owner_last_name};${usersData.owner_first_name};;;
+${vCardData}
+END:VCARD`;
 
     const blob = new Blob([vCardString], { type: "text/vcard" });
     const url = window.URL.createObjectURL(blob);
