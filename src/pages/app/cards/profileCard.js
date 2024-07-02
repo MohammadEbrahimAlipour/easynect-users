@@ -62,6 +62,10 @@ const ProfileCard = () => {
   // Fetch card data from the API
   useEffect(() => {
     // Replace with your API endpoint
+    getCardsRequest();
+  }, [accessToken.accessToken]);
+
+  const getCardsRequest = () => {
     const apiUrl = API_ROUTES.CARDS_PROFILE_CARD_PAGES;
 
     axiosInstance
@@ -94,7 +98,7 @@ const ProfileCard = () => {
           console.error("Error fetching data:", error);
         }
       });
-  }, [accessToken.accessToken]);
+  };
 
   useEffect(() => {
     // Assuming cardData is your state which has data fetched from the API.
@@ -183,6 +187,11 @@ const ProfileCard = () => {
     }
 
     return 0;
+  };
+
+  const handlePageDelete = () => {
+    setShowSheetMore(false);
+    getCardsRequest();
   };
 
   return (
@@ -283,7 +292,7 @@ const ProfileCard = () => {
                         {/* bottom section */}
                         <div className="pb-5 border-t-[1px] w-full">
                           <div className="grid grid-cols-12">
-                            <div className="mt-5 mx-4 flex justify-center items-center col-span-10">
+                            <div className="mt-5 mx-4 flex justify-start gap-3 items-center col-span-10">
                               {/* box right 1 */}
                               <Link
                                 href={`/app/cards/editProfileInfo?id=${id}`}
@@ -294,18 +303,6 @@ const ProfileCard = () => {
                                   <p className="text-xs ">ویرایش</p>
                                 </div>
                               </Link>
-
-                              {/* box right 2 */}
-                              <div className="w-[46%] h-[32px] mx-1 border-2 rounded-md flex justify-center items-center">
-                                <button
-                                  onClick={() =>
-                                    handleClickedCardId(id, card_title)
-                                  }
-                                  className="text-xs font-ravi"
-                                >
-                                  اشتراک گذاری
-                                </button>
-                              </div>
 
                               {/* box right 3 */}
                               <Link
@@ -362,6 +359,7 @@ const ProfileCard = () => {
         showSheetMore={showSheetMore}
         setShowSheetMore={setShowSheetMore}
         moreSheetDetails={moreSheetDetails}
+        onDelete={handlePageDelete}
       />
     </>
   );

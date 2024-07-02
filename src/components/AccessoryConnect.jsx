@@ -1,7 +1,5 @@
-import Link from "next/link";
 import React, { useState } from "react";
 import axios from "axios";
-import BottomSheetWrapper from "./bottomSheet/BottomSheetWrapper";
 import { useAccessToken } from "../../context/AccessTokenContext";
 import { generateApiUrl } from "./ApiUr";
 import { toast } from "react-toastify";
@@ -10,11 +8,7 @@ import NFCTag from "./accessories/NFCTag";
 import { motion } from "framer-motion";
 import Code from "./accessories/Code";
 
-const AccessoryConnect = ({
-  showAccessory,
-  setShowAccessory,
-  moreSheetDetails
-}) => {
+const AccessoryConnect = ({ moreSheetDetails }) => {
   const accessToken = useAccessToken();
   const [accessCode, setAccessCode] = useState();
   const [useNfc, setUseNfc] = useState(false);
@@ -30,8 +24,8 @@ const AccessoryConnect = ({
   const blinkAnimation = {
     blink: {
       opacity: [1, 0.1, 1],
-      transition: { repeat: Infinity, repeatType: "mirror", duration: 3 }
-    }
+      transition: { repeat: Infinity, repeatType: "mirror", duration: 3 },
+    },
   };
 
   const handleCodeSubmit = async (e) => {
@@ -43,15 +37,15 @@ const AccessoryConnect = ({
         const apiUrl = generateApiUrl(`/api/v1/devices/${moreSheetDetails.id}`);
 
         const payload = {
-          url: accessCode // This will be 'device/{input_value}'
+          url: accessCode, // This will be 'device/{input_value}'
         };
 
         const response = await axios.post(apiUrl, payload, {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`,
             "Content-Type": "application/json",
-            "Accept-Language": "fa"
-          }
+            "Accept-Language": "fa",
+          },
         });
 
         if (response.status === 200) {
@@ -102,8 +96,8 @@ const AccessoryConnect = ({
             headers: {
               Authorization: `Bearer ${accessToken.accessToken}`,
               "Accept-Language": "fa",
-              "Content-Type": "application/json"
-            }
+              "Content-Type": "application/json",
+            },
           }
         )
         .then((response) => {
@@ -132,126 +126,121 @@ const AccessoryConnect = ({
   };
 
   return (
-    <BottomSheetWrapper
-      open={showAccessory}
-      onClose={() => setShowAccessory(false)}
-    >
-      <div className=" pt-5 pb-8 container !px-6">
-        {/* top line close line*/}
-        <div className="w-full flex justify-center pb-4">
-          <span className="w-[36px] h-[5px] rounded-2xl opacity-25 bg-muted" />
-        </div>
-
-        {/* head */}
-        <h3 className="text-lg font-medium">اتصال اکسسوری</h3>
-
-        {/* choices */}
-        <div className="flex justify-between items-center my-4">
-          <button
-            onClick={() => {
-              setUseCode(false);
-              setUseCamera(false);
-              setUseNfc(true);
-            }}
-            className={`border border-dark px-3 py-[2px] rounded-md text-sm ${
-              useNfc ? "bg-dark text-white" : ""
-            }`}
-          >
-            nfc
-          </button>
-
-          <button
-            onClick={() => {
-              setUseCode(false);
-              setUseNfc(false);
-              setUseCamera(true);
-            }}
-            className={`border border-dark px-3 py-[2px] rounded-md text-sm  ${
-              useCamera ? "bg-dark text-white" : ""
-            }`}
-          >
-            دوربین
-          </button>
-          <button
-            onClick={() => {
-              setUseCamera(false);
-              setUseNfc(false);
-              setUseCode(true);
-            }}
-            className={`border border-dark px-3 py-[2px] rounded-md text-sm ${
-              useCode ? "bg-dark text-white" : ""
-            }`}
-          >
-            کد
-          </button>
-        </div>
-
-        {/* byCamera */}
-        {useCamera && (
-          <form onSubmit={handleCameraSubmit}>
-            <div className="flex justify-center items-center mt-6">
-              {/* main square */}
-              {!showCamera ? (
-                <div
-                  onClick={() => setShowCamera(true)}
-                  className="flex justify-center items-center border-2 border-dark w-[140px] h-[140px] rounded-lg "
-                >
-                  {/* middle circle */}
-                  <motion.div
-                    variants={blinkAnimation}
-                    animate="blink"
-                    className="bg-dark w-[66px] h-[66px] rounded-full "
-                  />
-                </div>
-              ) : (
-                <QrReader result={result} setResult={setResult} />
-              )}
-            </div>
-            {/* button */}
-            {result && (
-              <button
-                type="submit"
-                className="flex items-center justify-center w-full
-      bg-dark text-white py-3 leading-0 rounded-lg mt-7"
-              >
-                اتصال
-              </button>
-            )}
-          </form>
-        )}
-
-        {useNfc && (
-          <form onSubmit={handleCameraSubmit}>
-            <NFCTag result={result} setResult={setResult} />
-
-            {/* button */}
-            <button
-              type="submit"
-              className="flex items-center justify-center w-full
-                  bg-dark text-white py-3 leading-0 rounded-lg mt-7"
-            >
-              اتصال
-            </button>
-          </form>
-        )}
-
-        {useCode && (
-          <form onSubmit={handleCodeSubmit}>
-            <Code setAccessCode={setAccessCode} />
-
-            <button
-              type="submit"
-              className="flex items-center justify-center w-full
-                  bg-dark text-white py-3 leading-0 rounded-lg mt-7"
-            >
-              اتصال
-            </button>
-          </form>
-        )}
-
-        {/* by camera */}
+    <div className="pt-5 pb-8 !px-6">
+      {/* top line close line*/}
+      <div className="w-full flex justify-center pb-4">
+        <span className="w-[36px] h-[5px] rounded-2xl opacity-25 bg-muted" />
       </div>
-    </BottomSheetWrapper>
+
+      {/* head */}
+      <h3 className="text-lg font-medium">اتصال اکسسوری</h3>
+
+      {/* choices */}
+      <div className="flex justify-between items-center my-4">
+        <button
+          onClick={() => {
+            setUseCode(false);
+            setUseCamera(false);
+            setUseNfc(true);
+          }}
+          className={`border border-dark px-3 py-[2px] rounded-md text-sm ${
+            useNfc ? "bg-dark text-white" : ""
+          }`}
+        >
+          nfc
+        </button>
+
+        <button
+          onClick={() => {
+            setUseCode(false);
+            setUseNfc(false);
+            setUseCamera(true);
+          }}
+          className={`border border-dark px-3 py-[2px] rounded-md text-sm  ${
+            useCamera ? "bg-dark text-white" : ""
+          }`}
+        >
+          دوربین
+        </button>
+        <button
+          onClick={() => {
+            setUseCamera(false);
+            setUseNfc(false);
+            setUseCode(true);
+          }}
+          className={`border border-dark px-3 py-[2px] rounded-md text-sm ${
+            useCode ? "bg-dark text-white" : ""
+          }`}
+        >
+          کد
+        </button>
+      </div>
+
+      {/* byCamera */}
+      {useCamera && (
+        <form onSubmit={handleCameraSubmit}>
+          <div className="flex justify-center items-center mt-6">
+            {/* main square */}
+            {!showCamera ? (
+              <div
+                onClick={() => setShowCamera(true)}
+                className="flex justify-center items-center border-2 border-dark w-[140px] h-[140px] rounded-lg "
+              >
+                {/* middle circle */}
+                <motion.div
+                  variants={blinkAnimation}
+                  animate="blink"
+                  className="bg-dark w-[66px] h-[66px] rounded-full "
+                />
+              </div>
+            ) : (
+              <QrReader result={result} setResult={setResult} />
+            )}
+          </div>
+          {/* button */}
+          {result && (
+            <button
+              type="submit"
+              className="flex items-center justify-center w-full
+      bg-dark text-white py-3 leading-0 rounded-lg mt-7"
+            >
+              اتصال
+            </button>
+          )}
+        </form>
+      )}
+
+      {useNfc && (
+        <form onSubmit={handleCameraSubmit}>
+          <NFCTag result={result} setResult={setResult} />
+
+          {/* button */}
+          <button
+            type="submit"
+            className="flex items-center justify-center w-full
+                  bg-dark text-white py-3 leading-0 rounded-lg mt-7"
+          >
+            اتصال
+          </button>
+        </form>
+      )}
+
+      {useCode && (
+        <form onSubmit={handleCodeSubmit}>
+          <Code setAccessCode={setAccessCode} />
+
+          <button
+            type="submit"
+            className="flex items-center justify-center w-full
+                  bg-dark text-white py-3 leading-0 rounded-lg mt-7"
+          >
+            اتصال
+          </button>
+        </form>
+      )}
+
+      {/* by camera */}
+    </div>
   );
 };
 
