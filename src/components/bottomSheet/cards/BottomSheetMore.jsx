@@ -134,7 +134,7 @@ const BottomSheetMore = ({
     );
   };
 
-  const content = useMemo(() => {
+  const content = () => {
     switch (currentTab) {
       case TABS.default:
         return defaultTab();
@@ -145,7 +145,7 @@ const BottomSheetMore = ({
       default:
         return <defaultTab />;
     }
-  }, [currentTab]);
+  };
 
   return (
     <>
@@ -154,7 +154,7 @@ const BottomSheetMore = ({
           open={showSheetMore}
           onClose={() => setShowSheetMore(false)}
         >
-          {content}
+          {content()}
         </BottomSheetWrapper>
       )}
     </>

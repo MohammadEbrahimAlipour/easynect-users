@@ -17,7 +17,6 @@ const QR_CODE_TYPE = Object.freeze({
 });
 
 const BottomSheetShareById = ({ showSheet, setShowSheet, clickedCardId }) => {
-  console.log("clickedCardId", clickedCardId);
   const accessToken = useAccessToken();
   const [showOptions, setShoOptions] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
