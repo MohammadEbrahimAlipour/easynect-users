@@ -8,22 +8,35 @@ import { ArrowDownIcon } from "@/components/Icons";
 import LoadingState from "@/components/LoadingState";
 import { toast } from "react-toastify";
 import { saveAs } from "file-saver";
+import { Typography } from "@mui/material";
+import tw from "tailwind-styled-components";
+
+const QR_CODE_TYPE = Object.freeze({
+  offline: "offline",
+  online: "online",
+});
 
 const BottomSheetShareById = ({ showSheet, setShowSheet, clickedCardId }) => {
+  console.log("clickedCardId", clickedCardId);
   const accessToken = useAccessToken();
   const [showOptions, setShoOptions] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [pagesData, setPagesData] = useState(null);
+  const [offlineQRCode, setOfflineQRCode] = useState(null);
 
   const [isQrCodeReady, setIsQrCodeReady] = useState(false); // to check if QR code is ready
   const [qrCodeValue, setQRCodeValue] = useState(""); // State to hold the QR code value
   const qrRef = useRef();
+  const offlineQrRef = useRef();
 
-  const saveQRCode = () => {
+  const saveQRCode = (qrCodeType) => {
     if (isQrCodeReady && qrRef.current) {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
-      const svgElement = qrRef.current.querySelector("svg");
+      let svgElement = qrRef.current.querySelector("svg");
+      if (qrCodeType === QR_CODE_TYPE.offline) {
+        svgElement = offlineQrRef.current.querySelector("svg");
+      }
       if (!svgElement) {
         console.error("SVG element not found");
         return;
@@ -61,19 +74,67 @@ const BottomSheetShareById = ({ showSheet, setShowSheet, clickedCardId }) => {
         setQRCodeValue(matchedPage.page_url);
         setIsQrCodeReady(true);
       }
+
+      getOfflineQRCodeRequest();
     }
   }, [pagesData, clickedCardId]); // Run the effect whenever pagesData or clickedCardId changes
 
-  const copyLinkToClipboard = async () => {
+  const copyLinkToClipboard = async (qrCodeType) => {
     if (qrCodeValue) {
       // Use qrCodeValue which is already set for the QR code value
       try {
-        await navigator.clipboard.writeText(qrCodeValue);
+        let value = qrCodeValue;
+        if (qrCodeType === QR_CODE_TYPE.offline) {
+          value = offlineQRCode;
+        }
+        await navigator.clipboard.writeText(value);
         toast.success("لینک کارت کپی شد"); // The link is copied successfully
       } catch (err) {
         console.error("خطایی رخ داده است:", err); // An error occurred
       }
     }
+  };
+
+  const getOfflineQRCodeRequest = () => {
+    const apiUrl = generateApiUrl(
+      `/api/v1/pages/offlineqr/${clickedCardId.id}`
+    );
+    axios
+      .get(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${accessToken.accessToken}`,
+          "Accept-Language": "fa",
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) generateOfflineQRCode(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
+  };
+
+  const generateOfflineQRCode = (data) => {
+    let vCardData = data.links
+      .map((item) => {
+        switch (item.type) {
+          case "phone":
+            return `TEL;TYPE=${item.title}:${item.content_val}`;
+          case "email":
+            return `EMAIL;TYPE=${item.title}:${item.content_val}`;
+          case "link":
+            return `URL;TYPE=${item.title}:${item.content_val}`;
+          case "file":
+            return `URL;TYPE=${item.title}:${item.content_val}`;
+          default:
+            return "";
+        }
+      })
+      .join("\n");
+
+    const vCardString = `BEGIN:VCARD\nVERSION:3.0\nN;CHARSET=utf-8:${data.owner_last_name};${data.owner_first_name};;;\n${vCardData}\nEND:VCARD`;
+
+    setOfflineQRCode(vCardString);
   };
 
   // to fetch the data
@@ -84,8 +145,8 @@ const BottomSheetShareById = ({ showSheet, setShowSheet, clickedCardId }) => {
       .get(apiUrl, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
-          "Accept-Language": "fa"
-        }
+          "Accept-Language": "fa",
+        },
       })
       .then((response) => {
         // Handle the data once it's received
@@ -118,34 +179,63 @@ const BottomSheetShareById = ({ showSheet, setShowSheet, clickedCardId }) => {
               {clickedCardId.card_title}
             </h3>
             {/* qr code */}
-            <div className="flex flex-col justify-center items-center my-4">
-              {/* Add the ref to the QR code container */}
-              <div ref={qrRef}>
-                <QRCode
-                  value={qrCodeValue}
-                  size={200}
-                  fgColor="#000"
-                  bgColor="#fff"
-                  level="H"
-                  renderAs="svg"
-                />
-              </div>
+            <div className="flex justify-around">
+              {/* online qr code */}
+              <div className=" flex flex-col justify-center items-center my-4">
+                <Typography className="mb-4">آنلاین</Typography>
+                {/* Add the ref to the QR code container */}
+                <div ref={qrRef}>
+                  <QRCode
+                    value={qrCodeValue}
+                    size={150}
+                    fgColor="#000"
+                    bgColor="#fff"
+                    level="H"
+                    renderAs="svg"
+                  />
+                </div>
 
-              {/* button */}
-              <button
-                onClick={saveQRCode}
-                className="flex items-center justify-center  px-[57px]
-              bg-dark text-white py-3 leading-0 rounded-lg mt-4"
-              >
-                ذخیره در گالری
-              </button>
-              <button
-                onClick={copyLinkToClipboard}
-                className="flex items-center justify-center  px-[57px]
-              bg-dark text-white py-3 leading-0 rounded-lg mt-2"
-              >
-                کپی لینک کارت
-              </button>
+                {/* button */}
+                <Button onClick={() => saveQRCode(QR_CODE_TYPE.online)}>
+                  ذخیره در گالری
+                </Button>
+                <Button
+                  onClick={() => copyLinkToClipboard(QR_CODE_TYPE.online)}
+                >
+                  کپی لینک کارت
+                </Button>
+              </div>
+              {/* end of online qr code */}
+
+              {/* offline qr code */}
+              <div className="flex flex-col justify-center items-center my-4">
+                <Typography className="mb-4">آفلاین</Typography>
+                {/* Add the ref to the QR code container */}
+                <div ref={offlineQrRef}>
+                  <QRCode
+                    value={offlineQRCode}
+                    size={150}
+                    fgColor="#000"
+                    bgColor="#fff"
+                    level="H"
+                    renderAs="svg"
+                  />
+                </div>
+
+                {/* button */}
+                <Button
+                  onClick={() => saveQRCode(QR_CODE_TYPE.offline)}
+                  className=""
+                >
+                  ذخیره در گالری
+                </Button>
+                <Button
+                  onClick={() => copyLinkToClipboard(QR_CODE_TYPE.offline)}
+                >
+                  کپی لینک کارت
+                </Button>
+              </div>
+              {/* end of online qr code */}
             </div>
           </div>
         </BottomSheetWrapper>
@@ -155,3 +245,17 @@ const BottomSheetShareById = ({ showSheet, setShowSheet, clickedCardId }) => {
 };
 
 export default BottomSheetShareById;
+
+const Button = tw.div`
+  flex
+  items-center
+  justify-center
+  w-full
+  bg-dark
+  text-white
+  py-3
+  leading-0
+  rounded-lg
+  mt-4
+  text-xs
+`;

@@ -304,6 +304,18 @@ const ProfileCard = () => {
                                 </div>
                               </Link>
 
+                              {/* box right 2 */}
+                              <div className="w-[46%] h-[32px] mx-1 border-2 rounded-md flex justify-center items-center">
+                                <button
+                                  onClick={() =>
+                                    handleClickedCardId(id, card_title)
+                                  }
+                                  className="text-xs font-ravi"
+                                >
+                                  اشتراک گذاری
+                                </button>
+                              </div>
+
                               {/* box right 3 */}
                               <Link
                                 href={`/app/stats/personsStats?selectedIdFromCard=${id}`}
