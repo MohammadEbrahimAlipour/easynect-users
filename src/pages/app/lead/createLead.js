@@ -32,7 +32,7 @@ const CreateLead = () => {
   const handleInputChange = (index, value) => {
     setInputValues((prevInputValues) => ({
       ...prevInputValues,
-      [index]: value
+      [index]: value,
     }));
   };
 
@@ -45,8 +45,8 @@ const CreateLead = () => {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`, // Add your access token here
           "Accept-Language": "fa", // Language header
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
       .then((response) => {
         console.log("response ", response);
@@ -89,21 +89,21 @@ const CreateLead = () => {
     const fieldValues = selectedFields.map((field, index) => ({
       lead_capture_store_id: field.id,
       title: (leadOptions[index] = field.title),
-      order: index + 1 //order here
+      order: index + 1, //order here
     }));
 
     axios
       .post(apiUrl, fieldValues, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
-          "Accept-Language": "fa"
-        }
+          "Accept-Language": "fa",
+        },
       })
       .then((response) => {
         // Handle the response as needed (e.g., show a success message)
         console.log("User data updated successfully.");
         toast.success("فیلد های جدید ساخته و اضافه شد");
-        router.push(`/app/lead/lead?id=${id}`);
+        router.push(`/app/cards/profileCard`);
       })
       .catch((error) => {
         console.error("Error updating user data:", error);
