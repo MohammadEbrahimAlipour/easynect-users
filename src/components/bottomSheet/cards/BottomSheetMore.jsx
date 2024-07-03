@@ -8,11 +8,12 @@ import axios from "axios";
 import { useAccessToken } from "../../../../context/AccessTokenContext";
 import { toast } from "react-toastify";
 import { generateApiUrl } from "@/components/ApiUr";
+import BottomSheetShareById from "./BottomSheetShareById";
 
 const TABS = Object.freeze({
   default: "default",
   delete: "delete",
-  "accessory-connect": "accessory-connect",
+  share: "share",
 });
 
 const BottomSheetMore = ({
@@ -68,18 +69,18 @@ const BottomSheetMore = ({
         <ItemsWrapper>
           <Item
             $as={Link}
-            href={`/app/lead/lead?id=${moreSheetDetails.id}`}
+            href={`/app/stats/personsStats?selectedIdFromCard=${moreSheetDetails.id}`}
             className=" border-b-[1px] font-medium  justify-center block py-3 px-4 hover:bg-gray-100 font-ravi w-full"
           >
-            فرم لید
+            آمار
           </Item>
 
           <Item
             onClick={() => {
-              setCurrentTab(TABS["accessory-connect"]);
+              setCurrentTab(TABS["share"]);
             }}
           >
-            اتصال اکسسوری
+            اشتراک گذاری
           </Item>
 
           <Item
@@ -93,10 +94,6 @@ const BottomSheetMore = ({
         </ItemsWrapper>
       </>
     );
-  };
-
-  const accessoryConnectTab = () => {
-    return <AccessoryConnect moreSheetDetails={moreSheetDetails} />;
   };
 
   const deleteTab = () => {
@@ -138,8 +135,8 @@ const BottomSheetMore = ({
     switch (currentTab) {
       case TABS.default:
         return defaultTab();
-      case TABS["accessory-connect"]:
-        return accessoryConnectTab();
+      case TABS["share"]:
+        return <BottomSheetShareById clickedCardId={moreSheetDetails} />;
       case TABS["delete"]:
         return deleteTab();
       default:

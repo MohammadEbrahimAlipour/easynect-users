@@ -7,8 +7,9 @@ import QrReader from "./accessories/QrReader";
 import NFCTag from "./accessories/NFCTag";
 import { motion } from "framer-motion";
 import Code from "./accessories/Code";
+import BottomSheetWrapper from "./bottomSheet/BottomSheetWrapper";
 
-const AccessoryConnect = ({ moreSheetDetails }) => {
+const AccessoryConnect = ({ open, onClose, moreSheetDetails }) => {
   const accessToken = useAccessToken();
   const [accessCode, setAccessCode] = useState();
   const [useNfc, setUseNfc] = useState(false);
@@ -126,121 +127,123 @@ const AccessoryConnect = ({ moreSheetDetails }) => {
   };
 
   return (
-    <div className="pt-5 pb-8 !px-6">
-      {/* top line close line*/}
-      <div className="w-full flex justify-center pb-4">
-        <span className="w-[36px] h-[5px] rounded-2xl opacity-25 bg-muted" />
-      </div>
+    <BottomSheetWrapper open={open} onClose={onClose}>
+      <div className="pt-5 pb-8 !px-6">
+        {/* top line close line*/}
+        <div className="w-full flex justify-center pb-4">
+          <span className="w-[36px] h-[5px] rounded-2xl opacity-25 bg-muted" />
+        </div>
 
-      {/* head */}
-      <h3 className="text-lg font-medium">اتصال اکسسوری</h3>
+        {/* head */}
+        <h3 className="text-lg font-medium">اتصال اکسسوری</h3>
 
-      {/* choices */}
-      <div className="flex justify-between items-center my-4">
-        <button
-          onClick={() => {
-            setUseCode(false);
-            setUseCamera(false);
-            setUseNfc(true);
-          }}
-          className={`border border-dark px-3 py-[2px] rounded-md text-sm ${
-            useNfc ? "bg-dark text-white" : ""
-          }`}
-        >
-          nfc
-        </button>
+        {/* choices */}
+        <div className="flex justify-between items-center my-4">
+          <button
+            onClick={() => {
+              setUseCode(false);
+              setUseCamera(false);
+              setUseNfc(true);
+            }}
+            className={`border border-dark px-3 py-[2px] rounded-md text-sm ${
+              useNfc ? "bg-dark text-white" : ""
+            }`}
+          >
+            nfc
+          </button>
 
-        <button
-          onClick={() => {
-            setUseCode(false);
-            setUseNfc(false);
-            setUseCamera(true);
-          }}
-          className={`border border-dark px-3 py-[2px] rounded-md text-sm  ${
-            useCamera ? "bg-dark text-white" : ""
-          }`}
-        >
-          دوربین
-        </button>
-        <button
-          onClick={() => {
-            setUseCamera(false);
-            setUseNfc(false);
-            setUseCode(true);
-          }}
-          className={`border border-dark px-3 py-[2px] rounded-md text-sm ${
-            useCode ? "bg-dark text-white" : ""
-          }`}
-        >
-          کد
-        </button>
-      </div>
+          <button
+            onClick={() => {
+              setUseCode(false);
+              setUseNfc(false);
+              setUseCamera(true);
+            }}
+            className={`border border-dark px-3 py-[2px] rounded-md text-sm  ${
+              useCamera ? "bg-dark text-white" : ""
+            }`}
+          >
+            دوربین
+          </button>
+          <button
+            onClick={() => {
+              setUseCamera(false);
+              setUseNfc(false);
+              setUseCode(true);
+            }}
+            className={`border border-dark px-3 py-[2px] rounded-md text-sm ${
+              useCode ? "bg-dark text-white" : ""
+            }`}
+          >
+            کد
+          </button>
+        </div>
 
-      {/* byCamera */}
-      {useCamera && (
-        <form onSubmit={handleCameraSubmit}>
-          <div className="flex justify-center items-center mt-6">
-            {/* main square */}
-            {!showCamera ? (
-              <div
-                onClick={() => setShowCamera(true)}
-                className="flex justify-center items-center border-2 border-dark w-[140px] h-[140px] rounded-lg "
+        {/* byCamera */}
+        {useCamera && (
+          <form onSubmit={handleCameraSubmit}>
+            <div className="flex justify-center items-center mt-6">
+              {/* main square */}
+              {!showCamera ? (
+                <div
+                  onClick={() => setShowCamera(true)}
+                  className="flex justify-center items-center border-2 border-dark w-[140px] h-[140px] rounded-lg "
+                >
+                  {/* middle circle */}
+                  <motion.div
+                    variants={blinkAnimation}
+                    animate="blink"
+                    className="bg-dark w-[66px] h-[66px] rounded-full "
+                  />
+                </div>
+              ) : (
+                <QrReader result={result} setResult={setResult} />
+              )}
+            </div>
+            {/* button */}
+            {result && (
+              <button
+                type="submit"
+                className="flex items-center justify-center w-full
+      bg-dark text-white py-3 leading-0 rounded-lg mt-7"
               >
-                {/* middle circle */}
-                <motion.div
-                  variants={blinkAnimation}
-                  animate="blink"
-                  className="bg-dark w-[66px] h-[66px] rounded-full "
-                />
-              </div>
-            ) : (
-              <QrReader result={result} setResult={setResult} />
+                اتصال
+              </button>
             )}
-          </div>
-          {/* button */}
-          {result && (
+          </form>
+        )}
+
+        {useNfc && (
+          <form onSubmit={handleCameraSubmit}>
+            <NFCTag result={result} setResult={setResult} />
+
+            {/* button */}
             <button
               type="submit"
               className="flex items-center justify-center w-full
-      bg-dark text-white py-3 leading-0 rounded-lg mt-7"
+                  bg-dark text-white py-3 leading-0 rounded-lg mt-7"
             >
               اتصال
             </button>
-          )}
-        </form>
-      )}
+          </form>
+        )}
 
-      {useNfc && (
-        <form onSubmit={handleCameraSubmit}>
-          <NFCTag result={result} setResult={setResult} />
+        {useCode && (
+          <form onSubmit={handleCodeSubmit}>
+            <Code setAccessCode={setAccessCode} />
 
-          {/* button */}
-          <button
-            type="submit"
-            className="flex items-center justify-center w-full
+            <button
+              type="submit"
+              className="flex items-center justify-center w-full
                   bg-dark text-white py-3 leading-0 rounded-lg mt-7"
-          >
-            اتصال
-          </button>
-        </form>
-      )}
+            >
+              اتصال
+            </button>
+          </form>
+        )}
 
-      {useCode && (
-        <form onSubmit={handleCodeSubmit}>
-          <Code setAccessCode={setAccessCode} />
-
-          <button
-            type="submit"
-            className="flex items-center justify-center w-full
-                  bg-dark text-white py-3 leading-0 rounded-lg mt-7"
-          >
-            اتصال
-          </button>
-        </form>
-      )}
-
-      {/* by camera */}
-    </div>
+        {/* by camera */}
+      </div>
+    </BottomSheetWrapper>
   );
 };
 
