@@ -84,6 +84,15 @@ export async function getServerSideProps(context) {
       };
     }
 
+    if (error.response && error.response.status === 403) {
+      return {
+        redirect: {
+          destination: "/403",
+          permanent: false,
+        },
+      };
+    }
+
     if (error.response && error.response.data && error.response.data.detail) {
       return {
         props: { errorMessage: error.response.data.detail },
