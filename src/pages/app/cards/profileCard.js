@@ -15,6 +15,7 @@ import axiosInstance from "@/services/axiosInterceptors";
 import Head from "next/head";
 import Image from "next/image";
 import { generateApiUrl } from "@/components/ApiUr";
+import AccessoryConnect from "@/components/AccessoryConnect";
 
 const ProfileCard = () => {
   const [cardData, setCardData] = useState([]);
@@ -29,6 +30,10 @@ const ProfileCard = () => {
   const [showSheet, setShowSheet] = useState(false); //share options
   const [showSheetMore, setShowSheetMore] = useState(false); //more options
   const [cards, setCards] = useState([]);
+  const [
+    isAccessoryConnectBottomSheetOpen,
+    setIsAccessoryConnectBottomSheetOpen,
+  ] = useState(false);
 
   const [pageDataDontExist, setPageDAtaDontExist] = useState(false);
 
@@ -62,6 +67,10 @@ const ProfileCard = () => {
   // Fetch card data from the API
   useEffect(() => {
     // Replace with your API endpoint
+    getCardsRequest();
+  }, [accessToken.accessToken]);
+
+  const getCardsRequest = () => {
     const apiUrl = API_ROUTES.CARDS_PROFILE_CARD_PAGES;
 
     axiosInstance
@@ -94,7 +103,7 @@ const ProfileCard = () => {
           console.error("Error fetching data:", error);
         }
       });
-  }, [accessToken.accessToken]);
+  };
 
   useEffect(() => {
     // Assuming cardData is your state which has data fetched from the API.
@@ -183,6 +192,11 @@ const ProfileCard = () => {
     }
 
     return 0;
+  };
+
+  const handlePageDelete = () => {
+    setShowSheetMore(false);
+    getCardsRequest();
   };
 
   return (
@@ -283,37 +297,35 @@ const ProfileCard = () => {
                         {/* bottom section */}
                         <div className="pb-5 border-t-[1px] w-full">
                           <div className="grid grid-cols-12">
-                            <div className="mt-5 mx-4 flex justify-center items-center col-span-10">
+                            <div className="mt-5 flex justify-start gap-3 items-center col-span-10">
                               {/* box right 1 */}
                               <Link
                                 href={`/app/cards/editProfileInfo?id=${id}`}
                                 passHref
-                                className="w-[28%] h-[32px] border-2 rounded-md flex justify-center items-center"
+                                className="h-[32px] border-2 rounded-md flex justify-center items-center px-2"
                               >
                                 <div>
                                   <p className="text-xs ">ویرایش</p>
                                 </div>
                               </Link>
 
-                              {/* box right 2 */}
-                              <div className="w-[46%] h-[32px] mx-1 border-2 rounded-md flex justify-center items-center">
-                                <button
-                                  onClick={() =>
-                                    handleClickedCardId(id, card_title)
-                                  }
-                                  className="text-xs font-ravi"
-                                >
-                                  اشتراک گذاری
-                                </button>
-                              </div>
-
                               {/* box right 3 */}
                               <Link
-                                href={`/app/stats/personsStats?selectedIdFromCard=${id}`}
-                                className="w-[22%] h-[32px] border-2 rounded-md flex justify-center items-center"
+                                href={`/app/lead/lead?id=${id}`}
+                                className="h-[32px] border-2 rounded-md flex justify-center items-center px-2"
                               >
-                                <p className="text-xs">آمار</p>
+                                <p className="text-xs">فرم لید</p>
                               </Link>
+
+                              {/* box right 3 */}
+                              <div
+                                className="h-[32px] border-2 rounded-md flex justify-center items-center px-2"
+                                onClick={() => {
+                                  setIsAccessoryConnectBottomSheetOpen(true);
+                                }}
+                              >
+                                <p className="text-xs">اتصال اکسسوری</p>
+                              </div>
                             </div>
                             {/* left side more icon */}
                             <button
@@ -350,11 +362,12 @@ const ProfileCard = () => {
       </Layout>
       <Footer />
 
-      {/* bottom sheet */}
-      <BottomSheetShareById
-        showSheet={showSheet}
-        setShowSheet={setShowSheet}
-        clickedCardId={clickedCardId}
+      <AccessoryConnect
+        open={isAccessoryConnectBottomSheetOpen}
+        onClose={() => {
+          setIsAccessoryConnectBottomSheetOpen(false);
+        }}
+        moreSheetDetails={moreSheetDetails}
       />
 
       {/* Bottom sheet more */}
@@ -362,6 +375,7 @@ const ProfileCard = () => {
         showSheetMore={showSheetMore}
         setShowSheetMore={setShowSheetMore}
         moreSheetDetails={moreSheetDetails}
+        onDelete={handlePageDelete}
       />
     </>
   );

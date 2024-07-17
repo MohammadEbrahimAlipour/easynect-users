@@ -12,12 +12,33 @@ import "swiper/css";
 import ErrorBoundary from "@/components/Errors/ErrorBoundary";
 import "react-indiana-drag-scroll/dist/style.css";
 import { appWithTranslation } from "next-i18next";
+import { ThemeProvider, createTheme } from "@mui/material";
 
 const protectedRoutes = [/\/app\/.*/];
 
+const theme = createTheme({
+  typography: {
+    fontFamily: "Ravi, Arial",
+  },
+  palette: {
+    primary: {
+      light: "#757ce8",
+      main: "#3f50b5",
+      dark: "#002884",
+      contrastText: "#fff",
+    },
+    secondary: {
+      light: "#ff7961",
+      main: "#f44336",
+      dark: "#ba000d",
+      contrastText: "#000",
+    },
+  },
+});
+
 function App({ Component, pageProps }) {
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
@@ -27,7 +48,6 @@ function App({ Component, pageProps }) {
           href="/apple-touch-icon.png"
         />
       </Head>
-
       <main
         className={`mx-auto flex flex-col min-h-screen w-screen container:w-[414px]`}
       >
@@ -52,7 +72,7 @@ function App({ Component, pageProps }) {
         pauseOnHover
         theme="dark"
       />
-    </>
+    </ThemeProvider>
   );
 }
 

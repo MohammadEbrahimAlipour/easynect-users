@@ -1,7 +1,5 @@
-import Link from "next/link";
 import React, { useState } from "react";
 import axios from "axios";
-import BottomSheetWrapper from "./bottomSheet/BottomSheetWrapper";
 import { useAccessToken } from "../../context/AccessTokenContext";
 import { generateApiUrl } from "./ApiUr";
 import { toast } from "react-toastify";
@@ -9,12 +7,9 @@ import QrReader from "./accessories/QrReader";
 import NFCTag from "./accessories/NFCTag";
 import { motion } from "framer-motion";
 import Code from "./accessories/Code";
+import BottomSheetWrapper from "./bottomSheet/BottomSheetWrapper";
 
-const AccessoryConnect = ({
-  showAccessory,
-  setShowAccessory,
-  moreSheetDetails
-}) => {
+const AccessoryConnect = ({ open, onClose, moreSheetDetails }) => {
   const accessToken = useAccessToken();
   const [accessCode, setAccessCode] = useState();
   const [useNfc, setUseNfc] = useState(false);
@@ -30,8 +25,8 @@ const AccessoryConnect = ({
   const blinkAnimation = {
     blink: {
       opacity: [1, 0.1, 1],
-      transition: { repeat: Infinity, repeatType: "mirror", duration: 3 }
-    }
+      transition: { repeat: Infinity, repeatType: "mirror", duration: 3 },
+    },
   };
 
   const handleCodeSubmit = async (e) => {
@@ -43,15 +38,15 @@ const AccessoryConnect = ({
         const apiUrl = generateApiUrl(`/api/v1/devices/${moreSheetDetails.id}`);
 
         const payload = {
-          url: accessCode // This will be 'device/{input_value}'
+          url: accessCode, // This will be 'device/{input_value}'
         };
 
         const response = await axios.post(apiUrl, payload, {
           headers: {
             Authorization: `Bearer ${accessToken.accessToken}`,
             "Content-Type": "application/json",
-            "Accept-Language": "fa"
-          }
+            "Accept-Language": "fa",
+          },
         });
 
         if (response.status === 200) {
@@ -102,8 +97,8 @@ const AccessoryConnect = ({
             headers: {
               Authorization: `Bearer ${accessToken.accessToken}`,
               "Accept-Language": "fa",
-              "Content-Type": "application/json"
-            }
+              "Content-Type": "application/json",
+            },
           }
         )
         .then((response) => {
@@ -132,11 +127,8 @@ const AccessoryConnect = ({
   };
 
   return (
-    <BottomSheetWrapper
-      open={showAccessory}
-      onClose={() => setShowAccessory(false)}
-    >
-      <div className=" pt-5 pb-8 container !px-6">
+    <BottomSheetWrapper open={open} onClose={onClose}>
+      <div className="pt-5 pb-8 !px-6">
         {/* top line close line*/}
         <div className="w-full flex justify-center pb-4">
           <span className="w-[36px] h-[5px] rounded-2xl opacity-25 bg-muted" />

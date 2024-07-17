@@ -1,6 +1,6 @@
 // new changes
 // TODO: needs to be refactored
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import axios from "axios";
 import Image from "next/image";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
@@ -79,6 +79,15 @@ export async function getServerSideProps(context) {
       return {
         redirect: {
           destination: "/404",
+          permanent: false,
+        },
+      };
+    }
+
+    if (error.response && error.response.status === 403) {
+      return {
+        redirect: {
+          destination: "/403",
           permanent: false,
         },
       };
@@ -231,6 +240,26 @@ export default function Username({
     window.URL.revokeObjectURL(url);
   };
 
+  const isInWordHidden = useMemo(() => {
+    let hidden = false;
+
+    if (
+      usersData?.job_title?.length === 0 ||
+      usersData?.job_title === " " ||
+      !usersData?.job_title
+    )
+      hidden = true;
+
+    if (
+      usersData?.company?.length === 0 ||
+      usersData?.company === " " ||
+      !usersData?.company
+    )
+      hidden = true;
+
+    return hidden;
+  }, [usersData]);
+
   if (errorMessage) {
     toast.error(errorMessage);
     return null;
@@ -262,7 +291,8 @@ export default function Username({
               {usersData?.owner_first_name} {usersData?.owner_last_name}
             </FullName>
             <JobTitle>
-              {usersData?.job_title} {t("in")} {usersData?.company}
+              {usersData?.job_title} {!isInWordHidden && t("in")}{" "}
+              {usersData?.company}
               <InfoIcon className="mr-1" />
             </JobTitle>
           </Texts>
