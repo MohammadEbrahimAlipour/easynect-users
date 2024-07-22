@@ -322,6 +322,10 @@ const ProfileCard = () => {
                                 className="h-[32px] border-2 rounded-md flex justify-center items-center px-2"
                                 onClick={() => {
                                   setIsAccessoryConnectBottomSheetOpen(true);
+                                  setMoreSheetDetails({
+                                    id: id,
+                                    card_title: card_title,
+                                  });
                                 }}
                               >
                                 <p className="text-xs">اتصال اکسسوری</p>
