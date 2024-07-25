@@ -240,26 +240,6 @@ export default function Username({
     window.URL.revokeObjectURL(url);
   };
 
-  const isInWordHidden = useMemo(() => {
-    let hidden = false;
-
-    if (
-      usersData?.job_title?.length === 0 ||
-      usersData?.job_title === " " ||
-      !usersData?.job_title
-    )
-      hidden = true;
-
-    if (
-      usersData?.company?.length === 0 ||
-      usersData?.company === " " ||
-      !usersData?.company
-    )
-      hidden = true;
-
-    return hidden;
-  }, [usersData]);
-
   if (errorMessage) {
     toast.error(errorMessage);
     return null;
@@ -291,7 +271,7 @@ export default function Username({
               {usersData?.owner_first_name} {usersData?.owner_last_name}
             </FullName>
             <JobTitle>
-              {usersData?.job_title} {!isInWordHidden && t("in")}{" "}
+              {usersData?.job_title}
               {usersData?.company}
               <InfoIcon className="mr-1" />
             </JobTitle>
