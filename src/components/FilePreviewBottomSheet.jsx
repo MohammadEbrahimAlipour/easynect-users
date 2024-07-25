@@ -62,7 +62,7 @@ export default function FilePreviewBottomSheet({ url, isOpen, onClose }) {
       return (
         <Document
           externalLinkTarget="_blank"
-          file={url}
+          file={`${url}?refresh=${Math.floor(Date.now() / 1000)}`}
           onLoadSuccess={onDocumentLoadSuccess}
         >
           {Array.from(new Array(numPages), (el, index) => (
