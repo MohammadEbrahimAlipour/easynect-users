@@ -2,9 +2,7 @@ version: "3"
 
 services:
   nextjs-container:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: registry-ebef14e2c4-easynect.apps.ir-thr-ba1.arvancaas.ir/easynect/easynect-frontend:latest
     container_name: user-frontend
     restart: always
     expose:
