@@ -2,7 +2,9 @@ version: "3"
 
 services:
   nextjs-container:
-    image: ${DC_IMAGE_NAME}:${DC_IMAGE_TAG}
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: user-frontend
     restart: always
     expose:
