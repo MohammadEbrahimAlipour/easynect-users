@@ -18,7 +18,7 @@ import { downloadFile, getFileExtension } from "@/utils/file";
 import { FILE_EXTENSIONS } from "@/constants/file";
 import { useTranslation } from "react-i18next";
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.js`;
 
 const resizeObserverOptions = {};
 
