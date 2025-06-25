@@ -6,8 +6,9 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: [
-      process.env.NEXT_PUBLIC_S3_PAGES_URL,
-      process.env.NEXT_PUBLIC_S3_CONTENTS_URL,
+      process.env.NEXT_PUBLIC_S3_PAGES_URL || 'easynect-pages-contents.s3.ir-thr-at1.arvanstorage.ir',
+      process.env.NEXT_PUBLIC_S3_CONTENTS_URL || 'easynect-static-contents.s3.ir-thr-at1.arvanstorage.ir',
+      'easynect-production-static-contents.s3.ir-thr-at1.arvanstorage.ir',
     ],
   },
   output: "standalone",

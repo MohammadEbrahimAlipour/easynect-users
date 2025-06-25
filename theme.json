@@ -1,0 +1,24 @@
+{
+    "mainBackground": "rgba(255, 255, 255, 1)",
+    "mainTextColor": "rgba(0, 0, 0, 1)",
+    "calloutBackground": "rgba(var(--callout-rgb), 0.5)",
+    "calloutBorder": "rgba(var(--callout-border-rgb), 0.3)",
+    "cardBackground": "rgba(var(--card-rgb), 0)",
+    "cardBorder": "rgba(var(--card-border-rgb), 0)",
+    "cardHoverBackground": "rgba(var(--card-rgb), 0.1)",
+    "cardHoverBorder": "rgba(var(--card-border-rgb), 0.15)",
+    "primaryGlow": "var(--primary-glow)",
+    "secondaryGlow": "var(--secondary-glow)",
+    "tileBorderGradient": "var(--tile-border)",
+    "tileInnerGradient": "linear-gradient(to bottom right, rgba(var(--tile-start-rgb), 1), rgba(var(--tile-end-rgb), 1))",
+    "backgroundGradientMobile": "linear-gradient(to bottom, rgba(var(--background-start-rgb), 1), rgba(var(--callout-rgb), 0.5))",
+    "backgroundGradientFooter": "linear-gradient(to bottom, transparent 0%, rgb(var(--background-end-rgb)) 40%)",
+    "boxShadowThirteen": "0px 2px 8px -1px #0000001a",
+    "textShadowZero": "10px 9px 4px rgba(0, 0, 0, 0.6)",
+    "textShadowLeft4": "5px 9px 4px rgba(0, 0, 0, 0.2)",
+    "textShadowRight4": "11px 11px 8px rgba(0, 0, 0, 0.6)",
+    "toggleOnBackground": "#333",
+    "inputFocusBorder": "#cea16a",
+    "inputFocusOutline": "#cea16a"
+  }
+  

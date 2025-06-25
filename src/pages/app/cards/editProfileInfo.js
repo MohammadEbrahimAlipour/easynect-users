@@ -56,6 +56,7 @@ const EditProfileInfo = () => {
   const [isDirect, setIsDirect] = useState(formData.is_direct);
   const [isLoading, setIsLoading] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(null);
+  const sid = router.query.id;
 
   // Fetch data from the server when the component mounts
   useEffect(() => {
@@ -150,7 +151,7 @@ const EditProfileInfo = () => {
     // Send a PATCH request with the FormData and headers using Axios
 
     if (Object.keys(changedFormData).length === 0) {
-      router.push("/app/cards/profileCard");
+      router.push(`/app/cards/profileCard?id=${sid}`);
       return;
     }
 
@@ -175,7 +176,7 @@ const EditProfileInfo = () => {
           // Handle successful response, e.g., show a success message
           console.log("Form submitted successfully");
           setChangedFormData({}); // Clear the changedFormData object
-          router.push("/app/cards/profileCard");
+          router.push(`/app/cards/profileCard?id=${sid}`);
           // to reload the page
           // window.location.reload();
         } else {
@@ -197,8 +198,11 @@ const EditProfileInfo = () => {
   const goBack = () => {
     if (isLoading) return;
 
-    router.back();
-  };
+    if (sid) {
+      router.push(`/app/cards//profileCard?id=${sid}`);
+    } else {
+      router.back();
+    }  };
 
   const handleCloseCropBottomSheet = () => {
     setIsCropBottomSheetOpen(false);

@@ -287,6 +287,7 @@ export default function Playground() {
       .then((response) => {
         console.log("User data updated successfully.");
         toast.success("updated successfully");
+        router.back();
       })
       .catch((error) => {
         console.error("Error updating user data:", error);

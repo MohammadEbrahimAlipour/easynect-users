@@ -38,6 +38,9 @@ export const API_ROUTES = {
   // profile
   PROFILE_CHANGE_PASSWORD: generateApiUrl("/api/v1/users/change_password/"),
 
+  // invoices
+  INVOICES_INVOICE_LIST: generateApiUrl("/api/v1/invoice/"),
+
   // lead
   LEAD_LEADS: (id) => generateApiUrl(`/api/v1/leads/${id}`),
 

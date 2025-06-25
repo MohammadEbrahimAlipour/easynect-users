@@ -259,7 +259,7 @@ export default function Username({
       </Head>
 
       <Cover>
-        <CoverImage fill src={usersData?.banner_s3_url} />
+        {/* <CoverImage fill src={usersData?.banner_s3_url} /> */}
       </Cover>
       <Header>
         <ProfilePictureWrapper>

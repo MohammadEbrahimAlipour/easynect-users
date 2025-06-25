@@ -106,9 +106,10 @@ const ProfileCard = () => {
   };
 
   useEffect(() => {
-    // Assuming cardData is your state which has data fetched from the API.
-    setCards(
-      cardData.map((apiCard) => ({
+    const sid = router.query.id;
+  
+    const reorderedCards = [...cardData]
+      .map((apiCard) => ({
         isFallen: false,
         id: apiCard.id,
         card_title: apiCard.card_title,
@@ -119,8 +120,15 @@ const ProfileCard = () => {
         user_first_name: apiCard.user_first_name,
         user_last_name: apiCard.user_last_name,
       }))
-    );
-  }, [cardData]);
+      .sort((a, b) => {
+        // اگر کارت a همان کارت با id مورد نظر باشد، بفرستش انتها
+        if (a.id === sid) return 1;
+        if (b.id === sid) return -1;
+        return 0;
+      });
+  
+    setCards(reorderedCards);
+  }, [cardData, router.query.id]);
 
   const handleMouseMove = (e) => {
     if (!isTouching) return;
@@ -199,6 +207,43 @@ const ProfileCard = () => {
     getCardsRequest();
   };
 
+  const shiftCardForward = () => {
+    setCards((prev) => {
+      const newCards = [...prev];
+      const last = newCards.pop();
+      newCards.unshift(last);
+      return newCards;
+    });
+  };
+
+  const shiftCardBackward = () => {
+    setCards((prev) => {
+      const newCards = [...prev];
+      const first = newCards.shift();
+      newCards.push(first);
+      return newCards;
+    });
+  };
+
+  useEffect(() => {
+    const handleScroll = (e) => {
+      if (e.deltaY > 50) {
+        shiftCardForward();
+      } else if (e.deltaY < -50) {
+        shiftCardBackward();
+      }
+    };
+
+    const wrapper = cardWrapperRef.current;
+    wrapper.addEventListener("wheel", handleScroll, { passive: true });
+
+    return () => {
+      wrapper.removeEventListener("wheel", handleScroll);
+    };
+  }, [cards]);
+
+console.log(cards
+  .slice(cards.length - finalCardsNumber, cards.length), 'ssssssssssssssssssssss')
   return (
     <>
       <Head>
@@ -347,6 +392,20 @@ const ProfileCard = () => {
                     </Card>
                   )
                 )}
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-16">
+                <button
+                  onClick={shiftCardBackward}
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                >
+                  قبلی
+                </button>
+                <button
+                  onClick={shiftCardForward}
+                  className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
+                >
+                  بعدی
+                </button>
+              </div>
             </CardWrapper>
 
             <Link
