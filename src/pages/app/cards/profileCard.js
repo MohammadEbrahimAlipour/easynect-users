@@ -16,6 +16,9 @@ import Head from "next/head";
 import Image from "next/image";
 import { generateApiUrl } from "@/components/ApiUr";
 import AccessoryConnect from "@/components/AccessoryConnect";
+import { IconButton } from "@mui/material";
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const ProfileCard = () => {
   const [cardData, setCardData] = useState([]);
@@ -107,7 +110,7 @@ const ProfileCard = () => {
 
   useEffect(() => {
     const sid = router.query.id;
-  
+
     const reorderedCards = [...cardData]
       .map((apiCard) => ({
         isFallen: false,
@@ -126,7 +129,7 @@ const ProfileCard = () => {
         if (b.id === sid) return -1;
         return 0;
       });
-  
+
     setCards(reorderedCards);
   }, [cardData, router.query.id]);
 
@@ -242,8 +245,8 @@ const ProfileCard = () => {
     };
   }, [cards]);
 
-console.log(cards
-  .slice(cards.length - finalCardsNumber, cards.length), 'ssssssssssssssssssssss')
+  console.log(cards
+    .slice(cards.length - finalCardsNumber, cards.length), 'ssssssssssssssssssssss')
   return (
     <>
       <Head>
@@ -392,19 +395,34 @@ console.log(cards
                     </Card>
                   )
                 )}
-              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-16">
-                <button
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-12 flex gap-16">
+                <IconButton
                   onClick={shiftCardBackward}
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                  sx={{
+                    backgroundColor: '#D1AB48',
+                    color: '#fff',
+                    '&:hover': {
+                      backgroundColor: '#1E88E5', // blue-600
+                    },
+                  }}
                 >
-                  قبلی
-                </button>
-                <button
+                  <ArrowForwardIosIcon />
+
+                </IconButton>
+
+                <IconButton
                   onClick={shiftCardForward}
-                  className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
+                  sx={{
+                    backgroundColor: '#D1AB48',
+                    color: '#fff',
+                    '&:hover': {
+                      backgroundColor: '#43A047', // green-600
+                    },
+                  }}
                 >
-                  بعدی
-                </button>
+                  <ArrowBackIosNewIcon />
+
+                </IconButton>
               </div>
             </CardWrapper>
 

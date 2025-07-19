@@ -21,6 +21,9 @@ import UploadInput from "@/components/UploadInput";
 import EditProfileInfoLanguage from "@/components/EditProfileInfoLanguage";
 import CropImageBottomSheet from "@/components/CropImageBottomSheet";
 import { imageUrlToBlob, readFile } from "@/utils/file";
+import Faq from "@/components/editProfile/Faq";
+import GalleryUploader from "@/components/editProfile/GalleryUploader";
+import VideoEmbedUploader from "@/components/editProfile/VideoEmbedUploader";
 
 const EditProfileInfo = () => {
   const [pageData, setPageData] = useState(null);
@@ -202,7 +205,8 @@ const EditProfileInfo = () => {
       router.push(`/app/cards//profileCard?id=${sid}`);
     } else {
       router.back();
-    }  };
+    }
+  };
 
   const handleCloseCropBottomSheet = () => {
     setIsCropBottomSheetOpen(false);
@@ -388,6 +392,13 @@ const EditProfileInfo = () => {
                       currentLanguage={formData.final_page_language}
                       onSelect={handleLanguageChange}
                     />
+
+                    <Faq />
+
+                    <GalleryUploader />
+
+                    <VideoEmbedUploader />
+
                   </div>
                 </form>
                 {/* <div className="my-8">
