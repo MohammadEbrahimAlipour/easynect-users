@@ -89,6 +89,7 @@ const BottomSheetShareById = ({ clickedCardId }) => {
         if (qrCodeType === QR_CODE_TYPE.offline) {
           value = offlineQRCode;
         }
+        console.log(value, 'value')
         await navigator.clipboard.writeText(value);
         toast.success("لینک کارت کپی شد"); // The link is copied successfully
       } catch (err) {

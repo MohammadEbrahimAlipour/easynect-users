@@ -21,6 +21,9 @@ import UploadInput from "@/components/UploadInput";
 import EditProfileInfoLanguage from "@/components/EditProfileInfoLanguage";
 import CropImageBottomSheet from "@/components/CropImageBottomSheet";
 import { imageUrlToBlob, readFile } from "@/utils/file";
+import Faq from "@/components/editProfile/Faq";
+import GalleryUploader from "@/components/editProfile/GalleryUploader";
+import VideoEmbedUploader from "@/components/editProfile/VideoEmbedUploader";
 
 const EditProfileInfo = () => {
   const [pageData, setPageData] = useState(null);
@@ -56,6 +59,7 @@ const EditProfileInfo = () => {
   const [isDirect, setIsDirect] = useState(formData.is_direct);
   const [isLoading, setIsLoading] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(null);
+  const sid = router.query.id;
 
   // Fetch data from the server when the component mounts
   useEffect(() => {
@@ -150,7 +154,7 @@ const EditProfileInfo = () => {
     // Send a PATCH request with the FormData and headers using Axios
 
     if (Object.keys(changedFormData).length === 0) {
-      router.push("/app/cards/profileCard");
+      router.push(`/app/cards/profileCard?id=${sid}`);
       return;
     }
 
@@ -175,7 +179,7 @@ const EditProfileInfo = () => {
           // Handle successful response, e.g., show a success message
           console.log("Form submitted successfully");
           setChangedFormData({}); // Clear the changedFormData object
-          router.push("/app/cards/profileCard");
+          router.push(`/app/cards/profileCard?id=${sid}`);
           // to reload the page
           // window.location.reload();
         } else {
@@ -197,7 +201,11 @@ const EditProfileInfo = () => {
   const goBack = () => {
     if (isLoading) return;
 
-    router.back();
+    if (sid) {
+      router.push(`/app/cards//profileCard?id=${sid}`);
+    } else {
+      router.back();
+    }
   };
 
   const handleCloseCropBottomSheet = () => {
@@ -384,6 +392,13 @@ const EditProfileInfo = () => {
                       currentLanguage={formData.final_page_language}
                       onSelect={handleLanguageChange}
                     />
+
+                    <Faq />
+
+                    <GalleryUploader />
+
+                    <VideoEmbedUploader />
+
                   </div>
                 </form>
                 {/* <div className="my-8">

@@ -101,6 +101,14 @@ const Profile = () => {
                 className="ms-2"
               />
             </li>
+            {/* <li className="py-5 border-b-[1px] flex justify-start items-center">
+              <ProfileChangePassIcon />
+              <CustomLinkProfile
+                title=" سوابق مالی "
+                href="/app/profile/invoicesList/invoices"
+                className="ms-2"
+              />
+            </li> */}
 
             {/* logout */}
             <li className="py-5 border-b-[1px] flex justify-start items-center font-semibold">

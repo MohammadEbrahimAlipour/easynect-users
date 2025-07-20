@@ -38,9 +38,40 @@ export const API_ROUTES = {
   // profile
   PROFILE_CHANGE_PASSWORD: generateApiUrl("/api/v1/users/change_password/"),
 
+  // invoices
+  INVOICES_INVOICE_LIST: generateApiUrl("/api/v1/invoice/"),
+
   // lead
   LEAD_LEADS: (id) => generateApiUrl(`/api/v1/leads/${id}`),
 
   LEAD_CONNECTIONS: (pageId) =>
-    generateApiUrl(`/api/v1/connections/make_connections_by_lead/${pageId}`)
+    generateApiUrl(`/api/v1/connections/make_connections_by_lead/${pageId}`),
+  // Cataloge
+
+  CATALOG_DEPONDS_PAGE: (id) => generateApiUrl(`/api/v1/catalogs/page/${id}`),
+
+  CATALOGS_CATEGORY:(catalog_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/category/`),
+
+  CATALOG_RECORDER: (catalog_id) =>generateApiUrl(`/api/v1/${catalog_id}/category/reorder/`),
+
+  CATALOG_REMOVE:(catalog_id, category_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/category/${category_id}`),
+
+  CATALOG_UPDATE: (catalog_id, category_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/category/${category_id}`),
+
+
+  // items
+  CATALOG_ITEM: (catalog_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/items/`),
+
+  CATALOG_UPDATE_ITEM: (catalog_id, category_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/items/${category_id}/`),
+
+  CATALOG_REMOVE_ITEM:(catalog_id, category_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/items/${category_id}/`),
+
+  // category item
+
+  CATEGORY_ITEM_GET: (catalog_id, category_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/category/${category_id}/`),
+
+  CATEGORY_CREATED: (catalog_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/category/`),
+
+  ITEM_CREATED: (catalog_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/items/`)
+
 };

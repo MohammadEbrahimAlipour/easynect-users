@@ -66,6 +66,11 @@ const Footer = ({ className = "" }) => {
         title="آمار"
       />
       <CustomLink
+        href="/app/menu"
+        iconName="cards"
+        title="منو"
+      />
+      <CustomLink
         href="/app/contacts/contacts"
         iconName="contacts"
         title="مخاطبین"

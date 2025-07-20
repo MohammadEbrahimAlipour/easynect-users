@@ -43,7 +43,7 @@ const LoginUser = () => {
         "accept-language": "fa"
       };
       const formBody = new URLSearchParams(formData);
-
+      console.log(apiUrl, formBody, { headers })
       const response = await axiosInstance.post(apiUrl, formBody, { headers });
 
       if (response.status === 200) {
