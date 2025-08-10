@@ -27,6 +27,11 @@ import { LANGUAGES } from "@/constants/language";
 
 // services
 import axiosInstance from "@/services/axiosInterceptors";
+import SwitchModeButton from "@/components/buttons/SwitchModeButton";
+import { Box } from "@mui/material";
+import { API_ROUTES } from "@/services/api";
+import { useAccessToken } from "../../context/AccessTokenContext";
+import StoryList from "@/components/storyList/StoryList";
 
 export async function getServerSideProps(context) {
   try {
@@ -115,6 +120,9 @@ export default function Username({
   const [noDataContents, setNoDataContents] = useState(null);
   const [hasLeadForm, setHasLeadForm] = useState(false);
   const [isBioBottomSheetOpen, setIsBioBottomSheetOpen] = useState(false);
+  const [mode, setMode] = useState('menu');
+  const [items, setItems] = useState([]);
+  const accessToken = useAccessToken();
 
   const { t } = useTranslation();
 
@@ -140,6 +148,36 @@ export default function Username({
     }
   }, [username]);
 
+  const handleCategoryInfo = (id) => {
+    const apiUrl = API_ROUTES.CATALOGS_CATEGORY(id);
+    console.log(apiUrl, 'apiUrl')
+    axiosInstance
+      .get(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${accessToken.accessToken}`,
+
+        },
+      })
+      .then((response) => {
+        console.log(response.data, 'response lalalay lalay lay')
+        setItems(response.data)
+      })
+      .catch((error) => {
+        console.log(error)
+      });
+  };
+
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await handleCategoryInfo(usersData.catalog_id);
+    }
+    fetchData();
+  }, [usersData]);
+  console.log(username,
+    usersData, 'usersData')
+ 
   useEffect(() => {
     // Ensure usersData.contents exists and is an array before trying to flatten it
     if (usersData && Array.isArray(usersData.contents)) {
@@ -288,7 +326,10 @@ export default function Username({
           </Actions>
         </HeaderContent>
       </Header>
-      {usersData?.horizontal_menu ? (
+      <Box className='flex justify-center items-center'>
+        <SwitchModeButton mode={mode} setMode={setMode} />
+      </Box>
+      {mode == 'menu' ? usersData?.horizontal_menu ? (
         <>
           {noDataContents !== null ? (
             <div className="flex-1 px-4 -mt-4">
@@ -317,7 +358,7 @@ export default function Username({
         </>
       ) : (
         <LoadingState />
-      )}
+      ) : <StoryList storyData={items} Api={API_ROUTES.CATEGORY_ITEM_GET} parentId={usersData?.catalog_id} />}
 
       <LeadForm
         open={hasLeadForm}

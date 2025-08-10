@@ -5,7 +5,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import { useRouter } from "next/router";
 import Image from "next/image";
-export default function CategoryCard({ order, id, isHighlight, title, onEdit, onClose, onDragStart, image, onClick }) {
+export default function CategoryCard({ order, id, isHighlight, title, onEdit, onClose, onDragStart, image, onClick, disabled = false,  }) {
     const router = useRouter();
 
     return (
@@ -26,7 +26,7 @@ export default function CategoryCard({ order, id, isHighlight, title, onEdit, on
                 </IconButton>
             </Box>
 
-            <CardActionArea onClick={onClick}>
+            <CardActionArea onClick={onClick} disabled={disabled}>
                 <CardContent sx={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
                     {image && (
                         <div className="w-8 h-8 relative rounded-full overflow-hidden">

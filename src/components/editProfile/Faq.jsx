@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function Faq() {
+export default function Faq({ handleRouterBack, handleApiSubmit }) {
   const [faqs, setFaqs] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -14,8 +14,25 @@ export default function Faq() {
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-6">سوالات متداول</h2>
+    <div className="p-4 ">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-bold ">سوالات متداول</h2>
+        <div className="text-sm flex items-center gap-2 justify-center">
+          <span
+            onClick={handleRouterBack}
+            className="me-2 border-[1px] border-black px-4 py-1 rounded-lg"
+          >
+            انصراف
+          </span>
+          <button
+            onClick={async () => {handleApiSubmit(faqs)}} // This function should handle the API submission
+            type="submit" // This makes it a submit button
+            className="bg-dark text-white px-4 py-1 rounded-lg border-[1px] border-black"
+          >
+            ذخیره
+          </button>
+        </div>
+      </div>
 
       <div className="mb-6">
         {/* Title Input */}

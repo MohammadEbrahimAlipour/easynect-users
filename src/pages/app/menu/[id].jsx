@@ -5,16 +5,14 @@ import { API_ROUTES } from '@/services/api';
 import React, { useEffect, useState } from 'react'
 import { useAccessToken } from '../../../../context/AccessTokenContext';
 import axiosInstance from '@/services/axiosInterceptors';
-import CardPage from '@/components/card/pages';
 import { useRouter } from 'next/router';
 import TabsCards from '@/components/tabs';
-import CategoryCard from '@/components/card/catit/Category';
-import DraggableCategoryCard from '@/components/dnd/DraggableCategoryCard';
-import DndContextProvider from '@/components/dnd/DndContext';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Typography } from '@mui/material';
+import { Box, IconButton, TextField, Typography } from '@mui/material';
 import CatalogDialog from '@/components/dialog/CustomDialog';
 import { useModalStore } from '@/store/modalStore';
 import CatalogCard from '@/components/card/pages/CatalogCard';
+import AddIcon from '@mui/icons-material/Add';
+import HeaderTwoCustom from '@/components/HeaderTwoCustom';
 
 export default function Menu() {
   const router = useRouter();
@@ -31,8 +29,9 @@ export default function Menu() {
   const [catalogId, setCatalogId] = useState('')
   const [tabValue, setabValue] = useState(1);
   const [catalogCreated, setCatalogCreated] = useState(false);
-
+  const [refresh, setRefresh] = useState(false);
   const [items, setItems] = useState([]);
+  const [newCatalog, setNewCatalog] = useState(false);
 
   const [content, setContent] = useState('');
   const [imageFile, setImageFile] = useState(null);
@@ -42,29 +41,29 @@ export default function Menu() {
   const convertFileToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-  
+
       reader.readAsDataURL(file); // Reads the file as data URL (base64)
-      
+
       reader.onload = () => {
         const base64 = reader.result.split(',')[1]; // Remove "data:image/png;base64," part
         resolve(base64);
       };
-  
+
       reader.onerror = (error) => {
         reject(error);
       };
     });
   };
-  const handleFileChange = async(event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files?.[0];
     if (file) {
-      const base64String = await convertFileToBase64(file);
+      // const base64String = await convertFileToBase64(file);
 
-      setImageFile(base64String);
+      setImageFile(file);
     }
   };
- 
-  
+
+
   const handleClose = () => { setPageDAtaDontExist(false) }
   const moveCard = (fromIndex, toIndex) => {
     const updated = [...items];
@@ -142,7 +141,7 @@ export default function Menu() {
         // setCardData(response.data);
         // Set the card data directly if it's an array
         setCardData(response.data);
-
+        setRefresh(true);
         setIsLoading(false);
         // Save the id from the server in the state variable
         if (response.data && response.data.length > 0) {
@@ -154,66 +153,88 @@ export default function Menu() {
       });
   }
   const handleCreateCategoryOrItem = async () => {
-    const apiUrl = tabValue == 1 ? API_ROUTES.CATEGORY_CREATED(catalogId) : API_ROUTES.ITEM_CREATED(catalogId);
-    const data = tabValue == 1 ? {
-      title: title,
-      icon: imageFile
-    } : {
-      title: title,
-      banner: imageFile,
-      description : content
+    const apiUrl =
+      tabValue === 1 ? API_ROUTES.CATEGORY_CREATED(catalogId) : API_ROUTES.ITEM_CREATED(catalogId);
 
-    };
-    console.log(data, 'data')
-    axiosInstance
-      .post(apiUrl, data, {
+    const formData = new FormData();
+    formData.append('title', title);
+
+    if (tabValue === 1) {
+      // Category mode
+      if (imageFile) {
+        formData.append('icon', imageFile);
+      }
+    } else {
+      // Item mode
+      if (imageFile) {
+        formData.append('banner', imageFile);
+      }
+      formData.append('description', content);
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await axiosInstance.post(apiUrl, formData, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
-          'Content-Type': 'application/json',
+          // Don't set Content-Type manually
         },
-      })
-      .then((response) => {
-        // setCardData(response.data);
-        // Set the card data directly if it's an array
-        setCardData(response.data);
-
-        setIsLoading(false);
-        // Save the id from the server in the state variable
-        if (response.data && response.data.length > 0) {
-          setIdFromServer(response.data[0].id);
-        }
-      })
-      .catch((error) => {
-        setIsLoading(false);
       });
-  }
 
-  const handleEditModal = () => {
-    const apiUrl = tabValue == 1 ? API_ROUTES.CATALOG_UPDATE(catalogId, targetData.category_id) : API_ROUTES.CATALOG_UPDATE_ITEM(catalogId, targetData.category_id);
-    const data = tabValue == 1 ? {
-      title: title,
-      icon: imageFile
-    } : {
-      title: title,
-      banner: imageFile,
-      description : content
+      setCardData(response.data);
+      setIsLoading(false);
+      setRefresh(true)
 
-    };
-    console.log(data, 'apiUrl')
-    axiosInstance
-      .patch(apiUrl, data, {
-        headers: {
-          Authorization: `Bearer ${accessToken.accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      })
-      .then((response) => {
-        console.log(response.data, 'response')
-      })
-      .catch((error) => {
-        console.log(error)
-      });
+      if (response.data && response.data.length > 0) {
+        setIdFromServer(response.data[0].id);
+        setCatalogCreated(false)
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.error('Error uploading data:', error);
+      setCatalogCreated(false)
+    }
   };
+
+
+  const handleEditModal = async () => {
+    const apiUrl =
+      tabValue === 1
+        ? API_ROUTES.CATALOG_UPDATE(catalogId, targetData.category_id)
+        : API_ROUTES.CATALOG_UPDATE_ITEM(catalogId, targetData.category_id);
+
+    const formData = new FormData();
+    formData.append('title', title);
+
+    if (tabValue === 1) {
+      // دسته‌بندی (category)
+      if (imageFile) {
+        formData.append('icon', imageFile);
+      }
+    } else {
+      // آیتم (item)
+      if (imageFile) {
+        formData.append('banner', imageFile);
+      }
+      formData.append('description', content);
+    }
+
+    try {
+      const response = await axiosInstance.patch(apiUrl, formData, {
+        headers: {
+          Authorization: `Bearer ${accessToken.accessToken}`,
+          // 🚫 Content-Type را دستی ست نکن
+        },
+      });
+
+      console.log(response.data, 'response');
+      setRefresh(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
 
   const handleCategoryInfo = (id) => {
     const apiUrl = API_ROUTES.CATALOGS_CATEGORY(id);
@@ -222,13 +243,14 @@ export default function Menu() {
       .get(apiUrl, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
-          "accept-language": "fa", // Include the access token in the headers
+          "accept-language": "fa",
           suppress404Toast: true,
         },
       })
       .then((response) => {
         console.log(response.data, 'response lalalay lalay lay')
-        setItems(response.data)
+        setItems(response.data);
+        setRefresh(true);
       })
       .catch((error) => {
         console.log(error)
@@ -241,12 +263,14 @@ export default function Menu() {
       .delete(apiUrl, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
-          "accept-language": "fa", // Include the access token in the headers
+          "accept-language": "fa",
           suppress404Toast: true,
         },
       })
       .then((response) => {
         console.log(response.data, 'response')
+        setRefresh(true);
+
       })
       .catch((error) => {
         console.log(error)
@@ -257,41 +281,46 @@ export default function Menu() {
       await postCardsRequest();
     };
     fetchData();
-  }, [id]);
-  console.log(cardData, 'card')
+  }, [id, catalog]);
+  console.log(items, 'card')
   return (
     <>
-      <HeaderTwo />
+      <HeaderTwoCustom catalog={catalog} setCatalog={setCatalog} />
       <Layout>
         <div>
-          {catalog && <TabsCards columnConfig={columnConfig} items={items} moveCard={moveCard} setItems={setItems} value={tabValue}
+          {catalog && <TabsCards refresh={refresh} setRefresh={setRefresh} columnConfig={columnConfig} items={items} moveCard={moveCard} setItems={setItems} value={tabValue}
             setValue={setabValue} handleAddModal={() => setCatalogCreated(true)} />}
           {!catalog && <h1 className='pr-5 py-5'>کاتالوگ ها</h1>}
           {!catalog &&
             items.map((value, key) => (
-              <CatalogCard id={value.id} card_title={value.title} key={key} handleClick={() => {
+              <CatalogCard 
+              invoice_form_id={value.invoice_form_id}  id={value.id} card_title={value.title}  key={key} handleClick={() => {
                 setCatalog(true)
                 setCatalogId(value.id);
                 handleCategoryInfo(value.id)
               }
               } />
             ))}
-
+          {!catalog &&
+            <IconButton color="primary" onClick={() => setNewCatalog(true)} aria-label="add" sx={{ width: '100%', background: 'white', borderRadius: 5, marginTop: items ? 2 : 8, justifyContent: 'center', alignItems: 'center' }}>
+              <AddIcon sx={{ color: '#D1AB48' }} />
+            </IconButton>
+          }
 
         </div>
       </Layout>
       <Footer />
       <CatalogDialog
-        header="اولین کاتالوگ"
-        open={pageDataDontExist}
-        onClose={handleClose}
+        header="جدید کاتالوگ"
+        open={newCatalog}
+        onClose={() => setNewCatalog(false)}
         onConfirm={handleCreateCataloge}
       >
         <TextField
           label="Title"
           name="title"
-          variant="outlined"
           fullWidth
+          variant="outlined"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
@@ -302,7 +331,7 @@ export default function Menu() {
         onClose={() => setCatalogCreated(false)}
         onConfirm={handleCreateCategoryOrItem}
       >
-         <Box display="flex" flexDirection="column" gap={2}>
+        <Box display="flex" flexDirection="column" gap={2}>
           <TextField
             label="Title"
             name="title"
@@ -311,16 +340,16 @@ export default function Menu() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-          {tabValue != 1 && 
-          <TextField
-            label="content"
-            variant="outlined"
-            multiline
-            rows={3}
-            fullWidth
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          /> }
+          {tabValue != 1 &&
+            <TextField
+              label="content"
+              variant="outlined"
+              multiline
+              rows={3}
+              fullWidth
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            />}
           <input
             accept="image/*"
             type="file"
@@ -330,7 +359,7 @@ export default function Menu() {
         </Box>
       </CatalogDialog>
       <CatalogDialog
-        header= { tabValue == 1 ? "ویرایش کاتالوگ" : "ویرایش آیتم"}
+        header={tabValue == 1 ? "ویرایش کاتالوگ" : "ویرایش آیتم"}
         open={isModalOpen && mode === 'edit'}
         onClose={closeModal}
         onConfirm={handleConfirm}
@@ -344,16 +373,16 @@ export default function Menu() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-          {tabValue != 1 && 
-          <TextField
-            label="content"
-            variant="outlined"
-            multiline
-            rows={3}
-            fullWidth
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          /> }
+          {tabValue != 1 &&
+            <TextField
+              label="content"
+              variant="outlined"
+              multiline
+              rows={3}
+              fullWidth
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            />}
           <input
             accept="image/*"
             type="file"

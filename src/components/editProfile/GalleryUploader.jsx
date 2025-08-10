@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
 import tw from "tailwind-styled-components";
-import UploadFileIcon from "@/assets/icons/upload.svg"; 
+import UploadFileIcon from "@/assets/icons/upload.svg";
 
-export default function GalleryUploader({ onChoose }) {
+export default function GalleryUploader({ onChoose, handleRouterBack, handleApiSubmit }) {
   const [images, setImages] = useState([]);
   const fileInputRef = useRef();
 
@@ -21,10 +21,27 @@ export default function GalleryUploader({ onChoose }) {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
+  console.log(images, 'images')
   return (
     <Wrapper>
-      <Label>گالری تصاویر</Label>
-
+      <div className="flex justify-between items-center mb-6">
+        <Label>گالری تصاویر</Label>
+        <div className="text-sm flex items-center gap-2 justify-center">
+          <span
+            onClick={handleRouterBack}
+            className="me-2 border-[1px] border-black px-4 py-1 rounded-lg"
+          >
+            انصراف
+          </span>
+          <button
+            onClick={async () => { handleApiSubmit(images) }} // This function should handle the API submission
+            type="submit" // This makes it a submit button
+            className="bg-dark text-white px-4 py-1 rounded-lg border-[1px] border-black"
+          >
+            ذخیره
+          </button>
+        </div>
+      </div>
       <InputWrapper onClick={handleFileInputClick}>
         <Input
           type="file"

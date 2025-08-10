@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import tw from "tailwind-styled-components";
+import { toast } from "react-toastify";
 
-export default function VideoEmbedUploader({ onAdd }) {
+export default function VideoEmbedUploader({ onAdd, handleApiSubmit, handleRouterBack }) {
   const [videoUrl, setVideoUrl] = useState("");
   const [embedList, setEmbedList] = useState([]);
 
@@ -12,13 +13,16 @@ export default function VideoEmbedUploader({ onAdd }) {
       setVideoUrl("");
       onAdd?.(videoUrl); // optional callback
     } else {
-      alert("لینک وارد شده معتبر نیست. لطفاً از لینک‌های embeddable استفاده کنید.");
+      toast.error("لینک وارد شده معتبر نیست. لطفاً از لینک‌های embeddable استفاده کنید.", {
+        position: 'top-center',
+        autoClose: 2500,
+      });
     }
   };
 
   const isValidEmbedUrl = (url) => {
     return url.startsWith("https://www.youtube.com/embed/") ||
-           url.startsWith("https://player.vimeo.com/video/");
+      url.startsWith("https://player.vimeo.com/video/");
     // You can extend this with regex for more platforms
   };
 
@@ -28,7 +32,25 @@ export default function VideoEmbedUploader({ onAdd }) {
 
   return (
     <Wrapper>
-      <Label>لینک ویدیو (Embed)</Label>
+      <div className="flex justify-between items-center mb-6">
+
+        <Label>لینک ویدیو (Embed)</Label>
+        <div className="text-sm flex items-center gap-2 justify-center">
+          <span
+            onClick={handleRouterBack}
+            className="me-2 border-[1px] border-black px-4 py-1 rounded-lg"
+          >
+            انصراف
+          </span>
+          <button
+            onClick={async () => { handleApiSubmit(faqs) }} // This function should handle the API submission
+            type="submit" // This makes it a submit button
+            className="bg-dark text-white px-4 py-1 rounded-lg border-[1px] border-black"
+          >
+            ذخیره
+          </button>
+        </div>
+      </div>
 
       <InputWrapper>
         <Input
