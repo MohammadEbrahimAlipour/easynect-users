@@ -393,11 +393,8 @@ const EditProfileInfo = () => {
                       onSelect={handleLanguageChange}
                     />
 
-                    <Faq />
 
-                    <GalleryUploader />
 
-                    <VideoEmbedUploader />
 
                   </div>
                 </form>
@@ -436,6 +433,42 @@ const EditProfileInfo = () => {
                       <PenEditIcon />
                     </span>
                     صفحه بندی
+                  </Link>
+                  <Link
+                    href={`/app/cards/themeEditor?id=${id}`}
+                    className="border-[1px] border-black px-4 py-3 rounded-lg mb-2 flex justify-center items-center"
+                  >
+                    <span className="me-1">
+                      <PenEditIcon />
+                    </span>
+                    تعریف تم
+                  </Link>
+                  <Link
+                    href={`/app/cards/faq?id=${id}`}
+                    className="border-[1px] border-black px-4 py-3 rounded-lg mb-2 flex justify-center items-center"
+                  >
+                    <span className="me-1">
+                      <PenEditIcon />
+                    </span>
+                    سوالات متدوال
+                  </Link>
+                  <Link
+                    href={`/app/cards/gallery?id=${id}`}
+                    className="border-[1px] border-black px-4 py-3 rounded-lg mb-2 flex justify-center items-center"
+                  >
+                    <span className="me-1">
+                      <PenEditIcon />
+                    </span>
+                     گالری تصاویر
+                  </Link>
+                  <Link
+                    href={`/app/cards/embedded?id=${id}`}
+                    className="border-[1px] border-black px-4 py-3 rounded-lg mb-2 flex justify-center items-center"
+                  >
+                    <span className="me-1">
+                      <PenEditIcon />
+                    </span>
+                      لینک ویدیو
                   </Link>
                 </div>
               </div>

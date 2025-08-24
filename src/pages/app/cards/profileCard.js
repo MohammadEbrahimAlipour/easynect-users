@@ -64,6 +64,7 @@ const ProfileCard = () => {
   };
 
   const handleUsernameRedirect = (username) => {
+    // console.log(username, 'username');
     router.push(`/${username}`);
   };
 
@@ -245,8 +246,7 @@ const ProfileCard = () => {
     };
   }, [cards]);
 
-  console.log(cards
-    .slice(cards.length - finalCardsNumber, cards.length), 'ssssssssssssssssssssss')
+
   return (
     <>
       <Head>
@@ -365,6 +365,8 @@ const ProfileCard = () => {
                                 <p className="text-xs">فرم لید</p>
                               </Link>
 
+                             
+
                               {/* box right 3 */}
                               <div
                                 className="h-[32px] border-2 rounded-md flex justify-center items-center px-2"
@@ -395,7 +397,7 @@ const ProfileCard = () => {
                     </Card>
                   )
                 )}
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-12 flex gap-16">
+              <div className="absolute -bottom-24 left-1/2 -translate-x-1/2 translate-y-12 flex gap-16">
                 <IconButton
                   onClick={shiftCardBackward}
                   sx={{

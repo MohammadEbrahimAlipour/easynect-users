@@ -120,6 +120,6 @@ textarea:focus {
 /* outline: 1px solid #cea16a; */
 /* }  */
 
-.custom_ltr {
-  direction: ltr;
+.swiper-button-prev:after, .swiper-rtl .swiper-button-next:after {
+  color: bisque !important;
 }

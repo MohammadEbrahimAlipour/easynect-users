@@ -48,8 +48,8 @@ const Custom403 = () => {
     };
 
     const animateLast4 = async () => {
-      await animationControlsLast4.start(fallAnimationLast4);
-      await animationControlsLast4.start(shakeAnimation);
+      await animationControlsLast4?.start(fallAnimationLast4);
+      await animationControlsLast4?.start(shakeAnimation);
     };
 
     animateZero();

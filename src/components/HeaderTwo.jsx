@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRight } from "./Icons";
 import { useRouter } from "next/router";
 
-const HeaderTwo = ({ href, className = "" }) => {
+const HeaderTwo = ({ href, className = "", }) => {
   const router = useRouter();
 
   // Function to go back or navigate to a specific route

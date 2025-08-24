@@ -16,22 +16,62 @@ import { ThemeProvider, createTheme } from "@mui/material";
 
 const protectedRoutes = [/\/app\/.*/];
 
+
 const theme = createTheme({
   typography: {
-    fontFamily: "Ravi, Arial",
+    fontFamily: 'Ravi, Arial',
   },
   palette: {
     primary: {
-      light: "#757ce8",
-      main: "#3f50b5",
-      dark: "#002884",
-      contrastText: "#fff",
+      light: '#757ce8',
+      main: '#3f50b5',
+      dark: '#002884',
+      contrastText: '#fff',
     },
     secondary: {
-      light: "#ff7961",
-      main: "#f44336",
-      dark: "#ba000d",
-      contrastText: "#000",
+      light: '#ff7961',
+      main: '#f44336',
+      dark: '#ba000d',
+      contrastText: '#000',
+    },
+  },
+  components: {
+    MuiTextField: {
+      defaultProps: {
+        variant: 'outlined',
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          // رنگ پیش‌فرض border
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#D1AB48',
+          },
+          // در حالت hover
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#D1AB48',
+          },
+          // در حالت focus
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#D1AB48',
+          },
+        },
+        input: {
+          // رنگ متن داخل input
+          color: '#000',
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: '#D1AB48',
+          '&.Mui-focused': {
+            color: '#D1AB48',
+          },
+        },
+      },
     },
   },
 });

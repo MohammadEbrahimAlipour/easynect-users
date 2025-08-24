@@ -215,6 +215,10 @@ const ProfileCardExist = ({
             <Link href={`/appNect/lead/lead?id=${cardData.id}`}>فرم لید</Link>
           </li>
 
+          <li className="border-b py-2 font-normal text-sm">
+            <Link href={`/appNect/lead/order?id=${cardData.id}`}>فرم سفارش</Link>
+          </li>
+
           <li>
             <SubMenuOptions
               title="اشتراک گذاری کارت"

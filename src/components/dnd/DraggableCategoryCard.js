@@ -10,7 +10,8 @@ export default function DraggableCategoryCard({
   moveCard,
   onEdit,
   onClose,
-  onClick
+  onClick,
+  disabled
 }) {
   const ref = React.useRef(null);
 
@@ -42,6 +43,7 @@ export default function DraggableCategoryCard({
         onClose={() => onClose(item.id)}
         image={item.icon || item.banner}
         onClick={onClick}
+        disabled={disabled}
       />
     </div>
   );

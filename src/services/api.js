@@ -41,6 +41,7 @@ export const API_ROUTES = {
   // invoices
   INVOICES_INVOICE_LIST: generateApiUrl("/api/v1/invoice/"),
 
+
   // lead
   LEAD_LEADS: (id) => generateApiUrl(`/api/v1/leads/${id}`),
 
@@ -50,28 +51,53 @@ export const API_ROUTES = {
 
   CATALOG_DEPONDS_PAGE: (id) => generateApiUrl(`/api/v1/catalogs/page/${id}`),
 
-  CATALOGS_CATEGORY:(catalog_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/category/`),
+  CATALOGS_CATEGORY: (catalog_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/category/`),
 
-  CATALOG_RECORDER: (catalog_id) =>generateApiUrl(`/api/v1/${catalog_id}/category/reorder/`),
+  CATALOG_RECORDER: (catalog_id) => generateApiUrl(`/api/v1/${catalog_id}/category/reorder/`),
 
-  CATALOG_REMOVE:(catalog_id, category_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/category/${category_id}`),
+  CATALOG_REMOVE: (catalog_id, category_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/category/${category_id}`),
 
   CATALOG_UPDATE: (catalog_id, category_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/category/${category_id}`),
 
+  GET_INVOICE: (id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/`),
+
+  POST_INVOICE_FORM: (id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/form/`),
+
+  ADD_INVOICE_FORM_FIELD: (Cid, form_id) => generateApiUrl(`/api/v1/catalogs/${Cid}/invoices/form/${form_id}`),
+  CREATE_NEW_INVOICE_USER: (Cid, form_id) => generateApiUrl(`/api/v1/catalogs/customers/${Cid}/invoices/${form_id}`),
 
   // items
   CATALOG_ITEM: (catalog_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/items/`),
 
-  CATALOG_UPDATE_ITEM: (catalog_id, category_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/items/${category_id}/`),
+  CATALOG_UPDATE_ITEM: (catalog_id, category_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/items/${category_id}`),
 
-  CATALOG_REMOVE_ITEM:(catalog_id, category_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/items/${category_id}/`),
+  CATALOG_REMOVE_ITEM: (catalog_id, category_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/items/${category_id}/`),
 
+  CATALOG_DEPONDS_ITEM: (catalog_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/items/`),
   // category item
 
   CATEGORY_ITEM_GET: (catalog_id, category_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/category/${category_id}/`),
 
   CATEGORY_CREATED: (catalog_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/category/`),
 
-  ITEM_CREATED: (catalog_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/items/`)
+  ITEM_CREATED: (catalog_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/items/`),
 
+
+  ITEMS_GET: (catalog_id, item_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/items/${item_id}`),
+
+  // lead capture store
+  LEAD_CAPTURE_STORE: () => generateApiUrl(`/api/v1/lead_capture_store/`),
+
+  LEAD_CAPTURE_STORE_ID: (id) => generateApiUrl(`/api/v1/lead_capture_store/${id}`),
+  // contents
+  CONTENTS_FAQ: (pageId) => generateApiUrl(`/api/v1/contents/page/${pageId}/faqs/`),
+
+  //pages
+  CONTENTS_GALLERY: (pageId) => generateApiUrl(`/api/v1/pages/${pageId}/gallery/create/`),
+
+  // form lead
+  FORM_LEAD: (catalog_id, form_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/form/${form_id}`),
+  DELETE_FORM_LEAD: (catalog_id, form_id, field_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/form/${form_id}/${field_id}`),
+  ADD_INVOICE_FORM_FIELD: (catalog_id, form_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/form/${form_id}`),
+  ADD_CUSTOM_FROM_INVOICE: (catalog_id, form_id) => generateApiUrl(`/api/v1/catalogs/customers/${catalog_id}/invoices/${form_id}`),
 };

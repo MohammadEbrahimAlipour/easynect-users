@@ -9,19 +9,63 @@ import CatalogCard from '@/components/card/pages/CatalogCard';
 import { API_ROUTES } from '@/services/api';
 import DraggableCategoryCard from '@/components/dnd/DraggableCategoryCard';
 import DndContextProvider from '@/components/dnd/DndContext';
+import { useModalStore } from '@/store/modalStore';
+import CatalogDialogs from '@/components/menu/CatalogDialogs';
+import useCatalogStates from '@/hooks/catalogs/useCatalogStates';
+import useCatalogsApi from '@/hooks/catalogs/useCatalogsApi';
+import useCatalogActions from '@/hooks/catalogs/useCatalogActions';
+import { IconButton } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 
 export default function Menu() {
     const router = useRouter();
     const slug = router.query.slug || [];
     const [catalog_id, category_id] = slug || [];
-    const [items, setItems] = useState([]);
+    const [refresh, setRefresh] = useState(false);
+
+    const {
+        setCardData,
+        setIsLoading,
+        setIdFromServer,
+        pageDataDontExist,
+        setPageDAtaDontExist,
+        title,
+        setTitle,
+        catalog,
+        setCatalog,
+        catalogId,
+        setCatalogId,
+        tabValue,
+        setabValue,
+        catalogCreated,
+        setCatalogCreated,
+        items,
+        setItems,
+        content,
+        setContent,
+        imageFile,
+        setImageFile,
+        error
+    } = useCatalogStates();
     const accessToken = useAccessToken();
-    const moveCard = (fromIndex, toIndex) => {
-        const updated = [...items];
-        const [moved] = updated.splice(fromIndex, 1);
-        updated.splice(toIndex, 0, moved);
-        setItems(updated);
+    const openModal = useModalStore((s) => s.openModal);
+    const { isModalOpen, mode, targetData, closeModal } = useModalStore();
+    const { convertFileToBase64,
+        handleFileChange,
+        handleClose,
+        moveCard } = useCatalogActions(items, setItems, setImageFile, setPageDAtaDontExist,)
+
+    const { handleCreateItem,
+        handleEditModalItems,
+        handleDeleteModalItems } = useCatalogsApi(title, catalog_id, tabValue, imageFile, targetData, content, accessToken, setCardData, setIsLoading, setIdFromServer, setRefresh, refresh);
+    const handleConfirm = () => {
+        if (mode === 'edit') {
+            handleEditModalItems();
+        } else if (mode === 'delete') {
+            handleDeleteModalItems();
+        }
+        closeModal();
     };
     const handleGetCategoryItems = () => {
         const apiUrl = API_ROUTES.CATEGORY_ITEM_GET(catalog_id, category_id);
@@ -36,7 +80,7 @@ export default function Menu() {
             .then((response) => {
 
                 setItems(response.data);
-
+                setRefresh(false);
 
             })
             .catch((error) => {
@@ -48,21 +92,24 @@ export default function Menu() {
                 }
             });
     }
-
+  
     useEffect(() => {
         const fetchData = async () => {
             await handleGetCategoryItems();
         };
         if (catalog_id, category_id) fetchData();
-    }, [catalog_id, category_id]);
+    }, [catalog_id, category_id, refresh]);
 
     return (
         <>
             <HeaderTwo />
             <Layout>
                 <div>
-
+                    <h1>
+                        آیتم های مربوط به کتگوری
+                    </h1>
                     <DndContextProvider>
+                        <div className='max-h-[70vh] overflow-y-auto'>
                         {items.map((item, index) => (
 
                             <DraggableCategoryCard
@@ -71,12 +118,14 @@ export default function Menu() {
                                 item={item}
                                 index={index}
                                 moveCard={moveCard}
-                                // onEdit={(id) => openModal('edit', { category_id: item.id })}
-                                // onClose={(id) => openModal('delete', { category_id: item.id })}
-                                onClose={(id) => console.log(id)}
-                                onEdit={(id) => console.log(id)}
+                                onEdit={(id) => openModal('edit', { category_id: item.id })}
+                                onClose={(id) => openModal('delete', { category_id: item.id })}
                             />
                         ))}
+                        </div>
+                        <IconButton color="primary" onClick={() => {setCatalogCreated(true)}}  aria-label="add" sx={{ width: '100%', background: 'white', borderRadius: 5, marginTop: items ? 2 : 8, justifyContent: 'center', alignItems: 'center' }}>
+                            <AddIcon sx={{ color: '#D1AB48' }} />
+                        </IconButton>
                     </DndContextProvider>
 
 
@@ -84,7 +133,23 @@ export default function Menu() {
                 </div>
             </Layout>
             <Footer />
-
+            <CatalogDialogs
+                handleClose={handleClose}
+                handleCreateCategoryOrItem={handleCreateItem}
+                catalogCreated={catalogCreated}
+                setCatalogCreated={setCatalogCreated}
+                tabValue={tabValue}
+                title={title}
+                setTitle={setTitle}
+                content={content}
+                setContent={setContent}
+                handleFileChange={handleFileChange}
+                error={error}
+                isModalOpen={isModalOpen}
+                mode={mode}
+                closeModal={closeModal}
+                handleConfirm={handleConfirm}
+            />
         </>
     )
 }

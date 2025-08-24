@@ -18,8 +18,11 @@ export default function CatalogDialog({ header, open, onClose, onConfirm, childr
         </DialogContentText>
       </DialogContent>
       <DialogActions sx={{display: 'flex', justifyContent: 'right'}}>
-        <Button onClick={onClose}>لغو</Button>
-        <Button onClick={onConfirm}>تایید</Button>
+        <Button sx={{color: '#D1AB48'}} onClick={onClose}>لغو</Button>
+        <Button sx={{color: '#D1AB48'}} onClick={() => {
+          onConfirm();
+          onClose();
+          }}>تایید</Button>
       </DialogActions>
     </Dialog>
   );
