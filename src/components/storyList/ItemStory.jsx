@@ -12,18 +12,18 @@ import {
 import axiosInstance from '@/services/axiosInterceptors';
 import { useAccessToken } from '../../../context/AccessTokenContext';
 import { API_ROUTES } from '@/services/api';
-
-// Swiper (استفاده از پکیج موجود)
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
-
+import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 
-const ProfileCardWithModal = ({ data, parentId }) => {
+// 🆕 فرم سفارش (همون که قبلاً نوشتیم)
+import FormOrder from './FormOrder';
+
+const ProfileCardWithModal = ({ data, parentId, orderInfo }) => {
   const [open, setOpen] = useState(false);
   const [detailData, setDetailData] = useState(null);
+  const [showForm, setShowForm] = useState(false); // 🆕 کنترل نمایش فرم
 
   const accessToken = useAccessToken();
 
@@ -35,15 +35,19 @@ const ProfileCardWithModal = ({ data, parentId }) => {
   const handleClose = () => {
     setOpen(false);
     setDetailData(null);
+    setShowForm(false); // وقتی مودال بسته شد، فرم هم بسته شه
   };
 
   const fetchFromApi = async (id) => {
     try {
+      const postItem = API_ROUTES.ANALYSTICS_POST_ITEMS(id);
+      await axiosInstance.post(postItem, {}, {
+        headers: { Authorization: `Bearer ${accessToken.accessToken}` },
+      });
+
       const apiUrl = API_ROUTES.ITEMS_GET(parentId, id);
       const response = await axiosInstance.get(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${accessToken.accessToken}`,
-        },
+        headers: { Authorization: `Bearer ${accessToken.accessToken}` },
       });
       setDetailData(response.data);
     } catch (error) {
@@ -78,9 +82,7 @@ const ProfileCardWithModal = ({ data, parentId }) => {
             objectFit: 'cover',
             borderRadius: '12px 12px 0 0',
             transition: '0.3s',
-            '&:hover': {
-              transform: 'scale(1.02)',
-            },
+            '&:hover': { transform: 'scale(1.02)' },
             marginBottom: 2,
           }}
         />
@@ -128,103 +130,120 @@ const ProfileCardWithModal = ({ data, parentId }) => {
               <Skeleton variant="rounded" height={36} width={150} sx={{ mx: 'auto' }} />
             </>
           ) : (
-            // ✅ Actual Content
             <>
-              {/* Banner Image */}
-              {detailData.banner && (
-                <Box sx={{ height: 160, overflow: 'hidden' }}>
-                  <img
-                    src={detailData.banner}
-                    alt="Banner"
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'contain',
-                      border: '2px solid #c6ac85',
-                      borderRadius: 8,
-                    }}
-                  />
-                </Box>
-              )}
-
-              <Typography variant="h6" fontWeight={700} mb={1}>
-                {detailData.title || data.title}
-              </Typography>
-
-              <Typography variant="body2" color="text.secondary" mb={2}>
-                {detailData.description || data.description}
-              </Typography>
-
-              {/* Gallery with Swiper */}
-              {detailData.gallery?.length > 0 && (
-                <Box mt={2} mb={5}>
-                  <Swiper spaceBetween={10} slidesPerView={1} navigation={true} pagination={{
-                    type: 'progressbar',
-                  }} modules={[Navigation]}
-                  >
-                    {detailData.gallery.map((item) => (
-                      <SwiperSlide key={item.id}>
-                        <img
-                          src={item.pic_url}
-                          alt="gallery"
-                          style={{
-                            width: '100%',
-                            height: '200px',
-                            objectFit: 'contain',
-                            borderRadius: 8,
-                          }}
-                        />
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
-                  
-                </Box>
-              )}
-
-              {/* Content */}
-              {detailData.content && typeof detailData.content === 'string' && (
-                <Typography variant="body1" mt={2}>
-                  {detailData.content}
-                </Typography>
-              )}
-
-              {/* Submit Code Button */}
-              <Box mt={4} textAlign="center">
-                <Button
-                  variant="outlined"
-                  sx={{
+              {showForm ? (
+                // 🆕 نمایش فرم سفارش
+                <FormOrder
+                  fields={orderInfo?.fields || []}
+                  theme={{
+                    background: '#fff',
                     borderColor: '#c6ac85',
-                    color: '#c6ac85',
-
-                    '&:hover': {
-                      backgroundColor: '#c6ac85',
-                      color: '#fff',
-                    },
+                    primary: '#c6ac85',
+                    primaryHover: '#a89060',
+                    cardText: '#333',
                   }}
-                >
-                  ثبت کد سفارش
-                </Button>
-                <Button
-                  variant="outlined"
-                  sx={{
-                    borderColor: '#c6ac85',
-                    color: '#c6ac85',
-                    marginRight: 2,
-                    '&:hover': {
-                      backgroundColor: '#c6ac85',
-                      color: '#fff',
-                    },
+                  onSubmit={(values) => {
+                    console.log('Form submitted:', values);
+                    setShowForm(false); // بعد از ثبت فرم برگرده به حالت قبلی
                   }}
-                >
-                  لینک ارجاع
-                </Button>
-              </Box>
+                />
+              ) : (
+                // ✅ محتوای قبلی
+                <>
+                  {detailData.banner && (
+                    <Box sx={{ height: 160, overflow: 'hidden' }}>
+                      <img
+                        src={detailData.banner}
+                        alt="Banner"
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'contain',
+                          border: '2px solid #c6ac85',
+                          borderRadius: 8,
+                        }}
+                      />
+                    </Box>
+                  )}
 
+                  <Typography variant="h6" fontWeight={700} mb={1}>
+                    {detailData.title || data.title}
+                  </Typography>
+
+                  <Typography variant="body2" color="text.secondary" mb={2}>
+                    {detailData.description || data.description}
+                  </Typography>
+
+                  {detailData.gallery?.length > 0 && (
+                    <Box mt={2} mb={5}>
+                      <Swiper
+                        spaceBetween={10}
+                        slidesPerView={1}
+                        navigation
+                        pagination={{ type: 'progressbar' }}
+                        modules={[Navigation]}
+                      >
+                        {detailData.gallery.map((item) => (
+                          <SwiperSlide key={item.id}>
+                            <img
+                              src={item.pic_url}
+                              alt="gallery"
+                              style={{
+                                width: '100%',
+                                height: '200px',
+                                objectFit: 'contain',
+                                borderRadius: 8,
+                              }}
+                            />
+                          </SwiperSlide>
+                        ))}
+                      </Swiper>
+                    </Box>
+                  )}
+
+                  {detailData.content && typeof detailData.content === 'string' && (
+                    <Typography variant="body1" mt={2}>
+                      {detailData.content}
+                    </Typography>
+                  )}
+
+                  <Box mt={4} textAlign="center">
+                    <Button
+                      variant="outlined"
+                      onClick={() => setShowForm(true)} // 🆕 فرم رو باز کن
+                      sx={{
+                        borderColor: '#c6ac85',
+                        color: '#c6ac85',
+                        '&:hover': {
+                          backgroundColor: '#c6ac85',
+                          color: '#fff',
+                        },
+                      }}
+                    >
+                      ثبت کد سفارش
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={() => window.open(detailData.ref_link, '_blank')}
+                      sx={{
+                        borderColor: '#c6ac85',
+                        color: '#c6ac85',
+                        marginRight: 2,
+                        '&:hover': {
+                          backgroundColor: '#c6ac85',
+                          color: '#fff',
+                        },
+                      }}
+                    >
+                      لینک ارجاع
+                    </Button>
+                  </Box>
+                </>
+              )}
             </>
           )}
         </Box>
       </Modal>
-   
     </>
   );
 };

@@ -37,7 +37,6 @@ export async function getServerSideProps(context) {
   try {
     const { params } = context;
     const { username } = params;
-
     const apiUrl = generateApiUrl(`/api/v1/page_view/${username}`);
 
     const response = await axios.get(apiUrl, {
@@ -122,6 +121,14 @@ export default function Username({
   const [isBioBottomSheetOpen, setIsBioBottomSheetOpen] = useState(false);
   const [mode, setMode] = useState('menu');
   const [items, setItems] = useState([]);
+  const [theme, setTheme] = useState({
+    background: "#ffffff",
+    borderColor: "#000000",
+    cardBackground: "#f5f5f5",
+    cardText: "#333333",
+    headerText: "#222222"
+  });
+  const [formInfo, setFormInfo] = useState({});
   const accessToken = useAccessToken();
 
   const { t } = useTranslation();
@@ -148,9 +155,22 @@ export default function Username({
     }
   }, [username]);
 
+
   const handleCategoryInfo = (id) => {
+    const apiRecord = API_ROUTES.ANALYSTICS_POST_CATALOG(id);
+    axiosInstance
+      .post(apiRecord, {
+        headers: {
+          Authorization: `Bearer ${accessToken.accessToken}`,
+        },
+      })
+      .then((response) => {
+        console.log(response)
+      })
+      .catch((error) => {
+        console.error(error)
+      });
     const apiUrl = API_ROUTES.CATALOGS_CATEGORY(id);
-    console.log(apiUrl, 'apiUrl')
     axiosInstance
       .get(apiUrl, {
         headers: {
@@ -165,19 +185,33 @@ export default function Username({
       .catch((error) => {
         console.log(error)
       });
+    const orderApi = API_ROUTES.GET_ORDER(id);
+    axiosInstance
+      .get(orderApi, {
+        headers: {
+          Authorization: `Bearer ${accessToken.accessToken}`,
+
+        },
+      })
+      .then((response) => {
+        console.log(response.data, 'response get order')
+        setFormInfo(response.data)
+      })
+      .catch((error) => {
+        console.log(error)
+      });
   };
 
 
 
   useEffect(() => {
     const fetchData = async () => {
-      await handleCategoryInfo(usersData.catalog_id);
+      await handleCategoryInfo(usersData?.catalog_id);
     }
     fetchData();
   }, [usersData]);
-  console.log(username,
-    usersData, 'usersData')
- 
+
+
   useEffect(() => {
     // Ensure usersData.contents exists and is an array before trying to flatten it
     if (usersData && Array.isArray(usersData.contents)) {
@@ -219,7 +253,24 @@ export default function Username({
       setShowBio(false);
     }
   };
+  useEffect(() => {
+    const fetchTheme = async () => {
+      try {
+        const api = API_ROUTES.GET_THEME(usersData?.page_id);
+        const response = await axiosInstance.get(api, {
+          headers: {
+            Authorization: `Bearer ${accessToken.accessToken}`,
+          },
+        });
+        setTheme(response?.data?.theme);
+        console.log(response, 'response');
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
+    fetchTheme();
+  }, [usersData]);
   useEffect(() => {
     // Bind the event listener
     document.addEventListener("mousedown", handleClickOutside);
@@ -289,6 +340,10 @@ export default function Username({
     );
   }
 
+
+
+  console.log(theme, 'usersData')
+
   return (
     <>
       <Head>
@@ -296,29 +351,41 @@ export default function Username({
         <meta name="easynect business card" content="Powered by Easynect" />
       </Head>
 
-      <Cover>
+      <Cover style={{ background: theme?.background }}>
         {/* <CoverImage fill src={usersData?.banner_s3_url} /> */}
       </Cover>
-      <Header>
+
+      <Header style={{ background: theme?.cardBackground, borderBottom: `1px solid ${theme?.borderColor}` }}>
         <ProfilePictureWrapper>
           <ProfilePicture fill src={usersData?.profile_s3_url} />
         </ProfilePictureWrapper>
         <HeaderContent>
           <Texts onClick={() => setIsBioBottomSheetOpen(true)}>
-            <FullName>
+            <FullName style={{ color: theme?.headerText }}>
               {usersData?.owner_first_name} {usersData?.owner_last_name}
             </FullName>
-            <JobTitle>
+            <JobTitle style={{ color: theme?.cardText }}>
               {usersData?.job_title}
               {usersData?.company}
               <InfoIcon className="mr-1" />
             </JobTitle>
           </Texts>
           <Actions>
-            <Button onClick={handleSaveContact}>{t("save_contact")}</Button>
+            <Button
+              onClick={handleSaveContact}
+              style={{
+                background: theme?.headerText,
+                color: theme?.background,
+                border: `1px solid ${theme?.borderColor}`,
+              }}
+            >
+              {t("save_contact")}
+            </Button>
             <ButtonOutlined
-              onClick={() => {
-                setHasLeadForm(true);
+              onClick={() => setHasLeadForm(true)}
+              style={{
+                color: theme?.headerText,
+                border: `1px solid ${theme?.borderColor}`,
               }}
             >
               {t("join_lead")}
@@ -326,25 +393,25 @@ export default function Username({
           </Actions>
         </HeaderContent>
       </Header>
-      <Box className='flex justify-center items-center'>
+
+      <Box className="flex justify-center items-center" style={{ background: theme?.background }}>
         <SwitchModeButton mode={mode} setMode={setMode} />
       </Box>
+
       {mode == 'menu' ? usersData?.horizontal_menu ? (
         <>
           {noDataContents !== null ? (
-            <div className="flex-1 px-4 -mt-4">
+            <div className="flex-1 px-4 -mt-4" style={{ background: theme?.background }}>
               {!noDataContents ? (
-                <>
-                  <div className="mt-5">
-                    {usersData.contents?.map((object) => (
-                      <Widget
-                        key={object?.guid + object?.data?.length}
-                        data={object}
-                        handleCountingItemClicks={handleCountingItemClicks}
-                      />
-                    ))}
-                  </div>
-                </>
+                <div className="mt-5">
+                  {usersData.contents?.map((object) => (
+                    <Widget
+                      key={object?.guid + object?.data?.length}
+                      data={object}
+                      handleCountingItemClicks={handleCountingItemClicks}
+                    />
+                  ))}
+                </div>
               ) : (
                 <NoData />
               )}
@@ -358,7 +425,15 @@ export default function Username({
         </>
       ) : (
         <LoadingState />
-      ) : <StoryList storyData={items} Api={API_ROUTES.CATEGORY_ITEM_GET} parentId={usersData?.catalog_id} />}
+      ) : (
+        <StoryList
+          orderInfo={formInfo}
+          theme={theme}
+          storyData={items}
+          Api={API_ROUTES.CATEGORY_ITEM_GET}
+          parentId={usersData?.catalog_id}
+        />
+      )}
 
       <LeadForm
         open={hasLeadForm}
@@ -367,15 +442,18 @@ export default function Username({
         language={usersData.language}
         pageId={usersData.page_id}
         setHasLeadForm={setHasLeadForm}
+        theme={theme}
       />
 
       <BottomSheetWrapper
         open={isBioBottomSheetOpen}
         onClose={() => setIsBioBottomSheetOpen(false)}
+        theme={theme}
       >
-        <BioTitle>{t("bio_title")}</BioTitle>
-        <Bio>{usersData?.bio}</Bio>
+        <BioTitle style={{ color: theme.headerText }}>{t("bio_title")}</BioTitle>
+        <Bio style={{ color: theme.cardText }}>{usersData?.bio}</Bio>
       </BottomSheetWrapper>
+
     </>
   );
 }

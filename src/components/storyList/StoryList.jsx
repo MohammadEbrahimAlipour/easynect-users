@@ -1,17 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Box, Typography } from '@mui/material';
 import { useAccessToken } from '../../../context/AccessTokenContext';
 import axiosInstance from '@/services/axiosInterceptors';
 import ProfileListWithSkeleton from './ProfileListWithSkeleton';
 import { useRouter } from 'next/router';
 
-const colors = {
-  border: '#c6ac85',
-  text: '#000',
-  background: '#fff',
-};
-
-const StoryItem = ({ item, selected, onClick }) => (
+const StoryItem = ({ item, selected, onClick, theme, }) => (
   <Box
     onClick={() => onClick(item.id)}
     sx={{
@@ -25,7 +19,7 @@ const StoryItem = ({ item, selected, onClick }) => (
   >
     <Box
       sx={{
-        border: `3px solid ${selected ? colors.border : '#ddd'}`,
+        border: `3px solid ${selected ? theme.borderColor : '#ddd'}`,
         borderRadius: '50%',
         padding: '3px',
       }}
@@ -36,7 +30,7 @@ const StoryItem = ({ item, selected, onClick }) => (
         sx={{
           width: 60,
           height: 60,
-          border: `2px solid ${colors.background}`,
+          border: `2px solid ${theme.background}`,
         }}
       />
     </Box>
@@ -44,7 +38,7 @@ const StoryItem = ({ item, selected, onClick }) => (
       variant="caption"
       sx={{
         mt: 1,
-        color: colors.text,
+        color: theme.cardText,
         maxWidth: 70,
         textAlign: 'center',
         fontSize: 12,
@@ -55,7 +49,7 @@ const StoryItem = ({ item, selected, onClick }) => (
   </Box>
 );
 
-const StoryList = ({ storyData = [], Api, parentId }) => {
+const StoryList = ({ theme, storyData = [], Api, parentId, orderInfo }) => {
   const [selectedId, setSelectedId] = useState(null);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -63,6 +57,7 @@ const StoryList = ({ storyData = [], Api, parentId }) => {
   const router = useRouter();
 
   const fetchFromApi = (id) => {
+    if (!id) return;
     const apiUrl = Api(parentId, id);
     setLoading(true);
     axiosInstance
@@ -75,7 +70,7 @@ const StoryList = ({ storyData = [], Api, parentId }) => {
         setItems(response.data);
         setLoading(false);
       })
-      .catch((error) => {
+      .catch(() => {
         setLoading(false);
         setItems([]);
       });
@@ -86,8 +81,14 @@ const StoryList = ({ storyData = [], Api, parentId }) => {
     fetchFromApi(id);
   };
 
+  useEffect(() => {
+    if (storyData.length > 0) {
+      handleClick(storyData[0].id);
+    }
+  }, [storyData]);
+
   return (
-    <Box sx={{ bgcolor: colors.background }}>
+    <Box sx={{ bgcolor: theme.background }}>
       {/* Horizontally scrollable story list */}
       <Box
         sx={{
@@ -108,13 +109,20 @@ const StoryList = ({ storyData = [], Api, parentId }) => {
             item={item}
             selected={item.id === selectedId}
             onClick={handleClick}
+            theme={theme}
           />
         ))}
       </Box>
 
       {/* Vertically stacked items below */}
       <Box sx={{ px: 2, pt: 1 }}>
-        <ProfileListWithSkeleton userList={items} loading={loading} parentId={parentId} />
+        <ProfileListWithSkeleton
+          theme={theme}
+          userList={items}
+          loading={loading}
+          parentId={parentId}
+          orderInfo={orderInfo?.invoice_form}
+        />
       </Box>
     </Box>
   );

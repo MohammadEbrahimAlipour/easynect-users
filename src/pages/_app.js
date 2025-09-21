@@ -16,59 +16,105 @@ import { ThemeProvider, createTheme } from "@mui/material";
 
 const protectedRoutes = [/\/app\/.*/];
 
-
 const theme = createTheme({
+  direction: 'rtl',
   typography: {
-    fontFamily: 'Ravi, Arial',
-  },
-  palette: {
-    primary: {
-      light: '#757ce8',
-      main: '#3f50b5',
-      dark: '#002884',
-      contrastText: '#fff',
-    },
-    secondary: {
-      light: '#ff7961',
-      main: '#f44336',
-      dark: '#ba000d',
-      contrastText: '#000',
-    },
+    fontFamily: 'Tahoma, Arial, sans-serif',
   },
   components: {
     MuiTextField: {
       defaultProps: {
         variant: 'outlined',
+        padding: '8px 8px',
+        InputLabelProps: {
+          shrink: false,
+        },
       },
     },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          // رنگ پیش‌فرض border
+          padding: '12px',
           '& .MuiOutlinedInput-notchedOutline': {
             borderColor: '#D1AB48',
+            borderWidth: 2,
+            padding: '12px',
+
           },
-          // در حالت hover
           '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#D1AB48',
+            borderColor: '#B8941F',
+            padding: '12px',
+
           },
-          // در حالت focus
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderColor: '#D1AB48',
+            borderWidth: 2,
+            padding: '12px',
+
+          },
+          '&.Mui-focused .MuiInputLabel-root': {
+            opacity: 0.7,
+            padding: '12px',
+
           },
         },
         input: {
-          // رنگ متن داخل input
           color: '#000',
+          textAlign: 'right',
+          direction: 'rtl',
+          padding: '16.5px 16px',
+          fontFamily: 'Tahoma, Arial, sans-serif',
+          fontSize: '16px',
+          lineHeight: '1.5',
+          padding: '0px',
+
+        },
+        inputMultiline: {
+          padding: '16.5px 16px',
+          textAlign: 'right',
+          direction: 'rtl',
+          fontFamily: 'Tahoma, Arial, sans-serif',
+          fontSize: '16px',
+          lineHeight: '1.6',
+          resize: 'vertical',
+          padding: '0px',
         },
       },
     },
     MuiInputLabel: {
       styleOverrides: {
         root: {
+          right: 16,
+          left: 'unset',
+          top: '20px',
+          transform: 'translateY(-50%)',
+          transformOrigin: 'center right',
+          textAlign: 'right',
           color: '#D1AB48',
+          backgroundColor: 'white',
+          padding: '0 8px',
+          fontFamily: 'Tahoma, Arial, sans-serif',
+          fontSize: '16px',
+          fontWeight: 500,
           '&.Mui-focused': {
-            color: '#D1AB48',
+            display: 'none',
+          },
+          '&.MuiInputLabel-shrink': {
+            transform: 'translateY(-50%)',
+            top: '20px',
+            right: 16,
+          },
+        },
+        outlined: {
+          right: 16,
+          left: 'unset',
+          top: '20px',
+          backgroundColor: 'white',
+          padding: '0 8px',
+          '&.Mui-focused': {
+            transform: 'translateY(-50%)',
+            top: '20px',
+            backgroundColor: 'white',
           },
         },
       },

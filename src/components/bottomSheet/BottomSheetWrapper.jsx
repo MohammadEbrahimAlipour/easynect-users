@@ -1,5 +1,5 @@
 import { Drawer } from "@mui/material";
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import tw from "tailwind-styled-components";
 
 export default function BottomSheetWrapper({
@@ -11,6 +11,7 @@ export default function BottomSheetWrapper({
   className,
   fullScreen,
   fullWidth,
+  theme,
 }) {
   const getStyles = () => {
     let style = {
@@ -20,6 +21,8 @@ export default function BottomSheetWrapper({
       borderTopRightRadius: "1rem",
       height: height || "unset",
       maxHeight: maxHeight || "600px",
+      backgroundColor: theme?.cardBackground || "#fff",
+      color: theme?.text || "#000",
     };
 
     if (fullScreen) {
@@ -49,7 +52,15 @@ export default function BottomSheetWrapper({
 
   return (
     <Drawer anchor="bottom" open={open} onClose={onClose} sx={getStyles()}>
-      <Wrapper className={className}>{children}</Wrapper>
+      <Wrapper
+        className={className}
+        style={{
+          backgroundColor: theme?.cardBackground || "#fff",
+          color: theme?.text || "#000",
+        }}
+      >
+        {children}
+      </Wrapper>
     </Drawer>
   );
 }
@@ -57,4 +68,7 @@ export default function BottomSheetWrapper({
 const Wrapper = tw.div`
   h-full
   w-full
+  p-4
+  overflow-y-auto
+  rounded-t-2xl
 `;
