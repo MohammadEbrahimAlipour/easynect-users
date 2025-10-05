@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Avatar, Box, TextField, Typography, Button } from "@mui/material";
+import { Box, TextField, Typography, Button } from "@mui/material";
 
-const FormOrder = ({ fields, onSubmit, theme }) => {
+const FormOrder = ({ fields = [], orders = [], theme, onSubmit }) => {
   const [formValues, setFormValues] = useState({});
+  const [note, setNote] = useState("");
 
   const handleChange = (id, value) => {
     setFormValues((prev) => ({ ...prev, [id]: value }));
@@ -10,23 +11,47 @@ const FormOrder = ({ fields, onSubmit, theme }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const formattedFields = fields.map((field) => ({
+      title: field.title,
+      value: formValues[field.id] || "",
+      field_type: field.type,
+      field_id: field.id,
+    }));
+
+    const payload = {
+      note,
+      orders: orders.map((order) => ({
+        item_id: order.item_id,
+        count: order.count,
+      })),
+      fields: formattedFields,
+    };
+
     if (onSubmit) {
-      onSubmit(formValues);
+      onSubmit(payload);
     }
   };
+
+  const borderColor = theme?.borderColor || "#ddd";
+  const textColor = theme?.cardText || "#000";
+  const hoverColor = theme?.primaryHover || "#a89060";
 
   return (
     <Box
       component="form"
       onSubmit={handleSubmit}
       sx={{
-        bgcolor: theme.background,
-        p: 2,
+        bgcolor: theme?.background,
+        p: 3,
         borderRadius: 2,
+        maxWidth: 600,
+        mx: "auto",
       }}
     >
+      {/* فیلدهای داینامیک */}
       {fields
-        .sort((a, b) => a.order - b.order)
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
         .map((field) => (
           <Box
             key={field.id}
@@ -40,7 +65,7 @@ const FormOrder = ({ fields, onSubmit, theme }) => {
             <Box sx={{ flex: 1 }}>
               <Typography
                 variant="subtitle2"
-                sx={{ color: theme.cardText, mb: 0.5 }}
+                sx={{ color: textColor, mb: 0.5 }}
               >
                 {field.title}
                 {field.is_required && (
@@ -55,12 +80,8 @@ const FormOrder = ({ fields, onSubmit, theme }) => {
                 onChange={(e) => handleChange(field.id, e.target.value)}
                 sx={{
                   "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: theme.borderColor,
-                    },
-                    "&:hover fieldset": {
-                      borderColor: theme.primary,
-                    },
+                    "& fieldset": { borderColor: borderColor },
+                    "&:hover fieldset": { borderColor: theme?.primary },
                   },
                 }}
               />
@@ -68,13 +89,43 @@ const FormOrder = ({ fields, onSubmit, theme }) => {
           </Box>
         ))}
 
+      {/* یادداشت (note) */}
+      <Box sx={{ mb: 3 }}>
+        <Typography
+          variant="subtitle2"
+          sx={{ color: textColor, mb: 0.5 }}
+        >
+          یادداشت
+        </Typography>
+        <TextField
+          multiline
+          rows={3}
+          fullWidth
+          placeholder="یادداشت خود را وارد کنید..."
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": { borderColor: borderColor },
+              "&:hover fieldset": { borderColor: theme?.primary },
+            },
+          }}
+        />
+      </Box>
+
+      {/* دکمه ارسال */}
       <Button
         type="submit"
         variant="contained"
         sx={{
-          mt: 2,
-          bgcolor: theme.primary,
-          "&:hover": { bgcolor: theme.primaryHover },
+          background: theme?.background,
+          border: `2px solid ${borderColor}`,
+          color: borderColor,
+          fontWeight: "bold",
+          "&:hover": {
+            backgroundColor: hoverColor,
+            color: "#fff",
+          },
         }}
       >
         ثبت فرم

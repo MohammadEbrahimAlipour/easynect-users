@@ -16,6 +16,7 @@ export default function Box({
   data,
   handleCountingItemClicks,
   containerDisplayType,
+  theme, // ← اضافه شد
 }) {
   const { sub_order, type, title, content_val, s3_icon_url, description } =
     data || {};
@@ -24,31 +25,22 @@ export default function Box({
   const [currentFileURL, setCurrentFileURL] = useState(null);
 
   const handleSquareTypeDetection = () => {
-    if (!handleCountingItemClicks(data)) {
-      return;
-    }
-
+    if (!handleCountingItemClicks(data)) return;
     if (!data) return;
 
     if (data.type === "phone" && data.content_val) {
-      const telLink = `tel:${data.content_val}`;
-      window.location.href = telLink;
+      window.location.href = `tel:${data.content_val}`;
     } else if (data.type === "link" && data.content_val) {
-      const externalLink = data.content_val;
-      window.open(externalLink, "_blank", "noopener,noreferrer");
+      window.open(data.content_val, "_blank", "noopener,noreferrer");
     } else if (data.type === "file" && data.content_val) {
-      const isPDForImage = checkIsPDForImage(data.content_val);
-
-      if (isPDForImage) {
+      if (checkIsPDForImage(data.content_val)) {
         setCurrentFileURL(data.content_val);
         setIsPreviewSheetOpen(true);
         return;
       }
-
       downloadFile(data.content_val);
     } else if (data.type === "email" && data.content_val) {
-      const emailLink = `mailto:${data.content_val}`;
-      window.location.href = emailLink;
+      window.location.href = `mailto:${data.content_val}`;
     }
   };
 
@@ -67,24 +59,35 @@ export default function Box({
     <>
       <Wrapper
         onClick={handleSquareTypeDetection}
-        style={{ "--order": sub_order }}
+        style={{
+          "--order": sub_order,
+          backgroundColor: theme?.cardBackground || "#fff", // ← بک‌گراند Box
+        }}
         $type={containerDisplayType}
       >
         {type === "string" && (
-          <CopyButton title={title} content={content_val} />
+          <CopyButton
+            title={title}
+            content={content_val}
+            theme={theme} // ← پاس دادن theme به CopyButton
+          />
         )}
 
         <ImageWrapper $type={containerDisplayType}>
-          <Image
+          <BaseImage
             src={s3_icon_url}
             alt={title || ""}
             width={imageSize}
             height={imageSize}
           />
         </ImageWrapper>
-        <Title $type={containerDisplayType}>{title}</Title>
+
+        <Title $type={containerDisplayType} $theme={theme}>
+          {title}
+        </Title>
+
         {containerDisplayType === WIDGET_TYPE.square && (
-          <Description>{description}</Description>
+          <Description $theme={theme}>{description}</Description>
         )}
       </Wrapper>
 
@@ -106,7 +109,6 @@ const Wrapper = tw.div`
   relative
   flex-1
   order-[var(--order)]
-
   ${({ $type }) =>
     $type === WIDGET_TYPE.rectangle &&
     `
@@ -137,13 +139,12 @@ const ImageWrapper = tw.div`
   `}
 `;
 
-const Image = tw(BaseImage)`
-`;
-
 const Title = tw.div`
   font-medium
   text-xs
-  text-dark
+  ${({ $theme }) => `
+    color: ${$theme?.cardText || '#333'}
+  `}
 
   ${({ $type }) =>
     $type === WIDGET_TYPE.rectangle &&
@@ -156,8 +157,10 @@ const Title = tw.div`
 const Description = tw.div`
   font-medium
   text-xs
-  text-muted
   mt-2
   mb-5
   line-clamp-2
+  ${({ $theme }) => `
+    color: ${$theme?.cardText || '#777'}
+  `}
 `;

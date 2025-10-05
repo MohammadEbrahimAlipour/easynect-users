@@ -14,27 +14,28 @@ const optionTexts = {
 
 const mockData = {
   ANALYTICS_CATALOG_ITEMS_TOTAL_TAP: [
-    { id: "1", title: "محصول شماره ۱", banner: "https://via.placeholder.com/150", view: 42 },
-    { id: "2", title: "محصول شماره ۲", banner: "https://via.placeholder.com/150", view: 75 },
+    // { id: "1", title: "محصول شماره ۱", banner: "https://via.placeholder.com/150", view: 42 },
+    // { id: "2", title: "محصول شماره ۲", banner: "https://via.placeholder.com/150", view: 75 },
   ],
-  ANALYTICS_CATALOG_TOTAL_VIEW: { views: 117 },
+  ANALYTICS_CATALOG_TOTAL_VIEW: { 
+    // views: 117
+   },
   ANALYTICS_VIEW_BASES_DATE_RANGE: {
-    total_view: 117,
+    // total_view: 117,
     views: [
-      { date: "2025-09-08", views: 40 },
-      { date: "2025-09-09", views: 52 },
-      { date: "2025-09-10", views: 25 },
+      // { date: "2025-09-08", views: 40 },
+      // { date: "2025-09-09", views: 52 },
+      // { date: "2025-09-10", views: 25 },
     ],
   },
   ANALYTICS_ITEM_TAB_BASES_DATE_RANGE: [
-    { id: "1", taps: 20, title: "تب شماره ۱", s3_icon_url: "https://via.placeholder.com/50", guid: "guid-1" },
-    { id: "2", taps: 37, title: "تب شماره ۲", s3_icon_url: "https://via.placeholder.com/50", guid: "guid-2" },
+    // { id: "1", taps: 20, title: "تب شماره ۱", s3_icon_url: "https://via.placeholder.com/50", guid: "guid-1" },
+    // { id: "2", taps: 37, title: "تب شماره ۲", s3_icon_url: "https://via.placeholder.com/50", guid: "guid-2" },
   ],
 };
 
-const StatsChartSide = ({ onChangeShowFilterDateMenu, onChangeTypeFilter, typeFilter, selectedCardId, fromDate, toDate }) => {
+const StatsChartSide = ({ isCard, setIsCard, onChangeShowFilterDateMenu, onChangeTypeFilter, typeFilter, selectedCardId, fromDate, toDate }) => {
   const [toggleMenu, setToggleMenu] = useState(false);
-  const [isCard, setIsCard] = useState(false);
 
   // fetch hooks
   const viewFetch = useFetch();

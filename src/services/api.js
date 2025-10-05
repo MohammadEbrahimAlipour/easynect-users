@@ -113,5 +113,11 @@ export const API_ROUTES = {
   CREATE_THEME: (page_id) => generateApiUrl(`/api/v1/pages/${page_id}/theme/`),
   GET_THEME: (page_id) => generateApiUrl(`/api/v1/pages/${page_id}/theme/`),
   // ثبت سفارش
-  GET_ORDER: (catalog_id) => generateApiUrl(`/api/v1/catalogs/customer/${catalog_id}/`)
+  GET_ORDER: (catalog_id) => generateApiUrl(`/api/v1/catalogs/customer/${catalog_id}/`),
+  RECORD_FORM_ORDER: (catalog_id, form_id) => generateApiUrl(`/api/v1/catalogs/customer/${catalog_id}/invoice/${form_id}`)
+  // subs
+  ,GET_PLANS: () => generateApiUrl('/api/v1/subs/plans'),
+  GET_SUBSCRIPTION: (sub_id) => generateApiUrl(`/api/v1/subs/${sub_id}`),
+  RENEW_SUB: (sub_id) => generateApiUrl(`/api/v1/subs/${sub_id}`)
+
 };

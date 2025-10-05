@@ -8,6 +8,7 @@ import {
   Box,
   Button,
   Skeleton,
+  Tooltip
 } from '@mui/material';
 import axiosInstance from '@/services/axiosInterceptors';
 import { useAccessToken } from '../../../context/AccessTokenContext';
@@ -16,15 +17,16 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import LinkIcon from '@mui/icons-material/Link';
+import { toast } from "react-toastify";
 
-// 🆕 فرم سفارش (همون که قبلاً نوشتیم)
+// فرم سفارش
 import FormOrder from './FormOrder';
 
-const ProfileCardWithModal = ({ data, parentId, orderInfo }) => {
+const ProfileCardWithModal = ({ data, parentId, orderInfo, theme }) => {
   const [open, setOpen] = useState(false);
   const [detailData, setDetailData] = useState(null);
-  const [showForm, setShowForm] = useState(false); // 🆕 کنترل نمایش فرم
-
+  const [showForm, setShowForm] = useState(false);
   const accessToken = useAccessToken();
 
   const handleOpen = async () => {
@@ -35,7 +37,7 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo }) => {
   const handleClose = () => {
     setOpen(false);
     setDetailData(null);
-    setShowForm(false); // وقتی مودال بسته شد، فرم هم بسته شه
+    setShowForm(false);
   };
 
   const fetchFromApi = async (id) => {
@@ -55,7 +57,29 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo }) => {
     }
   };
 
+  const handleFormSubmit = async (values) => {
+    console.log('Form submitted:', values);
+    const apiUrl = API_ROUTES.RECORD_FORM_ORDER(parentId, orderInfo.id);
+    try {
+      const response = await axiosInstance.post(apiUrl, values, {
+        headers: { Authorization: `Bearer ${accessToken.accessToken}` },
+      });
+      console.log(response, 'response form submission')
+      toast.success('سفارش با موفقیت ثبت شد!');
+
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast.error('خطا در ثبت سفارش. لطفا دوباره تلاش کنید.');
+      return;
+    }
+  };
+
+
   const isHighlighted = data.is_highlighted;
+  const bg = theme?.cardBackground || '#fff';
+  const borderColor = isHighlighted ? theme?.primary || '#c6ac85' : theme?.borderColor || '#ddd';
+  const textColor = theme?.cardText || '#000';
+  const hoverColor = theme?.primaryHover || '#a89060';
 
   return (
     <>
@@ -65,11 +89,12 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo }) => {
           maxWidth: 345,
           margin: '16px auto',
           borderRadius: 2,
-          border: isHighlighted ? '2px solid #c6ac85' : '1px solid #ddd',
-          boxShadow: isHighlighted ? '0 0 15px #c6ac85' : 3,
+          border: `2px solid ${borderColor}`,
+          boxShadow: isHighlighted ? `0 0 15px ${borderColor}` : 3,
           cursor: 'pointer',
           transition: 'all 0.3s ease',
-          backgroundColor: '#fff',
+          backgroundColor: bg,
+          color: textColor,
         }}
       >
         <CardMedia
@@ -91,12 +116,12 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo }) => {
             gutterBottom
             variant="h6"
             component="div"
-            color={isHighlighted ? '#c6ac85' : '#000'}
+            color={textColor}
             fontWeight={600}
           >
             {data.title}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" color={theme?.cardTextSecondary || 'text.secondary'}>
             {data.description}
           </Typography>
         </CardContent>
@@ -112,7 +137,7 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo }) => {
             transform: 'translate(-50%, -50%)',
             width: '90%',
             maxWidth: 450,
-            bgcolor: 'background.paper',
+            bgcolor: theme?.background || '#fff',
             boxShadow: 24,
             borderRadius: 2,
             p: 3,
@@ -120,35 +145,27 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo }) => {
           }}
         >
           {!detailData ? (
-            // ⏳ Loading Skeletons
             <>
-              <Skeleton variant="rectangular" height={160} sx={{ mb: 2, borderRadius: 2 }} />
-              <Skeleton variant="text" height={32} sx={{ mb: 1 }} />
-              <Skeleton variant="text" height={24} sx={{ mb: 2 }} />
-              <Skeleton variant="rectangular" height={200} sx={{ mb: 4, borderRadius: 2 }} />
-              <Skeleton variant="text" height={20} sx={{ mb: 2 }} />
-              <Skeleton variant="rounded" height={36} width={150} sx={{ mx: 'auto' }} />
+              <Skeleton variant="rectangular" height={160} sx={{ mb: 2, borderRadius: 2, bgcolor: theme?.cardBackground || '#eee', animation: 'pulse 1.5s infinite' }} />
+              <Skeleton variant="text" height={32} sx={{ mb: 1, bgcolor: theme?.cardBackground || '#eee', animation: 'pulse 1.5s infinite' }} />
+              <Skeleton variant="text" height={24} sx={{ mb: 2, bgcolor: theme?.cardBackground || '#eee', animation: 'pulse 1.5s infinite' }} />
+              <Skeleton variant="rectangular" height={200} sx={{ mb: 4, borderRadius: 2, bgcolor: theme?.cardBackground || '#eee', animation: 'pulse 1.5s infinite' }} />
+              <Skeleton variant="text" height={20} sx={{ mb: 2, bgcolor: theme?.cardBackground || '#eee', animation: 'pulse 1.5s infinite' }} />
+              <Skeleton variant="rounded" height={36} width={150} sx={{ mx: 'auto', bgcolor: theme?.cardBackground || '#eee', animation: 'pulse 1.5s infinite' }} />
             </>
           ) : (
             <>
               {showForm ? (
-                // 🆕 نمایش فرم سفارش
                 <FormOrder
                   fields={orderInfo?.fields || []}
-                  theme={{
-                    background: '#fff',
-                    borderColor: '#c6ac85',
-                    primary: '#c6ac85',
-                    primaryHover: '#a89060',
-                    cardText: '#333',
-                  }}
-                  onSubmit={(values) => {
+                  theme={theme}
+                  onSubmit={async (values) => {
                     console.log('Form submitted:', values);
-                    setShowForm(false); // بعد از ثبت فرم برگرده به حالت قبلی
+                    handleFormSubmit(values);
+                    setShowForm(false);
                   }}
                 />
               ) : (
-                // ✅ محتوای قبلی
                 <>
                   {detailData.banner && (
                     <Box sx={{ height: 160, overflow: 'hidden' }}>
@@ -159,18 +176,18 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo }) => {
                           width: '100%',
                           height: '100%',
                           objectFit: 'contain',
-                          border: '2px solid #c6ac85',
+                          border: `2px solid ${borderColor}`,
                           borderRadius: 8,
                         }}
                       />
                     </Box>
                   )}
 
-                  <Typography variant="h6" fontWeight={700} mb={1}>
+                  <Typography variant="h6" fontWeight={700} mb={1} color={textColor}>
                     {detailData.title || data.title}
                   </Typography>
 
-                  <Typography variant="body2" color="text.secondary" mb={2}>
+                  <Typography variant="body2" color={theme?.cardText || 'text.secondary'} mb={2}>
                     {detailData.description || data.description}
                   </Typography>
 
@@ -193,6 +210,7 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo }) => {
                                 height: '200px',
                                 objectFit: 'contain',
                                 borderRadius: 8,
+                                border: `1px solid ${theme?.borderColor || '#ddd'}`,
                               }}
                             />
                           </SwiperSlide>
@@ -202,7 +220,7 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo }) => {
                   )}
 
                   {detailData.content && typeof detailData.content === 'string' && (
-                    <Typography variant="body1" mt={2}>
+                    <Typography variant="body1" mt={2} color={textColor}>
                       {detailData.content}
                     </Typography>
                   )}
@@ -210,14 +228,15 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo }) => {
                   <Box mt={4} textAlign="center">
                     <Button
                       variant="outlined"
-                      onClick={() => setShowForm(true)} // 🆕 فرم رو باز کن
+                      onClick={() => setShowForm(true)}
                       sx={{
-                        borderColor: '#c6ac85',
-                        color: '#c6ac85',
+                        borderColor: borderColor,
+                        color: borderColor,
                         '&:hover': {
-                          backgroundColor: '#c6ac85',
+                          backgroundColor: hoverColor,
                           color: '#fff',
                         },
+                        ml: 2,
                       }}
                     >
                       ثبت کد سفارش
@@ -226,16 +245,17 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo }) => {
                       variant="outlined"
                       onClick={() => window.open(detailData.ref_link, '_blank')}
                       sx={{
-                        borderColor: '#c6ac85',
-                        color: '#c6ac85',
-                        marginRight: 2,
+                        borderColor: borderColor,
+                        color: borderColor,
                         '&:hover': {
-                          backgroundColor: '#c6ac85',
+                          backgroundColor: hoverColor,
                           color: '#fff',
                         },
                       }}
                     >
-                      لینک ارجاع
+                      <Tooltip title="لینک ارجاع" arrow>
+                        <LinkIcon />
+                      </Tooltip>
                     </Button>
                   </Box>
                 </>

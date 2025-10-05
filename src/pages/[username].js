@@ -32,6 +32,11 @@ import { Box } from "@mui/material";
 import { API_ROUTES } from "@/services/api";
 import { useAccessToken } from "../../context/AccessTokenContext";
 import StoryList from "@/components/storyList/StoryList";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import FaqUser from "@/components/faqUser/FaqUser";
 
 export async function getServerSideProps(context) {
   try {
@@ -342,7 +347,7 @@ export default function Username({
 
 
 
-  console.log(theme, 'usersData')
+  console.log(usersData, 'usersData')
 
   return (
     <>
@@ -359,7 +364,7 @@ export default function Username({
         <ProfilePictureWrapper>
           <ProfilePicture fill src={usersData?.profile_s3_url} />
         </ProfilePictureWrapper>
-        <HeaderContent>
+        <HeaderContent $bg={theme.cardBackground}>
           <Texts onClick={() => setIsBioBottomSheetOpen(true)}>
             <FullName style={{ color: theme?.headerText }}>
               {usersData?.owner_first_name} {usersData?.owner_last_name}
@@ -395,7 +400,7 @@ export default function Username({
       </Header>
 
       <Box className="flex justify-center items-center" style={{ background: theme?.background }}>
-        <SwitchModeButton mode={mode} setMode={setMode} />
+        <SwitchModeButton mode={mode} setMode={setMode} theme={theme} />
       </Box>
 
       {mode == 'menu' ? usersData?.horizontal_menu ? (
@@ -409,8 +414,40 @@ export default function Username({
                       key={object?.guid + object?.data?.length}
                       data={object}
                       handleCountingItemClicks={handleCountingItemClicks}
+                      theme={theme}
                     />
                   ))}
+                  {usersData.gallery?.length > 0 && (
+                    <Box mt={2} mb={5}>
+                      <Swiper
+                        spaceBetween={10}
+                        slidesPerView={1}
+                        navigation
+                        pagination={{ type: 'progressbar' }}
+                        modules={[Navigation]}
+                      >
+                        {usersData.gallery.map((item) => (
+                          <SwiperSlide key={item.id}>
+                            <img
+                              src={item.pic_url}
+                              alt="gallery"
+                              style={{
+                                width: '100%',
+                                height: '100px',
+                                objectFit: 'contain',
+                                borderRadius: 8,
+                                border: `1px solid ${theme?.borderColor || '#ddd'}`,
+                              }}
+                            />
+                          </SwiperSlide>
+                        ))}
+                      </Swiper>
+                    </Box>
+                  )}
+                  {usersData.faqs?.length > 0 && (
+                    <FaqUser  data={usersData.faqs} theme={theme} />
+                  )}
+
                 </div>
               ) : (
                 <NoData />
@@ -488,6 +525,7 @@ const HeaderContent = tw.div`
   flex-1
   ps-2
   pt-6
+  ${(p) => `background: ${p.$bg};`}
 `;
 
 const Texts = tw.div`

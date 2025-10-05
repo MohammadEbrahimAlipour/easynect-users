@@ -7,23 +7,11 @@ export default function VideoEmbedUploader({ onAdd, handleApiSubmit, handleRoute
   const [embedList, setEmbedList] = useState([]);
 
   const handleAddVideo = () => {
-    if (isValidEmbedUrl(videoUrl)) {
       const newList = [...embedList, videoUrl];
       setEmbedList(newList);
       setVideoUrl("");
       onAdd?.(videoUrl); // optional callback
-    } else {
-      toast.error("لینک وارد شده معتبر نیست. لطفاً از لینک‌های embeddable استفاده کنید.", {
-        position: 'top-center',
-        autoClose: 2500,
-      });
-    }
-  };
-
-  const isValidEmbedUrl = (url) => {
-    return url.startsWith("https://www.youtube.com/embed/") ||
-      url.startsWith("https://player.vimeo.com/video/");
-    // You can extend this with regex for more platforms
+   
   };
 
   const removeVideo = (index) => {
@@ -43,7 +31,7 @@ export default function VideoEmbedUploader({ onAdd, handleApiSubmit, handleRoute
             انصراف
           </span>
           <button
-            onClick={async () => { handleApiSubmit(faqs) }} // This function should handle the API submission
+            onClick={async () => { handleApiSubmit(videoUrl) }} // This function should handle the API submission
             type="submit" // This makes it a submit button
             className="bg-dark text-white px-4 py-1 rounded-lg border-[1px] border-black"
           >
