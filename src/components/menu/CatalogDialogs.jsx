@@ -2,6 +2,7 @@
 import React from 'react';
 import { Box, TextField, Typography } from '@mui/material';
 import CatalogDialog from '../dialog/CustomDialog';
+import FileUploader from '../fileUploader/FileUploader';
 
 export default function CatalogDialogs({
   pageDataDontExist,
@@ -49,7 +50,7 @@ export default function CatalogDialogs({
       >
         <Box display="flex" flexDirection="column" gap={2}>
           <TextField
-            label="Title"
+            placeholder="نام"
             name="title"
             variant="outlined"
             fullWidth
@@ -57,7 +58,7 @@ export default function CatalogDialogs({
             onChange={(e) => setTitle(e.target.value)}
           />
           <TextField
-            label="content"
+            placeholder="محتوا"
             variant="outlined"
             multiline
             rows={3}
@@ -65,7 +66,7 @@ export default function CatalogDialogs({
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
-          <input accept="image/*" type="file" onChange={handleFileChange} />
+          <FileUploader onFileSelect={handleFileChange} />
           {error && <Typography color="error">{error}</Typography>}
         </Box>
       </CatalogDialog>
@@ -79,7 +80,7 @@ export default function CatalogDialogs({
       >
         <Box display="flex" flexDirection="column" gap={2}>
           <TextField
-            label="Title"
+            placeholder="نام"
             name="title"
             variant="outlined"
             fullWidth
@@ -87,7 +88,7 @@ export default function CatalogDialogs({
             onChange={(e) => setTitle(e.target.value)}
           />
           <TextField
-            label="content"
+            placeholder="محتوا"
             variant="outlined"
             multiline
             rows={3}
@@ -95,7 +96,7 @@ export default function CatalogDialogs({
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
-          <input accept="image/*" type="file" onChange={handleFileChange} />
+          <FileUploader onFileSelect={handleFileChange} />
           {error && <Typography color="error">{error}</Typography>}
         </Box>
       </CatalogDialog>

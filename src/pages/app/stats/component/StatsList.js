@@ -1,10 +1,11 @@
 import LoadingState from "@/components/LoadingState";
 import useFetch from "@/hooks/useFetch";
+import { API_ROUTES } from "@/services/api";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-const StatsList = ({ selectedCardId, fromDate, toDate }) => {
+const StatsList = ({ isCard, selectedCardId, fromDate, toDate }) => {
   const visitedFetch = useFetch();
   const [visitedList, setVisitedList] = useState([]);
   const [skip, setSkip] = useState(0);
@@ -32,9 +33,9 @@ const StatsList = ({ selectedCardId, fromDate, toDate }) => {
     setPrevSkip((prev) => prev + limit);
 
     const nextSkip = freshData ? 0 : prevSkip;
-
+    const url = API_ROUTES.ANALYTICS_ITEM_TAB_BASES_DATE_RANGE(selectedCardId);
     visitedFetch.load({
-      url: `/api/v1/analytics/get_list_contents_taps_based_on_date_range/${selectedCardId}`,
+      url: isCard ? `/api/v1/analytics/get_list_contents_taps_based_on_date_range/${selectedCardId}` : url,
       params: {
         from_date: fromDate,
         to_date: toDate,
@@ -43,6 +44,7 @@ const StatsList = ({ selectedCardId, fromDate, toDate }) => {
       },
       suppress404Toast: true
     });
+
   };
 
   const infinityDataLoad = () => {
@@ -51,8 +53,8 @@ const StatsList = ({ selectedCardId, fromDate, toDate }) => {
         dataLength={visitedList.length}
         next={loadData}
         hasMore
-        // hasMore={hasMoreVisitedItems} // Boolean indicating if there's more data to load
-        // loader={<LoadingState />} // Component that shows a loading indicator
+      // hasMore={hasMoreVisitedItems} // Boolean indicating if there's more data to load
+      // loader={<LoadingState />} // Component that shows a loading indicator
       >
         {visitedList.map((item) => (
           <div key={item.guid}>

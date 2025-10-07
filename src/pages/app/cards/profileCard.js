@@ -4,7 +4,7 @@ import { CardsCardIcon, CardsWifiIcon, PlusSign } from "@/components/Icons";
 import Layout from "@/components/Layout";
 import ProfileCardEmpty from "@/components/ProfileCardEmpty";
 import Link from "next/link";
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo, use } from "react";
 import { useAccessToken } from "../../../../context/AccessTokenContext";
 import tw from "tailwind-styled-components";
 import BottomSheetShareById from "@/components/bottomSheet/cards/BottomSheetShareById";
@@ -16,9 +16,14 @@ import Head from "next/head";
 import Image from "next/image";
 import { generateApiUrl } from "@/components/ApiUr";
 import AccessoryConnect from "@/components/AccessoryConnect";
-import { IconButton } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Modal } from "@mui/material";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { daysFromNow } from "@/utils/date";
+import { toPersianDigits } from "@/utils/formatter";
+import { Button } from "react-bootstrap";
+import { X } from "@mui/icons-material";
+import { set } from "lodash";
 
 const ProfileCard = () => {
   const [cardData, setCardData] = useState([]);
@@ -33,6 +38,12 @@ const ProfileCard = () => {
   const [showSheet, setShowSheet] = useState(false); //share options
   const [showSheetMore, setShowSheetMore] = useState(false); //more options
   const [cards, setCards] = useState([]);
+  const [plans, setPlans] = useState([]);
+  const [isPlansModalOpen, setIsPlansModalOpen] = useState(false);
+  const [selectedPlanId, setSelectedPlanId] = useState(null);
+  const [discountCode, setDiscountCode] = useState(null);
+  const [discountModal, setDisCountModal] = useState(false);
+  const [subId, setSubId] = useState(null);
   const [
     isAccessoryConnectBottomSheetOpen,
     setIsAccessoryConnectBottomSheetOpen,
@@ -123,6 +134,7 @@ const ProfileCard = () => {
         profile_s3_url: apiCard.profile_s3_url,
         user_first_name: apiCard.user_first_name,
         user_last_name: apiCard.user_last_name,
+        subs: apiCard.subs
       }))
       .sort((a, b) => {
         // اگر کارت a همان کارت با id مورد نظر باشد، بفرستش انتها
@@ -246,7 +258,54 @@ const ProfileCard = () => {
     };
   }, [cards]);
 
+  console.log(cards, 'cardData')
+  const handleShowPlans = async (subId) => {
+    try {
+      const response = await axiosInstance.get(API_ROUTES.GET_PLANS(), {
+        headers: {
+          Authorization: `Bearer ${accessToken.accessToken}`,
+          "accept-language": "fa",
+        },
+      });
+      console.log("📦 Plans:", response.data);
+      setIsPlansModalOpen(true);
+      setPlans(response.data);
+    } catch (error) {
+      console.error("❌ خطا در دریافت پلن‌ها:", error);
+    }
+  };
 
+  const handleRenewSub = async (subId) => {
+    try {
+      const data = {
+        plan_id: selectedPlanId,
+        discount_code: "string"
+      }
+      const response = await axiosInstance.post(API_ROUTES.RENEW_SUB(subId), data, {
+        headers: {
+          Authorization: `Bearer ${accessToken.accessToken}`,
+          "accept-language": "fa",
+        },
+      });
+      console.log("🔁 تمدید انجام شد:", response.data);
+      alert("اشتراک با موفقیت تمدید شد ✅");
+      
+      getCardsRequest();
+      
+    } catch (error) {
+      console.error("❌ خطا در تمدید اشتراک:", error);
+      alert("خطا در تمدید اشتراک ❌");
+    } finally {
+      setIsPlansModalOpen(false);
+      setDisCountModal(false);
+      setSelectedPlanId(null);
+      setDiscountCode(null);
+    }
+  };
+  const handleOpenModal = (subId) => {
+    setSubId(subId);
+    setDisCountModal(true);
+  }
   return (
     <>
       <Head>
@@ -256,7 +315,7 @@ const ProfileCard = () => {
       <Header cardData={cardData} />
       <Layout className="overflow-x-hidden min-h-fit">
         {!pageDataDontExist ? (
-          <div>
+          <div className="pb-16">
             <CardWrapper
               onTouchStart={handleOnTouch}
               onTouchEnd={handleOnTouchEnd}
@@ -277,6 +336,7 @@ const ProfileCard = () => {
                       job_title,
                       profile_s3_url,
                       username,
+                      subs
                     },
                     index
                   ) => (
@@ -289,10 +349,31 @@ const ProfileCard = () => {
                             isFallen
                           )}`,
                         }
+
                       }
                     >
                       <div className="w-full px-5 h-full py-5 ">
                         <div className="relative">
+                          <div className="absolute left-1/3 top-5 flex flex-col items-center gap-1">
+                            <span className="px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700 shadow-sm">
+                              {toPersianDigits(String(daysFromNow(subs?.expiration_date))) + " "} روز باقی مانده
+                            </span>
+
+                            <button
+                              onClick={() => handleShowPlans(subs?.id)}
+                              className="text-[11px] mt-1 bg-gray-100 text-gray-700 border border-gray-300 rounded-md px-2 py-[2px] hover:bg-gray-200 transition"
+                            >
+                              مشاهده پلن‌ها
+                            </button>
+
+                            <button
+                              onClick={() => handleOpenModal(subs?.id)}
+                              className="text-[11px] mt-1 bg-green-100 text-green-700 border border-green-300 rounded-md px-2 py-[2px] hover:bg-green-200 transition"
+                            >
+                              تمدید اشتراک
+                            </button>
+                          </div>
+
                           {/* two items left side */}
                           <div className=" absolute left-5 top-5">
                             {/* circle */}
@@ -321,8 +402,8 @@ const ProfileCard = () => {
                                 priority={true}
                                 className="rounded-full object-cover w-full h-full pointer-events-none"
                                 src={`${profile_s3_url}?${new Date().getTime()}`}
-                                width={80}
-                                height={80}
+                                width={90}
+                                height={90}
                                 alt={username}
                               />
                             </div>
@@ -365,11 +446,11 @@ const ProfileCard = () => {
                                 <p className="text-xs">فرم لید</p>
                               </Link>
 
-                             
+
 
                               {/* box right 3 */}
                               <div
-                                className="h-[32px] border-2 rounded-md flex justify-center items-center px-2"
+                                className="h-[32px] border-2 rounded-md flex justify-center items-center px-2 cursor-pointer"
                                 onClick={() => {
                                   setIsAccessoryConnectBottomSheetOpen(true);
                                   setMoreSheetDetails({
@@ -427,7 +508,49 @@ const ProfileCard = () => {
                 </IconButton>
               </div>
             </CardWrapper>
-
+            <Dialog
+              open={isPlansModalOpen}
+              onClose={() => setIsPlansModalOpen(false)}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                پلن ها
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  {plans.map((plan) => (
+                    <div key={plan.id} className="mb-4 border p-5 rounded-lg cursor-pointer" onClick={() => {
+                      setSelectedPlanId(plan.id)
+                      setIsPlansModalOpen(false)
+                    }} >
+                      <h3 style={{ margin: '0 0 8px 0' }}>{plan.name}</h3>
+                      <p >قیمت: {toPersianDigits(String(plan?.price))} تومان</p>
+                      <p >مدت زمان: {toPersianDigits(String(plan?.duration))} روز</p>
+                      <p >توضیحات: {plan.description}</p>
+                    </div>
+                  ))}
+                </DialogContentText>
+              </DialogContent>
+            </Dialog>
+            <Dialog
+              open={discountModal}
+              onClose={() => setDisCountModal(false)}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                تمدید پلن
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  <input type="text" placeholder="کد تخفیف (اختیاری)" className="border p-2 rounded-lg w-full mb-4" value={discountCode} onChange={(e) => setDiscountCode(e.target.value)} />
+                  <button  className="bg-[#F0D454] text-white rounded-lg p-2 cursor-pointer"  onClick={() => handleRenewSub(subId)} >
+                    تمدید اشتراک
+                  </button>
+                </DialogContentText>
+              </DialogContent>
+            </Dialog>
             <Link
               href="/app/cards/createCard"
               className="flex items-center justify-center w-full
@@ -488,10 +611,7 @@ const Card = tw.div`
   duration-300 
   ease-out
   translate-y-0
-
   overflow-hidden 
-
-  
 
   first:scale-[.8]
   first:-translate-y-24
@@ -501,11 +621,16 @@ const Card = tw.div`
   [&:nth-child(2)]:-translate-y-12
   [&:nth-child(2)]:shadow-[0px_4px_64px_0px_rgba(0,0,0,0.05)]
 
+  hover:scale-105
+  hover:shadow-[0px_8px_80px_0px_rgba(0,0,0,0.15)]
+  hover:-translate-y-2
+  hover:z-10
+
   ${({ $isCardFallen }) =>
     $isCardFallen &&
     `
     opacity-0 
     pointer-events-none
-    
   `}
 `;
+

@@ -21,9 +21,7 @@ import UploadInput from "@/components/UploadInput";
 import EditProfileInfoLanguage from "@/components/EditProfileInfoLanguage";
 import CropImageBottomSheet from "@/components/CropImageBottomSheet";
 import { imageUrlToBlob, readFile } from "@/utils/file";
-import Faq from "@/components/editProfile/Faq";
-import GalleryUploader from "@/components/editProfile/GalleryUploader";
-import VideoEmbedUploader from "@/components/editProfile/VideoEmbedUploader";
+
 
 const EditProfileInfo = () => {
   const [pageData, setPageData] = useState(null);
@@ -461,7 +459,7 @@ const EditProfileInfo = () => {
                     </span>
                      گالری تصاویر
                   </Link>
-                  <Link
+                  {/* <Link
                     href={`/app/cards/embedded?id=${id}`}
                     className="border-[1px] border-black px-4 py-3 rounded-lg mb-2 flex justify-center items-center"
                   >
@@ -469,7 +467,7 @@ const EditProfileInfo = () => {
                       <PenEditIcon />
                     </span>
                       لینک ویدیو
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
             </div>

@@ -103,7 +103,7 @@ export default function CardFormLead({ data, handleDeleteModal, handleEditModal 
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCancelDelete}>انصراف</Button>
+                    <Button onClick={handleCancelDelete} sx={{color: '#000'}}>انصراف</Button>
                     <Button onClick={handleConfirmDelete} color="error" variant="contained">
                         حذف
                     </Button>
@@ -113,10 +113,13 @@ export default function CardFormLead({ data, handleDeleteModal, handleEditModal 
                 header={`ویرایش فرم`}
                 open={editModal}
                 onClose={() => setEditModal(false)}
-                onConfirm={(field) => handleEditModal(field, title)}
+                onConfirm={() => {
+                    console.log(fieldId, title, 'field_id, title before test')
+                    handleEditModal(fieldId, title)
+                }}
             >
                 <TextField
-                    label="Title"
+                    placeholder="نام"
                     name="title"
                     fullWidth
                     variant="outlined"

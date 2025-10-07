@@ -12,6 +12,7 @@ import StatsList from "./component/StatsList";
 import StatsChartSide from "./component/StatsChartSide";
 
 const PersonsStats = () => {
+  const [isCard, setIsCard] = useState(false);
   const [selectedCardId, setSelectedCardId] = useState();
   const [fromDate, setFromDate] = useState();
   const [toDate, setToDate] = useState();
@@ -34,6 +35,8 @@ const PersonsStats = () => {
           selectedCardId={selectedCardId}
         />
         <StatsChartSide
+          setIsCard={setIsCard}
+          isCard={isCard}
           onChangeShowFilterDateMenu={setShowFilterDateMenu}
           onChangeTypeFilter={setTypeFilter}
           typeFilter={typeFilter}
@@ -42,6 +45,7 @@ const PersonsStats = () => {
           toDate={toDate}
         />
         <StatsList
+          isCard={isCard}
           selectedCardId={selectedCardId}
           fromDate={fromDate}
           toDate={toDate}

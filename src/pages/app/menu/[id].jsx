@@ -13,6 +13,7 @@ import { useModalStore } from '@/store/modalStore';
 import CatalogCard from '@/components/card/pages/CatalogCard';
 import AddIcon from '@mui/icons-material/Add';
 import HeaderTwoCustom from '@/components/HeaderTwoCustom';
+import FileUploader from '@/components/fileUploader/FileUploader';
 
 export default function Menu() {
   const router = useRouter();
@@ -293,15 +294,15 @@ export default function Menu() {
           {!catalog && <h1 className='pr-5 py-5'>کاتالوگ ها</h1>}
           {!catalog &&
             items.map((value, key) => (
-              <CatalogCard 
-              invoice_form_id={value.invoice_form_id}  id={value.id} card_title={value.title}  key={key} handleClick={() => {
-                setCatalog(true)
-                setCatalogId(value.id);
-                handleCategoryInfo(value.id)
-              }
-              } />
+              <CatalogCard
+                invoice_form_id={value.invoice_form_id} id={value.id} card_title={value.title} key={key} handleClick={() => {
+                  setCatalog(true)
+                  setCatalogId(value.id);
+                  handleCategoryInfo(value.id)
+                }
+                } />
             ))}
-          {!catalog &&
+          {!catalog && items.length == 0 &&
             <IconButton color="primary" onClick={() => setNewCatalog(true)} aria-label="add" sx={{ width: '100%', background: 'white', borderRadius: 5, marginTop: items ? 2 : 8, justifyContent: 'center', alignItems: 'center' }}>
               <AddIcon sx={{ color: '#D1AB48' }} />
             </IconButton>
@@ -317,7 +318,7 @@ export default function Menu() {
         onConfirm={handleCreateCataloge}
       >
         <TextField
-          label="Title"
+          placeholder="نام"
           name="title"
           fullWidth
           variant="outlined"
@@ -333,7 +334,7 @@ export default function Menu() {
       >
         <Box display="flex" flexDirection="column" gap={2}>
           <TextField
-            label="Title"
+            placeholder="نام"
             name="title"
             variant="outlined"
             fullWidth
@@ -342,7 +343,7 @@ export default function Menu() {
           />
           {tabValue != 1 &&
             <TextField
-              label="content"
+              placeholder="محتوا"
               variant="outlined"
               multiline
               rows={3}
@@ -350,11 +351,9 @@ export default function Menu() {
               value={content}
               onChange={(e) => setContent(e.target.value)}
             />}
-          <input
-            accept="image/*"
-            type="file"
-            onChange={handleFileChange}
-          />
+
+          <FileUploader onFileSelect={handleFileChange} />
+
           {error && <Typography color="error">{error}</Typography>}
         </Box>
       </CatalogDialog>
@@ -365,17 +364,19 @@ export default function Menu() {
         onConfirm={handleConfirm}
       >
         <Box display="flex" flexDirection="column" gap={2}>
+
           <TextField
-            label="Title"
+            
+            placeholder="نام"
             name="title"
-            variant="outlined"
             fullWidth
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            variant="outlined"
           />
           {tabValue != 1 &&
             <TextField
-              label="content"
+              placeholder="محتوا"
               variant="outlined"
               multiline
               rows={3}
@@ -383,11 +384,8 @@ export default function Menu() {
               value={content}
               onChange={(e) => setContent(e.target.value)}
             />}
-          <input
-            accept="image/*"
-            type="file"
-            onChange={handleFileChange}
-          />
+
+          <FileUploader onFileSelect={handleFileChange} />
           {error && <Typography color="error">{error}</Typography>}
         </Box>
       </CatalogDialog>

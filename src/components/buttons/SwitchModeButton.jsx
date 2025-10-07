@@ -3,7 +3,7 @@ import { Box, ButtonBase } from '@mui/material';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import ArticleIcon from '@mui/icons-material/Article';
 
-const SwitchModeButton = ({ mode, setMode }) => {
+const SwitchModeButton = ({ mode, setMode, theme }) => {
   const options = [
     { value: 'store', label: 'فروشگاه', icon: <StorefrontIcon fontSize="small" /> },
     { value: 'menu', label: 'صفحه', icon: <ArticleIcon fontSize="small" /> },
@@ -13,7 +13,7 @@ const SwitchModeButton = ({ mode, setMode }) => {
     <Box
       sx={{
         display: 'flex',
-        backgroundColor: '#f0f0f0',
+        backgroundColor: theme?.cardBackground || '#f0f0f0',
         borderRadius: '999px',
         p: '4px',
         width: 'fit-content',
@@ -35,13 +35,15 @@ const SwitchModeButton = ({ mode, setMode }) => {
               alignItems: 'center',
               gap: 1,
               fontWeight: isActive ? 'bold' : 'normal',
-              color: isActive ? '#fff' : '#444',
-              backgroundColor: isActive ? '#D1AB48' : 'transparent',
+              color: isActive ? theme?.background || '#fff' : theme?.cardText || '#444',
+              backgroundColor: isActive ? theme?.headerText || '#D1AB48' : 'transparent',
               transform: isActive ? 'scale(1.05)' : 'scale(1)',
               transition: 'all 0.3s ease',
               boxShadow: isActive ? '0 2px 6px rgba(0,0,0,0.15)' : 'none',
               '&:hover': {
-                backgroundColor: isActive ? '#C0993D' : '#e0e0e0',
+                backgroundColor: isActive
+                  ? theme?.borderColor || '#C0993D'
+                  : theme?.cardBackground || '#e0e0e0',
               },
             }}
           >

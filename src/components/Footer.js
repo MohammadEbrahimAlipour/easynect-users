@@ -33,7 +33,8 @@ const iconMappingSelected = {
 
 const CustomLink = ({ href, title, iconName, className = "" }) => {
   const router = useRouter();
-  const isSelected = router.asPath === href;
+  const isSelected = router.asPath === href || router.asPath.includes(href);
+  console.log(href, router.asPath, isSelected);
 
   return (
     <Link

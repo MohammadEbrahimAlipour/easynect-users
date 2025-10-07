@@ -81,6 +81,7 @@ export default function Order() {
     };
 
     const handleEditModal = async (field_id, title) => {
+        console.log(field_id, title, 'field_id, title')
         const apiUrl = API_ROUTES.DELETE_FORM_LEAD(id, form_id, field_id);
         console.log(apiUrl, 'apiUrl')
         axiosInstance

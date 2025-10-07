@@ -100,4 +100,24 @@ export const API_ROUTES = {
   DELETE_FORM_LEAD: (catalog_id, form_id, field_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/form/${form_id}/${field_id}`),
   ADD_INVOICE_FORM_FIELD: (catalog_id, form_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/form/${form_id}`),
   ADD_CUSTOM_FROM_INVOICE: (catalog_id, form_id) => generateApiUrl(`/api/v1/catalogs/customers/${catalog_id}/invoices/${form_id}`),
+  // analytics
+
+  ANALYTICS_CATALOG_ITEMS_TOTAL_TAP: (catalog_id) => generateApiUrl(`/api/v1/analytics/catalogs/get_catalog_items_total_tap/${catalog_id}`),
+  ANALYTICS_CATALOG_TOTAL_VIEW: (catalog_id) => generateApiUrl(`/api/v1/analytics/catalogs/get_catalog_items_total_tap/${catalog_id}`),
+  ANALYTICS_VIEW_BASES_DATE_RANGE: (catalog_id) => generateApiUrl(`/api/v1/analytics/catalogs/get_catalog_view_based_on_date_range/${catalog_id}`),
+  ANALYTICS_ITEM_TAB_BASES_DATE_RANGE: (catalog_id) => generateApiUrl(`/api/v1/analytics/catalogs/get_list_items_taps_based_on_date_range/${catalog_id}`),
+  ANALYSTICS_POST_CATALOG: (catalog_id) => generateApiUrl(`/api/v1/analytics/catalogs/view/${catalog_id}`),
+  ANALYSTICS_POST_ITEMS: (item_id) => generateApiUrl(`/api/v1/analytics/catalogs/items/tap/${item_id}`),
+
+  //theme 
+  CREATE_THEME: (page_id) => generateApiUrl(`/api/v1/pages/${page_id}/theme/`),
+  GET_THEME: (page_id) => generateApiUrl(`/api/v1/pages/${page_id}/theme/`),
+  // ثبت سفارش
+  GET_ORDER: (catalog_id) => generateApiUrl(`/api/v1/catalogs/customer/${catalog_id}/`),
+  RECORD_FORM_ORDER: (catalog_id, form_id) => generateApiUrl(`/api/v1/catalogs/customer/${catalog_id}/invoice/${form_id}`)
+  // subs
+  ,GET_PLANS: () => generateApiUrl('/api/v1/subs/plans'),
+  GET_SUBSCRIPTION: (sub_id) => generateApiUrl(`/api/v1/subs/${sub_id}`),
+  RENEW_SUB: (sub_id) => generateApiUrl(`/api/v1/subs/${sub_id}`)
+
 };
