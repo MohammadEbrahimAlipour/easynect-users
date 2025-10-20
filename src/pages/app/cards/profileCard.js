@@ -270,6 +270,8 @@ const ProfileCard = () => {
       console.log("📦 Plans:", response.data);
       setIsPlansModalOpen(true);
       setPlans(response.data);
+      setSubId(subId)
+
     } catch (error) {
       console.error("❌ خطا در دریافت پلن‌ها:", error);
     }
@@ -279,8 +281,9 @@ const ProfileCard = () => {
     try {
       const data = {
         plan_id: selectedPlanId,
-        discount_code: "string"
-      }
+        ...(discountCode && { discount_code: discountCode })
+      };
+
       const response = await axiosInstance.post(API_ROUTES.RENEW_SUB(subId), data, {
         headers: {
           Authorization: `Bearer ${accessToken.accessToken}`,
@@ -288,10 +291,11 @@ const ProfileCard = () => {
         },
       });
       console.log("🔁 تمدید انجام شد:", response.data);
-      alert("اشتراک با موفقیت تمدید شد ✅");
-      
+      // alert("اشتراک با موفقیت تمدید شد ✅");
+
+      window.location.href = response.data.url;
       getCardsRequest();
-      
+
     } catch (error) {
       console.error("❌ خطا در تمدید اشتراک:", error);
       alert("خطا در تمدید اشتراک ❌");
@@ -361,17 +365,16 @@ const ProfileCard = () => {
 
                             <button
                               onClick={() => handleShowPlans(subs?.id)}
-                              className="text-[11px] mt-1 bg-gray-100 text-gray-700 border border-gray-300 rounded-md px-2 py-[2px] hover:bg-gray-200 transition"
-                            >
-                              مشاهده پلن‌ها
-                            </button>
-
-                            <button
-                              onClick={() => handleOpenModal(subs?.id)}
-                              className="text-[11px] mt-1 bg-green-100 text-green-700 border border-green-300 rounded-md px-2 py-[2px] hover:bg-green-200 transition"
+                              className="text-[11px] mt-1 bg-green-100 text-gray-700 border border-gray-300 rounded-md px-2 py-[2px] hover:bg-gray-200 transition"
                             >
                               تمدید اشتراک
                             </button>
+
+                            {/* <button
+                              onClick={() => handleOpenModal(subs?.id)}
+                              className="text-[11px] mt-1 bg-green-100 text-green-700 border border-green-300 rounded-md px-2 py-[2px] hover:bg-green-200 transition"
+                            >
+                            </button> */}
                           </div>
 
                           {/* two items left side */}
@@ -523,6 +526,7 @@ const ProfileCard = () => {
                     <div key={plan.id} className="mb-4 border p-5 rounded-lg cursor-pointer" onClick={() => {
                       setSelectedPlanId(plan.id)
                       setIsPlansModalOpen(false)
+                      handleOpenModal(subId);
                     }} >
                       <h3 style={{ margin: '0 0 8px 0' }}>{plan.name}</h3>
                       <p >قیمت: {toPersianDigits(String(plan?.price))} تومان</p>
@@ -545,7 +549,7 @@ const ProfileCard = () => {
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
                   <input type="text" placeholder="کد تخفیف (اختیاری)" className="border p-2 rounded-lg w-full mb-4" value={discountCode} onChange={(e) => setDiscountCode(e.target.value)} />
-                  <button  className="bg-[#F0D454] text-white rounded-lg p-2 cursor-pointer"  onClick={() => handleRenewSub(subId)} >
+                  <button className="bg-[#F0D454] text-white rounded-lg p-2 cursor-pointer" onClick={() => handleRenewSub(subId)} >
                     تمدید اشتراک
                   </button>
                 </DialogContentText>
