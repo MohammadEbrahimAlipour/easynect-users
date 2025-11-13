@@ -42,7 +42,7 @@ export default function FieldCard({ field, index, moveCard, onEdit, onDelete }) 
             flexWrap="wrap"
         >
             {/* آواتار */}
-            {field.s3_icon_url && (
+            {/* {field.s3_icon_url && (
                 <Avatar
                     src={field.s3_icon_url}
                     alt={field.title}
@@ -54,7 +54,7 @@ export default function FieldCard({ field, index, moveCard, onEdit, onDelete }) 
                         borderRadius: '100%',
                     }}
                 />
-            )}
+            )} */}
 
             {/* اطلاعات فیلد */}
             <Box sx={{ flexGrow: 1, minWidth: 100 }}>

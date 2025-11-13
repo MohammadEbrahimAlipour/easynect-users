@@ -2,8 +2,6 @@ import React from "react";
 import { useDrag, useDrop } from "react-dnd";
 import CategoryCard from "../card/catit/Category";
 
-const ItemType = "CATEGORY_CARD";
-
 export default function DraggableCategoryCard({
   item,
   index,
@@ -11,12 +9,12 @@ export default function DraggableCategoryCard({
   onEdit,
   onClose,
   onClick,
-  disabled
+  onToggleHighlight, // اضافه شد
+  disabled, showHighlight
 }) {
   const ref = React.useRef(null);
-
   const [, drop] = useDrop({
-    accept: ItemType,
+    accept: "CATEGORY_CARD",
     hover(draggedItem) {
       if (draggedItem.index === index) return;
       moveCard(draggedItem.index, index);
@@ -25,7 +23,7 @@ export default function DraggableCategoryCard({
   });
 
   const [{ isDragging }, drag] = useDrag({
-    type: ItemType,
+    type: "CATEGORY_CARD",
     item: { index },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
@@ -35,15 +33,18 @@ export default function DraggableCategoryCard({
   drag(drop(ref));
 
   return (
-    <div  ref={ref} style={{ opacity: isDragging ? 0.5 : 1 }}>
+    <div ref={ref} style={{ opacity: isDragging ? 0.5 : 1 }}>
       <CategoryCard
         id={item.id}
         title={item.title}
+        image={item.icon || item.banner}
+        isHighlight={item.is_highlighted} // ✅
         onEdit={() => onEdit(item.id)}
         onClose={() => onClose(item.id)}
-        image={item.icon || item.banner}
+        onToggleHighlight={() => onToggleHighlight(item.id)} // ✅
         onClick={onClick}
         disabled={disabled}
+        showHighlight={showHighlight}
       />
     </div>
   );

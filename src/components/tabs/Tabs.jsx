@@ -54,6 +54,7 @@ export default function TabsCards({ refresh, setRefresh, columnConfig, items, mo
     setRefresh(false);
   }, [refresh])
 
+  console.log(items, 'items')
   return (
     <Box>
       <TabContext value={value}>

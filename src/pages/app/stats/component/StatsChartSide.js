@@ -2,8 +2,8 @@ import { useMemo, useState, useEffect } from "react";
 import useFetch from "@/hooks/useFetch";
 import Chart from "@/components/Chart";
 import { ArrowDownIcon } from "@/components/Icons";
-import { API_ROUTES } from "@/services/api";
 import ToggleSwitch from "@/components/analytics/ToggleSwitchTitle";
+import { toast } from "react-toastify";
 
 const optionTexts = {
   view: "بازدید‌ها",
@@ -13,28 +13,23 @@ const optionTexts = {
 };
 
 const mockData = {
-  ANALYTICS_CATALOG_ITEMS_TOTAL_TAP: [
-    // { id: "1", title: "محصول شماره ۱", banner: "https://via.placeholder.com/150", view: 42 },
-    // { id: "2", title: "محصول شماره ۲", banner: "https://via.placeholder.com/150", view: 75 },
-  ],
-  ANALYTICS_CATALOG_TOTAL_VIEW: { 
-    // views: 117
-   },
-  ANALYTICS_VIEW_BASES_DATE_RANGE: {
-    // total_view: 117,
-    views: [
-      // { date: "2025-09-08", views: 40 },
-      // { date: "2025-09-09", views: 52 },
-      // { date: "2025-09-10", views: 25 },
-    ],
-  },
-  ANALYTICS_ITEM_TAB_BASES_DATE_RANGE: [
-    // { id: "1", taps: 20, title: "تب شماره ۱", s3_icon_url: "https://via.placeholder.com/50", guid: "guid-1" },
-    // { id: "2", taps: 37, title: "تب شماره ۲", s3_icon_url: "https://via.placeholder.com/50", guid: "guid-2" },
-  ],
+  ANALYTICS_CATALOG_ITEMS_TOTAL_TAP: [],
+  ANALYTICS_CATALOG_TOTAL_VIEW: {},
+  ANALYTICS_VIEW_BASES_DATE_RANGE: { views: [] },
+  ANALYTICS_ITEM_TAB_BASES_DATE_RANGE: [],
 };
 
-const StatsChartSide = ({ isCard, setIsCard, onChangeShowFilterDateMenu, onChangeTypeFilter, typeFilter, selectedCardId, fromDate, toDate }) => {
+const StatsChartSide = ({
+  selectedCatalogId,
+  isCard,
+  setIsCard,
+  onChangeShowFilterDateMenu,
+  onChangeTypeFilter,
+  typeFilter,
+  selectedCardId,
+  fromDate,
+  toDate,
+}) => {
   const [toggleMenu, setToggleMenu] = useState(false);
 
   // fetch hooks
@@ -42,67 +37,110 @@ const StatsChartSide = ({ isCard, setIsCard, onChangeShowFilterDateMenu, onChang
   const connectionFetch = useFetch();
   const convertFetch = useFetch();
   const shareFetch = useFetch();
+  const catalogFetch = useFetch();
 
-  const catalogFetch = useFetch(); // برای حالت منو
-
-  // دریافت داده‌ها
+  // 📊 دریافت داده‌ها
   const getData = (filter) => {
-    if (!selectedCardId) return;
+    // 🛑 بررسی انتخاب‌ها
+    if (!isCard && !selectedCatalogId) {
+      toast.error("ابتدا منوی مورد نظر را انتخاب کنید");
+      return;
+    }
+    if (isCard && !selectedCardId) {
+      toast.error("ابتدا کارت ویزیت مورد نظر را انتخاب کنید");
+      return;
+    }
+
     const params = { from_date: fromDate, to_date: toDate };
 
     if (isCard) {
-      // حالت کارت → فقط فیلتر انتخاب شده
+      // حالت کارت → فقط API همان فیلتر
       switch (filter) {
         case "view":
-          viewFetch.load({ url: API_ROUTES.ANALYTICS_VIEW_BASES_DATE_RANGE(selectedCardId), params, suppress404Toast: true });
+          viewFetch.load({
+            url: `/api/v1/analytics/get_page_total_views/${selectedCardId}`,
+            params,
+            suppress404Toast: true,
+          });
           break;
         case "contacts":
-          connectionFetch.load({ url: `/api/v1/analytics/get_page_connection_stats_based_on_date_range/${selectedCardId}`, params, suppress404Toast: true });
+          connectionFetch.load({
+            url: `/api/v1/analytics/get_list_contents_taps_based_on_date_range/${selectedCardId}`,
+            params,
+            suppress404Toast: true,
+          });
           break;
         case "convertRate":
-          convertFetch.load({ url: `/api/v1/analytics/get_page_convert_rate_based_on_date_range/${selectedCardId}`, params, suppress404Toast: true });
+          convertFetch.load({
+            url: `/api/v1/analytics/get_page_convert_rate_based_on_date_range/${selectedCardId}`,
+            params,
+            suppress404Toast: true,
+          });
           break;
         case "shares":
-          shareFetch.load({ url: `/api/v1/analytics/get_page_view_based_on_date_range_by_share/${selectedCardId}`, params, suppress404Toast: true });
-          break;
-        default:
+          shareFetch.load({
+            url: `/api/v1/analytics/get_contents_taps_based_on_date_range/${selectedCardId}`,
+            params,
+            suppress404Toast: true,
+          });
           break;
       }
     } else {
-      // حالت منو → همه API ها همزمان
-      const menuAPIs = [
-        API_ROUTES.ANALYTICS_CATALOG_ITEMS_TOTAL_TAP(selectedCardId),
-        API_ROUTES.ANALYTICS_VIEW_BASES_DATE_RANGE(selectedCardId),
-        API_ROUTES.ANALYTICS_CATALOG_TOTAL_VIEW(selectedCardId),
-        API_ROUTES.ANALYTICS_ITEM_TAB_BASES_DATE_RANGE(selectedCardId),
-      ];
+      // حالت منو → فقط API مربوط به فیلتر انتخاب‌شده
+      let url = "";
+     
 
-      menuAPIs.forEach((url) => catalogFetch.load({ url, params, suppress404Toast: true }));
+      switch (filter) {
+        case "view":
+          url = `/api/v1/analytics/catalogs/get_catalog_view_based_on_date_range/${selectedCatalogId}`;
+          break;
+        case "contacts":
+          url = `/api/v1/analytics/catalogs/get_catalog_items_taps_based_on_date_range/${selectedCatalogId}`;
+          break;
+      
+        default:
+           break;
+      }
+
+      catalogFetch.load({ url, params, suppress404Toast: true });
     }
   };
 
+  // 📅 واکنش به تغییرات
   useEffect(() => {
-    if (selectedCardId && typeFilter) getData(typeFilter);
-  }, [selectedCardId, typeFilter, fromDate, toDate, isCard]);
+    if (typeFilter) getData(typeFilter);
+  }, [selectedCardId, typeFilter, fromDate, toDate, isCard, selectedCatalogId]);
 
-  // داده‌ها برای چارت
+  // 🎨 داده‌های چارت
   const chartViewData = useMemo(
-    () => (isCard ? viewFetch.response?.data || null : catalogFetch.response?.data || mockData.ANALYTICS_VIEW_BASES_DATE_RANGE),
+    () =>
+      isCard
+        ? viewFetch.response?.data || null
+        : catalogFetch.response?.data || mockData.ANALYTICS_VIEW_BASES_DATE_RANGE,
     [isCard, viewFetch.response, catalogFetch.response]
   );
 
   const chartConnectionData = useMemo(
-    () => (isCard ? connectionFetch.response?.data || null : catalogFetch.response?.data || mockData.ANALYTICS_CATALOG_ITEMS_TOTAL_TAP),
+    () =>
+      isCard
+        ? connectionFetch.response?.data || null
+        : catalogFetch.response?.data || mockData.ANALYTICS_CATALOG_ITEMS_TOTAL_TAP,
     [isCard, connectionFetch.response, catalogFetch.response]
   );
 
   const chartConvertData = useMemo(
-    () => (isCard ? convertFetch.response?.data || null : catalogFetch.response?.data || mockData.ANALYTICS_CATALOG_TOTAL_VIEW),
+    () =>
+      isCard
+        ? convertFetch.response?.data || null
+        : catalogFetch.response?.data || mockData.ANALYTICS_CATALOG_TOTAL_VIEW,
     [isCard, convertFetch.response, catalogFetch.response]
   );
 
   const chartShareData = useMemo(
-    () => (isCard ? shareFetch.response?.data || null : catalogFetch.response?.data || mockData.ANALYTICS_ITEM_TAB_BASES_DATE_RANGE),
+    () =>
+      isCard
+        ? shareFetch.response?.data || null
+        : catalogFetch.response?.data || mockData.ANALYTICS_ITEM_TAB_BASES_DATE_RANGE,
     [isCard, shareFetch.response, catalogFetch.response]
   );
 
@@ -130,18 +168,22 @@ const StatsChartSide = ({ isCard, setIsCard, onChangeShowFilterDateMenu, onChang
           </button>
           {toggleMenu && (
             <div className="absolute left-0 z-10 mt-2 w-28 origin-top-right rounded-md bg-white shadow-lg">
-              {Object.keys(optionTexts).map((value) => (
-                <button
-                  key={value}
-                  onClick={() => {
-                    onChangeTypeFilter(value);
-                    setToggleMenu(false);
-                  }}
-                  className="text-gray-700 block px-4 py-2 text-xs w-full border-b-[1px]"
-                >
-                  {optionTexts[value]}
-                </button>
-              ))}
+              {Object.keys(optionTexts).map((value) => {
+                // در حالت منو فقط view و contacts مجاز هستند
+                if (!isCard && !["view", "contacts"].includes(value)) return null;
+                return (
+                  <button
+                    key={value}
+                    onClick={() => {
+                      onChangeTypeFilter(value);
+                      setToggleMenu(false);
+                    }}
+                    className="text-gray-700 block px-4 py-2 text-xs w-full border-b-[1px]"
+                  >
+                    {optionTexts[value]}
+                  </button>
+                );
+              })}
             </div>
           )}
         </div>
@@ -156,7 +198,8 @@ const StatsChartSide = ({ isCard, setIsCard, onChangeShowFilterDateMenu, onChang
           rightLabel="براساس کارت ویزیت"
         />
         <div className="mt-4 text-sm text-gray-700">
-          حالت انتخاب شده: <span className="font-bold">{isCard ? "کارت ویزیت" : "منو"}</span>
+          حالت انتخاب شده:{" "}
+          <span className="font-bold">{isCard ? "کارت ویزیت" : "منو"}</span>
         </div>
       </div>
 

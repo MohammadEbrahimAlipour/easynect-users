@@ -102,15 +102,13 @@ export default function Order() {
                 toast.error('بروزرسانی فیلد با مشکل مواجه شد');
             });
     }
-    useEffect(() => {
-        const fetchData = async () => {
-            if (id) {
-                await handleApiSubmit();
-            }
-        };
-        fetchData();
-    }, [id]);
-    console.log(data, 'data')
+   useEffect(() => {
+  if (id && form_id) {
+    handleApiSubmit();
+  }
+}, [id, form_id]);
+
+    console.log(data, 'datas')
     return (
         <main>
             <HeaderTwo />

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import moment from "jalali-moment";
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -28,52 +27,29 @@ const options = {
   plugins: {
     title: {
       display: true,
-      text: "connection"
+      text: "Connection"
     }
   },
   scales: {
     x: {
-      grid: {
-        display: false // Remove grid lines on the x-axis
-      }
+      grid: { display: false }
     },
     y: {
-      grid: {
-        display: false // Remove grid lines on the y-axis
-      }
+      grid: { display: false }
     }
   },
   elements: {
     line: {
-      borderColor: "rgb(255, 99, 132)",
+      borderColor: "#CEA16A",
       borderWidth: 2,
-      borderCapStyle: "round",
-      borderDash: [],
-      borderDashOffset: 0.0,
-      borderJoinStyle: "miter",
-      tension: 0.1,
+      tension: 0.2,
       fill: true,
-      backgroundColor: "rgba(255, 99, 132, 0.5)"
+      backgroundColor: "rgba(206, 161, 106, 0.15)"
     }
   },
   legend: {
-    display: false // Hide the legend
+    display: false
   }
-};
-
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
-
-const data = {
-  labels: labels,
-  datasets: [
-    {
-      label: "Dataset 1",
-      data: [30, 12, 13, 0, 89, 0, 12],
-      borderColor: "#CEA16A",
-      backgroundColor: "#ffff",
-      borderLeftColor: "#ffff"
-    }
-  ]
 };
 
 const ChartDataContacts = ({ chartConnection }) => {
@@ -90,40 +66,33 @@ const ChartDataContacts = ({ chartConnection }) => {
   });
 
   useEffect(() => {
-    if (chartConnection && Array.isArray(chartConnection.views)) {
-      // const labels = chartConnection.views.map((view) => view.date);
-      const labels = chartConnection.views.map((view) => {
-        // Convert the date string from the server into a moment object in Jalali
-        return moment(view.date, "YYYY-MM-DD")
-          .locale("fa")
-          .format("YYYY/MM/DD");
-      });
-      const dataValues = chartConnection.views.map((view) => view.views);
+    if (Array.isArray(chartConnection) && chartConnection.length > 0) {
+      // بر اساس داده‌های فعلی، از title برای labels و taps برای مقدار استفاده می‌کنیم
+      const labels = chartConnection.map((item) => item.title);
+      const dataValues = chartConnection.map((item) => item.taps);
 
-      // Update the chartData state with labels and data
       setChartData({
-        labels: labels,
+        labels,
         datasets: [
           {
-            label: "Dataset 1",
+            label: "Taps per Item",
             data: dataValues,
             borderColor: "#CEA16A",
-            backgroundColor: "#ffff",
-            borderLeftColor: "#ffff"
+            backgroundColor: "rgba(206, 161, 106, 0.25)",
+            borderWidth: 2,
+            tension: 0.3
           }
         ]
       });
 
-      // Optionally, update the chart options title dynamically
-      options.plugins.title.text = `Total View: ${chartConnection.total_view}`;
+      options.plugins.title.text = "Total Connections";
     } else {
-      // Reset the chart data if chartConnection is null
+      // در صورت نبود داده
       setChartData({
         labels: [],
         datasets: [
           {
             label: "داده‌ای ثبت نشده",
-
             data: [],
             borderColor: "rgba(0, 0, 0, 0.1)",
             backgroundColor: "rgba(0, 0, 0, 0.05)"
@@ -131,11 +100,12 @@ const ChartDataContacts = ({ chartConnection }) => {
         ]
       });
 
-      // Reset the chart options title
       options.plugins.title.text = "داده‌ای ثبت نشده";
     }
   }, [chartConnection]);
-  console.log("connection", chartConnection);
+
+  console.log("chartConnection:", chartConnection);
+
   return (
     <div className="bg-white pb-4 rounded-lg">
       <Line options={options} data={chartData} />

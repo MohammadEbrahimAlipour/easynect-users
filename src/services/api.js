@@ -84,6 +84,7 @@ export const API_ROUTES = {
 
 
   ITEMS_GET: (catalog_id, item_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/items/${item_id}`),
+  ITEM_UPDATE_HIGHLIGHTED: (catalog_id, category_id, item_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/category/${category_id}/is_highlighted/${item_id}/`),
 
   // lead capture store
   LEAD_CAPTURE_STORE: () => generateApiUrl(`/api/v1/lead_capture_store/`),
@@ -91,7 +92,7 @@ export const API_ROUTES = {
   LEAD_CAPTURE_STORE_ID: (id) => generateApiUrl(`/api/v1/lead_capture_store/${id}`),
   // contents
   CONTENTS_FAQ: (pageId) => generateApiUrl(`/api/v1/contents/page/${pageId}/faqs/`),
-
+  DELETE_FAQ: (page_id, faq_id) => generateApiUrl(`/api/v1/contents/page/${page_id}/faqs/${faq_id}`),
   //pages
   CONTENTS_GALLERY: (pageId) => generateApiUrl(`/api/v1/pages/${pageId}/gallery/create/`),
 
@@ -118,6 +119,10 @@ export const API_ROUTES = {
   // subs
   ,GET_PLANS: () => generateApiUrl('/api/v1/subs/plans'),
   GET_SUBSCRIPTION: (sub_id) => generateApiUrl(`/api/v1/subs/${sub_id}`),
-  RENEW_SUB: (sub_id) => generateApiUrl(`/api/v1/subs/${sub_id}`)
+  RENEW_SUB: (sub_id) => generateApiUrl(`/api/v1/subs/${sub_id}`),
 
+  //invoices
+  GET_INVOICES_CATALOG_ID: (catalog_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/`),
+  GET_INVOICES_CATALOG_ID_INVOICE_ID: (catalog_id, invoice_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/${invoice_id}/`),
+  PATCH_INVOICES_CATALOG_ID_INVOICE_ID_IS_DONE: (catalog_id, invoice_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/${invoice_id}/is_done/`)
 };

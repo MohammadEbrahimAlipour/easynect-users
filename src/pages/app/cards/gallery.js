@@ -4,11 +4,13 @@ import Header from '@/components/Header'
 import Layout from '@/components/Layout'
 import { API_ROUTES } from '@/services/api'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useAccessToken } from '../../../../context/AccessTokenContext'
 import axiosInstance from '@/services/axiosInterceptors'
 import { toast } from "react-toastify";
 import GalleryUploader from '@/components/editProfile/GalleryUploader'
+import { generateApiUrl } from '@/components/ApiUr'
+import axios from 'axios'
 
 export default function Gallery() {
     const router = useRouter();
@@ -53,7 +55,22 @@ export default function Gallery() {
             toast.error("ارسال اطلاعات با مشکل مواجه شد");
         }
     };
+    useEffect(() => {
+        const fetchData = async () => {
+            const apiUrl = generateApiUrl(`/api/v1/page_view/${id}`);
 
+            const response = await axios.get(apiUrl, {
+                headers: {
+                    "Accept-Language": "fa", // Language header
+                },
+            });
+
+            const { data } = response;
+            console.log(data, 's')
+        }
+        fetchData();
+
+    }, [])
     return (
         <main>
             <Header />

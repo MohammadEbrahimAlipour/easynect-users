@@ -21,11 +21,11 @@ export default function Contacts() {
 
   return (
     <>
-      <Head>
+      {/* <Head>
         <title>ایزی‌نکت - مخاطبین</title>
         <meta name="easynect business card" content="Powered by Easynect" />
       </Head>
-      <Header />
+      <Header /> */}
       <Layout>
         <HeaderFilter
           onChangeContractPage={setContractPage}

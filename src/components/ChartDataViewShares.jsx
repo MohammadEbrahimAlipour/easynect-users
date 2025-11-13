@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import moment from "jalali-moment";
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -28,37 +27,23 @@ const options = {
   plugins: {
     title: {
       display: true,
-      text: "choose one"
+      text: "Shares"
     }
   },
   scales: {
-    x: {
-      grid: {
-        display: false // Remove grid lines on the x-axis
-      }
-    },
-    y: {
-      grid: {
-        display: false // Remove grid lines on the y-axis
-      }
-    }
+    x: { grid: { display: false } },
+    y: { grid: { display: false } }
   },
   elements: {
     line: {
-      borderColor: "rgb(255, 99, 132)",
+      borderColor: "#CEA16A",
       borderWidth: 2,
-      borderCapStyle: "round",
-      borderDash: [],
-      borderDashOffset: 0.0,
-      borderJoinStyle: "miter",
-      tension: 0.1,
+      tension: 0.3,
       fill: true,
-      backgroundColor: "rgba(255, 99, 132, 0.5)"
+      backgroundColor: "rgba(206, 161, 106, 0.15)"
     }
   },
-  legend: {
-    display: false // Hide the legend
-  }
+  legend: { display: false }
 };
 
 const ChartDataViewShares = ({ chartShare }) => {
@@ -75,40 +60,34 @@ const ChartDataViewShares = ({ chartShare }) => {
   });
 
   useEffect(() => {
-    if (chartShare && Array.isArray(chartShare.views)) {
-      // const labels = chartShare.views.map((view) => view.date);
-      const labels = chartShare.views.map((view) => {
-        // Convert the date string from the server into a moment object in Jalali
-        return moment(view.date, "YYYY-MM-DD")
-          .locale("fa")
-          .format("YYYY/MM/DD");
-      });
-      const dataValues = chartShare.views.map((view) => view.views);
+    if (Array.isArray(chartShare) && chartShare.length > 0) {
+      const labels = chartShare.map((item) =>
+        moment(item.date, "YYYY-MM-DD").locale("fa").format("YYYY/MM/DD")
+      );
 
-      // Update the chartData state with labels and data
+      const dataValues = chartShare.map((item) => item.taps);
+
       setChartData({
-        labels: labels,
+        labels,
         datasets: [
           {
-            label: "Dataset 1",
+            label: "تعداد اشتراک‌گذاری‌ها",
             data: dataValues,
             borderColor: "#CEA16A",
-            backgroundColor: "#ffff",
-            borderLeftColor: "#ffff"
+            backgroundColor: "rgba(206, 161, 106, 0.2)",
+            borderWidth: 2,
+            tension: 0.25
           }
         ]
       });
 
-      // Optionally, update the chart options title dynamically
-      options.plugins.title.text = `Total View: ${chartShare.total_view}`;
+      options.plugins.title.text = "نمودار اشتراک‌گذاری‌ها";
     } else {
-      // Reset the chart data if chartShare is null
       setChartData({
         labels: [],
         datasets: [
           {
             label: "داده‌ای ثبت نشده",
-
             data: [],
             borderColor: "rgba(0, 0, 0, 0.1)",
             backgroundColor: "rgba(0, 0, 0, 0.05)"
@@ -116,11 +95,12 @@ const ChartDataViewShares = ({ chartShare }) => {
         ]
       });
 
-      // Reset the chart options title
       options.plugins.title.text = "داده‌ای ثبت نشده";
     }
   }, [chartShare]);
-  console.log("connection", chartShare);
+
+  console.log("chartShare:", chartShare);
+
   return (
     <div className="bg-white pb-4 rounded-lg">
       <Line options={options} data={chartData} />

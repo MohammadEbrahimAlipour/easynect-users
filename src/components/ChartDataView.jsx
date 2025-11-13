@@ -73,52 +73,58 @@ const ChartDataView = ({ chartView }) => {
     ]
   });
 
-  useEffect(() => {
-    if (chartView && Array.isArray(chartView.views)) {
-      // const labels = chartView.views.map((view) => view.date);
-      const labels = chartView.views.map((view) => {
-        // Convert the date string from the server into a moment object in Jalali
-        return moment(view.date, "YYYY-MM-DD")
-          .locale("fa")
-          .format("YYYY/MM/DD");
-      });
-      const dataValues = chartView.views.map((view) => view.views);
+useEffect(() => {
+  if (chartView && Array.isArray(chartView.views)) {
+    // حالت عادی
+    const labels = chartView.views.map(view =>
+      moment(view.date, "YYYY-MM-DD").locale("fa").format("YYYY/MM/DD")
+    );
+    const dataValues = chartView.views.map(view => view.views);
 
-      // Update the chartData state with labels and data
-      setChartData({
-        labels: labels,
-        datasets: [
-          {
-            label: "Dataset 1",
-            data: dataValues,
-            borderColor: "#CEA16A",
-            backgroundColor: "#ffff",
-            borderLeftColor: "#ffff"
-          }
-        ]
-      });
+    setChartData({
+      labels,
+      datasets: [
+        {
+          label: "بازدیدها",
+          data: dataValues,
+          borderColor: "#CEA16A",
+          backgroundColor: "#ffff"
+        }
+      ]
+    });
 
-      // Optionally, update the chart options title dynamically
-      options.plugins.title.text = `Total View: ${chartView.total_view}`;
-    } else {
-      // Reset the chart data if chartView is null
-      setChartData({
-        labels: [],
-        datasets: [
-          {
-            label: "داده‌ای ثبت نشده",
+    options.plugins.title.text = `Total View: ${chartView.total_view}`;
+  } else if (chartView && typeof chartView.views === "number") {
+    // اگر views عددی بود
+    setChartData({
+      labels: ["امروز"],
+      datasets: [
+        {
+          label: "بازدیدها",
+          data: [chartView.views],
+          borderColor: "#CEA16A",
+          backgroundColor: "#ffff"
+        }
+      ]
+    });
+    options.plugins.title.text = `Total View: ${chartView.views}`;
+  } else {
+    // داده‌ای نیست
+    setChartData({
+      labels: [],
+      datasets: [
+        {
+          label: "داده‌ای ثبت نشده",
+          data: [],
+          borderColor: "rgba(0, 0, 0, 0.1)",
+          backgroundColor: "rgba(0, 0, 0, 0.05)"
+        }
+      ]
+    });
+    options.plugins.title.text = "داده‌ای ثبت نشده";
+  }
+}, [chartView]);
 
-            data: [],
-            borderColor: "rgba(0, 0, 0, 0.1)",
-            backgroundColor: "rgba(0, 0, 0, 0.05)"
-          }
-        ]
-      });
-
-      // Reset the chart options title
-      options.plugins.title.text = "داده‌ای ثبت نشده";
-    }
-  }, [chartView]);
 
   return (
     <div className="bg-white pb-4 rounded-lg">

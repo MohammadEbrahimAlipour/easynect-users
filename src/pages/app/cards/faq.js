@@ -4,7 +4,7 @@ import Header from '@/components/Header'
 import Layout from '@/components/Layout'
 import { API_ROUTES } from '@/services/api'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAccessToken } from '../../../../context/AccessTokenContext'
 import axiosInstance from '@/services/axiosInterceptors'
 import { toast } from "react-toastify";
@@ -13,7 +13,7 @@ export default function FaqCard() {
     const router = useRouter();
     const accessToken = useAccessToken()
     const id = router.query?.id;
-
+    const [existList, setExistList] = useState([])
     const handleRouterBack = () => {
         window.history.back();
     }
@@ -30,25 +30,71 @@ export default function FaqCard() {
             toast.success('با موفقیت ذخیره شد', {
                 position: 'top-center',
                 autoClose: 2500,
-              });
-              
-              setTimeout(() => {
+            });
+
+            setTimeout(() => {
                 window.history.back();
-              }, 2500);
+            }, 2500);
             //           
 
 
         } catch (error) {
             console.error('Error uploading data:', error);
-            toast.error('ارسال اطلاعات با مشکل مواجه شد');
+            window.history.back();
+
+            // toast.error('ارسال اطلاعات با مشکل مواجه شد');
 
         }
     }
+    const handleApiDelete = async (faq_id) => {
+        const apiUrl = API_ROUTES.DELETE_FAQ(id, faq_id);
+        try {
+            const response = await axiosInstance.delete(apiUrl, {
+                headers: {
+                    Authorization: `Bearer ${accessToken.accessToken}`,
+                    // Don't set Content-Type manually
+                },
+            });
+
+            toast.success('با موفقیت حذف شد', {
+                position: 'top-center',
+                autoClose: 2500,
+            });
+
+
+
+
+        } catch (error) {
+            console.error('Error uploading data:', error);
+            toast.error(' حذف با مشکل مواجه شد');
+
+        }
+    }
+    useEffect(() => {
+        const fetchData = async () => {
+            const apiUrl = API_ROUTES.CONTENTS_FAQ(id);
+            try {
+                const response = await axiosInstance.get(apiUrl, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken.accessToken}`,
+                    },
+                });
+                setExistList(response?.data);
+            } catch (error) {
+                console.error('Error uploading data:', error);
+                // toast.error('ارسال اطلاعات با مشکل مواجه شد');
+
+            }
+        }
+        if (accessToken.accessToken) {
+            fetchData()
+        }
+    }, [accessToken.accessToken])
     return (
         <main>
             <Header />
             <Layout className="!px-4 !pt-6">
-                <Faq handleApiSubmit={handleApiSubmit} handleRouterBack={handleRouterBack} />
+                <Faq handleApiDelete={handleApiDelete} existList={existList} handleApiSubmit={handleApiSubmit} handleRouterBack={handleRouterBack} />
             </Layout>
             <Footer />
         </main>

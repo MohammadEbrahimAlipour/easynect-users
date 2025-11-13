@@ -14,6 +14,7 @@ import CatalogCard from '@/components/card/pages/CatalogCard';
 import AddIcon from '@mui/icons-material/Add';
 import HeaderTwoCustom from '@/components/HeaderTwoCustom';
 import FileUploader from '@/components/fileUploader/FileUploader';
+import CustomCheckBox from '@/components/CustomCheckBox';
 
 export default function Menu() {
   const router = useRouter();
@@ -56,7 +57,7 @@ export default function Menu() {
     });
   };
   const handleFileChange = async (event) => {
-    const file = event.target.files?.[0];
+    const file = event.target?.files?.[0];
     if (file) {
       // const base64String = await convertFileToBase64(file);
 
@@ -198,7 +199,7 @@ export default function Menu() {
     }
   };
 
-
+  console.log(imageFile, 'image File')
   const handleEditModal = async () => {
     const apiUrl =
       tabValue === 1
@@ -283,7 +284,7 @@ export default function Menu() {
     };
     fetchData();
   }, [id, catalog]);
-  console.log(items, 'card')
+  console.log(targetData, 'card')
   return (
     <>
       <HeaderTwoCustom catalog={catalog} setCatalog={setCatalog} />
@@ -352,7 +353,7 @@ export default function Menu() {
               onChange={(e) => setContent(e.target.value)}
             />}
 
-          <FileUploader onFileSelect={handleFileChange} />
+          <FileUploader onFileSelect={(file) => setImageFile(file)} />
 
           {error && <Typography color="error">{error}</Typography>}
         </Box>
@@ -366,7 +367,6 @@ export default function Menu() {
         <Box display="flex" flexDirection="column" gap={2}>
 
           <TextField
-            
             placeholder="نام"
             name="title"
             fullWidth
@@ -385,7 +385,7 @@ export default function Menu() {
               onChange={(e) => setContent(e.target.value)}
             />}
 
-          <FileUploader onFileSelect={handleFileChange} />
+          <FileUploader onFileSelect={(file) => setImageFile(file)} />
           {error && <Typography color="error">{error}</Typography>}
         </Box>
       </CatalogDialog>

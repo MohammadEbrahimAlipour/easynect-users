@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-const StatsList = ({ isCard, selectedCardId, fromDate, toDate }) => {
+const StatsList = ({ selectedCatalogId, isCard, selectedCardId, fromDate, toDate }) => {
   const visitedFetch = useFetch();
   const [visitedList, setVisitedList] = useState([]);
   const [skip, setSkip] = useState(0);
@@ -16,11 +16,12 @@ const StatsList = ({ isCard, selectedCardId, fromDate, toDate }) => {
 
   useEffect(() => {
     if (selectedCardId) {
+      console.log('i am run')
       setVisitedList([]);
       setPrevSkip(0);
       loadData(true);
     }
-  }, [selectedCardId, fromDate, toDate]);
+  }, [selectedCardId, selectedCatalogId, fromDate, toDate, isCard]);
 
   useEffect(() => {
     const data = visitedFetch.response?.data;
@@ -33,7 +34,7 @@ const StatsList = ({ isCard, selectedCardId, fromDate, toDate }) => {
     setPrevSkip((prev) => prev + limit);
 
     const nextSkip = freshData ? 0 : prevSkip;
-    const url = API_ROUTES.ANALYTICS_ITEM_TAB_BASES_DATE_RANGE(selectedCardId);
+    const url = API_ROUTES.ANALYTICS_ITEM_TAB_BASES_DATE_RANGE(selectedCatalogId);
     visitedFetch.load({
       url: isCard ? `/api/v1/analytics/get_list_contents_taps_based_on_date_range/${selectedCardId}` : url,
       params: {
@@ -46,7 +47,6 @@ const StatsList = ({ isCard, selectedCardId, fromDate, toDate }) => {
     });
 
   };
-
   const infinityDataLoad = () => {
     return (
       <InfiniteScroll

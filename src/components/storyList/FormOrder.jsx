@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Box, TextField, Typography, Button } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 const FormOrder = ({ fields = [], orders = [], theme, onSubmit }) => {
   const [formValues, setFormValues] = useState({});
   const [note, setNote] = useState("");
-
+  const {t} = useTranslation()
   const handleChange = (id, value) => {
     setFormValues((prev) => ({ ...prev, [id]: value }));
   };
@@ -95,13 +96,12 @@ const FormOrder = ({ fields = [], orders = [], theme, onSubmit }) => {
           variant="subtitle2"
           sx={{ color: textColor, mb: 0.5 }}
         >
-          یادداشت
+          {t('note')}
         </Typography>
         <TextField
           multiline
           rows={3}
           fullWidth
-          placeholder="یادداشت خود را وارد کنید..."
           value={note}
           onChange={(e) => setNote(e.target.value)}
           sx={{
@@ -128,7 +128,7 @@ const FormOrder = ({ fields = [], orders = [], theme, onSubmit }) => {
           },
         }}
       >
-        ثبت فرم
+        {t('submit-form')}
       </Button>
     </Box>
   );

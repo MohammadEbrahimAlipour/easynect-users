@@ -3,8 +3,11 @@ import React from 'react';
 import { Box, TextField, Typography } from '@mui/material';
 import CatalogDialog from '../dialog/CustomDialog';
 import FileUploader from '../fileUploader/FileUploader';
+import CustomCheckBox from '../CustomCheckBox';
 
 export default function CatalogDialogs({
+  item_id,
+  catalog_id, category_id,
   pageDataDontExist,
   handleClose,
   handleCreateCategoryOrItem,
@@ -97,6 +100,8 @@ export default function CatalogDialogs({
             onChange={(e) => setContent(e.target.value)}
           />
           <FileUploader onFileSelect={handleFileChange} />
+          <CustomCheckBox item_id={item_id} catalog_id={catalog_id} category_id={category_id}/>
+
           {error && <Typography color="error">{error}</Typography>}
         </Box>
       </CatalogDialog>
