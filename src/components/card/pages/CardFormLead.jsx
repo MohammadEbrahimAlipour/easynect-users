@@ -52,7 +52,7 @@ export default function CardFormLead({ data, handleDeleteModal, handleEditModal 
     setItems(fields);
   }
 }, [fields]);
-
+console.log(items, 'items')
     return (
         <><Card
             variant="outlined"

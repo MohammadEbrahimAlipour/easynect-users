@@ -95,12 +95,17 @@ export const API_ROUTES = {
   DELETE_FAQ: (page_id, faq_id) => generateApiUrl(`/api/v1/contents/page/${page_id}/faqs/${faq_id}`),
   //pages
   CONTENTS_GALLERY: (pageId) => generateApiUrl(`/api/v1/pages/${pageId}/gallery/create/`),
+  GET_GALLERY: (page_id) => generateApiUrl(`/api/v1/pages/${page_id}/gallery/`),
+  ADD_GALLERY: (page_id) => generateApiUrl(`/api/v1/pages/${page_id}/gallery/`),
+  DELETE_FROM_GALLERY :(page_id, gallery_id) => generateApiUrl(`/api/v1/pages/${page_id}/gallery/${gallery_id}/`),
 
   // form lead
   FORM_LEAD: (catalog_id, form_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/form/${form_id}`),
   DELETE_FORM_LEAD: (catalog_id, form_id, field_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/form/${form_id}/${field_id}`),
   ADD_INVOICE_FORM_FIELD: (catalog_id, form_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/form/${form_id}`),
   ADD_CUSTOM_FROM_INVOICE: (catalog_id, form_id) => generateApiUrl(`/api/v1/catalogs/customers/${catalog_id}/invoices/${form_id}`),
+  UPDATE_FORM_LEAD: (catalog_id, form_id, field_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/form/${form_id}/field/${field_id}`)
+  ,
   // analytics
 
   ANALYTICS_CATALOG_ITEMS_TOTAL_TAP: (catalog_id) => generateApiUrl(`/api/v1/analytics/catalogs/get_catalog_items_total_tap/${catalog_id}`),
