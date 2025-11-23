@@ -47,9 +47,12 @@ export default function CardFormLead({ data, handleDeleteModal, handleEditModal 
         handleDeleteModal(fieldId);
         setDeleteDialogOpen(false);
     }
-    useEffect(() => {
-        setItems(fields)
-    }, [fields, data])
+  useEffect(() => {
+  if (Array.isArray(fields) && fields.length > 0) {
+    setItems(fields);
+  }
+}, [fields]);
+console.log(items, 'items')
     return (
         <><Card
             variant="outlined"

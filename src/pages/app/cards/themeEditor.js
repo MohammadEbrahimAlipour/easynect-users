@@ -63,7 +63,7 @@ const ThemeEditor = () => {
   const router = useRouter();
   const { id } = router.query;
   const accessToken = useAccessToken();
-
+console.log(theme, 'theme')
   const handleColorChange = (key, color) => {
     setTheme((prev) => ({
       ...prev,
@@ -98,24 +98,24 @@ const ThemeEditor = () => {
       toast.error('خطا در ذخیره تم. لطفا دوباره تلاش کنید.');
     }
   };
-  useEffect(() => {
-    const fetchTheme = async () => {
-      try {
-        const api = API_ROUTES.GET_THEME(id);
-        const response = await axiosInstance.get(api, {
-          headers: {
-            Authorization: `Bearer ${accessToken.accessToken}`,
-          },
-        });
-        setTheme(response?.data?.theme);
-        console.log(response, 'response');
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchTheme = async () => {
+  //     try {
+  //       const api = API_ROUTES.GET_THEME(id);
+  //       const response = await axiosInstance.get(api, {
+  //         headers: {
+  //           Authorization: `Bearer ${accessToken.accessToken}`,
+  //         },
+  //       });
+  //       setTheme(response?.data?.theme);
+  //       console.log(response, 'response');
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
 
-    fetchTheme();
-  }, []);
+  //   fetchTheme();
+  // }, []);
   return (
     <main>
       <Header />

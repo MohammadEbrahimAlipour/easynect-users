@@ -19,6 +19,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import LinkIcon from '@mui/icons-material/Link';
 import { toast } from "react-toastify";
+import { useTranslation } from "next-i18next";
 
 // فرم سفارش
 import FormOrder from './FormOrder';
@@ -28,6 +29,7 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo, theme }) => {
   const [detailData, setDetailData] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const accessToken = useAccessToken();
+  const { t } = useTranslation();
 
   const handleOpen = async () => {
     setOpen(true);
@@ -145,13 +147,11 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo, theme }) => {
           }}
         >
           {!detailData ? (
+            // حالت لودینگ
             <>
-              <Skeleton variant="rectangular" height={160} sx={{ mb: 2, borderRadius: 2, bgcolor: theme?.cardBackground || '#eee', animation: 'pulse 1.5s infinite' }} />
-              <Skeleton variant="text" height={32} sx={{ mb: 1, bgcolor: theme?.cardBackground || '#eee', animation: 'pulse 1.5s infinite' }} />
-              <Skeleton variant="text" height={24} sx={{ mb: 2, bgcolor: theme?.cardBackground || '#eee', animation: 'pulse 1.5s infinite' }} />
-              <Skeleton variant="rectangular" height={200} sx={{ mb: 4, borderRadius: 2, bgcolor: theme?.cardBackground || '#eee', animation: 'pulse 1.5s infinite' }} />
-              <Skeleton variant="text" height={20} sx={{ mb: 2, bgcolor: theme?.cardBackground || '#eee', animation: 'pulse 1.5s infinite' }} />
-              <Skeleton variant="rounded" height={36} width={150} sx={{ mx: 'auto', bgcolor: theme?.cardBackground || '#eee', animation: 'pulse 1.5s infinite' }} />
+              <Skeleton variant="rectangular" height={160} sx={{ mb: 2, borderRadius: 2 }} />
+              <Skeleton variant="text" height={32} sx={{ mb: 1 }} />
+              <Skeleton variant="text" height={24} sx={{ mb: 2 }} />
             </>
           ) : (
             <>
@@ -160,57 +160,51 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo, theme }) => {
                   fields={orderInfo?.fields || []}
                   theme={theme}
                   onSubmit={async (values) => {
-                    console.log('Form submitted:', values);
                     handleFormSubmit(values);
                     setShowForm(false);
                   }}
                 />
               ) : (
                 <>
-                  {detailData.banner && (
-                    <Box sx={{ height: 160, overflow: 'hidden' }}>
-                      <img
-                        src={detailData.banner}
-                        alt="Banner"
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'contain',
-                          border: `2px solid ${borderColor}`,
-                          borderRadius: 8,
-                        }}
-                      />
-                    </Box>
-                  )}
-
-                  <Typography variant="h6" fontWeight={700} mb={1} color={textColor}>
-                    {detailData.title || data.title}
-                  </Typography>
-
-                  <Typography variant="body2" color={theme?.cardText || 'text.secondary'} mb={2}>
-                    {detailData.description || data.description}
-                  </Typography>
-
-                  {detailData.gallery?.length > 0 && (
-                    <Box mt={2} mb={5}>
+                  {/* ✅ اسلایدر عکس‌ها در بالا */}
+                  {(detailData.banner || (detailData.gallery?.length > 0)) && (
+                    <Box mb={3}>
                       <Swiper
                         spaceBetween={10}
                         slidesPerView={1}
                         navigation
-                        pagination={{ type: 'progressbar' }}
+                        pagination={{ type: "bullets" }}
                         modules={[Navigation]}
                       >
-                        {detailData.gallery.map((item) => (
+                        {/* عکس اصلی */}
+                        {detailData.banner && (
+                          <SwiperSlide>
+                            <img
+                              src={detailData.banner}
+                              alt="banner"
+                              style={{
+                                width: "100%",
+                                height: "230px",
+                                objectFit: "contain",
+                                borderRadius: 8,
+                                border: `1px solid ${theme?.borderColor || "#ddd"}`,
+                              }}
+                            />
+                          </SwiperSlide>
+                        )}
+
+                        {/* گالری */}
+                        {detailData.gallery?.map((item) => (
                           <SwiperSlide key={item.id}>
                             <img
                               src={item.pic_url}
                               alt="gallery"
                               style={{
-                                width: '100%',
-                                height: '200px',
-                                objectFit: 'contain',
+                                width: "100%",
+                                height: "230px",
+                                objectFit: "contain",
                                 borderRadius: 8,
-                                border: `1px solid ${theme?.borderColor || '#ddd'}`,
+                                border: `1px solid ${theme?.borderColor || "#ddd"}`,
                               }}
                             />
                           </SwiperSlide>
@@ -219,12 +213,22 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo, theme }) => {
                     </Box>
                   )}
 
-                  {detailData.content && typeof detailData.content === 'string' && (
+                  {/* متن‌ها */}
+                  <Typography variant="h6" fontWeight={700} mb={1} color={textColor}>
+                    {detailData.title || data.title}
+                  </Typography>
+
+                  <Typography variant="body2" color={theme?.cardText || "text.secondary"} mb={2}>
+                    {detailData.description || data.description}
+                  </Typography>
+
+                  {detailData.content && typeof detailData.content === "string" && (
                     <Typography variant="body1" mt={2} color={textColor}>
                       {detailData.content}
                     </Typography>
                   )}
 
+                  {/* دکمه‌ها */}
                   <Box mt={4} textAlign="center">
                     <Button
                       variant="outlined"
@@ -232,24 +236,25 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo, theme }) => {
                       sx={{
                         borderColor: borderColor,
                         color: borderColor,
-                        '&:hover': {
+                        "&:hover": {
                           backgroundColor: hoverColor,
-                          color: '#fff',
+                          color: "#fff",
                         },
                         ml: 2,
                       }}
                     >
-                      ثبت کد سفارش
+              {t('save-order')}
                     </Button>
+
                     <Button
                       variant="outlined"
-                      onClick={() => window.open(detailData.ref_link, '_blank')}
+                      onClick={() => window.open(detailData.ref_link, "_blank")}
                       sx={{
                         borderColor: borderColor,
                         color: borderColor,
-                        '&:hover': {
+                        "&:hover": {
                           backgroundColor: hoverColor,
-                          color: '#fff',
+                          color: "#fff",
                         },
                       }}
                     >
@@ -262,6 +267,7 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo, theme }) => {
               )}
             </>
           )}
+
         </Box>
       </Modal>
     </>

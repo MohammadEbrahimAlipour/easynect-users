@@ -17,14 +17,7 @@ export default function useCatalogActions(items,setItems, setImageFile, setPageD
             };
         });
     };
-    const handleFileChange = async (event) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            // const base64String = await convertFileToBase64(file);
-
-            setImageFile(file);
-        }
-    };
+    const handleFileChange = (file) => setImageFile(file)
 
 
     const handleClose = () => { setPageDAtaDontExist(false) }

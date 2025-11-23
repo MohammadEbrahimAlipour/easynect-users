@@ -84,6 +84,7 @@ export const API_ROUTES = {
 
 
   ITEMS_GET: (catalog_id, item_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/items/${item_id}`),
+  ITEM_UPDATE_HIGHLIGHTED: (catalog_id, category_id, item_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/category/${category_id}/is_highlighted/${item_id}/`),
 
   // lead capture store
   LEAD_CAPTURE_STORE: () => generateApiUrl(`/api/v1/lead_capture_store/`),
@@ -91,15 +92,20 @@ export const API_ROUTES = {
   LEAD_CAPTURE_STORE_ID: (id) => generateApiUrl(`/api/v1/lead_capture_store/${id}`),
   // contents
   CONTENTS_FAQ: (pageId) => generateApiUrl(`/api/v1/contents/page/${pageId}/faqs/`),
-
+  DELETE_FAQ: (page_id, faq_id) => generateApiUrl(`/api/v1/contents/page/${page_id}/faqs/${faq_id}`),
   //pages
   CONTENTS_GALLERY: (pageId) => generateApiUrl(`/api/v1/pages/${pageId}/gallery/create/`),
+  GET_GALLERY: (page_id) => generateApiUrl(`/api/v1/pages/${page_id}/gallery/`),
+  ADD_GALLERY: (page_id) => generateApiUrl(`/api/v1/pages/${page_id}/gallery/`),
+  DELETE_FROM_GALLERY :(page_id, gallery_id) => generateApiUrl(`/api/v1/pages/${page_id}/gallery/${gallery_id}/`),
 
   // form lead
   FORM_LEAD: (catalog_id, form_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/form/${form_id}`),
   DELETE_FORM_LEAD: (catalog_id, form_id, field_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/form/${form_id}/${field_id}`),
   ADD_INVOICE_FORM_FIELD: (catalog_id, form_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/form/${form_id}`),
   ADD_CUSTOM_FROM_INVOICE: (catalog_id, form_id) => generateApiUrl(`/api/v1/catalogs/customers/${catalog_id}/invoices/${form_id}`),
+  UPDATE_FORM_LEAD: (catalog_id, form_id, field_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/form/${form_id}/field/${field_id}`)
+  ,
   // analytics
 
   ANALYTICS_CATALOG_ITEMS_TOTAL_TAP: (catalog_id) => generateApiUrl(`/api/v1/analytics/catalogs/get_catalog_items_total_tap/${catalog_id}`),
@@ -118,6 +124,10 @@ export const API_ROUTES = {
   // subs
   ,GET_PLANS: () => generateApiUrl('/api/v1/subs/plans'),
   GET_SUBSCRIPTION: (sub_id) => generateApiUrl(`/api/v1/subs/${sub_id}`),
-  RENEW_SUB: (sub_id) => generateApiUrl(`/api/v1/subs/${sub_id}`)
+  RENEW_SUB: (sub_id) => generateApiUrl(`/api/v1/subs/${sub_id}`),
 
+  //invoices
+  GET_INVOICES_CATALOG_ID: (catalog_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/`),
+  GET_INVOICES_CATALOG_ID_INVOICE_ID: (catalog_id, invoice_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/${invoice_id}/`),
+  PATCH_INVOICES_CATALOG_ID_INVOICE_ID_IS_DONE: (catalog_id, invoice_id) => generateApiUrl(`/api/v1/catalogs/${catalog_id}/invoices/${invoice_id}/is_done/`)
 };

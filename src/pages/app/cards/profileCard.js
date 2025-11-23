@@ -514,47 +514,82 @@ const ProfileCard = () => {
             <Dialog
               open={isPlansModalOpen}
               onClose={() => setIsPlansModalOpen(false)}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
+              fullWidth
+              maxWidth="sm"
             >
-              <DialogTitle id="alert-dialog-title">
-                پلن ها
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
+              <DialogTitle className="text-center font-semibold">تمدید اشتراک</DialogTitle>
+
+              <DialogContent dividers className="max-h-[60vh] overflow-y-auto">
+                <p className="text-gray-500 text-sm mb-3 text-center">
+                  یکی از پلن‌های زیر را انتخاب کن:
+                </p>
+
+                <div className="space-y-3">
                   {plans.map((plan) => (
-                    <div key={plan.id} className="mb-4 border p-5 rounded-lg cursor-pointer" onClick={() => {
-                      setSelectedPlanId(plan.id)
-                      setIsPlansModalOpen(false)
-                      handleOpenModal(subId);
-                    }} >
-                      <h3 style={{ margin: '0 0 8px 0' }}>{plan.name}</h3>
-                      <p >قیمت: {toPersianDigits(String(plan?.price))} تومان</p>
-                      <p >مدت زمان: {toPersianDigits(String(plan?.duration))} روز</p>
-                      <p >توضیحات: {plan.description}</p>
+                    <div
+                      key={plan.id}
+                      className={`border p-4 rounded-lg transition-all cursor-pointer ${selectedPlanId === plan.id
+                          ? "border-yellow-400 bg-yellow-50"
+                          : "border-gray-300 hover:border-yellow-300"
+                        }`}
+                      onClick={() => setSelectedPlanId(plan.id)}
+                    >
+                      <h3 className="font-semibold mb-1">{plan.name}</h3>
+                      <p className="text-sm">💰 قیمت: {toPersianDigits(String(plan?.price))} تومان</p>
+                      <p className="text-sm">🕒 مدت: {toPersianDigits(String(plan?.duration))} روز</p>
+                      <p className="text-sm text-gray-600">{plan.description}</p>
                     </div>
                   ))}
-                </DialogContentText>
+                </div>
+
+                <div className="mt-6">
+                  <input
+                    type="text"
+                    placeholder="کد تخفیف (اختیاری)"
+                    className="border p-2 rounded-lg w-full"
+                    value={discountCode || ""}
+                    onChange={(e) => setDiscountCode(e.target.value)}
+                  />
+                </div>
               </DialogContent>
+
+              <DialogActions
+                sx={{
+                  position: "sticky",
+                  bottom: 0,
+                  background: "white",
+                  borderTop: "1px solid #eee",
+                  justifyContent: "center",
+                  padding: "16px",
+                }}
+              >
+                <button
+                  disabled={!selectedPlanId}
+                  onClick={() => handleRenewSub(subId)}
+                  className={`flex items-center justify-center gap-2 px-6 py-2 rounded-lg font-medium transition ${selectedPlanId
+                      ? "bg-yellow-400 hover:bg-yellow-500 text-white"
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    }`}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-5 h-5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M4.5 12a7.5 7.5 0 0112.682-5.303L21 3v7.5h-7.5l3.112-3.112A7.5 7.5 0 104.5 12z"
+                    />
+                  </svg>
+                  تمدید اشتراک
+                </button>
+              </DialogActions>
             </Dialog>
-            <Dialog
-              open={discountModal}
-              onClose={() => setDisCountModal(false)}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title">
-                تمدید پلن
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  <input type="text" placeholder="کد تخفیف (اختیاری)" className="border p-2 rounded-lg w-full mb-4" value={discountCode} onChange={(e) => setDiscountCode(e.target.value)} />
-                  <button className="bg-[#F0D454] text-white rounded-lg p-2 cursor-pointer" onClick={() => handleRenewSub(subId)} >
-                    تمدید اشتراک
-                  </button>
-                </DialogContentText>
-              </DialogContent>
-            </Dialog>
+
             <Link
               href="/app/cards/createCard"
               className="flex items-center justify-center w-full

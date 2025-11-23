@@ -3,10 +3,10 @@ import { Box, ButtonBase } from '@mui/material';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import ArticleIcon from '@mui/icons-material/Article';
 
-const SwitchModeButton = ({ mode, setMode, theme }) => {
+const SwitchModeButton = ({ mode, setMode, theme, lan }) => {
   const options = [
-    { value: 'store', label: 'فروشگاه', icon: <StorefrontIcon fontSize="small" /> },
-    { value: 'menu', label: 'صفحه', icon: <ArticleIcon fontSize="small" /> },
+    { value: 'store', label: lan('shop'), icon: <StorefrontIcon fontSize="small" /> },
+    { value: 'menu', label: lan('page'), icon: <ArticleIcon fontSize="small" /> },
   ];
 
   return (

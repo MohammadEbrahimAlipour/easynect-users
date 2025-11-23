@@ -1,8 +1,16 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import tw from "tailwind-styled-components";
 import UploadFileIcon from "@/assets/icons/upload.svg";
 
-export default function GalleryUploader({ onChoose, handleRouterBack, handleApiSubmit }) {
+const isFile = (item) => item instanceof File;
+
+export default function GalleryUploader({
+  gallery,
+  onChoose,
+  handleRouterBack,
+  handleApiSubmit,
+  handleDeleteFromApi, 
+}) {
   const [images, setImages] = useState([]);
   const fileInputRef = useRef();
 
@@ -17,15 +25,28 @@ export default function GalleryUploader({ onChoose, handleRouterBack, handleApiS
     fileInputRef.current.value = "";
   };
 
-  const removeImage = (index) => {
+  const removeImage = async (item, index) => {
+    // اگر از API آمده بود => DELETE to API
+    if (!isFile(item) && item.id) {
+      await handleDeleteFromApi(item.id); 
+      // (تو این تابع باید DELETE رو بزنی: /api/v1/pages/{page_id}/gallery/{gallery_id}/ )
+    }
+
+    // حذف از state
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  console.log(images, 'images')
+  useEffect(()=>{
+    if(gallery){
+      setImages(gallery);
+    }
+  },[gallery])
+  console.log(gallery,images, 'gallery')
   return (
     <Wrapper>
       <div className="flex justify-between items-center mb-6">
         <Label>گالری تصاویر</Label>
+
         <div className="text-sm flex items-center gap-2 justify-center">
           <span
             onClick={handleRouterBack}
@@ -33,15 +54,17 @@ export default function GalleryUploader({ onChoose, handleRouterBack, handleApiS
           >
             انصراف
           </span>
+
           <button
-            onClick={async () => { handleApiSubmit(images) }} // This function should handle the API submission
-            type="submit" // This makes it a submit button
+            onClick={() => handleApiSubmit(images)}
+            type="submit"
             className="bg-dark text-white px-4 py-1 rounded-lg border-[1px] border-black"
           >
             ذخیره
           </button>
         </div>
       </div>
+
       <InputWrapper onClick={handleFileInputClick}>
         <Input
           type="file"
@@ -57,16 +80,23 @@ export default function GalleryUploader({ onChoose, handleRouterBack, handleApiS
       </InputWrapper>
 
       <Gallery>
-        {images.map((file, index) => (
-          <Thumbnail key={index}>
-            <img
-              src={URL.createObjectURL(file)}
-              alt="preview"
-              className="object-cover w-full h-full"
-            />
-            <RemoveButton onClick={() => removeImage(index)}>×</RemoveButton>
-          </Thumbnail>
-        ))}
+        {images?.map((item, index) => {
+          const preview = isFile(item)
+            ? URL.createObjectURL(item)
+            : item.pic_url;
+          return (
+            <Thumbnail key={index}>
+              <img
+                src={preview}
+                alt="preview"
+                className="object-cover w-full h-full"
+              />
+              <RemoveButton onClick={() => removeImage(item, index)}>
+                ×
+              </RemoveButton>
+            </Thumbnail>
+          );
+        })}
       </Gallery>
     </Wrapper>
   );

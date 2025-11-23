@@ -3,7 +3,12 @@
   "save_contact": "Save contact",
   "join_lead": "Join lead",
   "bio_title": "Biography",
+  "shop": "Shop",
+  "page": "Page",
   "close": "Close",
+  "save-order": "Save Order Code",
+  "note": "Note",
+  "submit-form": "Submit Form",
   "download_file": "Download file",
   "unsupported_file": {
     "title": "File format",

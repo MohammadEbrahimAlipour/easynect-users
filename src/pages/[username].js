@@ -258,24 +258,24 @@ export default function Username({
       setShowBio(false);
     }
   };
-  useEffect(() => {
-    const fetchTheme = async () => {
-      try {
-        const api = API_ROUTES.GET_THEME(usersData?.page_id);
-        const response = await axiosInstance.get(api, {
-          headers: {
-            Authorization: `Bearer ${accessToken.accessToken}`,
-          },
-        });
-        setTheme(response?.data?.theme);
-        console.log(response, 'response');
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchTheme = async () => {
+  //     try {
+  //       const api = API_ROUTES.GET_THEME(usersData?.page_id || );
+  //       const response = await axiosInstance.get(api, {
+  //         headers: {
+  //           Authorization: `Bearer ${accessToken.accessToken}`,
+  //         },
+  //       });
+  //       setTheme(response?.data?.theme);
+  //       console.log(response, 'response');
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
 
-    fetchTheme();
-  }, [usersData]);
+  //   fetchTheme();
+  // }, [usersData]);
   useEffect(() => {
     // Bind the event listener
     document.addEventListener("mousedown", handleClickOutside);
@@ -364,7 +364,7 @@ export default function Username({
         <ProfilePictureWrapper>
           <ProfilePicture fill src={usersData?.profile_s3_url} />
         </ProfilePictureWrapper>
-        <HeaderContent $bg={theme.cardBackground}>
+        <HeaderContent $bg={theme?.cardBackground}>
           <Texts onClick={() => setIsBioBottomSheetOpen(true)}>
             <FullName style={{ color: theme?.headerText }}>
               {usersData?.owner_first_name} {usersData?.owner_last_name}
@@ -400,7 +400,7 @@ export default function Username({
       </Header>
 
       <Box className="flex justify-center items-center" style={{ background: theme?.background }}>
-        <SwitchModeButton mode={mode} setMode={setMode} theme={theme} />
+        <SwitchModeButton mode={mode} setMode={setMode} theme={theme} lan={t}/>
       </Box>
 
       {mode == 'menu' ? usersData?.horizontal_menu ? (

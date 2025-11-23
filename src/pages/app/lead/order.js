@@ -82,7 +82,7 @@ export default function Order() {
 
     const handleEditModal = async (field_id, title) => {
         console.log(field_id, title, 'field_id, title')
-        const apiUrl = API_ROUTES.DELETE_FORM_LEAD(id, form_id, field_id);
+        const apiUrl = API_ROUTES.UPDATE_FORM_LEAD(id, form_id, field_id);
         console.log(apiUrl, 'apiUrl')
         axiosInstance
             .patch(apiUrl, { title: title }, {
@@ -102,15 +102,13 @@ export default function Order() {
                 toast.error('بروزرسانی فیلد با مشکل مواجه شد');
             });
     }
-    useEffect(() => {
-        const fetchData = async () => {
-            if (id) {
-                await handleApiSubmit();
-            }
-        };
-        fetchData();
-    }, [id]);
-    console.log(data, 'data')
+   useEffect(() => {
+  if (id && form_id) {
+    handleApiSubmit();
+  }
+}, [id, form_id]);
+
+    console.log(data, 'datas')
     return (
         <main>
             <HeaderTwo />

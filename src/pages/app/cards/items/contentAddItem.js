@@ -126,6 +126,7 @@ export default function ContentStoreAddItem() {
     });
   };
 
+  console.log(contentData, 'content')
   return (
     <>
       <Head>

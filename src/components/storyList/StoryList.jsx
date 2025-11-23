@@ -58,6 +58,7 @@ const StoryList = ({ theme, storyData = [], Api, parentId, orderInfo }) => {
   const [ind, setInd] = useState(0);
   const accessToken = useAccessToken();
   const router = useRouter();
+  const isNavigatingRef = useRef(false); // ✅ Add this
 
   const fetchFromApi = async (id) => {
     if (!id) return;
@@ -85,13 +86,22 @@ const StoryList = ({ theme, storyData = [], Api, parentId, orderInfo }) => {
   };
 
   const handleNavigateNext = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (isNavigatingRef.current) return; // ✅ Prevent overlapping navigation
 
-    const nextIndex = ind + 1;
+     const nextIndex = ind + 1;
     if (nextIndex < storyData.length) {
-      console.log(nextIndex, 'nextIndex');
-      handleClick(storyData[nextIndex].id, nextIndex);
+      isNavigatingRef.current = true; // ✅ Lock navigation
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      setTimeout(() => {
+        handleClick(storyData[nextIndex].id, nextIndex);
+        // ✅ Unlock after content loads
+        setTimeout(() => {
+          isNavigatingRef.current = false;
+        }, 500);
+      }, 500);
     }
+
   };
 
   useEffect(() => {

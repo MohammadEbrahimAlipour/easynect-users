@@ -72,9 +72,9 @@ const Footer = ({ className = "" }) => {
         title="منو"
       />
       <CustomLink
-        href="/app/contacts/contacts"
+        href="/app/order/main"
         iconName="contacts"
-        title="مخاطبین"
+        title="سفارش ها"
       />
       <CustomLink
         href="/app/cards/profileCard"

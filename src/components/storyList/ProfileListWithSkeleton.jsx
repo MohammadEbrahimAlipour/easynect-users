@@ -1,18 +1,25 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Box, Grid, Skeleton, Typography } from '@mui/material';
 import ProfileCardWithModal from './ItemStory';
 
 const ProfileListWithSkeleton = ({ theme, userList, loading, parentId, orderInfo, onScrollEnd }) => {
   const itemsPerPage = 2;
+ const hasTriggeredRef = useRef(false); // ✅ Add this
 
+  useEffect(() => {
+    // ✅ Reset trigger when new content loads
+    hasTriggeredRef.current = false;
+  }, [userList]);
+ 
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
       const windowHeight = window.innerHeight;
       const fullHeight = document.body.scrollHeight;
 
-      // بررسی اینکه کاربر واقعا به آخر صفحه رسیده
-      if (scrollTop + windowHeight >= fullHeight - 100) {
+      // ✅ Check if NOT already triggered
+      if (scrollTop + windowHeight >= fullHeight - 100 && !hasTriggeredRef.current) {
+        hasTriggeredRef.current = true; // ✅ Mark as triggered
         onScrollEnd?.();
       }
     };
