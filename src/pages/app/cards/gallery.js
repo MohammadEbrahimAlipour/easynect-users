@@ -37,7 +37,7 @@ export default function Gallery() {
 
             if (gallery) {
 
-                formData.append("pic ", file);
+                formData.append("pic", file);
             }
             else {
                 formData.append("gallery", file);
