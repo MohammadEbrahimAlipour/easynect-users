@@ -146,6 +146,7 @@ const MediaSettingsHorz = () => {
         const formDataToSend = new FormData();
         for (const key in formData) {
           formDataToSend.append(key, formData[key]);
+          console.log(formDataToSend,formData, 'formDataToSend')
         }
 
         // Append the file to formData before sending

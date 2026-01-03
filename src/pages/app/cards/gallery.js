@@ -26,7 +26,7 @@ export default function Gallery() {
             return;
         }
         console.log(gallery.data, 'gallery')
-        const apiUrl = gallery.data ? API_ROUTES.ADD_GALLERY(id) : API_ROUTES.CONTENTS_GALLERY(id);
+        const apiUrl =  API_ROUTES.CONTENTS_GALLERY(id);
         const formData = new FormData();
 
         images.forEach((file) => {
@@ -37,7 +37,7 @@ export default function Gallery() {
 
             if (gallery) {
 
-                formData.append("pic", file);
+                formData.append("gallery", file);
             }
             else {
                 formData.append("gallery", file);
