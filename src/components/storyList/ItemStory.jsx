@@ -20,17 +20,31 @@ import 'swiper/css/navigation';
 import LinkIcon from '@mui/icons-material/Link';
 import { toast } from "react-toastify";
 import { useTranslation } from "next-i18next";
-
-// فرم سفارش
 import FormOrder from './FormOrder';
 
 const ProfileCardWithModal = ({ data, parentId, orderInfo, theme }) => {
   const [open, setOpen] = useState(false);
   const [detailData, setDetailData] = useState(null);
   const [showForm, setShowForm] = useState(false);
+
   const accessToken = useAccessToken();
   const { t } = useTranslation();
 
+  const isHighlighted = data.is_highlighted;
+
+  /* 🎨 theme safe values */
+  const bg = theme?.cardBackground || '#fff';
+  const textColor = theme?.cardText || '#000';
+  const secondaryText = theme?.cardTextSecondary || '#666';
+  const primary = theme?.primary || '#c6ac85';
+  const hoverColor = theme?.primaryHover || '#a89060';
+  const borderColor = isHighlighted ? primary : theme?.borderColor || '#ddd';
+
+  const cardBg = isHighlighted
+    ? `linear-gradient(180deg, ${bg}, ${theme?.highlightBackground || "#fff8e1"})`
+    : bg;
+
+  /* 📡 handlers */
   const handleOpen = async () => {
     setOpen(true);
     await fetchFromApi(data.id);
@@ -44,92 +58,117 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo, theme }) => {
 
   const fetchFromApi = async (id) => {
     try {
-      const postItem = API_ROUTES.ANALYSTICS_POST_ITEMS(id);
-      await axiosInstance.post(postItem, {}, {
-        headers: { Authorization: `Bearer ${accessToken.accessToken}` },
-      });
+      await axiosInstance.post(
+        API_ROUTES.ANALYSTICS_POST_ITEMS(id),
+        {},
+        { headers: { Authorization: `Bearer ${accessToken.accessToken}` } }
+      );
 
-      const apiUrl = API_ROUTES.ITEMS_GET(parentId, id);
-      const response = await axiosInstance.get(apiUrl, {
-        headers: { Authorization: `Bearer ${accessToken.accessToken}` },
-      });
+      const response = await axiosInstance.get(
+        API_ROUTES.ITEMS_GET(parentId, id),
+        { headers: { Authorization: `Bearer ${accessToken.accessToken}` } }
+      );
+
       setDetailData(response.data);
-    } catch (error) {
-      console.error('API fetch error:', error);
+    } catch (err) {
+      console.error(err);
     }
   };
 
   const handleFormSubmit = async (values) => {
-    console.log('Form submitted:', values);
-    const apiUrl = API_ROUTES.RECORD_FORM_ORDER(parentId, orderInfo.id);
     try {
-      const response = await axiosInstance.post(apiUrl, values, {
-        headers: { Authorization: `Bearer ${accessToken.accessToken}` },
-      });
-      console.log(response, 'response form submission')
+      await axiosInstance.post(
+        API_ROUTES.RECORD_FORM_ORDER(parentId, orderInfo.id),
+        values,
+        { headers: { Authorization: `Bearer ${accessToken.accessToken}` } }
+      );
       toast.success('سفارش با موفقیت ثبت شد!');
-
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      toast.error('خطا در ثبت سفارش. لطفا دوباره تلاش کنید.');
-      return;
+    } catch {
+      toast.error('خطا در ثبت سفارش');
     }
   };
 
-
-  const isHighlighted = data.is_highlighted;
-  const bg = theme?.cardBackground || '#fff';
-  const borderColor = isHighlighted ? theme?.primary || '#c6ac85' : theme?.borderColor || '#ddd';
-  const textColor = theme?.cardText || '#000';
-  const hoverColor = theme?.primaryHover || '#a89060';
-
   return (
     <>
+      {/* 🟨 CARD */}
       <Card
         onClick={handleOpen}
         sx={{
-          maxWidth: 345,
-          margin: '16px auto',
-          borderRadius: 2,
+          position: 'relative',
+
+          /* 🔥 تفاوت اندازه واقعی */
+          width: isHighlighted ? 360 : 320,
+          transform: isHighlighted ? 'scale(1.02)' : 'scale(0.92)',
+
+          margin: isHighlighted ? '24px auto' : '12px auto',
+          borderRadius: 3,
+
           border: `2px solid ${borderColor}`,
-          boxShadow: isHighlighted ? `0 0 15px ${borderColor}` : 3,
+          background: cardBg,
           cursor: 'pointer',
-          transition: 'all 0.3s ease',
-          backgroundColor: bg,
-          color: textColor,
+
+          transition: 'all 0.35s ease',
+
+          boxShadow: isHighlighted
+            ? '0 20px 45px rgba(198,172,133,0.45)'
+            : '0 6px 14px rgba(0,0,0,0.12)',
+
+          opacity: isHighlighted ? 1 : 0.85,
+
+          '&:hover': {
+            transform: isHighlighted ? 'scale(1.06)' : 'scale(0.96)',
+            boxShadow: isHighlighted
+              ? '0 28px 55px rgba(198,172,133,0.6)'
+              : '0 10px 22px rgba(0,0,0,0.18)',
+            opacity: 1
+          }
         }}
       >
+        {/* ⭐ BADGE */}
+        {isHighlighted && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 12,
+              right: 12,
+              background: `linear-gradient(135deg, ${primary}, ${hoverColor})`,
+              color: '#fff',
+              px: 1.5,
+              py: 0.5,
+              borderRadius: '14px',
+              fontSize: 12,
+              fontWeight: 700,
+              zIndex: 2
+            }}
+          >
+            ⭐ ویژه
+          </Box>
+        )}
+
         <CardMedia
           component="img"
           image={data.banner}
           alt={data.title}
           sx={{
             height: 200,
-            width: '100%',
             objectFit: 'cover',
-            borderRadius: '12px 12px 0 0',
-            transition: '0.3s',
-            '&:hover': { transform: 'scale(1.02)' },
-            marginBottom: 2,
+            filter: isHighlighted ? 'brightness(1.05) saturate(1.1)' : 'none',
+            transition: '0.3s'
           }}
         />
+
         <CardContent>
-          <Typography
-            gutterBottom
-            variant="h6"
-            component="div"
-            color={textColor}
-            fontWeight={600}
-          >
+          <Typography variant="h6" fontWeight={700} color={textColor}>
             {data.title}
           </Typography>
-          <Typography variant="body2" color={theme?.cardTextSecondary || 'text.secondary'}>
+
+          <Typography variant="body2" color={secondaryText}>
             {data.description}
           </Typography>
         </CardContent>
       </Card>
 
-      {/* Modal */}
+      {/* 🟦 MODAL */}
       <Modal open={open} onClose={handleClose}>
         <Box
           sx={{
@@ -140,134 +179,106 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo, theme }) => {
             width: '90%',
             maxWidth: 450,
             bgcolor: theme?.background || '#fff',
-            boxShadow: 24,
-            borderRadius: 2,
+            borderRadius: 3,
             p: 3,
-            outline: 'none',
+            outline: 'none'
           }}
         >
           {!detailData ? (
-            // حالت لودینگ
             <>
-              <Skeleton variant="rectangular" height={160} sx={{ mb: 2, borderRadius: 2 }} />
-              <Skeleton variant="text" height={32} sx={{ mb: 1 }} />
-              <Skeleton variant="text" height={24} sx={{ mb: 2 }} />
+              <Skeleton variant="rectangular" height={180} sx={{ mb: 2 }} />
+              <Skeleton height={30} />
+              <Skeleton height={22} />
             </>
+          ) : showForm ? (
+            <FormOrder
+              fields={orderInfo?.fields || []}
+              theme={theme}
+              onSubmit={(v) => {
+                handleFormSubmit(v);
+                setShowForm(false);
+              }}
+            />
           ) : (
             <>
-              {showForm ? (
-                <FormOrder
-                  fields={orderInfo?.fields || []}
-                  theme={theme}
-                  onSubmit={async (values) => {
-                    handleFormSubmit(values);
-                    setShowForm(false);
-                  }}
-                />
-              ) : (
-                <>
-                  {/* ✅ اسلایدر عکس‌ها در بالا */}
-                  {(detailData.banner || (detailData.gallery?.length > 0)) && (
-                    <Box mb={3}>
-                      <Swiper
-                        spaceBetween={10}
-                        slidesPerView={1}
-                        navigation
-                        pagination={{ type: "bullets" }}
-                        modules={[Navigation]}
-                      >
-                        {/* عکس اصلی */}
-                        {detailData.banner && (
-                          <SwiperSlide>
-                            <img
-                              src={detailData.banner}
-                              alt="banner"
-                              style={{
-                                width: "100%",
-                                height: "230px",
-                                objectFit: "contain",
-                                borderRadius: 8,
-                                border: `1px solid ${theme?.borderColor || "#ddd"}`,
-                              }}
-                            />
-                          </SwiperSlide>
-                        )}
-
-                        {/* گالری */}
-                        {detailData.gallery?.map((item) => (
-                          <SwiperSlide key={item.id}>
-                            <img
-                              src={item.pic_url}
-                              alt="gallery"
-                              style={{
-                                width: "100%",
-                                height: "230px",
-                                objectFit: "contain",
-                                borderRadius: 8,
-                                border: `1px solid ${theme?.borderColor || "#ddd"}`,
-                              }}
-                            />
-                          </SwiperSlide>
-                        ))}
-                      </Swiper>
-                    </Box>
+              {(detailData.banner || detailData.gallery?.length > 0) && (
+                <Swiper navigation modules={[Navigation]}>
+                  {detailData.banner && (
+                    <SwiperSlide>
+                      <img
+                        src={detailData.banner}
+                        style={{
+                          width: '100%',
+                          height: 230,
+                          objectFit: 'contain',
+                          borderRadius: 8
+                        }}
+                      />
+                    </SwiperSlide>
                   )}
-
-                  {/* متن‌ها */}
-                  <Typography variant="h6" fontWeight={700} mb={1} color={textColor}>
-                    {detailData.title || data.title}
-                  </Typography>
-
-                  <Typography variant="body2" color={theme?.cardText || "text.secondary"} mb={2}>
-                    {detailData.description || data.description}
-                  </Typography>
-
-                  {detailData.content && typeof detailData.content === "string" && (
-                    <Typography variant="body1" mt={2} color={textColor}>
-                      {detailData.content}
-                    </Typography>
-                  )}
-
-                  {/* دکمه‌ها */}
-                  <Box mt={4} textAlign="center">
-                    <Button
-                      variant="outlined"
-                      onClick={() => setShowForm(true)}
-                      sx={{
-                        borderColor: borderColor,
-                        color: borderColor,
-                        "&:hover": {
-                          backgroundColor: hoverColor,
-                          color: "#fff",
-                        },
-                        ml: 2,
-                      }}
-                    >
-              {t('save-order')}
-                    </Button>
-
-                    <Button
-                      variant="outlined"
-                      onClick={() => window.open(detailData.ref_link, "_blank")}
-                      sx={{
-                        borderColor: borderColor,
-                        color: borderColor,
-                        "&:hover": {
-                          backgroundColor: hoverColor,
-                          color: "#fff",
-                        },
-                      }}
-                    >
-                      <Tooltip title="لینک ارجاع" arrow>
-                        <LinkIcon />
-                      </Tooltip>
-                    </Button>
-                  </Box>
-                </>
+                  {detailData.gallery?.map((g) => (
+                    <SwiperSlide key={g.id}>
+                      <img
+                        src={g.pic_url}
+                        style={{
+                          width: '100%',
+                          height: 230,
+                          objectFit: 'contain',
+                          borderRadius: 8
+                        }}
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
               )}
+
+              <Typography variant="h6" fontWeight={700} mt={2}>
+                {detailData.title}
+              </Typography>
+
+              <Typography variant="body2" mt={1}>
+                {detailData.description}
+              </Typography>
+
+              <Box mt={4} textAlign="center">
+                <Button
+                  variant={isHighlighted ? 'contained' : 'outlined'}
+                  onClick={() => setShowForm(true)}
+                  sx={{
+                    backgroundColor: isHighlighted ? primary : 'transparent',
+                    color: isHighlighted ? '#fff' : primary,
+                    borderColor: primary,
+                    '&:hover': {
+                      backgroundColor: hoverColor,
+                      color: '#fff'
+                    },
+                    ml: 1
+                  }}
+                >
+                  {t('save-order')}
+                </Button>
+
+                {detailData.ref_link && (
+                  <Tooltip title="لینک ارجاع">
+                    <Button
+                      variant="outlined"
+                      onClick={() => window.open(detailData.ref_link, '_blank')}
+                      sx={{
+                        borderColor: primary,
+                        color: primary,
+                        '&:hover': {
+                          backgroundColor: hoverColor,
+                          color: '#fff'
+                        }
+                      }}
+                    >
+                      <LinkIcon />
+                    </Button>
+                  </Tooltip>
+                )}
+              </Box>
             </>
           )}
-
         </Box>
       </Modal>
     </>

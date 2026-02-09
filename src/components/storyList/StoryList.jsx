@@ -144,7 +144,7 @@ const StoryList = ({ theme, storyData = [], Api, parentId, orderInfo }) => {
       </Box>
 
       {/* محتوای عمودی زیر استوری */}
-      <Box sx={{ px: 2, pt: 1 }}>
+      <Box sx={{ px: 2, pt: 1, pb:40 }}>
         <ProfileListWithSkeleton
           theme={theme}
           userList={items}
