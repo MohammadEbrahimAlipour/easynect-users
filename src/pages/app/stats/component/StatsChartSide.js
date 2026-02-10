@@ -192,7 +192,7 @@ const StatsChartSide = ({
       {/* سوییچ منو / کارت */}
       <div className="w-full relative mb-5">
         <ToggleSwitch
-          isChecked={isCard}
+          isChecked={!isCard}
           toggleSwitch={() => setIsCard((prev) => !prev)}
           leftLabel="براساس منو"
           rightLabel="براساس کارت ویزیت"
