@@ -71,12 +71,12 @@ const ProfileCard = ({ page }) => {
       <h2 className="text-center text-lg font-bold mb-1">
         {page.user_first_name} {page.user_last_name}
       </h2>
-      <p className="text-center text-gray-500">{page.job_title}</p>
+      {/* <p className="text-center text-gray-500">{page.job_title}</p> */}
       <a
         href={`/app/order/catalogs/${page.catalogs[0]?.id}`}
         className="block text-center text-blue-600 mt-3 underline"
       >
-        مشاهده کاتالوگ‌ها
+        مشاهده 
       </a>
     </div>
   );

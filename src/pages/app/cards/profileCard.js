@@ -48,12 +48,24 @@ const ProfileCard = () => {
     isAccessoryConnectBottomSheetOpen,
     setIsAccessoryConnectBottomSheetOpen,
   ] = useState(false);
+  const [openParams, setOpenParams] = useState(false);
+
+  const handleClick = (event) => {
+
+    setOpenParams((prev) => (!prev));
+    setTimeout(() => {
+    setOpenParams(prev => !prev);
+  }, 2000);
+  };
+
 
   const [pageDataDontExist, setPageDAtaDontExist] = useState(false);
 
   const router = useRouter();
-  const cardWrapperRef = useRef(null);
+  const msgParam = router.query.msg;
+  console.log(msgParam, 'msgparams')
 
+  const cardWrapperRef = useRef(null);
   const finalCardsNumber = useMemo(() => {
     const cardsNumber = cards.length;
     return cardsNumber <= 3 ? cardsNumber : 3;
@@ -120,6 +132,9 @@ const ProfileCard = () => {
       });
   };
 
+  useEffect(() => {
+      handleClick()
+  }, [msgParam])
   useEffect(() => {
     const sid = router.query.id;
 
@@ -529,8 +544,8 @@ const ProfileCard = () => {
                     <div
                       key={plan.id}
                       className={`border p-4 rounded-lg transition-all cursor-pointer ${selectedPlanId === plan.id
-                          ? "border-yellow-400 bg-yellow-50"
-                          : "border-gray-300 hover:border-yellow-300"
+                        ? "border-yellow-400 bg-yellow-50"
+                        : "border-gray-300 hover:border-yellow-300"
                         }`}
                       onClick={() => setSelectedPlanId(plan.id)}
                     >
@@ -567,8 +582,8 @@ const ProfileCard = () => {
                   disabled={!selectedPlanId}
                   onClick={() => handleRenewSub(subId)}
                   className={`flex items-center justify-center gap-2 px-6 py-2 rounded-lg font-medium transition ${selectedPlanId
-                      ? "bg-yellow-400 hover:bg-yellow-500 text-white"
-                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    ? "bg-yellow-400 hover:bg-yellow-500 text-white"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
                     }`}
                 >
                   <svg
@@ -589,7 +604,9 @@ const ProfileCard = () => {
                 </button>
               </DialogActions>
             </Dialog>
-
+            <Dialog open={openParams} >
+              <DialogTitle>{msgParam}</DialogTitle>
+            </Dialog >
             <Link
               href="/app/cards/createCard"
               className="flex items-center justify-center w-full
