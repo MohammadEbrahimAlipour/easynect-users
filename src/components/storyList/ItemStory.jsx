@@ -21,11 +21,13 @@ import LinkIcon from '@mui/icons-material/Link';
 import { toast } from "react-toastify";
 import { useTranslation } from "next-i18next";
 import FormOrder from './FormOrder';
+import { useCartStore } from '@/store/useCartStore';
 
 const ProfileCardWithModal = ({ data, parentId, orderInfo, theme }) => {
   const [open, setOpen] = useState(false);
   const [detailData, setDetailData] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const addToCart = useCartStore((state) => state.addToCart);
 
   const accessToken = useAccessToken();
   const { t } = useTranslation();
@@ -75,7 +77,7 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo, theme }) => {
     }
   };
 
-  const handleFormSubmit = async (values) => {
+  const handleFormSubmit = async (values) => { 
     try {
       await axiosInstance.post(
         API_ROUTES.RECORD_FORM_ORDER(parentId, orderInfo.id),
@@ -195,7 +197,17 @@ const ProfileCardWithModal = ({ data, parentId, orderInfo, theme }) => {
               fields={orderInfo?.fields || []}
               theme={theme}
               onSubmit={(v) => {
-                handleFormSubmit(v);
+                // handleFormSubmit(v); //* this part relates i should add shopping card
+                addToCart({
+                  id: detailData.id,
+                  title: detailData.title,
+                  price: detailData.price, // if exists
+                  quantity: 1,
+                  banner: detailData.banner,
+                  parentId: parentId
+                });
+
+                toast.success("Added to cart 🛒");
                 setShowForm(false);
               }}
             />
