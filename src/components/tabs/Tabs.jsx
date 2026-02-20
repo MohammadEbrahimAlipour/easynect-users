@@ -87,8 +87,8 @@ export default function TabsCards({ refresh, setRefresh, columnConfig, items, mo
                 item={item}
                 index={index}
                 moveCard={moveCard}
-                onEdit={(id) => openModal('edit', { category_id: item.id })}
-                onClose={(id) => openModal('delete', { category_id: item.id })}
+                onEdit={() => openModal('edit', item)}
+                onClose={() => openModal('delete', item)}
                 disabled={value === 2 ? true : false}
               />
             ))}

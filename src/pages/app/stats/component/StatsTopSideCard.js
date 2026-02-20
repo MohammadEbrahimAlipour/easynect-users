@@ -17,10 +17,12 @@ const StatsTopSideCard = ({
     statsCardFetch.load({ url: "/api/v1/analytics/pages/" });
   }, []);
 
+
   useEffect(() => {
     const data = statsCardFetch.response?.data;
     if (data && Array.isArray(data) && data.length) {
       onSelectedId(data[0]?.id);
+      onSelectedSubId(data[0]?.catalogs[0]?.id)
     }
   }, [statsCardFetch.response?.data]);
 
@@ -30,6 +32,7 @@ const StatsTopSideCard = ({
   }, [statsCardFetch.response?.data]);
 
   if (statsCardFetch.isLoading) return <LoadingState />;
+
 
   return (
     <div className="w-full">

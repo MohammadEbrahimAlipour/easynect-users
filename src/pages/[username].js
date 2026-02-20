@@ -18,6 +18,7 @@ import { generateApiUrl } from "@/components/ApiUr";
 import ClientPageFooter from "@/components/ClientPageFooter";
 import LoadingState from "@/components/LoadingState";
 import NoData from "@/components/pageView/NoData";
+import { useRouter } from 'next/router';
 
 // assets
 import BaseInfoIcon from "@/assets/icons/info.svg";
@@ -28,7 +29,7 @@ import { LANGUAGES } from "@/constants/language";
 // services
 import axiosInstance from "@/services/axiosInterceptors";
 import SwitchModeButton from "@/components/buttons/SwitchModeButton";
-import { Box } from "@mui/material";
+import { Box, IconButton, Badge } from "@mui/material";
 import { API_ROUTES } from "@/services/api";
 import { useAccessToken } from "../../context/AccessTokenContext";
 import StoryList from "@/components/storyList/StoryList";
@@ -37,6 +38,8 @@ import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import FaqUser from "@/components/faqUser/FaqUser";
+import { useCartStore } from "@/store/useCartStore";
+import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 
 export async function getServerSideProps(context) {
   try {
@@ -135,6 +138,7 @@ export default function Username({
   });
   const [formInfo, setFormInfo] = useState({});
   const accessToken = useAccessToken();
+  const router = useRouter();
 
   const { t } = useTranslation();
 
@@ -207,6 +211,13 @@ export default function Username({
       });
   };
 
+  const handleShoplyfterClick = () => {
+    // Navigate to the order page, sending parentId, orderInfo, itemId
+    router.push({
+      pathname: '/shoplyfter', // your target page
+      
+    });
+  };
 
 
   useEffect(() => {
@@ -215,8 +226,9 @@ export default function Username({
     }
     fetchData();
   }, [usersData]);
+  const cart = useCartStore((state) => state.cart);
 
-
+  console.log(cart, 'cart')
   useEffect(() => {
     // Ensure usersData.contents exists and is an array before trying to flatten it
     if (usersData && Array.isArray(usersData.contents)) {
@@ -365,16 +377,36 @@ export default function Username({
           <ProfilePicture fill src={usersData?.profile_s3_url} />
         </ProfilePictureWrapper>
         <HeaderContent $bg={theme?.cardBackground}>
-          <Texts onClick={() => setIsBioBottomSheetOpen(true)}>
-            <FullName style={{ color: theme?.headerText }}>
-              {usersData?.owner_first_name} {usersData?.owner_last_name}
-            </FullName>
-            <JobTitle style={{ color: theme?.cardText }}>
-              {usersData?.job_title}
-              {usersData?.company}
-              <InfoIcon className="mr-1" />
-            </JobTitle>
-          </Texts>
+          <div className="flex justify-between">
+            <Texts onClick={() => setIsBioBottomSheetOpen(true)}>
+              <FullName style={{ color: theme?.headerText }}>
+                {usersData?.owner_first_name} {usersData?.owner_last_name}
+              </FullName>
+              <JobTitle style={{ color: theme?.cardText }}>
+                {usersData?.job_title}
+                {usersData?.company}
+                <InfoIcon className="mr-1" />
+              </JobTitle>
+            </Texts>
+            <div className="w-8 cursor-pointer" onClick={handleShoplyfterClick}>
+              <Badge badgeContent={cart.length} sx={{
+                '& .MuiBadge-badge': {
+                  backgroundColor: theme.headerText,
+                  color: 'white',
+                }
+              }}>
+                <ShoppingCartIcon color="action" className="w-8 h-8 text-black" />
+              </Badge>
+              {
+                /**
+                 * * navigate to a part for select and request for this part
+                 * * use this : handleFormSubmit in itemStory.jsx like and i send it
+                 * * cart output is something like : [{banner: "https://easynect-production-static-contents.s3.ir-thr-at1.arvanstorage.ir/users/icons/defualt.webp",id: "45b5f91f-a32a-4e4e-90b9-458a1af021e2",price: undefined,quantity: 1,title: "Jacob Peterson"}]
+                  * * do it and create  thnings relates it
+                */
+              }
+            </div>
+          </div>
           <Actions>
             <Button
               onClick={handleSaveContact}
@@ -396,11 +428,13 @@ export default function Username({
               {t("join_lead")}
             </ButtonOutlined>
           </Actions>
+
+
         </HeaderContent>
       </Header>
 
       <Box className="flex justify-center items-center" style={{ background: theme?.background }}>
-        <SwitchModeButton mode={mode} setMode={setMode} theme={theme} lan={t}/>
+        <SwitchModeButton mode={mode} setMode={setMode} theme={theme} lan={t} />
       </Box>
 
       {mode == 'menu' ? usersData?.horizontal_menu ? (
@@ -445,7 +479,7 @@ export default function Username({
                     </Box>
                   )}
                   {usersData.faqs?.length > 0 && (
-                    <FaqUser  data={usersData.faqs} theme={theme} />
+                    <FaqUser data={usersData.faqs} theme={theme} />
                   )}
 
                 </div>
@@ -514,12 +548,14 @@ const CoverImage = tw(Image)`
 `;
 
 const Header = tw.div`
+  relative
   -translate-y-4
   pe-6
   ps-3
   flex
   items-center
 `;
+
 
 const HeaderContent = tw.div`
   flex-1

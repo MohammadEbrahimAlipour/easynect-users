@@ -39,7 +39,6 @@ export default function Menu() {
   const [imageFile, setImageFile] = useState(null);
   const [error, setError] = useState('');
 
-  console.log(imageFile, 'imageFile')
   const convertFileToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -199,12 +198,18 @@ export default function Menu() {
     }
   };
 
-  console.log(imageFile, 'image File')
+  useEffect(() => {
+    if (isModalOpen && mode === 'edit' && targetData) {
+      setTitle(targetData.title || '');
+      setContent(targetData.description || '');
+      setImageFile(null); 
+    }
+  }, [isModalOpen, mode, targetData]);
   const handleEditModal = async () => {
     const apiUrl =
       tabValue === 1
-        ? API_ROUTES.CATALOG_UPDATE(catalogId, targetData.category_id)
-        : API_ROUTES.CATALOG_UPDATE_ITEM(catalogId, targetData.category_id);
+        ? API_ROUTES.CATALOG_UPDATE(catalogId, targetData.id)
+        : API_ROUTES.CATALOG_UPDATE_ITEM(catalogId, targetData.id);
 
     const formData = new FormData();
     formData.append('title', title);
